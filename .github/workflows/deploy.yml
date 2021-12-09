@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.17.5] #версия node.js на которой разарабатывался проект
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Setup keyy
+      - run: set -eu
+      - run: mkdir "$HOME/.ssh"
+      - run: echo "${{ secrets.volik_25_secret }}" > "$HOME/.ssh/volik_25_secret" # volik_25_secret - название секрета
+      - run: chmod 600 "$HOME/.ssh/volik_25_secret"
+      # Build
+      - run: npm ci
+      - run: npm run build
+      # Deploy flowervalley - название проекта
+      - run: cd dist/flowervalley && rsync -e "ssh -i $HOME/.ssh/volik_25_secret -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
+      - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/volik_25_secret -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
