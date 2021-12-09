@@ -19,11 +19,11 @@ jobs:
       # Setup keyy
       - run: set -eu
       - run: mkdir "$HOME/.ssh"
-      - run: echo "${{ secrets.authorized_keys }}" > "$HOME/.ssh/authorized_keys" # VOLIK_25_SECRET - название секрета
-      - run: chmod 600 "$HOME/.ssh/authorized_keys"
+      - run: echo "${{ secrets.VOLIK_25_SECRET }}" > "$HOME/.ssh/VOLIK_25_SECRET" # VOLIK_25_SECRET - название секрета
+      - run: chmod 600 "$HOME/.ssh/VOLIK_25_SECRET"
       # Build
       - run: npm ci
       - run: npm run build
       # Deploy flowervalley - название проекта
-      - run: cd dist/flowervalley && rsync -e "ssh -i $HOME/.ssh/authorized_keys -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
-      - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/authorized_keys -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
+      - run: cd dist/flowervalley && rsync -e "ssh -i $HOME/.ssh/VOLIK_25_SECRET -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
+      - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/VOLIK_25_SECRET -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand3/public_html # полный путь до папки, куда нужно скопировать файлы
