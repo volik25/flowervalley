@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'flower-valley-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'flowervalley';
-}
+export class AppComponent {}

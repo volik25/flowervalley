@@ -13,7 +13,7 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: 'module',
       },
-      plugins: ['@angular-eslint/template'],
+      plugins: ['@angular-eslint/template', 'import'],
       processor: '@angular-eslint/template/extract-inline-html',
     },
     {

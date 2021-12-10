@@ -1,0 +1,129 @@
+@import "src/assets/styles/colors";
+
+$root: '.header';
+
+
+#{$root} {
+  &__contacts {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    font-family: 'Quarion', serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+
+    .title {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 108.9%;
+    }
+
+    .whats-app-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $whats-app-button;
+      font-weight: 500;
+      font-size: 15.4978px;
+      line-height: 19px;
+      color: #3A3A3A;
+      .pi-whatsapp {
+        color: $main-green;
+      }
+      &:hover {
+        cursor: pointer;
+        box-shadow: 5px $main-green;
+      }
+    }
+    .address {
+      max-width: 270px;
+    }
+    .work-time {
+      max-width: 200px;
+    }
+    .contacts {
+      font-weight: 500;
+      font-size: 15.4978px;
+      line-height: 19px;
+    }
+  }
+  &__menu-bar {
+    background-color: $main-green;
+    color: $white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    font-family: 'Quarion', serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+
+    &_content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      margin: auto;
+      div {
+        &:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+      .prices, .catalog {
+        &:hover {
+          text-decoration: none;
+        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .prices {
+        font-weight: 600;
+        padding: 20px;
+        border: 1px solid #FFFFFF;
+        border-radius: 10px;
+      }
+      .catalog {
+        font-size: 24px;
+        line-height: 30px;
+      }
+      .cart {
+        &:hover {
+          text-decoration: none;
+        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #FFFFFF;
+        border-radius: 10px;
+        padding: 10px;
+        .pi-shopping-cart {
+          font-size: 35px;
+          padding-right: 5px;
+        }
+        &__sum {
+          font-weight: 600;
+          font-size: 20px;
+          line-height: 25px;
+        }
+        &__count {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 17px;
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep p-button {
+  border: none;
+}
