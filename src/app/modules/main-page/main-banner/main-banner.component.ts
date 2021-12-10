@@ -5,4 +5,28 @@ import { Component } from '@angular/core';
   templateUrl: './main-banner.component.html',
   styleUrls: ['./main-banner.component.scss'],
 })
-export class MainBannerComponent {}
+export class MainBannerComponent {
+  public photos = [
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+    {
+      src: 'assets/images/strong-gold.png',
+    },
+  ];
+}

@@ -7,9 +7,19 @@ import { MainBannerComponent } from './main-banner/main-banner.component';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
+import { InputTextModule } from 'primeng/inputtext';
+import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
   declarations: [MainPageComponent, MainBannerComponent],
-  imports: [CommonModule, MainPageRoutingModule, ButtonModule, SharedModule, RippleModule],
+  imports: [
+    CommonModule,
+    MainPageRoutingModule,
+    ButtonModule,
+    SharedModule,
+    RippleModule,
+    InputTextModule,
+    CarouselModule,
+  ],
 })
 export class MainPageModule {}
