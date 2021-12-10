@@ -1,0 +1,91 @@
+@import "colors";
+
+.container {
+  width: 80%;
+  margin: auto;
+  .banner {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+    .header {
+      font-weight: 500;
+      font-size: 60px;
+      line-height: 100%;
+    }
+    .info {
+      color: $text-grey;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 140%;
+      padding-top: 20px;
+    }
+    .carousel {
+      &__img {
+        border-radius: 25px;
+        width: 100%;
+        height: auto;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+    }
+  }
+  .info-banner {
+    width: 100%;
+    margin-top: 25px;
+    background: $light-grey;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    div {
+      font-weight: 500;
+      font-size: 48px;
+      line-height: 110%;
+      color: $main-green;
+      span {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 110%;
+        color: $text;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .p-carousel-indicators {
+  position: absolute;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  .p-carousel-indicator button {
+    opacity: 0.4;
+    border-radius: 119.15px;
+    height: 3px;
+  }
+  .p-carousel-indicator.p-highlight button {
+    opacity: 1;
+    background-color: white;
+  }
+}
+:host ::ng-deep .p-carousel-content {
+  position: relative;
+  .p-carousel-prev, .p-carousel-next {
+    color: white;
+    position: absolute;
+    z-index: 10;
+  }
+  .p-carousel-next {
+    right: 0;
+  }
+}
+
+:host ::ng-deep .p-button {
+  background-color: $main-green;
+  border-color: $main-green;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 110%;
+}
