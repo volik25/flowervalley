@@ -10,6 +10,9 @@
     "flowervalley": {
       "projectType": "application",
       "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
         "@schematics/angular:application": {
           "strict": true
         }
@@ -31,8 +34,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeicons/primeicons.css",
+              "src/styles.scss",
+              "src/assets/fonts/fonts.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/styles"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -98,7 +109,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeicons/primeicons.css",
+              "src/styles.scss"
             ],
             "scripts": []
           }
