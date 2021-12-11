@@ -1,4 +1,5 @@
 @import "src/assets/styles/colors";
+@import "styles";
 
 $root: '.header';
 
@@ -7,7 +8,7 @@ $root: '.header';
   &__contacts {
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    max-width: $container-width;
     margin: auto;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -67,7 +68,7 @@ $root: '.header';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 80%;
+      max-width: $container-width;
       margin: auto;
       div {
         &:hover {
