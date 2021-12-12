@@ -1,7 +1,12 @@
 <div class="container my-4">
-  <span class="p-input-icon-left w-12">
+  <span class="search p-input-icon-left w-12">
     <i class="pi pi-search"></i>
     <input class="w-12" pInputText placeholder="Поиск по товарам" type="text" />
+    <p-button class="search__button">
+      <ng-template pTemplate="content">
+        <img src="assets/icons/search.png" width="30px" height="30px" />
+      </ng-template>
+    </p-button>
   </span>
   <div class="banner">
     <div class="pr-8">
@@ -12,11 +17,11 @@
         felis nec ultricies vel, massa, est nunc. Purus at a nisl.
       </div>
       <div>
-        <p-button styleClass="mt-4">
+        <p-button styleClass="mt-4" class="banner__button">
           <ng-template pTemplate="content">
             <div>Каталог тюльпанов</div>
-            <div class="ml-2">
-              <img src="assets/images/leaf.png" />
+            <div class="banner__button_leaf ml-2">
+              <img src="assets/icons/leaf.png" width="22px" height="22px" />
             </div>
           </ng-template>
         </p-button>
@@ -28,23 +33,27 @@
           <img class="carousel__img" [src]="photo.src" />
         </ng-template>
       </p-carousel>
+      <div class="carousel__banner">
+        <img src="assets/icons/shield.png" width="22px" />
+        <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
+      </div>
     </div>
   </div>
   <div class="info-banner">
     <div>
-      5800+<br />
+      <span>5800+</span>
       <span>ДОВОЛЬНЫХ КЛИЕНТОВ</span>
     </div>
     <div>
-      20 лет<br />
+      <span>20 лет</span>
       <span>НА РЫНКЕ ЦВЕТОВ</span>
     </div>
     <div>
-      50+<br />
+      <span>50+</span>
       <span>ГОРОДОВ В РОССИИ</span>
     </div>
     <div>
-      1 500.000<br />
+      <span>1 500.000 шт</span>
       <span>ЦВЕТОВ В ГОД</span>
     </div>
   </div>
