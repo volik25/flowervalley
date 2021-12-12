@@ -4,10 +4,46 @@
 .container {
   max-width: $container-width;
   margin: auto;
+  .search {
+    position: relative;
+    input {
+      height: 67px;
+    }
+    &__button {
+      ::ng-deep button {
+        padding: 10px;
+      }
+      position: absolute;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      top: 0;
+      bottom: 0;
+      right: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
   .banner {
     display: flex;
     width: 100%;
     margin-top: 20px;
+    &__button {
+      position: relative;
+      ::ng-deep button {
+        padding-right: 80px;
+        border-radius: 10px;
+        height: 55px;
+      }
+      &_leaf {
+        position: absolute;
+        right: 0;
+        padding: 15px;
+        background-color: $dark-green;
+        border-radius: 10px;
+      }
+    }
     .header {
       font-weight: 500;
       font-size: 60px;
@@ -55,11 +91,16 @@
     justify-content: space-between;
     padding: 10px 20px;
     div {
-      font-weight: 500;
-      font-size: 48px;
-      line-height: 110%;
-      color: $main-green;
-      span {
+      display: flex;
+      flex-direction: column;
+      span:first-child {
+        font-weight: 500;
+        font-size: 48px;
+        line-height: 110%;
+        color: $main-green;
+        margin-bottom: 20px;
+      }
+      span:last-child {
         font-weight: 500;
         font-size: 16px;
         line-height: 110%;
@@ -80,10 +121,14 @@
     opacity: 0.4;
     border-radius: 119.15px;
     height: 3px;
+    width: 32.79px;
   }
   .p-carousel-indicator.p-highlight button {
     opacity: 1;
     background-color: white;
+    border-radius: 119.15px;
+    height: 3px;
+    width: 32.79px;
   }
 }
 :host ::ng-deep .p-carousel-content {
