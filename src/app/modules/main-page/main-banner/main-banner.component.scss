@@ -75,7 +75,7 @@
         font-weight: 500;
         font-size: 16px;
         line-height: 135%;
-        color: $white;
+        color: $white-100;
         background: rgba(255, 255, 255, 0.25);
         backdrop-filter: blur(13px);
         border-radius: 10px;
@@ -141,19 +141,5 @@
   }
   .p-carousel-next {
     right: 0;
-  }
-}
-
-:host ::ng-deep .p-button {
-  background-color: $main-green;
-  border-color: $main-green;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 110%;
-  &:enabled {
-    &:hover, &:active {
-      background-color: $dark-green;
-      border-color: $dark-green;
-    }
   }
 }
