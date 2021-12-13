@@ -1,0 +1,15 @@
+@import "colors";
+
+:host ::ng-deep .p-button {
+  background-color: $main-green;
+  border-color: $main-green;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 110%;
+  &:enabled {
+    &:hover, &:active {
+      background-color: $dark-green;
+      border-color: $dark-green;
+    }
+  }
+}

@@ -1,0 +1,86 @@
+@import "colors";
+@import "styles";
+
+$root: '.footer';
+
+footer {
+  background-color: $footer;
+}
+
+#{$root} {
+  max-width: $container-width;
+  margin: auto;
+  padding-top: 65px;
+  padding-bottom: 65px;
+  display: flex;
+  &__company {
+    color: $white-100;
+    img {
+      width: 165px;
+    }
+    span:first-child {
+      font-weight: 600;
+      font-size: 25.8621px;
+      line-height: 110%;
+    }
+    span:nth-child(2) {
+      font-weight: normal;
+      font-size: 20.1149px;
+      line-height: 24px;
+    }
+    span:last-child {
+      color: $white-50;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 120%;
+    }
+  }
+  &__menu {
+    display: flex;
+    justify-content: space-between;
+    color: $white-100;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 110%;
+    margin-bottom: 60px;
+    div:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+  &__contacts {
+    display: flex;
+    .whats-app-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 140px;
+      height: 44px;
+      background-color: $whats-app-button-footer;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 15.4978px;
+      line-height: 19px;
+      color: $white-100;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .address, .work-time {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 120%;
+      color: $white-70;
+      max-width: 255px;
+    }
+    .phone, .mail {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 120%;
+      color: $white-100;
+    }
+  }
+}
