@@ -4,14 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
+import { FlowerValleySharedModule } from './components/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent],
-  imports: [BrowserModule, AppRoutingModule, RouterModule, ButtonModule, SharedModule],
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, RouterModule, ButtonModule, FlowerValleySharedModule],
   providers: [],
   bootstrap: [AppComponent],
 })

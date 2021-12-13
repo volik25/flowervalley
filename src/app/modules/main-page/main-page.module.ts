@@ -9,6 +9,7 @@ import { SharedModule } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
+import { FlowerValleySharedModule } from '../../components/shared.module';
 
 @NgModule({
   declarations: [MainPageComponent, MainBannerComponent],
@@ -20,6 +21,7 @@ import { CarouselModule } from 'primeng/carousel';
     RippleModule,
     InputTextModule,
     CarouselModule,
+    FlowerValleySharedModule,
   ],
 })
 export class MainPageModule {}

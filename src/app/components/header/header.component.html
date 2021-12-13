@@ -1,7 +1,12 @@
 <header class="header">
   <div class="header__contacts">
     <div class="flex justify-content-center align-items-center">
-      <img src="../../../assets/images/logo.png" alt="flowervalley" />
+      <img
+        [routerLink]="['']"
+        class="cursor-pointer"
+        src="../../../assets/images/logo.png"
+        alt="flowervalley"
+      />
       <div class="flex flex-column justify-content-center pl-2">
         <div class="title">Агрофирма<br />Цветочная Долина</div>
         <div>Тепличное хозяйство</div>
@@ -42,7 +47,7 @@
         </span>
         <div class="pl-2">ПРАЙС-ЛИСТ</div>
       </div>
-      <div class="catalog">
+      <div class="catalog" [routerLink]="['/catalog']">
         <span class="pi pi-shopping-bag"></span>
         <div class="pl-2">Каталог</div>
       </div>
