@@ -6,6 +6,9 @@
   flex-wrap: wrap;
   padding-top: 40px;
   padding-bottom: 20px;
+  ::ng-deep .p-button {
+    padding: 12px;
+  }
 }
 
 .product {
@@ -43,6 +46,7 @@
       max-width: 90px;
       input {
         text-align: center;
+        padding: 0;
       }
     }
     .p-inputgroup-addon {
