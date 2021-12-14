@@ -1,0 +1,51 @@
+@import "container";
+@import "colors";
+
+$root: '.sales';
+
+#{$root} {
+  @include fv-container(50px, 50px);
+  &__header {
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 110%;
+    display: flex;
+    align-items: center;
+    .pi-percentage {
+      color: $main-green;
+    }
+  }
+  &__content {
+    margin-top: 40px;
+    .item {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      &__container {
+        background:$sales-background no-repeat center;
+        background-size: cover;
+        height: 400px;
+        color: $white-100;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 60px;
+        &_content {
+          max-width: 50%;
+          &>div:first-child {
+            font-weight: 600;
+            font-size: 36px;
+            line-height: 110%;
+          }
+          &>div:nth-child(2) {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 140%;
+            margin-top: 15px;
+            margin-bottom: 40px;
+          }
+        }
+      }
+    }
+  }
+}

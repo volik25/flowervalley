@@ -1,0 +1,8 @@
+@import "sizes";
+
+@mixin fv-container($padding-top: 0px, $padding-bottom: 0px) {
+  width: $container-width;
+  margin: auto;
+  padding-top: $padding-top;
+  padding-bottom: $padding-bottom;
+}

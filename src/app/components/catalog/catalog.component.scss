@@ -1,4 +1,4 @@
-@import "styles";
+@import "container";
 @import "colors";
 
 $root: '.catalog';
@@ -8,8 +8,7 @@ $root: '.catalog';
 }
 
 #{$root} {
-  max-width: $container-width;
-  margin: auto;
+  @include fv-container();
   padding-top: 50px;
   padding-bottom: 50px;
   &__header {
