@@ -1,19 +1,7 @@
-<div class="container">
-  <div class="catalog">
-    <div class="catalog__header">
-      <div class="title">
-        <span class="pi pi-shopping-bag" style="font-size: 25px"></span>
-        <div class="pl-3">Каталог</div>
-      </div>
-    </div>
-    <div class="catalog__content">
-      <div class="card" *ngFor="let item of catalog">
-        <div [ngStyle]="{ 'background-image': 'url(' + item.img + ')' }"></div>
-        <div class="flex justify-content-between align-items-center">
-          <div>{{ item.title }}</div>
-          <p-button icon="pi pi-arrow-right" [routerLink]="['/catalog', item.route]"></p-button>
-        </div>
-      </div>
-    </div>
+<div class="card" *ngFor="let item of catalog">
+  <div [ngStyle]="{ 'background-image': 'url(' + item.img + ')' }"></div>
+  <div class="flex justify-content-between align-items-center">
+    <div>{{ item.title }}</div>
+    <p-button icon="pi pi-arrow-right" [routerLink]="['/catalog', item.route]"></p-button>
   </div>
 </div>

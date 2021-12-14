@@ -1,0 +1,21 @@
+@import "colors";
+
+$root: '.leaf';
+
+#{$root} {
+  &__button {
+    position: relative;
+    ::ng-deep button {
+      padding-right: 80px;
+      border-radius: 10px;
+      height: 55px;
+    }
+    &_icon{
+      position: absolute;
+      right: 0;
+      padding: 15px;
+      background-color: $dark-green;
+      border-radius: 10px;
+    }
+  }
+}

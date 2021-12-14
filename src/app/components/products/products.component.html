@@ -1,0 +1,17 @@
+<div class="product" *ngFor="let product of products">
+  <div [ngStyle]="{ 'background-image': 'url(' + product.img + ')' }"></div>
+  <div>{{ product.title }}</div>
+  <div class="product__interactive">
+    <div class="product__interactive_price">{{ product.price }}₽</div>
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount(product.id)"></span>
+      <input type="text" pInputText [(ngModel)]="product.count" />
+      <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount(product.id)"></span>
+    </div>
+    <p-button (onClick)="addToCart(product)">
+      <ng-template pTemplate="content">
+        <img src="assets/icons/cart.png" width="25px" />
+      </ng-template>
+    </p-button>
+  </div>
+</div>

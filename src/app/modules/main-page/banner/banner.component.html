@@ -16,16 +16,10 @@
         Aliquet ut sit vestibulum auctor id. Maecenas vel mollis et viverra aenean cursus. Consequat
         felis nec ultricies vel, massa, est nunc. Purus at a nisl.
       </div>
-      <div>
-        <p-button styleClass="mt-4" class="banner__button">
-          <ng-template pTemplate="content">
-            <div>Каталог тюльпанов</div>
-            <div class="banner__button_leaf ml-2">
-              <img src="assets/icons/leaf.png" width="22px" height="22px" />
-            </div>
-          </ng-template>
-        </p-button>
-      </div>
+      <flower-valley-leaf-button
+        title="Каталог тюльпанов"
+        styleClass="mt-4"
+      ></flower-valley-leaf-button>
     </div>
     <div class="carousel">
       <p-carousel [value]="photos" [circular]="true">

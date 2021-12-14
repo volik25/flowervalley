@@ -12,6 +12,16 @@
       border-color: $dark-green;
     }
   }
+  &.p-button-outlined {
+    background-color: $whats-app-button;
+    color: $main-green;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $dark-green;
+        color: $white-100;
+      }
+    }
+  }
 }
 
 :host ::ng-deep .p-carousel-indicators {

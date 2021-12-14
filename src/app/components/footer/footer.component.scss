@@ -8,9 +8,7 @@ footer {
 }
 
 #{$root} {
-  @include fv-container();
-  padding-top: 65px;
-  padding-bottom: 65px;
+  @include fv-container(65px, 65px);
   display: flex;
   &__company {
     color: $white-100;

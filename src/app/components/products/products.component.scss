@@ -1,0 +1,60 @@
+@import "colors";
+
+:host {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  ::ng-deep .p-button {
+    padding: 12px;
+  }
+}
+
+.product {
+  background-color: $white-100;
+  border-radius: 10px;
+  width: 280px;
+  margin-bottom: 20px;
+  &>div:first-child {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 280px;
+    height: 230px;
+    border-radius: 10px;
+  }
+  &>div:nth-child(2) {
+    padding: 20px 20px 30px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 110%;
+  }
+  &__interactive {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    &_price {
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 110%;
+      color: $main-green;
+    }
+    .p-inputgroup {
+      min-width: 90px;
+      max-width: 90px;
+      input {
+        text-align: center;
+        padding: 0;
+      }
+    }
+    .p-inputgroup-addon {
+      padding-left: 5px;
+      padding-right: 5px;
+      min-width: 20px;
+      background-color: $white-100;
+      cursor: pointer;
+    }
+  }
+}

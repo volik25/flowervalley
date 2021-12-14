@@ -1,3 +1,18 @@
 <flower-valley-banner></flower-valley-banner>
-<flower-valley-catalog></flower-valley-catalog>
+<flower-valley-container
+  [background]="backgroundEnum.DARK"
+  headerTitle="Каталог"
+  headerIcon="pi-shopping-bag"
+>
+  <flower-valley-catalog></flower-valley-catalog>
+</flower-valley-container>
 <flower-valley-sales></flower-valley-sales>
+<flower-valley-container
+  [background]="backgroundEnum.DARK"
+  headerTitle="Популярные товары"
+  headerIconImage="assets/icons/fire.png"
+  [headerButton]="button"
+  [footerButton]="footerButton"
+>
+  <flower-valley-products></flower-valley-products>
+</flower-valley-container>
