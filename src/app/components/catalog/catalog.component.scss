@@ -1,54 +1,30 @@
-@import "container";
 @import "colors";
 
-$root: '.catalog';
-
-.container {
-  background: $light-grey;
+:host {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 40px;
+  padding-bottom: 20px;
 }
 
-#{$root} {
-  @include fv-container();
-  padding-top: 50px;
-  padding-bottom: 50px;
-  &__header {
-    .title {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-      font-size: 48px;
-      line-height: 110%;
-      color: $text;
-      span {
-        color: $main-green;
-      }
-    }
+.card {
+  background-color: $white-100;
+  border-radius: 10px;
+  width: 280px;
+  margin-bottom: 20px;
+  &>div:first-child {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 280px;
+    height: 230px;
+    border-radius: 10px;
   }
-  &__content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding-top: 40px;
-    padding-bottom: 20px;
-    .card {
-      background-color: $white-100;
-      border-radius: 10px;
-      width: 280px;
-      margin-bottom: 20px;
-      &>div:first-child {
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        width: 280px;
-        height: 230px;
-        border-radius: 10px;
-      }
-      &>div:last-child {
-        padding: 20px 20px 30px;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 110%;
-      }
-    }
+  &>div:last-child {
+    padding: 20px 20px 30px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 110%;
   }
 }
