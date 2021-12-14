@@ -7,8 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint",
-    "lint:fix": "ng lint --fix"
+    "lint": "npm run lint:es && npm run lint:pre",
+    "lint:fix": "npm run lint:es:fix && npm run lint:pre:fix",
+    "lint:es": "eslint \"./src/**/*.ts\"",
+    "lint:es:fix": "npm run lint:es -- --fix",
+    "lint:pre": "prettier --check \"./src/**/*.html\"",
+    "lint:pre:fix": "npm run lint:pre -- --write"
   },
   "lint-staged": {
     "*.{ts,js}": [

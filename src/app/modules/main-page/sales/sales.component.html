@@ -1,0 +1,21 @@
+<div class="sales">
+  <div class="sales__header">
+    <span class="pi pi-percentage" style="font-size: 25px"></span>
+    <div class="pl-3">Акции и скидки</div>
+  </div>
+  <div class="sales__content">
+    <p-carousel [value]="sales" [circular]="true">
+      <ng-template let-sale pTemplate="item">
+        <div [ngStyle]="{ 'background-image': 'url(' + sale.img + ')' }" class="item">
+          <div class="item__container">
+            <div class="item__container_content">
+              <div>{{ sale.title }}</div>
+              <div>{{ sale.description }}</div>
+              <p-button label="Подробнее"></p-button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+</div>

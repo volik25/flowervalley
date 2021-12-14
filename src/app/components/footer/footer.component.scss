@@ -1,5 +1,5 @@
 @import "colors";
-@import "styles";
+@import "container";
 
 $root: '.footer';
 
@@ -8,8 +8,7 @@ footer {
 }
 
 #{$root} {
-  max-width: $container-width;
-  margin: auto;
+  @include fv-container();
   padding-top: 65px;
   padding-bottom: 65px;
   display: flex;

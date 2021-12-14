@@ -3,16 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { MainPageRoutingModule } from './main-page-routing.module';
 import { MainPageComponent } from './main-page.component';
-import { MainBannerComponent } from './main-banner/main-banner.component';
+import { BannerComponent } from './banner/banner.component';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
 import { FlowerValleySharedModule } from '../../components/shared.module';
+import { SalesComponent } from './sales/sales.component';
 
 @NgModule({
-  declarations: [MainPageComponent, MainBannerComponent],
+  declarations: [MainPageComponent, BannerComponent, SalesComponent],
   imports: [
     CommonModule,
     MainPageRoutingModule,

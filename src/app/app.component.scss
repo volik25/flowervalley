@@ -13,3 +13,37 @@
     }
   }
 }
+
+:host ::ng-deep .p-carousel-indicators {
+  position: absolute;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  .p-carousel-indicator button {
+    opacity: 0.4;
+    border-radius: 119.15px;
+    height: 3px;
+    width: 32.79px;
+  }
+  .p-carousel-indicator.p-highlight button {
+    opacity: 1;
+    background-color: white;
+    border-radius: 119.15px;
+    height: 3px;
+    width: 32.79px;
+  }
+}
+:host ::ng-deep .p-carousel-content {
+  position: relative;
+  border-radius: 15px;
+  .p-carousel-prev, .p-carousel-next {
+    color: white;
+    position: absolute;
+    z-index: 10;
+  }
+  .p-carousel-next {
+    right: 0;
+  }
+}

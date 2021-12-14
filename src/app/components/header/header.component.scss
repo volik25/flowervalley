@@ -1,5 +1,5 @@
-@import "src/assets/styles/colors";
-@import "styles";
+@import "colors";
+@import "container";
 
 $root: '.header';
 
@@ -8,8 +8,7 @@ $root: '.header';
   &__contacts {
     display: flex;
     justify-content: space-between;
-    max-width: $container-width;
-    margin: auto;
+    @include fv-container();
     padding-top: 20px;
     padding-bottom: 20px;
 
