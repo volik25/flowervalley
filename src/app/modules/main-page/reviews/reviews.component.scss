@@ -1,0 +1,31 @@
+@import "colors";
+
+$root: '.carousel';
+
+#{$root} {
+  &__page {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px;
+    &_img {
+      width: 200px;
+      height: auto;
+    }
+  }
+}
+
+:host ::ng-deep .p-carousel-indicators {
+  .p-carousel-indicator.p-highlight button {
+    background-color: $text;
+  }
+  .p-carousel-indicator button {
+    background-color: $text;
+    opacity: 0.32;
+  }
+}
+
+:host ::ng-deep .p-carousel-content {
+  .p-carousel-prev, .p-carousel-next {
+    color: $text;
+  }
+}

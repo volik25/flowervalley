@@ -8,9 +8,9 @@
     <div class="container__content_header">
       <div class="title">
         <div>
-          <span *ngIf="headerIcon" class="pi {{ headerIcon }}" style="font-size: 25px"></span>
-          <img *ngIf="headerIconImage" [src]="headerIconImage" width="22px" />
-          <div class="pl-3">{{ headerTitle }}</div>
+          <span *ngIf="headerIcon" class="pi {{ headerIcon }} mr-3" style="font-size: 25px"></span>
+          <img *ngIf="headerIconImage" [src]="headerIconImage" width="22px" class="mr-3" />
+          <div>{{ headerTitle }}</div>
         </div>
         <flower-valley-leaf-button
           *ngIf="headerButton"
