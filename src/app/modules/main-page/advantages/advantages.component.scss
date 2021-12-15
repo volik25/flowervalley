@@ -1,0 +1,61 @@
+@import "container";
+@import "colors";
+
+$root: '.advantages';
+
+#{$root} {
+  @include fv-container(80px, 80px);
+  &__card {
+    background: $green-gradient;
+    padding: 40px;
+    border-radius: 15px;
+    &_title {
+      font-weight: 600;
+      font-size: 48px;
+      line-height: 130%;
+      color: $white-100;
+    }
+    &_name {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 130%;
+      text-transform: uppercase;
+      color: $white-100;
+      padding-top: 15px;
+      padding-bottom: 40px;
+    }
+    &_content {
+      display: flex;
+      &>div {
+        display: flex;
+        flex-direction: column;
+        color: $white-100;
+        &>div:first-child {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: $white-10;
+          border-radius: 10px;
+          width: 65px;
+          height: 65px;
+        }
+        &>div:nth-child(2) {
+          font-weight: 500;
+          font-size: 22px;
+          line-height: 135%;
+          padding-top: 15px;
+          padding-bottom: 15px;
+        }
+        &>div:last-child {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 140%;
+        }
+      }
+      &>div:nth-child(2) {
+        margin-left: 45px;
+        margin-right: 45px;
+      }
+    }
+  }
+}
