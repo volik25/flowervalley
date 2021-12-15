@@ -11,9 +11,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
 import { FlowerValleySharedModule } from '../../components/shared.module';
 import { SalesComponent } from './sales/sales.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
-  declarations: [MainPageComponent, BannerComponent, SalesComponent],
+  declarations: [MainPageComponent, BannerComponent, SalesComponent, AboutComponent],
   imports: [
     CommonModule,
     MainPageRoutingModule,
