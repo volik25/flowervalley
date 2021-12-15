@@ -12,9 +12,16 @@ import { CarouselModule } from 'primeng/carousel';
 import { FlowerValleySharedModule } from '../../components/shared.module';
 import { SalesComponent } from './sales/sales.component';
 import { AboutComponent } from './about/about.component';
+import { AdvantagesComponent } from './advantages/advantages.component';
 
 @NgModule({
-  declarations: [MainPageComponent, BannerComponent, SalesComponent, AboutComponent],
+  declarations: [
+    MainPageComponent,
+    BannerComponent,
+    SalesComponent,
+    AboutComponent,
+    AdvantagesComponent,
+  ],
   imports: [
     CommonModule,
     MainPageRoutingModule,
