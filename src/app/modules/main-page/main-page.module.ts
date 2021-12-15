@@ -15,6 +15,7 @@ import { AboutComponent } from './about/about.component';
 import { AdvantagesComponent } from './advantages/advantages.component';
 import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../pipes/pipes.module';
+import { ReviewsComponent } from './reviews/reviews.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { PipesModule } from '../../pipes/pipes.module';
     AboutComponent,
     AdvantagesComponent,
     VideoComponent,
+    ReviewsComponent,
   ],
   imports: [
     CommonModule,
