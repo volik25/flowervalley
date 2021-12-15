@@ -4,7 +4,12 @@
   headerTitle="Каталог"
   headerIcon="pi-shopping-bag"
 >
-  <flower-valley-catalog></flower-valley-catalog>
+  <div class="flex-container">
+    <flower-valley-catalog-item
+      *ngFor="let item of catalog"
+      [item]="item"
+    ></flower-valley-catalog-item>
+  </div>
 </flower-valley-container>
 <flower-valley-sales></flower-valley-sales>
 <flower-valley-container
@@ -14,7 +19,12 @@
   [headerButton]="button"
   [footerButton]="footerButton"
 >
-  <flower-valley-products></flower-valley-products>
+  <div class="flex-container">
+    <flower-valley-product-item
+      *ngFor="let product of products"
+      [product]="product"
+    ></flower-valley-product-item>
+  </div>
 </flower-valley-container>
 <flower-valley-about></flower-valley-about>
 <flower-valley-advantages></flower-valley-advantages>
