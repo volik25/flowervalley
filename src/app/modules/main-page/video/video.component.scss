@@ -1,0 +1,33 @@
+@import "colors";
+
+$root: '.video';
+
+#{$root} {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  &__container {
+    iframe {
+      border: none;
+      border-radius: 10px;
+    }
+    div {
+      max-width: 340px;
+    }
+    &>div:nth-child(2) {
+      padding-top: 25px;
+      padding-bottom: 15px;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 135%;
+      color: $text;
+    }
+    &>div:last-child {
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 135%;
+      color: $text-grey;
+    }
+  }
+}
