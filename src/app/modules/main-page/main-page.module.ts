@@ -13,6 +13,8 @@ import { FlowerValleySharedModule } from '../../components/shared.module';
 import { SalesComponent } from './sales/sales.component';
 import { AboutComponent } from './about/about.component';
 import { AdvantagesComponent } from './advantages/advantages.component';
+import { VideoComponent } from './video/video.component';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { AdvantagesComponent } from './advantages/advantages.component';
     SalesComponent,
     AboutComponent,
     AdvantagesComponent,
+    VideoComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +34,7 @@ import { AdvantagesComponent } from './advantages/advantages.component';
     InputTextModule,
     CarouselModule,
     FlowerValleySharedModule,
+    PipesModule,
   ],
 })
 export class MainPageModule {}
