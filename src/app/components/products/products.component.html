@@ -1,6 +1,8 @@
 <div class="product" *ngFor="let product of products">
-  <div [ngStyle]="{ 'background-image': 'url(' + product.img + ')' }"></div>
-  <div>{{ product.title }}</div>
+  <div class="product__header">
+    <img class="product__header_image" [src]="product.img" />
+    <div class="product__header_title">{{ product.title }}</div>
+  </div>
   <div class="product__interactive">
     <div class="product__interactive_price">{{ product.price }}₽</div>
     <div class="p-inputgroup">
