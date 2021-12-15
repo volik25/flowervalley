@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { CatalogComponent } from './catalog/catalog.component';
+import { CatalogItemComponent } from './catalog-item/catalog-item.component';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { RouterModule } from '@angular/router';
-import { ProductsComponent } from './products/products.component';
+import { ProductItemComponent } from './product-item/product-item.component';
 import { ContainerComponent } from './container/container.component';
 import { LeafButtonComponent } from './leaf-button/leaf-button.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,8 +16,8 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     HeaderComponent,
     FooterComponent,
-    CatalogComponent,
-    ProductsComponent,
+    CatalogItemComponent,
+    ProductItemComponent,
     ContainerComponent,
     LeafButtonComponent,
   ],
@@ -25,9 +25,9 @@ import { FormsModule } from '@angular/forms';
   exports: [
     HeaderComponent,
     FooterComponent,
-    CatalogComponent,
+    CatalogItemComponent,
     ContainerComponent,
-    ProductsComponent,
+    ProductItemComponent,
     LeafButtonComponent,
   ],
 })

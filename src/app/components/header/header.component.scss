@@ -5,11 +5,14 @@ $root: '.header';
 
 
 #{$root} {
+  position: sticky;
+  top:-100px;
+  z-index: 1000;
   &__contacts {
     display: flex;
     justify-content: space-between;
     @include fv-container(20px, 20px);
-
+    height: 100px;
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
@@ -63,8 +66,6 @@ $root: '.header';
   &__menu-bar {
     background-color: $main-green;
     color: $white-100;
-    padding-top: 20px;
-    padding-bottom: 20px;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -74,8 +75,7 @@ $root: '.header';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: $container-width;
-      margin: auto;
+      @include fv-container(20px, 20px);
       div {
         &:hover {
           cursor: pointer;
