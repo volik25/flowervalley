@@ -1,0 +1,62 @@
+@import "container";
+@import "colors";
+
+$root: '.category';
+
+@mixin active {
+  background: $main-green;
+  color: $white-100;
+  border-color: $main-green;
+}
+
+.container {
+  background-color: $light-grey;
+}
+
+#{$root} {
+  @include fv-container(30px);
+  &__header {
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 100%;
+  }
+  &__content {
+    padding-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    &_menu {
+      padding-right: 40px;
+      min-width: 250px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 17px;
+      .item {
+        border: 1px solid $border;
+        padding: 15px 20px;
+        background: $white-100;
+        &.active {
+          @include active
+        }
+        &:hover {
+          cursor: pointer;
+          @include active
+        }
+      }
+    }
+    &_items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+}
+
+.border-radius-bottom {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.border-radius-top {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}

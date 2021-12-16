@@ -1,68 +1,20 @@
 import { Component } from '@angular/core';
-import { BackgroundType } from '../../components/container/background.enum';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'flower-valley-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss'],
+  selector: 'flower-valley-category',
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.scss'],
 })
-export class MainPageComponent {
-  public get backgroundEnum() {
-    return BackgroundType;
+export class CategoryComponent {
+  public category: any | undefined;
+
+  constructor(private route: ActivatedRoute, private router: Router) {
+    route.params.subscribe((params) => {
+      const categoryRoute = params['category'];
+      this.category = this.catalog.find((item) => item.route === categoryRoute);
+    });
   }
-
-  public button = {
-    title: 'Перейти в каталог',
-    routerLink: ['/catalog'],
-  };
-
-  public footerButton = {
-    ...this.button,
-    icon: 'pi-arrow-right',
-  };
-
-  public catalog = [
-    {
-      title: 'Тюльпаны на 8 марта',
-      img: 'assets/images/mocks/catalog/1.png',
-      route: 'tulips',
-    },
-    {
-      title: 'Рассада однолетних цветов',
-      img: 'assets/images/mocks/catalog/2.png',
-      route: 'one-year-flowers',
-    },
-    {
-      title: 'Мнолетние растения',
-      img: 'assets/images/mocks/catalog/3.png',
-      route: 'long-life-flowers',
-    },
-    {
-      title: 'Ампельные цветы в кашпо',
-      img: 'assets/images/mocks/catalog/4.png',
-      route: 'ampels-flowers',
-    },
-    {
-      title: 'Ампельная рассада (укорененные черенки)',
-      img: 'assets/images/mocks/catalog/5.png',
-      route: 'short-ampels-flowers',
-    },
-    {
-      title: 'Рассада овощей',
-      img: 'assets/images/mocks/catalog/6.png',
-      route: 'vegetables',
-    },
-    {
-      title: 'Рассада клубники и земляники',
-      img: 'assets/images/mocks/catalog/7.png',
-      route: 'strawberries',
-    },
-    {
-      title: 'Грунт питательный для цветов',
-      img: 'assets/images/mocks/catalog/8.png',
-      route: 'priming',
-    },
-  ];
 
   public products = [
     {
@@ -150,4 +102,47 @@ export class MainPageComponent {
       count: 54,
     },
   ];
+
+  public catalog = [
+    {
+      title: 'Тюльпаны на 8 марта',
+      route: 'tulips',
+    },
+    {
+      title: 'Рассада однолетних цветов',
+      route: 'one-year-flowers',
+    },
+    {
+      title: 'Мнолетние растения',
+      route: 'long-life-flowers',
+    },
+    {
+      title: 'Ампельные цветы в кашпо',
+      route: 'ampels-flowers',
+    },
+    {
+      title: 'Ампельная рассада (укорененные черенки)',
+      route: 'short-ampels-flowers',
+    },
+    {
+      title: 'Рассада овощей',
+      route: 'vegetables',
+    },
+    {
+      title: 'Рассада клубники и земляники',
+      route: 'strawberries',
+    },
+    {
+      title: 'Грунт питательный для цветов',
+      route: 'priming',
+    },
+  ];
+
+  public navigateTo(id: number): void {
+    this.router.navigate([id], { relativeTo: this.route });
+  }
+
+  public isActive(title: string): boolean {
+    return this.category.title === title;
+  }
 }

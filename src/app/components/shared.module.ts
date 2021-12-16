@@ -11,6 +11,7 @@ import { ContainerComponent } from './container/container.component';
 import { LeafButtonComponent } from './leaf-button/leaf-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { FormsModule } from '@angular/forms';
     ProductItemComponent,
     ContainerComponent,
     LeafButtonComponent,
+    BreadcrumbComponent,
   ],
   imports: [CommonModule, ButtonModule, SharedModule, RouterModule, InputTextModule, FormsModule],
   exports: [
@@ -29,6 +31,7 @@ import { FormsModule } from '@angular/forms';
     ContainerComponent,
     ProductItemComponent,
     LeafButtonComponent,
+    BreadcrumbComponent,
   ],
 })
 export class FlowerValleySharedModule {}

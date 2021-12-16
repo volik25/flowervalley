@@ -1,0 +1,25 @@
+@import "container";
+
+$root: '.product';
+
+#{$root} {
+  @include fv-container(30px);
+  &__header {
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 100%;
+    padding-bottom: 40px;
+  }
+  &__desc {
+    display: flex;
+    justify-content: space-between;
+    &_photo {
+      max-width: 550px;
+      &::ng-deep {
+        .p-galleria-thumbnail-container {
+          background: none;
+        }
+      }
+    }
+  }
+}

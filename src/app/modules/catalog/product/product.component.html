@@ -1,0 +1,35 @@
+<div class="product">
+  <div class="product__header">
+    {{ product.name }}
+  </div>
+  <div class="product__desc">
+    <div class="product__desc_photo">
+      <p-galleria
+        [value]="product.photos"
+        [numVisible]="4"
+        [circular]="true"
+        [showThumbnailNavigators]="false"
+      >
+        <ng-template pTemplate="item" let-photo>
+          <p-image
+            [imageStyle]="{ width: '100%', 'border-radius': '15px' }"
+            [src]="photo"
+            [preview]="true"
+          ></p-image>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-photo>
+          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo" width="100px"></p-image>
+        </ng-template>
+      </p-galleria>
+    </div>
+    <div class="product__desc_info">
+      <div class="product__desc_info-tare">{{ product.tare }}</div>
+      <div class="product__desc_info-description">{{ product.description }}</div>
+      <div class="product__desc_info-categories"></div>
+      <div class="product__desc_info-share"></div>
+      <div class="product__desc_info-cart"></div>
+    </div>
+  </div>
+  <div class="product__delivery"></div>
+  <div class="product__others"></div>
+</div>

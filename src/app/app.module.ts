@@ -6,10 +6,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FlowerValleySharedModule } from './components/shared.module';
+import { LoaderComponent } from './_loader/loader.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, RouterModule, ButtonModule, FlowerValleySharedModule],
+  declarations: [AppComponent, LoaderComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    RouterModule,
+    ButtonModule,
+    FlowerValleySharedModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

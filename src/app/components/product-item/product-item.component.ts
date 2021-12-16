@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -16,6 +16,8 @@ export class ProductItemComponent {
   }
   private _product: any;
 
+  @Output()
+  public openProductCard: EventEmitter<any> = new EventEmitter<any>();
   constructor(private cartService: CartService) {}
 
   public increaseCount() {

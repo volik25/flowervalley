@@ -7,7 +7,7 @@ $root: '.header';
 #{$root} {
   position: sticky;
   top:-100px;
-  z-index: 1000;
+  z-index: 100;
   &__contacts {
     display: flex;
     justify-content: space-between;
