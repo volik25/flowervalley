@@ -1,5 +1,4 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { BackgroundType } from './background.enum';
 
 @Component({
   selector: 'flower-valley-container',
@@ -15,12 +14,9 @@ export class ContainerComponent {
   @Input()
   public headerIconImage: string | undefined;
   @Input()
-  public background: BackgroundType = BackgroundType.LIGHT;
+  public background: 'light' | 'dark' = 'light';
   @Input()
   public headerButton: Record<string, any> | undefined;
   @Input()
   public footerButton: Record<string, any> | undefined;
-  public get backgroundEnum() {
-    return BackgroundType;
-  }
 }

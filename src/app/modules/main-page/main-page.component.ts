@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BackgroundType } from '../../components/container/background.enum';
 
 @Component({
   selector: 'flower-valley-main-page',
@@ -7,10 +6,6 @@ import { BackgroundType } from '../../components/container/background.enum';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-  public get backgroundEnum() {
-    return BackgroundType;
-  }
-
   public button = {
     title: 'Перейти в каталог',
     routerLink: ['/catalog'],

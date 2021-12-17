@@ -1,4 +1,6 @@
 <flower-valley-header></flower-valley-header>
-<flower-valley-breadcrumb *ngIf="isShowBreadcrumb"></flower-valley-breadcrumb>
+<div class="container" *ngIf="isShowBreadcrumb">
+  <flower-valley-breadcrumb></flower-valley-breadcrumb>
+</div>
 <router-outlet></router-outlet>
 <flower-valley-footer></flower-valley-footer>

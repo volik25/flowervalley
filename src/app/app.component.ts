@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-root',

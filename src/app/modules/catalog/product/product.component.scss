@@ -1,4 +1,5 @@
 @import "container";
+@import "colors";
 
 $root: '.product';
 
@@ -14,10 +15,153 @@ $root: '.product';
     display: flex;
     justify-content: space-between;
     &_photo {
-      max-width: 550px;
+      min-width: 50%;
       &::ng-deep {
         .p-galleria-thumbnail-container {
           background: none;
+        }
+      }
+    }
+    &_info {
+      margin-left: 40px;
+      &-tare {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 22px;
+        text-transform: uppercase;
+        color: $text-grey;
+      }
+      &-description {
+        margin-top: 40px;
+        margin-bottom: 60px;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 150%;
+        color: $text-grey;
+      }
+      &-categories {
+        display: flex;
+        align-items: start;
+        font-size: 14px;
+        line-height: 140%;
+        margin-bottom: 20px;
+        .title {
+          padding-right: 5px;
+          font-weight: 600;
+        }
+        .cat-array {
+          font-weight: 400;
+          color: $text-grey;
+          &>span {
+            padding-right: 5px;
+            span:first-child {
+              text-decoration: underline;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      &-share {
+        display: flex;
+        align-items: start;
+        font-size: 14px;
+        line-height: 140%;
+        margin-bottom: 20px;
+        .title {
+          padding-right: 5px;
+          font-weight: 600;
+        }
+        .share-array {
+          display: flex;
+          align-items: center;
+        }
+      }
+      &-cart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .price {
+          font-weight: 500;
+          font-size: 36px;
+          line-height: 45px;
+          color: $main-green;
+        }
+        .right-block {
+          display: flex;
+          align-items: center;
+          .count {
+            margin-right: 20px;
+            .p-inputgroup {
+              input {
+                width: 50px;
+                text-align: center;
+                padding: 0;
+                border: 1px solid $border-count;
+                &:focus-visible {
+                  outline: 3px auto $border-count;
+                }
+              }
+            }
+            .p-inputgroup-addon {
+              padding-left: 5px;
+              padding-right: 5px;
+              min-width: 20px;
+              background-color: $white-100;
+              cursor: pointer;
+            }
+          }
+          .button {
+            ::ng-deep .p-button {
+              span {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 110%;
+                text-transform: uppercase;
+                padding-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &__delivery {
+    padding-top: 90px;
+    padding-bottom: 70px;
+    &_card {
+      background: $green-gradient;
+      padding: 40px;
+      border-radius: 15px;
+      &-title {
+        font-weight: 500;
+        font-size: 60px;
+        line-height: 100%;
+        color: $white-100;
+        padding-bottom: 40px;
+      }
+      &-content {
+        display: flex;
+        justify-content: space-between;
+        &>div {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          color: $white-100;
+          &>div:first-child {
+            background: $white-10;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+          }
+          &>div:last-child {
+            padding-top: 15px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 140%;
+          }
         }
       }
     }

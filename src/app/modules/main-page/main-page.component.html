@@ -1,9 +1,5 @@
 <flower-valley-banner></flower-valley-banner>
-<flower-valley-container
-  [background]="backgroundEnum.DARK"
-  headerTitle="Каталог"
-  headerIcon="pi-shopping-bag"
->
+<flower-valley-container background="dark" headerTitle="Каталог" headerIcon="pi-shopping-bag">
   <div class="flex-container">
     <flower-valley-catalog-item
       *ngFor="let item of catalog"
@@ -13,7 +9,7 @@
 </flower-valley-container>
 <flower-valley-sales></flower-valley-sales>
 <flower-valley-container
-  [background]="backgroundEnum.DARK"
+  background="dark"
   headerTitle="Популярные товары"
   headerIconImage="assets/icons/fire.png"
   [headerButton]="button"
@@ -32,7 +28,7 @@
   <flower-valley-video></flower-valley-video>
 </flower-valley-container>
 <flower-valley-container
-  [background]="backgroundEnum.DARK"
+  background="dark"
   headerTitle="Отзывы"
   headerIconImage="assets/icons/file.png"
 >

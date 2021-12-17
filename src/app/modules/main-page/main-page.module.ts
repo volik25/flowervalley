@@ -9,7 +9,7 @@ import { SharedModule } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { CarouselModule } from 'primeng/carousel';
-import { FlowerValleySharedModule } from '../../components/shared.module';
+import { FlowerValleySharedModule } from '../../shared/shared.module';
 import { SalesComponent } from './sales/sales.component';
 import { AboutComponent } from './about/about.component';
 import { AdvantagesComponent } from './advantages/advantages.component';
