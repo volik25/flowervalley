@@ -12,6 +12,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ImageModule } from 'primeng/image';
 import { DialogModule } from 'primeng/dialog';
+import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
 
 @NgModule({
   declarations: [AppComponent, LoaderComponent, HeaderComponent, FooterComponent],
@@ -25,7 +26,7 @@ import { DialogModule } from 'primeng/dialog';
     ImageModule,
     DialogModule,
   ],
-  providers: [],
+  providers: [BreadcrumbService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

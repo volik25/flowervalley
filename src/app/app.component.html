@@ -1,6 +1,14 @@
 <flower-valley-header></flower-valley-header>
-<div class="container" *ngIf="isShowBreadcrumb">
-  <flower-valley-breadcrumb></flower-valley-breadcrumb>
+<div
+  [ngClass]="{
+    'background-dark': background === 'dark',
+    'background-light': background === 'light'
+  }"
+  *ngIf="isShowBreadcrumb"
+>
+  <div class="container">
+    <flower-valley-breadcrumb></flower-valley-breadcrumb>
+  </div>
 </div>
 <router-outlet></router-outlet>
 <flower-valley-footer></flower-valley-footer>

@@ -16,6 +16,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/private-policy/private-policy.module').then((m) => m.PrivatePolicyModule),
   },
+  {
+    path: 'contacts',
+    loadChildren: () => import('./modules/contacts/contacts.module').then((m) => m.ContactsModule),
+  },
 ];
 
 @NgModule({

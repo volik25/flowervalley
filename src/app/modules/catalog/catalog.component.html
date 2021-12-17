@@ -1,10 +1,9 @@
-<div class="catalog">
-  <div class="catalog__header">Каталог</div>
+<flower-valley-container background="dark" headerTitle="Каталог">
   <div class="catalog__categories">
     <flower-valley-catalog-item
       *ngFor="let item of catalog"
       [item]="item"
     ></flower-valley-catalog-item>
   </div>
-</div>
+</flower-valley-container>
 <router-outlet></router-outlet>

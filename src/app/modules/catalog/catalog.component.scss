@@ -4,17 +4,7 @@
 $root: '.catalog';
 
 #{$root} {
-  background-color: $light-grey;
-  &__header {
-    @include fv-container();
-    font-weight: 500;
-    font-size: 60px;
-    line-height: 100%;
-    padding-top: 40px;
-    padding-bottom: 40px;
-  }
   &__categories {
-    @include fv-container();
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
