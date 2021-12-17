@@ -1,14 +1,43 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, map, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BreadcrumbService {
   private url: string = '/';
+  private _startUrl: string = '';
+  private setUrlDuplicate: boolean = false;
+  public backgroundChanges: Subject<'light' | 'dark'> = new Subject<'light' | 'dark'>();
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  private _background: 'light' | 'dark' = 'light';
+
+  public set background(value: 'light' | 'dark') {
+    if (!this.setUrlDuplicate) {
+      this._background = value;
+      this.backgroundChanges.next(value);
+    }
+  }
+
+  public get background(): 'light' | 'dark' {
+    return this._background;
+  }
+
+  public get startUrl(): string {
+    return this._startUrl;
+  }
+
+  public set startUrl(value: string) {
+    if (value !== this._startUrl) {
+      this.setUrlDuplicate = false;
+      this._startUrl = value;
+    } else {
+      this.setUrlDuplicate = true;
+    }
+  }
+
+  constructor(private router: Router) {
     router.events
       .pipe(
         filter((e) => e instanceof NavigationEnd),

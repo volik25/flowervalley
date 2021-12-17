@@ -1,0 +1,78 @@
+<flower-valley-container background="dark" headerTitle="Контакты">
+  <div class="contacts">
+    <div class="contacts__info">
+      <div class="contacts__info_address">
+        <div class="contacts__info_address-title">
+          <p-image
+            styleClass="flex align-items-center mr-2"
+            src="assets/icons/map-grey.svg"
+            width="15px"
+          ></p-image>
+          <span>Адрес</span>
+        </div>
+        <div class="contacts__info_address-content">
+          140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
+        </div>
+      </div>
+      <div class="contacts__info_phones">
+        <div class="contacts__info_phones-title">
+          <p-image
+            styleClass="flex align-items-center mr-2"
+            src="assets/icons/phone.svg"
+            width="15px"
+          ></p-image>
+          <span>Номер</span>
+        </div>
+        <div class="contacts__info_phones-content">
+          <div>
+            <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
+            <a href="tel:+7(926)165-11-51">+7(926)165-11-51</a>
+          </div>
+          <div>
+            <a type="tel" href="tel:+7(903)101-34-01">+7(903)101-34-01</a>
+            <div class="whats-app-button p-2">
+              <span class="pi pi-whatsapp"></span>
+              <div class="pl-1">What'sApp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contacts__info_mail">
+        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@gmail.com</a>
+      </div>
+      <div class="contacts__info_timing">
+        <div class="contacts__info_timing-title">
+          <p-image
+            styleClass="flex align-items-center mr-2"
+            src="assets/icons/clock.svg"
+            width="15px"
+          ></p-image>
+          <span>Время работы</span>
+        </div>
+        <div class="contacts__info_timing-content">
+          <span>Пн-Вс:</span> с <span>9:00</span> до <span>20:00</span> без выходных и обеда
+        </div>
+      </div>
+    </div>
+    <div class="contacts__maps">
+      <p-image src="assets/images/mocks/map.png" width="550"></p-image>
+      <iframe
+        src="https://yandex.ru/map-widget/v1/?um=constructor%3Af0f81081a26b3a5a29beb2d09e827b36f9014680da091bb23a40bd9068f08b50&amp;source=constructor"
+        width="550"
+        height="300"
+      ></iframe>
+    </div>
+  </div>
+</flower-valley-container>
+<flower-valley-container background="dark" headerTitle="Фотографии">
+  <div class="flex justify-content-between flex-wrap">
+    <p-image
+      *ngFor="let photo of photos"
+      [src]="photo"
+      width="380px"
+      class="mb-4"
+      [imageStyle]="{ 'border-radius': '10px' }"
+      [preview]="true"
+    ></p-image>
+  </div>
+</flower-valley-container>

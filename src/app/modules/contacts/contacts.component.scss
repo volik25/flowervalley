@@ -1,0 +1,120 @@
+@import "colors";
+
+$root: '.contacts';
+
+#{$root} {
+  display: flex;
+  justify-content: space-between;
+  &__info {
+    padding-right: 60px;
+    &_address {
+      &-title {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 140%;
+        color: $text-grey;
+        text-transform: uppercase;
+      }
+      &-content {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 140%;
+        padding-top: 20px;
+        padding-bottom: 40px;
+        color: $text;
+      }
+    }
+    &_phones {
+      &-title {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 140%;
+        color: $text-grey;
+        text-transform: uppercase;
+      }
+      &-content {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 120%;
+        padding-top: 20px;
+        padding-bottom: 40px;
+        display: flex;
+        &>div {
+          display: flex;
+          flex-direction: column;
+          &:first-child {
+            margin-right: 40px;
+          }
+          a {
+            color: $text;
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+            }
+            &:first-child {
+              margin-bottom: 20px;
+            }
+          }
+        }
+        .whats-app-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: $whats-app-button;
+          border-radius: 5px;
+          color: $main-green;
+          font-weight: 500;
+          font-size: 15.4978px;
+          line-height: 19px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    &_mail {
+      padding-bottom: 40px;
+      a {
+        font-weight: 500;
+        font-size: 36px;
+        line-height: 120%;
+        color: $main-green;
+      }
+    }
+    &_timing {
+      &-title {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 140%;
+        color: $text-grey;
+        text-transform: uppercase;
+      }
+      &-content {
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 140%;
+        padding-top: 20px;
+        padding-bottom: 40px;
+        color: $text;
+        span {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  &__maps {
+    display: flex;
+    flex-direction: column;
+    iframe {
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+    }
+  }
+}

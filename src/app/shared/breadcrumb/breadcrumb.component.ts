@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BreadcrumbService } from './breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
-  providers: [BreadcrumbService],
 })
 export class BreadcrumbComponent {
   private path: string | undefined;
   public parentPath: string | undefined;
 
-  constructor(private route: ActivatedRoute, private _bs: BreadcrumbService) {
+  constructor(private route: ActivatedRoute) {
     this.path = this.getPath(route.snapshot);
     const parentSnapshot = route.parent?.snapshot;
     if (parentSnapshot) {

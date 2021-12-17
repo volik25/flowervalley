@@ -5,12 +5,16 @@ import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
   selector: 'flower-valley-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [BreadcrumbService],
 })
 export class AppComponent {
-  public cookieVisible = true;
+  public cookieVisible = false;
+  public background: 'light' | 'dark' = 'light';
 
-  constructor(private _bs: BreadcrumbService) {}
+  constructor(private _bs: BreadcrumbService) {
+    _bs.backgroundChanges.subscribe((background) => {
+      this.background = background;
+    });
+  }
 
   public get isShowBreadcrumb(): boolean {
     return this._bs.isShow;
