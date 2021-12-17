@@ -8,6 +8,8 @@ import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
   providers: [BreadcrumbService],
 })
 export class AppComponent {
+  public cookieVisible = true;
+
   constructor(private _bs: BreadcrumbService) {}
 
   public get isShowBreadcrumb(): boolean {
