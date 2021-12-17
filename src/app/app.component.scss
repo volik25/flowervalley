@@ -27,6 +27,16 @@
       }
     }
   }
+  &.p-button-cookie {
+    background-color: $white-100;
+    color: $main-green;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $dark-green;
+        color: $white-100;
+      }
+    }
+  }
 }
 
 :host ::ng-deep .p-carousel-indicators {
@@ -61,4 +71,11 @@
   .p-carousel-next {
     right: 0;
   }
+}
+
+.cookie {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
 }

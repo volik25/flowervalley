@@ -4,3 +4,24 @@
 </div>
 <router-outlet></router-outlet>
 <flower-valley-footer></flower-valley-footer>
+<p-dialog
+  [closable]="false"
+  [(visible)]="cookieVisible"
+  [modal]="true"
+  [resizable]="false"
+  [draggable]="false"
+  position="top-left"
+  [style]="{ width: '350px' }"
+>
+  <span class="cookie"
+    >Веб-сайт использует файлы cookie. Продолжая пользоваться сайтом, вы даете согласие на работу с
+    этими файлами.</span
+  >
+  <ng-template pTemplate="footer">
+    <p-button
+      styleClass="p-button-cookie"
+      (onClick)="cookieVisible = false"
+      label="Понял, принял"
+    ></p-button>
+  </ng-template>
+</p-dialog>

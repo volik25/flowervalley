@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ImageModule } from 'primeng/image';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [AppComponent, LoaderComponent, HeaderComponent, FooterComponent],
@@ -22,6 +23,7 @@ import { ImageModule } from 'primeng/image';
     ButtonModule,
     FlowerValleySharedModule,
     ImageModule,
+    DialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

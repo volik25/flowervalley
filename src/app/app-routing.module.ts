@@ -11,6 +11,11 @@ const routes: Routes = [
     path: 'catalog',
     loadChildren: () => import('./modules/catalog/catalog.module').then((m) => m.CatalogModule),
   },
+  {
+    path: 'private-policy',
+    loadChildren: () =>
+      import('./modules/private-policy/private-policy.module').then((m) => m.PrivatePolicyModule),
+  },
 ];
 
 @NgModule({
