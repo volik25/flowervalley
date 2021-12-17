@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="category">
+    <div class="category__header">
+      {{ category.title }}
+    </div>
+    <div class="category__content">
+      <div class="category__content_menu">
+        <div
+          class="item"
+          *ngFor="let item of catalog; let first = first; let last = last"
+          [ngClass]="{
+            'border-radius-top': first,
+            'border-radius-bottom': last,
+            active: isActive(item.title)
+          }"
+          [routerLink]="['../', item.route]"
+        >
+          {{ item.title }}
+        </div>
+      </div>
+      <div class="category__content_items">
+        <flower-valley-product-item
+          *ngFor="let product of products"
+          [product]="product"
+          (openProductCard)="navigateTo($event)"
+        ></flower-valley-product-item>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
-@import "container";
-@import "colors";
+@import "src/assets/styles/container";
+@import "src/assets/styles/colors";
 
 $root: '.container';
 
@@ -22,6 +22,7 @@ $root: '.container';
       font-size: 48px;
       line-height: 110%;
       color: $text;
+      padding-bottom: 40px;
       div {
         display: flex;
         align-items: center;

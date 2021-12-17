@@ -1,0 +1,105 @@
+<div class="product">
+  <div class="product__header">
+    {{ product.name }}
+  </div>
+  <div class="product__desc">
+    <div class="product__desc_photo">
+      <p-galleria [value]="product.photos" [circular]="true" [showThumbnailNavigators]="false">
+        <ng-template pTemplate="item" let-photo>
+          <p-image
+            [imageStyle]="{ width: '100%', 'border-radius': '15px' }"
+            [src]="photo"
+            [preview]="true"
+          ></p-image>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-photo>
+          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo" width="100px"></p-image>
+        </ng-template>
+      </p-galleria>
+    </div>
+    <div class="product__desc_info">
+      <div class="product__desc_info-tare">{{ product.tare }}</div>
+      <div class="product__desc_info-description">{{ product.description }}</div>
+      <div class="product__desc_info-categories">
+        <div class="title">Категории:</div>
+        <div class="cat-array">
+          <span *ngFor="let category of product.categories; let last = last">
+            <span>{{ category.title }}</span>
+            <span *ngIf="!last">,</span>
+          </span>
+        </div>
+      </div>
+      <div class="product__desc_info-share">
+        <div class="title">Поделиться:</div>
+        <div class="share-array">
+          <p-image
+            *ngFor="let category of categories"
+            src="assets/icons/product/{{ category.src }}.svg"
+            width="15px"
+            height="15px"
+            styleClass="mx-2 cursor-pointer"
+          ></p-image>
+        </div>
+      </div>
+      <div class="product__desc_info-cart">
+        <div class="price">{{ product.price | priceConverter }}</div>
+        <div class="right-block">
+          <div class="count">
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount()"></span>
+              <input type="text" pInputText [(ngModel)]="product.count" />
+              <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount()"></span>
+            </div>
+          </div>
+          <div class="button">
+            <p-button (onClick)="addToCart()">
+              <ng-template pTemplate="content">
+                <p-image
+                  styleClass="flex align-items-center"
+                  src="assets/icons/cart.svg"
+                  width="15px"
+                ></p-image>
+                <span>В корзину</span>
+              </ng-template>
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="product__delivery">
+    <div class="product__delivery_card">
+      <div class="product__delivery_card-title">Доставка</div>
+      <div class="product__delivery_card-content">
+        <div>
+          <div>
+            <p-image styleClass="flex align-items-center" src="assets/icons/map.svg"></p-image>
+          </div>
+          <div>
+            Доставка тюльпанов осуществляется сторонними транспортными компаниями по заказу
+            покупателя. Агрофирма не осуществляет доставку тюльпанов
+          </div>
+        </div>
+        <div>
+          <div>
+            <p-image styleClass="flex align-items-center" src="assets/icons/delivery.svg"></p-image>
+          </div>
+          <div class="flex flex-column">
+            <span class="pb-2">Доставка рассады цветов по Москве 2500 рублей. За МКАД 50р/км.</span>
+            <span
+              >Посчитать доставку по вашему адресу вы сможете при оформлении заказа в корзине</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<flower-valley-container background="dark" headerTitle="Другие товары">
+  <div class="flex flex-wrap justify-content-between">
+    <flower-valley-product-item
+      *ngFor="let prod of products"
+      [product]="prod"
+    ></flower-valley-product-item>
+  </div>
+</flower-valley-container>

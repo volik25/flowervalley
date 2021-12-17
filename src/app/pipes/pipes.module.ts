@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { SafeUrlPipe } from './safe-url.pipe';
+import { PriceConverterPipe } from './price-converter.pipe';
 
 @NgModule({
-  declarations: [SafeUrlPipe],
+  declarations: [SafeUrlPipe, PriceConverterPipe],
   imports: [CommonModule],
-  exports: [SafeUrlPipe],
+  exports: [SafeUrlPipe, PriceConverterPipe],
+  providers: [DecimalPipe],
 })
 export class PipesModule {}

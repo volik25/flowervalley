@@ -1,4 +1,9 @@
 @import "colors";
+@import "container";
+
+.container {
+  @include fv-container(30px);
+}
 
 :host ::ng-deep .p-button {
   background-color: $main-green;
