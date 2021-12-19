@@ -7,14 +7,14 @@ import { DecimalPipe } from '@angular/common';
 export class PriceConverterPipe implements PipeTransform {
   constructor(private decimalPipe: DecimalPipe) {}
 
-  public transform(value: number | string): string | null {
-    return this.decimalTransform(value);
+  public transform(value: number | string, dotOptions?: string): string | null {
+    return this.decimalTransform(value, dotOptions);
   }
 
-  private decimalTransform(value: number | string): string | null {
+  private decimalTransform(value: number | string, dotOptions?: string): string | null {
     let number = this.decimalPipe.transform(value);
     number = number?.split(',').join(' ') || null;
-    if (!number?.split('.')[1]) {
+    if (!number?.split('.')[1] && dotOptions) {
       number += '.0';
     }
     return `${number}₽`;

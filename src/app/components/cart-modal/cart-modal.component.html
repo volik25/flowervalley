@@ -1,0 +1,60 @@
+<div class="cart">
+  <div class="cart__content">
+    <div *ngFor="let item of cart" class="cart__content_item">
+      <div class="flex align-items-center">
+        <div
+          class="cart__content_item-img"
+          [style.background-image]="'url(' + item['img'] + ')'"
+        ></div>
+      </div>
+      <div class="cart__content_item-info">
+        <div class="content">
+          <span class="title">{{ item['title'] }}</span>
+          <div class="interactive">
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon" (click)="increaseCount(item)">
+                <p-image
+                  styleClass="flex align-items-center"
+                  src="assets/icons/plus-min.svg"
+                ></p-image>
+              </span>
+              <input
+                type="text"
+                pInputText
+                [ngModel]="item['count']"
+                [min]="1"
+                (ngModelChange)="changeCount(item, $event)"
+              />
+              <span class="p-inputgroup-addon" (click)="decreaseCount(item)">
+                <p-image
+                  styleClass="flex align-items-center"
+                  src="assets/icons/minus-min.svg"
+                ></p-image>
+              </span>
+            </div>
+            <span class="price">{{ item['price'] }}₽ за шт.</span>
+            <span class="sum">{{ item['price'] * item['count'] | priceConverter }}</span>
+          </div>
+        </div>
+        <div class="trash">
+          <span class="pi pi-trash cursor-pointer" (click)="removeItem(item['id'])"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cart__footer">
+    <div>
+      <p-button [routerLink]="['cart']" (onClick)="hide()" label="ПЕРЕЙТИ В КОРЗИНУ"></p-button>
+      <div>
+        <span>ИТОГО:</span>
+        <span>{{ getSum | priceConverter }}</span>
+      </div>
+    </div>
+    <div>
+      <span (click)="hide()">Свернуть</span>
+      <span class="pi pi-angle-up"></span>
+    </div>
+  </div>
+</div>
+
+<!--count, id, img, price, title-->

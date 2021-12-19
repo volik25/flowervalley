@@ -30,4 +30,28 @@ export class CartService {
       this.cartUpdate.next([item]);
     }
   }
+
+  public removeFromCart(id: number): void {
+    const cart = sessionStorage.getItem('cart');
+    if (cart) {
+      let cartUpdated: Record<string, any>[] = JSON.parse(cart);
+      const index = cartUpdated.findIndex((cartItem) => id === cartItem['id']);
+      cartUpdated.splice(index, 1);
+      sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
+      this.cartUpdate.next(cartUpdated);
+    }
+  }
+
+  public updateCount(item: Record<string, any>): void {
+    const cart = sessionStorage.getItem('cart');
+    if (cart) {
+      let cartUpdated: Record<string, any>[] = JSON.parse(cart);
+      const product = cartUpdated.find((cartItem) => item['id'] === cartItem['id']);
+      if (product) {
+        product['count'] = item['count'];
+      }
+      sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
+      this.cartUpdate.next(cartUpdated);
+    }
+  }
 }

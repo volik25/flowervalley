@@ -13,9 +13,19 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ImageModule } from 'primeng/image';
 import { DialogModule } from 'primeng/dialog';
 import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CartModalComponent } from './components/cart-modal/cart-modal.component';
+import { PipesModule } from './pipes/pipes.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, LoaderComponent, HeaderComponent, FooterComponent],
+  declarations: [
+    AppComponent,
+    LoaderComponent,
+    HeaderComponent,
+    FooterComponent,
+    CartModalComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -25,6 +35,9 @@ import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
     FlowerValleySharedModule,
     ImageModule,
     DialogModule,
+    OverlayPanelModule,
+    PipesModule,
+    FormsModule,
   ],
   providers: [BreadcrumbService],
   bootstrap: [AppComponent],

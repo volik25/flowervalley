@@ -56,7 +56,7 @@
       <div>Тюльпаны оптом</div>
       <div>Рассада цветов</div>
       <div [routerLink]="['contacts']">Контакты</div>
-      <div class="cart">
+      <div class="cart" (click)="cartPanel.toggle($event)">
         <span class="cart__icon">
           <p-image src="assets/icons/cart.svg"></p-image>
         </span>
@@ -68,3 +68,9 @@
     </div>
   </div>
 </header>
+
+<p-overlayPanel #cartPanel>
+  <ng-template pTemplate>
+    <flower-valley-cart-modal [cart]="cart || []"></flower-valley-cart-modal>
+  </ng-template>
+</p-overlayPanel>
