@@ -7,7 +7,7 @@ import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  public cookieVisible = true;
+  public cookieVisible = false;
   public background: 'light' | 'dark' = 'light';
 
   constructor(private _bs: BreadcrumbService) {

@@ -2,7 +2,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { BreadcrumbService } from '../breadcrumb/breadcrumb.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, takeUntil } from 'rxjs';
-import { DestroyService } from '../../directives/destroy.service';
+import { DestroyService } from '../../services/destroy.service';
 
 @Component({
   selector: 'flower-valley-container',
