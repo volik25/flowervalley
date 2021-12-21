@@ -62,3 +62,64 @@
     }
   }
 }
+
+.important {
+  background-color: $whats-app-button;
+  border: 1px solid $main-green;
+  border-radius: 10px;
+  padding: 30px;
+  margin-top: 40px;
+  &__header {
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 100%;
+    text-transform: uppercase;
+    color: $main-green;
+    margin-bottom: 30px;
+  }
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &>div {
+      display: flex;
+      flex-direction: column;
+      &>span:first-child {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 100%;
+        color: $text;
+        margin-bottom: 10px;
+      }
+      &>span:last-child {
+        font-size: 14px;
+        line-height: 120%;
+        color: $text;
+      }
+    }
+    &_flowers {
+      &>span:last-child {
+        font-weight: 400;
+        span {
+          font-weight: 500;
+        }
+      }
+    }
+    &_tulips {
+      padding: 0 20px;
+      &>span:last-child {
+        font-weight: 500;
+        span {
+          line-height: 132%;
+          color: $red-100;
+          text-transform: uppercase;
+        }
+      }
+    }
+    &_pickup {
+      &>span:last-child {
+        font-weight: 500;
+      }
+    }
+  }
+}
