@@ -4,12 +4,12 @@
       <div class="flex align-items-center">
         <div
           class="cart__content_item-img"
-          [style.background-image]="'url(' + item['img'] + ')'"
+          [style.background-image]="'url(' + item.photos[0] + ')'"
         ></div>
       </div>
       <div class="cart__content_item-info">
         <div class="content">
-          <span class="title">{{ item['title'] }}</span>
+          <span class="title">{{ item.name }}</span>
           <div class="interactive">
             <div class="p-inputgroup">
               <span class="p-inputgroup-addon" (click)="increaseCount(item)">
@@ -21,7 +21,7 @@
               <input
                 type="text"
                 pInputText
-                [ngModel]="item['count']"
+                [ngModel]="item.count"
                 [min]="1"
                 (ngModelChange)="changeCount(item, $event)"
               />
@@ -32,12 +32,12 @@
                 ></p-image>
               </span>
             </div>
-            <span class="price">{{ item['price'] }}₽ за шт.</span>
-            <span class="sum">{{ item['price'] * item['count'] | priceConverter }}</span>
+            <span class="price">{{ item.price }}₽ за шт.</span>
+            <span class="sum">{{ item.price * item.count | priceConverter }}</span>
           </div>
         </div>
         <div class="trash">
-          <span class="pi pi-trash cursor-pointer" (click)="removeItem(item['id'])"></span>
+          <span class="pi pi-trash cursor-pointer" (click)="removeItem(item.id)"></span>
         </div>
       </div>
     </div>
@@ -56,5 +56,3 @@
     </div>
   </div>
 </div>
-
-<!--count, id, img, price, title-->

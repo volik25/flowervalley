@@ -11,6 +11,10 @@
   font-weight: 500;
   font-size: 18px;
   line-height: 110%;
+  &.text-normal {
+    font-size: 14px;
+    line-height: 100%;
+  }
   &:enabled {
     &:hover, &:active {
       background-color: $dark-green;
@@ -23,6 +27,17 @@
     &:enabled {
       &:hover, &:active {
         background-color: $dark-green;
+        color: $white-100;
+      }
+    }
+  }
+  &.p-button-danger {
+    background-color: $danger-background;
+    border-color: $danger-border;
+    color: $red-100;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $red-100;
         color: $white-100;
       }
     }

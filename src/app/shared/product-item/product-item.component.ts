@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../services/cart.service';
+import { Product } from '../../_models/product';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -7,11 +8,11 @@ import { CartService } from '../../services/cart.service';
   styleUrls: ['./product-item.component.scss'],
 })
 export class ProductItemComponent {
-  public get product(): any {
+  public get product(): Product {
     return this._product;
   }
   @Input()
-  public set product(value: any) {
+  public set product(value: Product) {
     this._product = value;
   }
   private _product: any;

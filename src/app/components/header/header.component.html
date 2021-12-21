@@ -56,7 +56,7 @@
       <div>Тюльпаны оптом</div>
       <div>Рассада цветов</div>
       <div [routerLink]="['contacts']">Контакты</div>
-      <div class="cart" (click)="cartPanel.toggle($event)">
+      <div class="cart" (click)="cart?.length ? cartPanel.toggle($event) : goToCart()">
         <span class="cart__icon">
           <p-image src="assets/icons/cart.svg"></p-image>
         </span>

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { Product } from '../../_models/product';
 
 @Component({
   selector: 'flower-valley-cart-modal',
@@ -9,13 +10,13 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 })
 export class CartModalComponent {
   @Input()
-  public cart: Record<string, any>[] = [];
+  public cart: Product[] = [];
 
   constructor(private cartService: CartService, private _op: OverlayPanel) {}
 
   public get getSum(): number {
     let sum = 0;
-    this.cart.map((cart) => (sum += cart['price'] * cart['count']));
+    this.cart.map((cart) => (sum += cart.price * cart.count));
     return sum;
   }
 
@@ -23,26 +24,26 @@ export class CartModalComponent {
     this._op.hide();
   }
 
-  public increaseCount(item: Record<string, any>) {
-    item['count']++;
+  public increaseCount(item: Product) {
+    item.count++;
     this.cartService.updateCount(item);
   }
 
-  public decreaseCount(item: Record<string, any>) {
-    if (item['count'] <= 1) return;
-    item['count']--;
+  public decreaseCount(item: Product) {
+    if (item.count <= 1) return;
+    item.count--;
     this.cartService.updateCount(item);
   }
 
-  public changeCount(item: Record<string, any>, count: number): void {
+  public changeCount(item: Product, count: number): void {
     if (count <= 1) count = 1;
-    item['count'] = count;
+    item.count = count;
     this.cartService.updateCount(item);
   }
 
   public removeItem(id: number): void {
     this.cartService.removeFromCart(id);
-    const index = this.cart.findIndex((cartItem) => id === cartItem['id']);
+    const index = this.cart.findIndex((cartItem) => id === cartItem.id);
     this.cart.splice(index, 1);
   }
 }

@@ -1,0 +1,64 @@
+@import "colors";
+
+.banner {
+  background-color: $main-green;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px;
+  &__img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white-10;
+    border-radius: 10px;
+    padding: 10px;
+    width: 52px;
+    height: 52px;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    &_title {
+      font-weight: normal;
+      font-size: 24px;
+      line-height: 140%;
+      color: $white-100;
+    }
+    &_info {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 140%;
+      color: $white-70;
+    }
+  }
+}
+
+.info-text {
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 140%;
+  color: $text;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.contacts {
+  display: flex;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  margin-bottom: 60px;
+  &__address {
+    max-width: 450px;
+    margin-right: 45px;
+  }
+  &__phoneMail {
+    display: flex;
+    align-items: center;
+    a {
+      color: $main-green;
+    }
+  }
+}
