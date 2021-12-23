@@ -63,6 +63,13 @@
   }
 }
 
+.empty-message {
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 100%;
+  margin-top: -20px;
+}
+
 .important {
   background-color: $whats-app-button;
   border: 1px solid $main-green;

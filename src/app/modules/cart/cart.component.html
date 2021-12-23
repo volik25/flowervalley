@@ -25,7 +25,10 @@
       <a href="mailto:flowervalley@mail.ru">flowervalley@mail.ru</a>
     </div>
   </div>
-  <flower-valley-cart-goods></flower-valley-cart-goods>
+  <flower-valley-cart-goods *ngIf="goods.length"></flower-valley-cart-goods>
+  <div class="empty-message">
+    <div>Ваша корзина пуста</div>
+  </div>
   <div class="important">
     <div class="important__header">Важно!</div>
     <div class="important__content">
@@ -53,6 +56,6 @@
     </div>
   </div>
 </flower-valley-container>
-<flower-valley-container background="dark" headerTitle="Оформление заказа">
+<flower-valley-container *ngIf="goods.length" background="dark" headerTitle="Оформление заказа">
   <flower-valley-order-confirmation></flower-valley-order-confirmation>
 </flower-valley-container>
