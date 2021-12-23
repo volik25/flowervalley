@@ -1,0 +1,78 @@
+<p-card styleClass="confirmation">
+  <p-table
+    [value]="goods"
+    sortField="group"
+    sortMode="single"
+    rowGroupMode="subheader"
+    groupRowsBy="group"
+    styleClass="confirmation"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Товар</th>
+        <th>Цена</th>
+        <th>Кол-во</th>
+        <th>Стоимость</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="groupheader" let-product>
+      <tr pRowGroupHeader>
+        <td colspan="5">
+          {{ product.group || 'Товар' }}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr class="product">
+        <td class="product__name">
+          <div
+            class="product__name_img"
+            [ngStyle]="{ 'background-image': 'url(' + product.photos[0] + ')' }"
+          ></div>
+          <span>{{ product.name }}</span>
+        </td>
+        <td class="product__price">{{ product.price | priceConverter: 'two':'rub' }}</td>
+        <td class="product__count">
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount(product)"></span>
+            <input
+              type="text"
+              pInputText
+              [ngModel]="product.count"
+              [min]="1"
+              (ngModelChange)="changeCount(product, $event)"
+            />
+            <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount(product)"></span>
+          </div>
+        </td>
+        <td class="product__price">
+          {{ product.price * product.count | priceConverter: 'two':'rub' }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <div class="summary-block">
+    <div class="summary-block__delivery">
+      <span>Доставка:</span>
+      <span>{{ shippingCost | priceConverter: 'two':'rub' }}</span>
+    </div>
+    <div class="summary-block__boxes">
+      <span>Коробки:</span>
+      <span>{{ getBoxesCount }}x ({{ getBoxesSum | priceConverter: 'none':'RUB' }})</span>
+    </div>
+    <div class="summary-block__summary">
+      <span>Итог:</span>
+      <span>{{ getSum | priceConverter: 'two':'rub' }}</span>
+    </div>
+  </div>
+</p-card>
+
+<p-button
+  [style]="{ 'margin-top': '20px' }"
+  styleClass="p-button-estimate w-12 flex justify-content-center"
+>
+  <ng-template pTemplate="content">
+    <p-image styleClass="flex align-items-center" src="assets/icons/estimate.svg"></p-image>
+    <span>Скачать смету</span>
+  </ng-template>
+</p-button>

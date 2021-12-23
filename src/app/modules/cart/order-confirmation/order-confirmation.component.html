@@ -1,0 +1,101 @@
+<div class="confirmation">
+  <span class="p-buttonset">
+    <button
+      pButton
+      class="w-6"
+      [ngClass]="{ 'p-button-outlined': clientType !== 'individual' }"
+      label="ФИЗИЧЕСКИЕ ЛИЦА"
+      (click)="clientType = 'individual'"
+    ></button>
+    <button
+      pButton
+      class="w-6"
+      [ngClass]="{ 'p-button-outlined': clientType !== 'entity' }"
+      label="ЮРИДИЧЕСКИЕ ЛИЦА"
+      (click)="clientType = 'entity'"
+    ></button>
+  </span>
+  <div class="confirmation__content">
+    <div class="confirmation__content_form">
+      <form [formGroup]="contacts">
+        <span class="p-float-label">
+          <input type="text" id="FIO" pInputText formControlName="name" />
+          <label for="FIO">Контактное лицо</label>
+        </span>
+
+        <span class="p-float-label">
+          <input type="text" id="phone" pInputText formControlName="phone" />
+          <label for="phone">Телефон</label>
+        </span>
+
+        <span class="p-float-label">
+          <input type="text" id="email" pInputText formControlName="email" />
+          <label for="email">Email</label>
+        </span>
+
+        <span class="p-float-label">
+          <input
+            [ngClass]="{ 'calculation-padding': shippingCost }"
+            type="text"
+            id="address"
+            pInputText
+            formControlName="address"
+          />
+          <label for="address">Адрес доставки</label>
+          <div class="calculation-result" *ngIf="shippingCost || delivery_error">
+            <p-button
+              *ngIf="!showDelivery && !delivery_error"
+              (onClick)="deliveryButtonClick()"
+              label="Рассчитать доставку"
+            ></p-button>
+            <div
+              *ngIf="showDelivery || delivery_error"
+              class="delivery"
+              [ngClass]="{ success: shippingCost, error: delivery_error }"
+            >
+              {{
+                shippingCost
+                  ? 'Доставка ' + (shippingCost | priceConverter: 'none':'RUB')
+                  : delivery_error
+              }}
+            </div>
+          </div>
+        </span>
+        <div class="flex justify-content-end">
+          <p-button
+            *ngIf="showDelivery"
+            styleClass="p-button-text"
+            label="Показать на карте"
+            (onClick)="showMapToggle()"
+          ></p-button>
+        </div>
+      </form>
+      <form *ngIf="clientType === 'entity'" [formGroup]="entityData">
+        <span class="p-float-label">
+          <input type="text" id="entityName" pInputText formControlName="name" />
+          <label for="entityName">Наименование организации</label>
+        </span>
+      </form>
+      <div class="p-field-checkbox">
+        <p-checkbox [formControl]="pickUp" [binary]="true" inputId="pickUp"></p-checkbox>
+        <label for="pickUp">Самовывоз</label>
+      </div>
+      <p-button styleClass="confirm-order" label="Оформить заказ"></p-button>
+    </div>
+    <div class="confirmation__content_goods">
+      <flower-valley-confirmation-goods
+        [shippingCost]="showDelivery ? shippingCost || 0 : 0"
+      ></flower-valley-confirmation-goods>
+    </div>
+  </div>
+</div>
+<div id="yaMap" #yamap style="position: absolute; top: -500px"></div>
+
+<p-dialog
+  [(visible)]="showMap"
+  [modal]="true"
+  [closeOnEscape]="false"
+  (visibleChange)="visibleChange()"
+>
+  <div #mapContent></div>
+</p-dialog>

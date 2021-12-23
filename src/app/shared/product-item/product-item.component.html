@@ -1,8 +1,8 @@
 <div class="product">
   <div class="product__header">
-    <img class="product__header_image" [src]="product.img" />
+    <img class="product__header_image" [src]="product.photos[0]" />
     <div class="product__header_title" (click)="openProductCard.emit(product.id)">
-      {{ product.title }}
+      {{ product.name }}
     </div>
   </div>
   <div class="product__interactive">

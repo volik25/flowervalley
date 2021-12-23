@@ -17,6 +17,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CartModalComponent } from './components/cart-modal/cart-modal.component';
 import { PipesModule } from './pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BpRequestInterceptor } from './interceptors/bp-request.interceptor';
+import { BusinessPackService } from './services/business-paсk.service';
 
 @NgModule({
   declarations: [
@@ -38,8 +41,17 @@ import { FormsModule } from '@angular/forms';
     OverlayPanelModule,
     PipesModule,
     FormsModule,
+    HttpClientModule,
   ],
-  providers: [BreadcrumbService],
+  providers: [
+    BreadcrumbService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BpRequestInterceptor,
+      multi: true,
+    },
+    BusinessPackService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

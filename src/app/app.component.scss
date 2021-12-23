@@ -11,6 +11,10 @@
   font-weight: 500;
   font-size: 18px;
   line-height: 110%;
+  &.text-normal {
+    font-size: 14px;
+    line-height: 100%;
+  }
   &:enabled {
     &:hover, &:active {
       background-color: $dark-green;
@@ -27,6 +31,17 @@
       }
     }
   }
+  &.p-button-danger {
+    background-color: $danger-background;
+    border-color: $danger-border;
+    color: $red-100;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $red-100;
+        color: $white-100;
+      }
+    }
+  }
   &.p-button-cookie {
     background-color: $white-100;
     color: $main-green;
@@ -34,6 +49,36 @@
       &:hover, &:active {
         background-color: $dark-green;
         color: $white-100;
+      }
+    }
+  }
+  &.p-button-text {
+    background: none;
+    border: none;
+    color: $main-green;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $whats-app-button;
+        color: $main-green;
+      }
+    }
+  }
+  &.p-button-estimate {
+    background-color: $whats-app-button;
+    border-radius: 15px;
+    color: $text;
+    border: none;
+    span {
+      margin-left: 15px;
+    }
+    &:enabled {
+      &:hover, &:active {
+        background-color: $whats-app-button;
+        color: $text;
+        outline: 1px solid $main-green;
+        span {
+          text-decoration: underline;
+        }
       }
     }
   }
