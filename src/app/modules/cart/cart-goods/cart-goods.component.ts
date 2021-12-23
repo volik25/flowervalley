@@ -64,6 +64,7 @@ export class CartGoodsComponent {
   }
 
   public removeBoxes(): void {
+    this.boxService.removeBoxes();
     this.boxes = [];
   }
 }

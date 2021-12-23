@@ -33,6 +33,10 @@ export class BoxService {
     ];
   }
 
+  public removeBoxes(): void {
+    this.boxes = [];
+  }
+
   public getBoxes(): Observable<Box[]> {
     return this._boxesUpdate.asObservable();
   }
