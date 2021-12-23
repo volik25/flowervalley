@@ -1,0 +1,127 @@
+@import "colors";
+
+$root: '.confirmation';
+
+#{$root} {
+  display: flex;
+  flex-direction: column;
+  .p-buttonset {
+    .p-button {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 100%;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      &.p-button-outlined {
+        color: $text-grey;
+        background: none;
+        &:enabled {
+          &:hover, &:active {
+            background-color: $dark-green;
+            border-color: $dark-green;
+            color: $white-100;
+          }
+        }
+      }
+    }
+  }
+  &__content {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    &_form {
+      .p-float-label {
+        position: relative;
+        width: 540px;
+        margin-bottom: 10px;
+        .p-inputtext {
+          width: 100%;
+          padding: 20px 22px;
+          &.calculation-padding {
+            padding-right: 210px;
+          }
+        }
+        input:focus, input.p-filled {
+          &~ label {
+            top: 15px;
+            left: 22px;
+          }
+          padding-bottom: 15px;
+          padding-top: 25px;
+        }
+        .calculation-result {
+          position: absolute;
+          top: 15px;
+          right: 10px;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 100%;
+          ::ng-deep .p-button {
+            padding: 8px 22px;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 100%;
+          }
+          .delivery {
+            border-radius: 5px;
+            padding: 8px 22px;
+            &.success {
+              border: 1px solid $main-green;
+              color: $text;
+            }
+            &.error {
+              border: 1px solid $red-100;
+              background-color: $red-100;
+              color: $white-100;
+            }
+          }
+        }
+      }
+      .p-field-checkbox {
+        margin-bottom: 10px;
+        ::ng-deep {
+          .p-checkbox-box {
+            box-shadow: none;
+          }
+          .p-checkbox .p-checkbox-box.p-highlight {
+            background-color: $main-green;
+            border-color: $main-green;
+          }
+          .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box {
+            &:hover, &.p-focus {
+              border-color: $main-green;
+            }
+          }
+        }
+        label {
+          margin-left: 10px;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 100%;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+      ::ng-deep .p-button {
+        &.confirm-order {
+          margin-top: 50px;
+          width: 90%;
+          padding: 25px;
+          border-radius: 15px;
+          span {
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 100%;
+          }
+        }
+        &.p-button-text {
+          padding: 8px 22px;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 100%;
+        }
+      }
+    }
+  }
+}

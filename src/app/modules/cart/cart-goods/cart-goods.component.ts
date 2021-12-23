@@ -59,7 +59,8 @@ export class CartGoodsComponent {
   }
 
   public genBoxes(): void {
-    this.boxes = this.boxService.genBoxes();
+    this.boxService.genBoxes();
+    this.boxes = this.boxService.boxes;
   }
 
   public removeBoxes(): void {

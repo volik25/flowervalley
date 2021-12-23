@@ -1,12 +1,32 @@
 @import "colors";
 
-::ng-deep .p-datatable.p-table-override {
+::ng-deep .p-card.confirmation {
+  .p-card-content {
+    padding: 0;
+  }
+}
+
+::ng-deep .p-datatable.confirmation {
+  height: 370px;
+  overflow-y: scroll;
+  padding-right: 10px;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-thumb;
+    border-radius: 80px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $scrollbar;
+    border-radius: 80px;
+  }
   .p-datatable-thead {
     tr {
       th {
         background-color: $white-100;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 12px;
         line-height: 100%;
         text-transform: uppercase;
         color: $text-grey;
@@ -39,9 +59,9 @@
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center;
-          width: 70px;
-          height: 70px;
-          border-radius: 10px;
+          width: 40px;
+          height: 40px;
+          border-radius: 5px;
         }
         &_icon {
           display: flex;
@@ -52,20 +72,30 @@
           background-color: $box-background;
         }
         &>span {
-          margin-left: 25px;
+          margin-left: 15px;
           font-weight: 500;
-          font-size: 18px;
+          font-size: 16px;
           line-height: 100%;
           color: $text;
+          max-width: 85px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
+      }
+      &__price {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        color: $text-grey;
       }
       &__count {
         text-align: center;
         .p-inputgroup {
           width: auto;
-          height: 50px;
+          height: 35px;
           input {
-            max-width: 70px;
+            max-width: 50px;
             font-weight: 500;
             font-size: 17.7778px;
             line-height: 110%;
@@ -86,99 +116,44 @@
           }
         }
       }
-      &__delete {
-        .trash {
-          display: flex;
-          align-items: center;
-          color: $red-40;
-          .pi:hover {
-            color: $red-100;
-          }
-        }
-      }
-    }
-  }
-}
-
-.boxes {
-  border-top: 1px solid $border-cart;
-  &__title {
-    padding: 1rem;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 100%;
-    text-transform: uppercase;
-    color: $text-grey;
-  }
-  &__content {
-    padding: 0 1rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    &_text {
-      display: flex;
-      flex-direction: column;
-      font-size: 16px;
-      color: $text;
-      span:first-child {
-        font-weight: normal;
-        line-height: 100%;
-      }
-      span:last-child:not(:first-child) {
-        padding-top: 10px;
+      &__price {
         font-weight: 500;
-        line-height: 120%;
+        font-size: 16px;
+        line-height: 100%;
+        color: $text;
       }
     }
   }
 }
 
 .summary-block {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   border-top: 1px solid $main-green;
-  padding-top: 30px;
-  &__info {
-    max-width: 500px;
-    &>div {
-      background-color: $whats-app-button;
-      border-radius: 10px;
-      padding: 15px 20px;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 140%;
-      color: $main-green;
-    }
-  }
-  &__summary{
+  margin-top: 20px;
+  padding-top: 25px;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  &>div {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    font-weight: 500;
-    line-height: 100%;
     span:first-child {
-      font-size: 18px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 100%;
       text-transform: uppercase;
       color: $text;
     }
     span:last-child {
-      margin-top: 20px;
-      font-size: 24px;
+      margin-top: 10px;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 100%;
       color: $main-green;
     }
   }
-  &__additional{
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 120%;
-    span:first-child {
-      color: $red-100;
-      margin-bottom: 5px;
-    }
-  }
+}
+
+.estimate {
+  color: $text;
+  margin-left: 15px;
 }

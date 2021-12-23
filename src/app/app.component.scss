@@ -52,6 +52,36 @@
       }
     }
   }
+  &.p-button-text {
+    background: none;
+    border: none;
+    color: $main-green;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $whats-app-button;
+        color: $main-green;
+      }
+    }
+  }
+  &.p-button-estimate {
+    background-color: $whats-app-button;
+    border-radius: 15px;
+    color: $text;
+    border: none;
+    span {
+      margin-left: 15px;
+    }
+    &:enabled {
+      &:hover, &:active {
+        background-color: $whats-app-button;
+        color: $text;
+        outline: 1px solid $main-green;
+        span {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }
 
 :host ::ng-deep .p-carousel-indicators {
