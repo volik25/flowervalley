@@ -1,4 +1,9 @@
-<flower-valley-container background="dark" [headerTitle]="category?.name">
+<flower-valley-container
+  background="dark"
+  [headerTitle]="category?.name"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="actionsTemplate"
+>
   <div class="category__content">
     <div class="category__content_menu">
       <div
@@ -21,12 +26,15 @@
         (openProductCard)="navigateTo($event)"
       ></flower-valley-product-item>
     </div>
-    <p-splitButton
-      *ngIf="isAdmin"
-      (onClick)="showAddProductModal()"
-      icon="pi pi-plus"
-      label="Новый товар"
-      [model]="actions"
-    ></p-splitButton>
   </div>
 </flower-valley-container>
+
+<ng-template #actionsTemplate>
+  <p-splitButton
+    *ngIf="isAdmin"
+    (onClick)="showAddProductModal()"
+    icon="pi pi-plus"
+    label="Новый товар"
+    [model]="actions"
+  ></p-splitButton>
+</ng-template>

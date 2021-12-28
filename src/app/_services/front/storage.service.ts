@@ -4,6 +4,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class StorageService {
+  public setItem<T>(key: string, item: T): void {
+    sessionStorage.setItem(key, JSON.stringify(item));
+  }
+
+  public getItem<T>(key: string): T | null {
+    const item = sessionStorage.getItem(key);
+    if (item) {
+      return JSON.parse(item);
+    }
+    return null;
+  }
+
   public addItem<T>(key: string, item: T) {
     let storageItems = [];
     const storageString = sessionStorage.getItem(key);

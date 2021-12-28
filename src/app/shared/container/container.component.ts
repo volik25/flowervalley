@@ -1,9 +1,8 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { BreadcrumbService } from '../breadcrumb/breadcrumb.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, takeUntil } from 'rxjs';
 import { DestroyService } from '../../_services/front/destroy.service';
-import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-container',
@@ -27,7 +26,9 @@ export class ContainerComponent {
   public footerButton: Record<string, any> | undefined;
   @Input()
   public isAdmin: boolean = false;
-  public buttonItems: MenuItem[];
+  @Input()
+  // @ts-ignore
+  public buttonTemplate: TemplateRef<any>;
 
   constructor(
     private bs: BreadcrumbService,
@@ -44,29 +45,5 @@ export class ContainerComponent {
         bs.startUrl = event.urlAfterRedirects;
         this.bs.background = this.background;
       });
-    this.buttonItems = [
-      {
-        label: 'Добавить',
-        icon: 'pi pi-plus',
-        command: () => {
-          this.addModal();
-        },
-      },
-      {
-        label: 'Редактировать',
-        icon: 'pi pi-pencil',
-        command: () => {
-          this.editModal();
-        },
-      },
-    ];
-  }
-
-  private addModal(): void {
-    // console.log('add');
-  }
-
-  private editModal(): void {
-    // console.log('edit');
   }
 }

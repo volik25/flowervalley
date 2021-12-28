@@ -7,21 +7,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BaseApiService {
-  private baseUrl = environment.baseUrl;
+  protected baseUrl = environment.baseUrl;
 
   protected apiUrl: string | undefined;
 
-  constructor(private http: HttpClient) {}
+  constructor(protected http: HttpClient) {}
 
-  // public getItem<T>(): Observable<any> {
-  //   return this.http.get<T>(`${this.baseUrl}/${this.apiUrl}`);
-  // }
-
-  public getItemById<T>(id: string): Observable<T> {
+  public getItemById<T>(id: string | number): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}/${this.apiUrl}/${id}`);
   }
 
-  public addItem<T>(item: T): Observable<string> {
+  public addItem<T>(item: T): Observable<any> {
     return this.http.post<string>(`${this.baseUrl}/${this.apiUrl}`, item);
   }
 

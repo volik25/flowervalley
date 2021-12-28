@@ -3,8 +3,8 @@
   styleClass="mb-2"
   [customUpload]="true"
   mode="basic"
-  chooseLabel="Загрузить изображения"
-  [multiple]="true"
+  [chooseLabel]="label"
+  [multiple]="multi"
   [auto]="true"
   (uploadHandler)="uploadFiles($event.files)"
 ></p-fileUpload>

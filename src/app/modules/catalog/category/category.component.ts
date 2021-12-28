@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
-import { ProductItem } from '../../../_models/product-item';
 import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 import { MenuItem } from 'primeng/api';
 import { slugify } from 'transliteration';
+import { CatalogService } from '../../../_services/back/catalog.service';
+import { StorageService } from '../../../_services/front/storage.service';
+import { categoriesKey } from '../../../_utils/constants';
 import { AdminService } from '../../../_services/back/admin.service';
+import { ProductItem } from '../../../_models/product-item';
+import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 
 @Component({
   selector: 'flower-valley-category',
@@ -18,6 +21,8 @@ import { AdminService } from '../../../_services/back/admin.service';
 export class CategoryComponent {
   public isAdmin: boolean = false;
   public category: Category | undefined;
+  public catalog: Category[] = [];
+  public products: ProductItem[] = [];
   public actions: MenuItem[] = [
     {
       label: 'Импорт из БизнесПак',
@@ -32,33 +37,27 @@ export class CategoryComponent {
     private bs: BreadcrumbService,
     private ds: DialogService,
     private adminService: AdminService,
+    private storageService: StorageService,
+    private catalogService: CatalogService,
   ) {
     route.params.subscribe((params) => {
       const categoryRoute = params['category'];
-      this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
+      this.catalog = storageService.getItem<Category[]>(categoriesKey) || [];
+      if (this.catalog.length) {
+        this.setCategories(categoryRoute);
+      } else {
+        catalogService.getItems().subscribe((categoriesApi) => {
+          this.catalog = categoriesApi;
+          storageService.setItem(categoriesKey, categoriesApi);
+          this.setCategories(categoryRoute);
+        });
+      }
       bs.addItem(this.category);
     });
     adminService.checkAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
     });
   }
-
-  public catalog: Category[] = [
-    {
-      name: 'Тюльпаны',
-      id: 1,
-    },
-    {
-      name: 'Цветы',
-      id: 2,
-    },
-    {
-      name: 'Растения',
-      id: 3,
-    },
-  ];
-
-  public products: ProductItem[] = [];
 
   public navigateTo(id: number): void {
     this.router.navigate([id], { relativeTo: this.route });
@@ -80,5 +79,12 @@ export class CategoryComponent {
 
   public getRoute(name: string): string {
     return slugify(name);
+  }
+
+  private setCategories(categoryRoute: string): void {
+    this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
+    this.catalogService.getItemById<ProductItem[]>(this.category?.id || 0).subscribe((products) => {
+      this.products = products;
+    });
   }
 }

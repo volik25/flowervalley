@@ -22,6 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ImageModule } from 'primeng/image';
 import { FilesUploadComponent } from './files-upload/files-upload.component';
 import { EditProductComponent } from './product-item/edit-product/edit-product.component';
+import { AddCategoryComponent } from './catalog-item/add-category/add-category.component';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { EditProductComponent } from './product-item/edit-product/edit-product.c
     SignInComponent,
     FilesUploadComponent,
     EditProductComponent,
+    AddCategoryComponent,
   ],
   imports: [
     CommonModule,
@@ -51,6 +54,7 @@ import { EditProductComponent } from './product-item/edit-product/edit-product.c
     FileUploadModule,
     HttpClientModule,
     ImageModule,
+    MultiSelectModule,
   ],
   exports: [
     CatalogItemComponent,

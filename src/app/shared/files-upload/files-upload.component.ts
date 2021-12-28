@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FileUpload } from 'primeng/fileupload';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -11,6 +11,10 @@ export class FilesUploadComponent {
   @ViewChild('fileUpload')
   public fileUpload: FileUpload | undefined;
   private _photos: File[] = [];
+  @Input()
+  public multi: boolean = true;
+  @Input()
+  public label: string = 'Загрузить изображения';
   @Output()
   public uploaded: EventEmitter<File[]> = new EventEmitter<File[]>();
   constructor(private sanitizer: DomSanitizer) {}

@@ -12,14 +12,9 @@
           <img *ngIf="headerIconImage" [src]="headerIconImage" width="22px" class="mr-3" />
           <div>{{ headerTitle }}</div>
         </div>
-        <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
-        <p-button
-          *ngIf="isAdmin"
-          label="Действия"
-          icon="pi pi-angle-down"
-          iconPos="left"
-          (onClick)="menu.toggle($event)"
-        ></p-button>
+        <div *ngIf="isAdmin">
+          <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+        </div>
         <flower-valley-leaf-button
           *ngIf="headerButton"
           [routerLink]="headerButton['routerLink']"

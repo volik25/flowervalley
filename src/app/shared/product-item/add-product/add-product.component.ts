@@ -5,6 +5,9 @@ import { GoodsBusinessPack } from '../../../_models/business-pack/goods-base';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { ProductService } from '../../../_services/back/product.service';
 import { BusinessPackConverterService } from '../../../_services/back/business-pack-converter.service';
+import { Product } from '../../../_models/product';
+import { CatalogService } from '../../../_services/back/catalog.service';
+import { Category } from '../../../_models/category';
 
 @Component({
   selector: 'flower-valley-add-product',
@@ -14,6 +17,7 @@ import { BusinessPackConverterService } from '../../../_services/back/business-p
 export class AddProductComponent {
   public businessPackResults: GoodsBusinessPack[] = [];
   public selectedProduct: GoodsBusinessPack | undefined;
+  public categories: Category[] = [];
   public isImport: boolean = false;
   public goods: FormGroup;
   public product: FormGroup;
@@ -26,6 +30,7 @@ export class AddProductComponent {
     private fb: FormBuilder,
     private bpService: BusinessPackService,
     private bpConverter: BusinessPackConverterService,
+    private catalogService: CatalogService,
     private productService: ProductService,
     public config: DynamicDialogConfig,
   ) {
@@ -41,6 +46,10 @@ export class AddProductComponent {
     });
     this.product = fb.group({
       description: ['', Validators.required],
+      categories: [],
+    });
+    this.catalogService.getItems().subscribe((items) => {
+      this.categories = items;
     });
   }
 
@@ -101,8 +110,16 @@ export class AddProductComponent {
   public patchValue(): void {
     if (this.selectedProduct) {
       this.goods.patchValue(this.selectedProduct);
+      if (this.selectedProduct.Object) {
+        this.productService
+          .getItemById<Product>(this.selectedProduct.Object)
+          .subscribe((product) => {
+            this.product.patchValue(product);
+          });
+      }
     } else {
       this.goods.reset();
+      this.product.reset();
     }
   }
 

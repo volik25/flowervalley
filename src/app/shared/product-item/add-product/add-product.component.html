@@ -54,6 +54,19 @@
     </span>
   </div>
   <form [formGroup]="product">
+    <span class="p-float-label mb-2">
+      <p-multiSelect
+        styleClass="w-12"
+        inputId="parent"
+        [options]="categories"
+        optionValue="id"
+        optionLabel="name"
+        emptyMessage="Категорий нет"
+        formControlName="categories"
+        [filter]="false"
+      ></p-multiSelect>
+      <label for="parent">Расположить в категории (необязательно)</label>
+    </span>
     <p-editor
       styleClass="mb-2"
       formControlName="description"

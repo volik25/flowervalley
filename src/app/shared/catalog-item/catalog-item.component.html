@@ -1,7 +1,7 @@
 <div class="card">
   <div [ngStyle]="{ 'background-image': 'url(' + item.img + ')' }"></div>
   <div class="flex justify-content-between align-items-center">
-    <div>{{ item.title }}</div>
-    <p-button icon="pi pi-arrow-right" [routerLink]="['/catalog', item.route]"></p-button>
+    <div>{{ item.name }}</div>
+    <p-button icon="pi pi-arrow-right" [routerLink]="['/catalog', routerLink]"></p-button>
   </div>
 </div>

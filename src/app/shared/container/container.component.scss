@@ -23,10 +23,10 @@ $root: '.container';
       line-height: 110%;
       color: $text;
       padding-bottom: 40px;
-      div {
+      &>div {
         display: flex;
         align-items: center;
-        span {
+        &>span {
           color: $main-green;
         }
       }

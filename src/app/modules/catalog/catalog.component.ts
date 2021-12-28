@@ -1,56 +1,42 @@
 import { Component } from '@angular/core';
 import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { AddCategoryComponent } from '../../shared/catalog-item/add-category/add-category.component';
+import { CatalogService } from '../../_services/back/catalog.service';
+import { Category } from '../../_models/category';
+import { StorageService } from '../../_services/front/storage.service';
+import { categoriesKey } from '../../_utils/constants';
+import { AdminService } from '../../_services/back/admin.service';
 
 @Component({
   selector: 'flower-valley-catalog',
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.scss'],
+  providers: [DialogService],
 })
 export class CatalogComponent {
-  constructor(private bs: BreadcrumbService) {
+  public catalog: Category[] = [];
+  public isAdmin: boolean = false;
+
+  constructor(
+    private bs: BreadcrumbService,
+    private _ds: DialogService,
+    private catalogService: CatalogService,
+    private storageService: StorageService,
+    private adminService: AdminService,
+  ) {
     bs.setItem('Каталог');
+    catalogService.getItems().subscribe((categories) => {
+      this.catalog = categories;
+      storageService.setItem(categoriesKey, categories);
+    });
+    adminService.checkAdmin().subscribe((isAdmin) => (this.isAdmin = isAdmin));
   }
 
-  public catalog = [
-    {
-      title: 'Тюльпаны на 8 марта',
-      img: 'assets/images/mocks/catalog/1.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Рассада однолетних цветов',
-      img: 'assets/images/mocks/catalog/2.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Мнолетние растения',
-      img: 'assets/images/mocks/catalog/3.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Ампельные цветы в кашпо',
-      img: 'assets/images/mocks/catalog/4.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Ампельная рассада (укорененные черенки)',
-      img: 'assets/images/mocks/catalog/5.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Рассада овощей',
-      img: 'assets/images/mocks/catalog/6.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Рассада клубники и земляники',
-      img: 'assets/images/mocks/catalog/7.png',
-      route: 'tyulpany',
-    },
-    {
-      title: 'Грунт питательный для цветов',
-      img: 'assets/images/mocks/catalog/8.png',
-      route: 'tyulpany',
-    },
-  ];
+  public addCategory(): void {
+    this._ds.open(AddCategoryComponent, {
+      header: 'Добавить раздел',
+      width: '600px',
+    });
+  }
 }

@@ -1,4 +1,9 @@
-<flower-valley-container background="dark" headerTitle="Каталог">
+<flower-valley-container
+  background="dark"
+  headerTitle="Каталог"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="actionsTemplate"
+>
   <div class="catalog__categories">
     <flower-valley-catalog-item
       *ngFor="let item of catalog"
@@ -6,4 +11,7 @@
     ></flower-valley-catalog-item>
   </div>
 </flower-valley-container>
-<router-outlet></router-outlet>
+
+<ng-template #actionsTemplate>
+  <p-button label="Добавить категорию" (onClick)="addCategory()"></p-button>
+</ng-template>
