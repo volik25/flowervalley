@@ -9,17 +9,7 @@ $root: '.category';
   border-color: $main-green;
 }
 
-.container {
-  background-color: $light-grey;
-}
-
 #{$root} {
-  @include fv-container(30px);
-  &__header {
-    font-weight: 500;
-    font-size: 60px;
-    line-height: 100%;
-  }
   &__content {
     padding-top: 40px;
     display: flex;

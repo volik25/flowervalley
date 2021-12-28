@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, Subject } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { slugify } from 'transliteration';
+import { Category } from '../../_models/category';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class BreadcrumbService {
   private url: string = '/';
   private _startUrl: string = '';
   private setUrlDuplicate: boolean = false;
-  public backgroundChanges: Subject<'light' | 'dark'> = new Subject<'light' | 'dark'>();
+  public backgroundChanges: BehaviorSubject<'light' | 'dark'> = new BehaviorSubject<
+    'light' | 'dark'
+  >('light');
+  private items = [
+    {
+      title: 'Главная',
+      routerLink: [''],
+    },
+  ];
+  private _breadCrumbUpdate: BehaviorSubject<any> = new BehaviorSubject<any>(this.items);
 
   private _background: 'light' | 'dark' = 'light';
 
@@ -50,5 +59,33 @@ export class BreadcrumbService {
 
   public get isShow(): boolean {
     return this.url !== '/';
+  }
+
+  public setItem(title: string): void {
+    this._breadCrumbUpdate.next([
+      ...this.items,
+      {
+        title: title,
+        routerLink: [''],
+      },
+    ]);
+  }
+
+  public addItem(category?: Category): void {
+    this._breadCrumbUpdate.next([
+      ...this.items,
+      {
+        title: 'Каталог',
+        routerLink: ['catalog'],
+      },
+      {
+        title: category?.name,
+        routerLink: [slugify(category?.name || '')],
+      },
+    ]);
+  }
+
+  public breadCrumbChanges(): Observable<any> {
+    return this._breadCrumbUpdate.asObservable();
   }
 }

@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DestroyService } from '../../../services/destroy.service';
+import { DestroyService } from '../../../_services/front/destroy.service';
 import { debounceTime, takeUntil } from 'rxjs';
-import { YaMapService } from '../../../services/ya-map.service';
+import { YaMapService } from '../../../_services/front/ya-map.service';
 
 @Component({
   selector: 'flower-valley-order-confirmation',

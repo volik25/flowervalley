@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'flower-valley-banner',
@@ -6,6 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./banner.component.scss'],
 })
 export class BannerComponent {
+  @Input()
+  public isAdmin: boolean = false;
   public photos = [
     {
       src: 'assets/images/strong-gold.png',

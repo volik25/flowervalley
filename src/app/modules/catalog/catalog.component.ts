@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-catalog',
@@ -6,46 +7,50 @@ import { Component } from '@angular/core';
   styleUrls: ['./catalog.component.scss'],
 })
 export class CatalogComponent {
+  constructor(private bs: BreadcrumbService) {
+    bs.setItem('Каталог');
+  }
+
   public catalog = [
     {
       title: 'Тюльпаны на 8 марта',
       img: 'assets/images/mocks/catalog/1.png',
-      route: 'tulips',
+      route: 'tyulpany',
     },
     {
       title: 'Рассада однолетних цветов',
       img: 'assets/images/mocks/catalog/2.png',
-      route: 'one-year-flowers',
+      route: 'tyulpany',
     },
     {
       title: 'Мнолетние растения',
       img: 'assets/images/mocks/catalog/3.png',
-      route: 'long-life-flowers',
+      route: 'tyulpany',
     },
     {
       title: 'Ампельные цветы в кашпо',
       img: 'assets/images/mocks/catalog/4.png',
-      route: 'ampels-flowers',
+      route: 'tyulpany',
     },
     {
       title: 'Ампельная рассада (укорененные черенки)',
       img: 'assets/images/mocks/catalog/5.png',
-      route: 'short-ampels-flowers',
+      route: 'tyulpany',
     },
     {
       title: 'Рассада овощей',
       img: 'assets/images/mocks/catalog/6.png',
-      route: 'vegetables',
+      route: 'tyulpany',
     },
     {
       title: 'Рассада клубники и земляники',
       img: 'assets/images/mocks/catalog/7.png',
-      route: 'strawberries',
+      route: 'tyulpany',
     },
     {
       title: 'Грунт питательный для цветов',
       img: 'assets/images/mocks/catalog/8.png',
-      route: 'priming',
+      route: 'tyulpany',
     },
   ];
 }

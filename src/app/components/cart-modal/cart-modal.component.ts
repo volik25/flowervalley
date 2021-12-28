@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { CartService } from '../../services/cart.service';
+import { CartService } from '../../_services/front/cart.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { Product } from '../../_models/product';
+import { ProductItem } from '../../_models/product-item';
 
 @Component({
   selector: 'flower-valley-cart-modal',
@@ -10,7 +10,7 @@ import { Product } from '../../_models/product';
 })
 export class CartModalComponent {
   @Input()
-  public cart: Product[] = [];
+  public cart: ProductItem[] = [];
 
   constructor(private cartService: CartService, private _op: OverlayPanel) {}
 
@@ -24,24 +24,24 @@ export class CartModalComponent {
     this._op.hide();
   }
 
-  public increaseCount(item: Product) {
+  public increaseCount(item: ProductItem) {
     item.count++;
     this.cartService.updateCount(item);
   }
 
-  public decreaseCount(item: Product) {
+  public decreaseCount(item: ProductItem) {
     if (item.count <= 1) return;
     item.count--;
     this.cartService.updateCount(item);
   }
 
-  public changeCount(item: Product, count: number): void {
+  public changeCount(item: ProductItem, count: number): void {
     if (count <= 1) count = 1;
     item.count = count;
     this.cartService.updateCount(item);
   }
 
-  public removeItem(id: number): void {
+  public removeItem(id: string): void {
     this.cartService.removeFromCart(id);
     const index = this.cart.findIndex((cartItem) => id === cartItem.id);
     this.cart.splice(index, 1);

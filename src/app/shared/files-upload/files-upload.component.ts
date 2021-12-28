@@ -1,0 +1,43 @@
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { FileUpload } from 'primeng/fileupload';
+import { DomSanitizer } from '@angular/platform-browser';
+
+@Component({
+  selector: 'flower-valley-files-upload',
+  templateUrl: './files-upload.component.html',
+  styleUrls: ['./files-upload.component.scss'],
+})
+export class FilesUploadComponent {
+  @ViewChild('fileUpload')
+  public fileUpload: FileUpload | undefined;
+  private _photos: File[] = [];
+  @Output()
+  public uploaded: EventEmitter<File[]> = new EventEmitter<File[]>();
+  constructor(private sanitizer: DomSanitizer) {}
+
+  public set photos(files) {
+    this._photos = [];
+    files.map((file) => {
+      if (this.isImage(file)) {
+        (<any>file).objectURL = this.sanitizer.bypassSecurityTrustUrl(
+          window.URL.createObjectURL(file),
+        );
+        this._photos.push(file);
+      }
+    });
+  }
+
+  public get photos(): any[] {
+    return this._photos;
+  }
+
+  public uploadFiles(files: File[]): void {
+    this.photos = files;
+    this.fileUpload?.clear();
+    this.uploaded.emit(this.photos);
+  }
+
+  private isImage(file: File): boolean {
+    return /^image\//.test(file.type);
+  }
+}

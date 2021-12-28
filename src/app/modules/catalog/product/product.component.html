@@ -24,7 +24,7 @@
         <div class="title">Категории:</div>
         <div class="cat-array">
           <span *ngFor="let category of product.categories; let last = last">
-            <span>{{ category.title }}</span>
+            <span>{{ category.name }}</span>
             <span *ngIf="!last">,</span>
           </span>
         </div>

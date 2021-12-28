@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Goods } from '../_models/business-pack/goods';
-import { Firm } from '../_models/business-pack/firm';
-import { environment } from '../../environments/environment';
+import { Firm } from '../../_models/business-pack/firm';
+import { environment } from '../../../environments/environment';
+import { GoodsBusinessPack } from '../../_models/business-pack/goods-base';
 
 @Injectable()
 export class BusinessPackService {
@@ -59,27 +59,33 @@ export class BusinessPackService {
 
   //------------------------ API Товаров -----------------------------//
 
-  public searchGoods(query?: string): Observable<Goods[]> {
-    return this.http.get<Goods[]>(
+  public searchGoods(query?: string): Observable<any> {
+    return this.http.get<GoodsBusinessPack[]>(
       `${this.baseUrl}/model/search${query ? `?query=${encodeURIComponent(query)}` : ``}`,
     );
   }
 
-  public createGoods(goods: Goods): Observable<string> {
-    return this.http.post<string>(`${this.baseUrl}/model`, goods);
+  public createGoods(goods: GoodsBusinessPack): Observable<{ Object: string }> {
+    return this.http.post<{ Object: string }>(`${this.baseUrl}/model`, goods);
   }
 
-  public getGoodsById(id: string): Observable<Goods> {
-    return this.http.get<Goods>(`${this.baseUrl}/model/${id}`);
+  public getGoodsById(id: string): Observable<GoodsBusinessPack> {
+    return this.http.get<GoodsBusinessPack>(`${this.baseUrl}/model/${id}`);
   }
 
   public deleteGoods(id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/model/${id}`);
   }
 
-  public updateGoods(goods: Goods): Observable<any> {
-    const { object } = goods;
-    delete goods.object;
-    return this.http.post(`${this.baseUrl}/model/${object}`, goods);
+  public updateGoods(goods: GoodsBusinessPack): Observable<{ Object: string }> {
+    const { Object } = goods;
+    delete goods.Object;
+    return this.http.post<{ Object: string }>(`${this.baseUrl}/model/${Object}`, goods);
+  }
+
+  public searchVolume(query?: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/volume/search${query ? `?query=${encodeURIComponent(query)}` : ``}`,
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CartService } from '../../services/cart.service';
-import { Product } from '../../_models/product';
+import { CartService } from '../../_services/front/cart.service';
+import { ProductItem } from '../../_models/product-item';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -8,11 +8,11 @@ import { Product } from '../../_models/product';
   styleUrls: ['./product-item.component.scss'],
 })
 export class ProductItemComponent {
-  public get product(): Product {
+  public get product(): ProductItem {
     return this._product;
   }
   @Input()
-  public set product(value: Product) {
+  public set product(value: ProductItem) {
     this._product = value;
   }
   private _product: any;
