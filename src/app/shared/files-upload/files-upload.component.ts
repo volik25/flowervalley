@@ -34,7 +34,7 @@ export class FilesUploadComponent {
   public uploadFiles(files: File[]): void {
     this.photos = files;
     this.fileUpload?.clear();
-    this.uploaded.emit(this.photos);
+    this.uploaded.emit(files);
   }
 
   private isImage(file: File): boolean {

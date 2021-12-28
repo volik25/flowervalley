@@ -41,7 +41,7 @@ $root: '.product';
       }
       &-categories {
         display: flex;
-        align-items: start;
+        align-items: flex-start;
         font-size: 14px;
         line-height: 140%;
         margin-bottom: 20px;
@@ -63,7 +63,7 @@ $root: '.product';
       }
       &-share {
         display: flex;
-        align-items: start;
+        align-items: flex-start;
         font-size: 14px;
         line-height: 140%;
         margin-bottom: 20px;
