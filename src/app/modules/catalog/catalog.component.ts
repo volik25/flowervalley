@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AddCategoryComponent } from '../../shared/catalog-item/add-category/add-category.component';
@@ -7,6 +7,7 @@ import { Category } from '../../_models/category';
 import { StorageService } from '../../_services/front/storage.service';
 import { categoriesKey } from '../../_utils/constants';
 import { AdminService } from '../../_services/back/admin.service';
+import { LoadingService } from '../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-catalog',
@@ -14,7 +15,7 @@ import { AdminService } from '../../_services/back/admin.service';
   styleUrls: ['./catalog.component.scss'],
   providers: [DialogService],
 })
-export class CatalogComponent {
+export class CatalogComponent implements OnInit {
   public catalog: Category[] = [];
   public isAdmin: boolean = false;
 
@@ -24,13 +25,19 @@ export class CatalogComponent {
     private catalogService: CatalogService,
     private storageService: StorageService,
     private adminService: AdminService,
+    private ls: LoadingService,
   ) {
     bs.setItem('Каталог');
-    catalogService.getItems().subscribe((categories) => {
-      this.catalog = categories;
-      storageService.setItem(categoriesKey, categories);
-    });
     adminService.checkAdmin().subscribe((isAdmin) => (this.isAdmin = isAdmin));
+  }
+
+  public ngOnInit(): void {
+    const sub = this.catalogService.getItems().subscribe((categories) => {
+      this.catalog = categories;
+      this.storageService.setItem(categoriesKey, categories);
+      this.ls.removeSubscription(sub);
+    });
+    this.ls.addSubscription(sub);
   }
 
   public addCategory(): void {

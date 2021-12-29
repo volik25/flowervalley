@@ -1,7 +1,4 @@
-<flower-valley-container>
-  <div class="product__header">
-    {{ product.name }}
-  </div>
+<flower-valley-container [headerTitle]="product.name" *ngIf="product">
   <div class="product__desc">
     <div class="product__desc_photo">
       <p-galleria [value]="product.photos" [circular]="true" [showThumbnailNavigators]="false">

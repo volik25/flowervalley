@@ -1,4 +1,5 @@
 <flower-valley-header></flower-valley-header>
+<flower-valley-loader *ngIf="loadingService.isLoading"></flower-valley-loader>
 <div
   [ngClass]="{
     'background-dark': background === 'dark',

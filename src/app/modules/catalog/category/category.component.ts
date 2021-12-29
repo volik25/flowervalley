@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
 import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
@@ -11,6 +11,7 @@ import { categoriesKey } from '../../../_utils/constants';
 import { AdminService } from '../../../_services/back/admin.service';
 import { ProductItem } from '../../../_models/product-item';
 import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
+import { LoadingService } from '../../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-category',
@@ -18,7 +19,7 @@ import { AddProductComponent } from '../../../shared/product-item/add-product/ad
   styleUrls: ['./category.component.scss'],
   providers: [DialogService],
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
   public isAdmin: boolean = false;
   public category: Category | undefined;
   public catalog: Category[] = [];
@@ -39,23 +40,28 @@ export class CategoryComponent {
     private adminService: AdminService,
     private storageService: StorageService,
     private catalogService: CatalogService,
+    private ls: LoadingService,
   ) {
-    route.params.subscribe((params) => {
+    adminService.checkAdmin().subscribe((isAdmin) => {
+      this.isAdmin = isAdmin;
+    });
+  }
+
+  public ngOnInit(): void {
+    this.route.params.subscribe((params) => {
       const categoryRoute = params['category'];
-      this.catalog = storageService.getItem<Category[]>(categoriesKey) || [];
+      this.catalog = this.storageService.getItem<Category[]>(categoriesKey) || [];
       if (this.catalog.length) {
         this.setCategories(categoryRoute);
       } else {
-        catalogService.getItems().subscribe((categoriesApi) => {
+        const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
           this.catalog = categoriesApi;
-          storageService.setItem(categoriesKey, categoriesApi);
+          this.storageService.setItem(categoriesKey, categoriesApi);
           this.setCategories(categoryRoute);
+          this.ls.removeSubscription(sub);
         });
+        this.ls.addSubscription(sub);
       }
-      bs.addItem(this.category);
-    });
-    adminService.checkAdmin().subscribe((isAdmin) => {
-      this.isAdmin = isAdmin;
     });
   }
 
@@ -83,8 +89,19 @@ export class CategoryComponent {
 
   private setCategories(categoryRoute: string): void {
     this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
-    this.catalogService.getItemById<ProductItem[]>(this.category?.id || 0).subscribe((products) => {
-      this.products = products;
-    });
+    this.bs.addItem(this.category);
+    const sub = this.catalogService
+      .getItemById<Category>(this.category?.id || 0)
+      .subscribe((category) => {
+        this.products =
+          category.products?.map((product) => {
+            return {
+              ...product,
+              count: Number(product.coefficient) || 1,
+            };
+          }) || [];
+        this.ls.removeSubscription(sub);
+      });
+    this.ls.addSubscription(sub);
   }
 }

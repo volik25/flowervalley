@@ -1,7 +1,8 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SignInComponent } from './shared/sign-in/sign-in.component';
+import { LoadingService } from './_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-root',
@@ -19,7 +20,13 @@ export class AppComponent {
       width: '600px',
     });
   }
-  constructor(private _bs: BreadcrumbService, private _ds: DialogService) {
+  constructor(
+    private _bs: BreadcrumbService,
+    private _ds: DialogService,
+    public loadingService: LoadingService,
+    private cdr: ChangeDetectorRef,
+  ) {
+    loadingService.changeDetectorRef = cdr;
     _bs.backgroundChanges.subscribe((background) => {
       this.background = background;
     });
