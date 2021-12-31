@@ -24,6 +24,7 @@ import { FilesUploadComponent } from './files-upload/files-upload.component';
 import { EditProductComponent } from './product-item/edit-product/edit-product.component';
 import { AddCategoryComponent } from './catalog-item/add-category/add-category.component';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { EditCategoryComponent } from './catalog-item/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     FilesUploadComponent,
     EditProductComponent,
     AddCategoryComponent,
+    EditCategoryComponent,
   ],
   imports: [
     CommonModule,

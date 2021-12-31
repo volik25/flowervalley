@@ -4,4 +4,18 @@
     <div>{{ item.name }}</div>
     <p-button icon="pi pi-arrow-right" [routerLink]="['/catalog', routerLink]"></p-button>
   </div>
+  <div *ngIf="isAdmin">
+    <p-button
+      class="w-12"
+      styleClass="w-12 mb-2"
+      label="Редактировать"
+      (onClick)="showEditCategoryModal()"
+    ></p-button>
+    <p-button
+      class="w-12"
+      styleClass="w-12 p-button-danger"
+      label="Удалить"
+      (onClick)="deleteCategory()"
+    ></p-button>
+  </div>
 </div>

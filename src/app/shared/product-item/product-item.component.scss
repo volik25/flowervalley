@@ -14,8 +14,11 @@
   justify-content: space-between;
   &__header {
     &_image {
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
       width: 280px;
-      height: auto;
+      height: 180px;
       border-radius: 10px;
     }
     &_title {
@@ -55,5 +58,12 @@
       background-color: $white-100;
       cursor: pointer;
     }
+  }
+  &__edit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px 15px 15px;
   }
 }

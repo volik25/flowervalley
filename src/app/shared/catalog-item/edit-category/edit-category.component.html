@@ -1,4 +1,4 @@
-<form [formGroup]="category" (ngSubmit)="addCategory()">
+<form [formGroup]="categoryGroup" (ngSubmit)="editCategory()">
   <span class="p-float-label mb-2 mr-2">
     <p-dropdown
       styleClass="w-12"
@@ -18,8 +18,9 @@
     <label for="name">Название</label>
   </span>
   <flower-valley-files-upload
+    [files]="[category.img]"
     [multi]="false"
-    label="Добавить обложку"
+    label="Редактировать обложку"
     (uploaded)="photoUploaded($event)"
   ></flower-valley-files-upload>
   <p-button type="submit" label="Добавить"></p-button>

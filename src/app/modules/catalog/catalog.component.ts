@@ -32,6 +32,10 @@ export class CatalogComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.getCategories();
+  }
+
+  private getCategories(): void {
     const sub = this.catalogService.getItems().subscribe((categories) => {
       this.catalog = categories;
       this.storageService.setItem(categoriesKey, categories);
@@ -41,9 +45,21 @@ export class CatalogComponent implements OnInit {
   }
 
   public addCategory(): void {
-    this._ds.open(AddCategoryComponent, {
+    const modal = this._ds.open(AddCategoryComponent, {
       header: 'Добавить раздел',
       width: '600px',
     });
+    modal.onClose.subscribe((res: { success: boolean }) => {
+      if (res?.success) this.getCategories();
+    });
+  }
+
+  public updateCategoriesList(): void {
+    this.getCategories();
+  }
+
+  public deleteCategory(id: number): void {
+    const index = this.catalog.findIndex((category) => category.id === id);
+    this.catalog.splice(index, 1);
   }
 }

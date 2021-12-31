@@ -21,13 +21,13 @@ export class BaseApiService {
     return this.http.post<string>(`${this.baseUrl}/${this.apiUrl}`, item);
   }
 
-  public updateItem<T extends { id?: string }>(item: T): Observable<T> {
+  public updateItem<T extends { id?: string | number }>(item: T): Observable<T> {
     const id = item.id;
     delete item.id;
     return this.http.post<T>(`${this.baseUrl}/${this.apiUrl}/${id}`, item);
   }
 
-  public deleteItem(id: string): Observable<any> {
+  public deleteItem(id: string | number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${this.apiUrl}/${id}`);
   }
 }

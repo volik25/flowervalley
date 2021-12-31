@@ -8,25 +8,24 @@ import { BreadcrumbService } from './breadcrumb.service';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
-  private path: string | undefined;
-  public parentPath: string | undefined;
+  private readonly path: string | undefined;
   public items: any;
+  public parentPath: string[] = [''];
 
   constructor(private route: ActivatedRoute, private _bS: BreadcrumbService) {
-    this.path = this.getPath(route.snapshot);
-    const parentSnapshot = route.parent?.snapshot;
-    if (parentSnapshot) {
-      this.parentPath = this.getPath(parentSnapshot);
-    }
+    this.path = BreadcrumbComponent.getPath(route.snapshot);
   }
 
   public ngOnInit(): void {
     this._bS.breadCrumbChanges().subscribe((res) => {
       this.items = res;
+      if (this.items.length > 2) {
+        this.parentPath = this.items[this.items.length - 2].routerLink;
+      }
     });
   }
 
-  private getPath(snapshot: ActivatedRouteSnapshot): string | undefined {
+  private static getPath(snapshot: ActivatedRouteSnapshot): string | undefined {
     if (snapshot.params) {
       return snapshot.url[0]?.path;
     } else {

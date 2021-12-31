@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GoodsBusinessPack } from '../../../_models/business-pack/goods-base';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProductService } from '../../../_services/back/product.service';
 import { BusinessPackConverterService } from '../../../_services/back/business-pack-converter.service';
-import { Product } from '../../../_models/product';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';
 
@@ -32,7 +31,8 @@ export class AddProductComponent {
     private bpConverter: BusinessPackConverterService,
     private catalogService: CatalogService,
     private productService: ProductService,
-    public config: DynamicDialogConfig,
+    private config: DynamicDialogConfig,
+    private ref: DynamicDialogRef,
   ) {
     this.isImport = config.data.isImport;
     this.goods = fb.group({
@@ -78,7 +78,7 @@ export class AddProductComponent {
           formData.append(key.toLowerCase(), value);
         });
         this.productService.addItem<any>(formData).subscribe(() => {
-          // console.log(res);
+          this.ref.close({ success: true });
         });
       });
     } else {
@@ -95,7 +95,7 @@ export class AddProductComponent {
           formData.append(key.toLowerCase(), value);
         });
         this.productService.addItem<any>(formData).subscribe(() => {
-          // console.log(res);
+          this.ref.close({ success: true });
         });
       });
     }
@@ -108,17 +108,20 @@ export class AddProductComponent {
   }
 
   public patchValue(): void {
-    if (this.selectedProduct) {
-      this.goods.patchValue(this.selectedProduct);
-      if (this.selectedProduct.Object) {
-        this.productService
-          .getItemById<Product>(this.selectedProduct.Object)
-          .subscribe((product) => {
-            this.product.patchValue(product);
-          });
-      }
+    if (this.selectedProduct && this.selectedProduct.Object) {
+      this.productService.getItemById(this.selectedProduct.Object).subscribe((product) => {
+        if (product) {
+          this.goods.disable();
+          this.product.disable();
+        } else {
+          // @ts-ignore
+          this.goods.patchValue(this.selectedProduct);
+          this.goods.disable();
+        }
+      });
     } else {
       this.goods.reset();
+      this.goods.enable();
       this.product.reset();
     }
   }

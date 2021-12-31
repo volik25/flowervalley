@@ -89,19 +89,34 @@ export class CategoryComponent implements OnInit {
 
   private setCategories(categoryRoute: string): void {
     this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
-    this.bs.addItem(this.category);
-    const sub = this.catalogService
-      .getItemById<Category>(this.category?.id || 0)
-      .subscribe((category) => {
-        this.products =
-          category.products?.map((product) => {
-            return {
-              ...product,
-              count: Number(product.coefficient) || 1,
-            };
-          }) || [];
-        this.ls.removeSubscription(sub);
-      });
-    this.ls.addSubscription(sub);
+    this.updateProductsList();
+  }
+
+  private updateProductsList(): void {
+    if (this.category) {
+      this.bs.addItem(this.category.name);
+      const sub = this.catalogService
+        .getItemById<Category>(this.category.id)
+        .subscribe((category) => {
+          this.products =
+            category.products?.map((product) => {
+              return {
+                ...product,
+                count: Number(product.coefficient) || 1,
+              };
+            }) || [];
+          this.ls.removeSubscription(sub);
+        });
+      this.ls.addSubscription(sub);
+    }
+  }
+
+  public updateProducts(): void {
+    this.updateProductsList();
+  }
+
+  public deleteProduct(id?: string) {
+    const index = this.products.findIndex((product) => product.id === id);
+    this.products.splice(index, 1);
   }
 }

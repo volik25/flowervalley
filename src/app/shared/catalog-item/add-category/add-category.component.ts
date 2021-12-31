@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../_models/category';
 import { CatalogService } from '../../../_services/back/catalog.service';
-import { StorageService } from '../../../_services/front/storage.service';
-import { categoriesKey } from '../../../_utils/constants';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'flower-valley-add-category',
@@ -16,11 +15,11 @@ export class AddCategoryComponent {
   constructor(
     private fb: FormBuilder,
     private catalogService: CatalogService,
-    private storeService: StorageService,
+    public ref: DynamicDialogRef,
   ) {
     this.category = fb.group({
       name: ['', Validators.required],
-      img: [''],
+      img: ['', Validators.required],
       parentId: [null],
     });
     catalogService.getItems().subscribe((items) => {
@@ -31,10 +30,22 @@ export class AddCategoryComponent {
   public addCategory(): void {
     if (this.category.invalid) return;
     const category: Category = this.category.getRawValue();
-    this.catalogService.addItem<Category>(category).subscribe((res) => {
-      category.id = res;
-      this.categories.push(category);
-      this.storeService.setItem(categoriesKey, this.categories);
+    const formData = new FormData();
+    Object.getOwnPropertyNames(category).map((key) => {
+      if (key !== 'img') {
+        // @ts-ignore
+        const value = category[key];
+        formData.append(key, value);
+      }
     });
+    formData.append('img', category.img);
+    this.catalogService.addItem<any>(formData).subscribe((id) => {
+      category.id = id;
+      this.ref.close({ success: true });
+    });
+  }
+
+  public photoUploaded(photos: File[]): void {
+    this.category.get('img')?.setValue(photos[0]);
   }
 }

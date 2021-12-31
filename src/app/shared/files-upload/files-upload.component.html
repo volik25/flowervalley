@@ -8,11 +8,14 @@
   [auto]="true"
   (uploadHandler)="uploadFiles($event.files)"
 ></p-fileUpload>
-<div class="flex flex-wrap mb-2">
+<div class="flex flex-wrap mb-2" *ngIf="!files.length">
   <p-image
     *ngFor="let photo of photos"
     styleClass="mr-2"
     [src]="photo.objectURL"
     width="100px"
   ></p-image>
+</div>
+<div class="flex flex-wrap mb-2" *ngIf="files.length">
+  <p-image *ngFor="let photo of files" styleClass="mr-2" [src]="photo" width="100px"></p-image>
 </div>

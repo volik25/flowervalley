@@ -26,6 +26,7 @@
   }
   .banner {
     display: flex;
+    flex-direction: column;
     width: 100%;
     margin-top: 20px;
     .header {
@@ -72,7 +73,7 @@
     background: $light-grey;
     border-radius: 10px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     padding: 10px 20px;
     div {
       display: flex;
@@ -91,5 +92,15 @@
         color: $text;
       }
     }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container .banner {
+    flex-direction: row;
+  }
+  .container .info-banner {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }

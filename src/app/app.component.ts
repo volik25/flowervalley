@@ -29,6 +29,7 @@ export class AppComponent {
     loadingService.changeDetectorRef = cdr;
     _bs.backgroundChanges.subscribe((background) => {
       this.background = background;
+      cdr.detectChanges();
     });
   }
 

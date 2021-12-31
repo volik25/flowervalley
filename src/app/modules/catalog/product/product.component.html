@@ -1,4 +1,9 @@
-<flower-valley-container [headerTitle]="product.name" *ngIf="product">
+<flower-valley-container
+  [headerTitle]="product.name"
+  [buttonTemplate]="actionsTemplate"
+  [isAdmin]="isAdmin"
+  *ngIf="product"
+>
   <div class="product__desc">
     <div class="product__desc_photo">
       <p-galleria [value]="product.photos" [circular]="true" [showThumbnailNavigators]="false">
@@ -100,3 +105,7 @@
     ></flower-valley-product-item>
   </div>
 </flower-valley-container>
+
+<ng-template #actionsTemplate>
+  <p-button label="Редактировать товар" (onClick)="editProduct()"></p-button>
+</ng-template>

@@ -21,9 +21,12 @@
     </div>
     <div class="category__content_items">
       <flower-valley-product-item
+        [isAdmin]="isAdmin"
         *ngFor="let product of products"
         [product]="product"
         (openProductCard)="navigateTo($event)"
+        (productUpdated)="updateProducts()"
+        (productDeleted)="deleteProduct(product.id)"
       ></flower-valley-product-item>
     </div>
   </div>

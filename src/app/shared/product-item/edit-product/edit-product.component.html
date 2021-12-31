@@ -1,1 +1,67 @@
-<p>edit-product works!</p>
+<form [formGroup]="goods" (ngSubmit)="editProduct()">
+  <span class="p-float-label">
+    <input type="text" id="name" pInputText formControlName="Name" />
+    <label for="name">Наименование</label>
+  </span>
+
+  <div class="flex">
+    <span class="p-float-label mb-2 mr-2">
+      <p-dropdown
+        styleClass="w-12"
+        inputId="volume"
+        [options]="options"
+        optionValue="value"
+        optionLabel="name"
+        formControlName="Volume"
+      ></p-dropdown>
+      <label for="volume">Единица измерения</label>
+    </span>
+    <span class="p-float-label">
+      <input type="text" id="price" pInputText formControlName="Price" />
+      <label for="price">Цена</label>
+    </span>
+  </div>
+  <div class="flex">
+    <span class="p-float-label mb-2 mr-2">
+      <p-dropdown
+        styleClass="w-12"
+        inputId="pack"
+        [options]="options"
+        optionValue="value"
+        optionLabel="name"
+        formControlName="Pack"
+      ></p-dropdown>
+      <label for="pack">Упаковка</label>
+    </span>
+    <span class="p-float-label">
+      <input type="text" id="coeff" pInputText formControlName="Coefficient" />
+      <label for="coeff">Количество товара в упаковке</label>
+    </span>
+  </div>
+  <form [formGroup]="productGroup">
+    <span class="p-float-label mb-2">
+      <p-multiSelect
+        styleClass="w-12"
+        inputId="parent"
+        [options]="categories"
+        optionValue="id"
+        optionLabel="name"
+        emptyMessage="Категорий нет"
+        formControlName="categories"
+        [filter]="false"
+      ></p-multiSelect>
+      <label for="parent">Расположить в категории (необязательно)</label>
+    </span>
+    <p-editor
+      styleClass="mb-2"
+      formControlName="description"
+      placeholder="Описание товара"
+    ></p-editor>
+    <flower-valley-files-upload
+      (uploaded)="filesUploaded($event)"
+      label="Обновить изображения"
+      [files]="product.photos || []"
+    ></flower-valley-files-upload>
+  </form>
+  <p-button type="submit" label="Добавить"></p-button>
+</form>

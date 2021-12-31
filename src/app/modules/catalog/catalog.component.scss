@@ -7,7 +7,20 @@ $root: '.catalog';
   &__categories {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     padding-bottom: 150px;
+  }
+}
+
+.start {
+  justify-content: flex-start;
+  ::ng-deep .card {
+    margin-right: 20px;
+  }
+}
+
+.between {
+  justify-content: space-between;
+  ::ng-deep .card {
+    margin-right: 0;
   }
 }
