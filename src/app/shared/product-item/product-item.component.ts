@@ -4,6 +4,7 @@ import { ProductItem } from '../../_models/product-item';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductService } from '../../_services/back/product.service';
+import { LoadingService } from '../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -33,6 +34,7 @@ export class ProductItemComponent {
     private cartService: CartService,
     private ds: DialogService,
     private productService: ProductService,
+    private ls: LoadingService,
   ) {}
 
   public increaseCount() {
@@ -64,17 +66,21 @@ export class ProductItemComponent {
     }
   }
 
-  public showEditProductModal(): void {
-    const modal = this.ds.open(EditProductComponent, {
-      header: 'Редактировать товар',
-      width: '600px',
-      data: {
-        product: this.product,
-      },
+  public showEditProductModal(id: string): void {
+    const sub = this.productService.getItemById(id).subscribe((product) => {
+      this.ls.removeSubscription(sub);
+      const modal = this.ds.open(EditProductComponent, {
+        header: 'Редактировать товар',
+        width: '600px',
+        data: {
+          product: product,
+        },
+      });
+      modal.onClose.subscribe((res: { success: boolean }) => {
+        if (res?.success) this.productUpdated.emit();
+      });
     });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res?.success) this.productUpdated.emit();
-    });
+    this.ls.addSubscription(sub);
   }
 
   public deleteProduct(): void {

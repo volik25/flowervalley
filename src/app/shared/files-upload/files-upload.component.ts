@@ -39,6 +39,7 @@ export class FilesUploadComponent {
 
   public uploadFiles(files: File[]): void {
     this.photos = files;
+    this.files = [];
     this.fileUpload?.clear();
     this.uploaded.emit(files);
   }

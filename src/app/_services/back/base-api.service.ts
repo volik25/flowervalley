@@ -21,10 +21,16 @@ export class BaseApiService {
     return this.http.post<string>(`${this.baseUrl}/${this.apiUrl}`, item);
   }
 
-  public updateItem<T extends { id?: string | number }>(item: T): Observable<T> {
-    const id = item.id;
-    delete item.id;
-    return this.http.post<T>(`${this.baseUrl}/${this.apiUrl}/${id}`, item);
+  public updateItem<T extends { id?: string | number }>(
+    item: T,
+    id?: string | number,
+  ): Observable<T> {
+    let identifier = id;
+    if (!identifier) {
+      identifier = item.id;
+      delete item.id;
+    }
+    return this.http.post<T>(`${this.baseUrl}/${this.apiUrl}/${identifier}`, item);
   }
 
   public deleteItem(id: string | number): Observable<any> {

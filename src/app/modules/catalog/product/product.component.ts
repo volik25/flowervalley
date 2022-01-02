@@ -109,6 +109,7 @@ export class ProductComponent implements OnInit {
       if (product) {
         this.product = {
           ...product,
+          id: id,
           count: Number(product.coefficient) || 1,
         };
         if (params) this.setCategories(params, product.name);

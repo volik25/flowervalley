@@ -62,22 +62,26 @@ export class EditProductComponent {
     this.photos.map((photo) => {
       formData.append('photos[]', photo);
     });
-    this.bpService.updateGoods(goods).subscribe((response) => {
-      const id = response.Object;
-      const product: any = {
-        ...this.converter.convertToProduct(goods),
-        id: id,
-        description: this.productGroup.getRawValue().description,
-      };
-      Object.getOwnPropertyNames(product).map((key) => {
-        // @ts-ignore
-        const value = product[key];
-        formData.append(key.toLowerCase(), value);
+    this.bpService
+      .updateGoods({
+        ...goods,
+        Object: this.product.id,
+      })
+      .subscribe((response) => {
+        const id = response.Object;
+        const product: any = {
+          ...this.converter.convertToProduct(goods),
+          description: this.productGroup.getRawValue().description,
+        };
+        Object.getOwnPropertyNames(product).map((key) => {
+          // @ts-ignore
+          const value = product[key];
+          formData.append(key.toLowerCase(), value);
+        });
+        this.productService.updateItem<any>(formData, id).subscribe(() => {
+          this.ref.close({ success: true });
+        });
       });
-      this.productService.updateItem<any>(formData).subscribe(() => {
-        this.ref.close({ success: true });
-      });
-    });
   }
 
   public filesUploaded(photos: File[]): void {

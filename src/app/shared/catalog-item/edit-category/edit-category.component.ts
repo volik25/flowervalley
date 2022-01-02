@@ -45,7 +45,7 @@ export class EditCategoryComponent {
       }
     });
     formData.append('img', category.img);
-    this.catalogService.updateItem<any>(formData).subscribe(() => {
+    this.catalogService.updateItem<any>(formData, this.category.id).subscribe(() => {
       this.ref.close({ success: true });
     });
   }
