@@ -27,7 +27,10 @@
       <div class="product__desc_info-categories">
         <div class="title">Категории:</div>
         <div class="cat-array">
-          <span *ngFor="let category of product.categories; let last = last">
+          <span
+            *ngFor="let category of product.categories; let last = last"
+            (click)="getRouterLink(category.name)"
+          >
             <span>{{ category.name }}</span>
             <span *ngIf="!last">,</span>
           </span>

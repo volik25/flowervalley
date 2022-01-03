@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
 import { ProductItem } from '../../../_models/product-item';
 import { ProductService } from '../../../_services/back/product.service';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Product } from '../../../_models/product';
 import { LoadingService } from '../../../_services/front/loading.service';
 import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
@@ -90,6 +90,7 @@ export class ProductComponent implements OnInit {
     private catalogService: CatalogService,
     private dialogService: DialogService,
     private route: ActivatedRoute,
+    private router: Router,
     private bs: BreadcrumbService,
     private ls: LoadingService,
     private adminService: AdminService,
@@ -205,5 +206,9 @@ export class ProductComponent implements OnInit {
     modal.onClose.subscribe((res: { success: boolean }) => {
       if (res?.success && this.product?.id) this.getProductById(this.product.id);
     });
+  }
+
+  public getRouterLink(string: string): void {
+    this.router.navigate(['catalog', slugify(string)], { relativeTo: this.route.parent?.parent });
   }
 }
