@@ -1,7 +1,7 @@
 import { ElementRef, Injectable } from '@angular/core';
-import { MkadPolygon } from './mkad-polygon';
+import { MkadPolygon } from '../../_utils/mkad-polygon';
 import { Observable, Subject } from 'rxjs';
-import { OrderConfirmationComponent } from '../modules/cart/order-confirmation/order-confirmation.component';
+import { OrderConfirmationComponent } from '../../modules/cart/order-confirmation/order-confirmation.component';
 
 declare var ymaps: any;
 

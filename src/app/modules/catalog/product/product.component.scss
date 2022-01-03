@@ -13,9 +13,8 @@ $root: '.product';
   }
   &__desc {
     display: flex;
-    justify-content: space-between;
     &_photo {
-      min-width: 50%;
+      width: 550px;
       &::ng-deep {
         .p-galleria-thumbnail-container {
           background: none;
@@ -24,6 +23,7 @@ $root: '.product';
     }
     &_info {
       margin-left: 40px;
+      width: calc(100% - 590px);
       &-tare {
         font-weight: 500;
         font-size: 18px;
@@ -41,7 +41,7 @@ $root: '.product';
       }
       &-categories {
         display: flex;
-        align-items: start;
+        align-items: flex-start;
         font-size: 14px;
         line-height: 140%;
         margin-bottom: 20px;
@@ -63,7 +63,7 @@ $root: '.product';
       }
       &-share {
         display: flex;
-        align-items: start;
+        align-items: flex-start;
         font-size: 14px;
         line-height: 140%;
         margin-bottom: 20px;

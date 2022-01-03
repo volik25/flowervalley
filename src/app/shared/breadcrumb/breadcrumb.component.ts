@@ -1,39 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { BreadcrumbService } from './breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
 })
-export class BreadcrumbComponent {
-  private path: string | undefined;
-  public parentPath: string | undefined;
+export class BreadcrumbComponent implements OnInit {
+  private readonly path: string | undefined;
+  public items: any;
+  public parentPath: string[] = [''];
 
-  constructor(private route: ActivatedRoute) {
-    this.path = this.getPath(route.snapshot);
-    const parentSnapshot = route.parent?.snapshot;
-    if (parentSnapshot) {
-      this.parentPath = this.getPath(parentSnapshot);
-    }
+  constructor(private route: ActivatedRoute, private _bS: BreadcrumbService) {
+    this.path = BreadcrumbComponent.getPath(route.snapshot);
   }
 
-  public items = [
-    {
-      title: 'Главная',
-      routerLink: [''],
-    },
-    {
-      title: 'Каталог',
-      routerLink: ['', 'catalog'],
-    },
-    {
-      title: 'Тюльпаны на 8 марта',
-      routerLink: ['', 'tulips'],
-    },
-  ];
+  public ngOnInit(): void {
+    this._bS.breadCrumbChanges().subscribe((res) => {
+      this.items = res;
+      if (this.items.length > 2) {
+        this.parentPath = this.items[this.items.length - 2].routerLink;
+      }
+    });
+  }
 
-  private getPath(snapshot: ActivatedRouteSnapshot): string | undefined {
+  private static getPath(snapshot: ActivatedRouteSnapshot): string | undefined {
     if (snapshot.params) {
       return snapshot.url[0]?.path;
     } else {

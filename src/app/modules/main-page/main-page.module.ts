@@ -14,7 +14,7 @@ import { SalesComponent } from './sales/sales.component';
 import { AboutComponent } from './about/about.component';
 import { AdvantagesComponent } from './advantages/advantages.component';
 import { VideoComponent } from './video/video.component';
-import { PipesModule } from '../../pipes/pipes.module';
+import { PipesModule } from '../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { ClientsComponent } from './clients/clients.component';
 

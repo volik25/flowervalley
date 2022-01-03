@@ -1,51 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { AddCategoryComponent } from '../../shared/catalog-item/add-category/add-category.component';
+import { CatalogService } from '../../_services/back/catalog.service';
+import { Category } from '../../_models/category';
+import { StorageService } from '../../_services/front/storage.service';
+import { categoriesKey } from '../../_utils/constants';
+import { AdminService } from '../../_services/back/admin.service';
+import { LoadingService } from '../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-catalog',
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.scss'],
+  providers: [DialogService],
 })
-export class CatalogComponent {
-  public catalog = [
-    {
-      title: 'Тюльпаны на 8 марта',
-      img: 'assets/images/mocks/catalog/1.png',
-      route: 'tulips',
-    },
-    {
-      title: 'Рассада однолетних цветов',
-      img: 'assets/images/mocks/catalog/2.png',
-      route: 'one-year-flowers',
-    },
-    {
-      title: 'Мнолетние растения',
-      img: 'assets/images/mocks/catalog/3.png',
-      route: 'long-life-flowers',
-    },
-    {
-      title: 'Ампельные цветы в кашпо',
-      img: 'assets/images/mocks/catalog/4.png',
-      route: 'ampels-flowers',
-    },
-    {
-      title: 'Ампельная рассада (укорененные черенки)',
-      img: 'assets/images/mocks/catalog/5.png',
-      route: 'short-ampels-flowers',
-    },
-    {
-      title: 'Рассада овощей',
-      img: 'assets/images/mocks/catalog/6.png',
-      route: 'vegetables',
-    },
-    {
-      title: 'Рассада клубники и земляники',
-      img: 'assets/images/mocks/catalog/7.png',
-      route: 'strawberries',
-    },
-    {
-      title: 'Грунт питательный для цветов',
-      img: 'assets/images/mocks/catalog/8.png',
-      route: 'priming',
-    },
-  ];
+export class CatalogComponent implements OnInit {
+  public catalog: Category[] = [];
+  public isAdmin: boolean = false;
+
+  constructor(
+    private bs: BreadcrumbService,
+    private _ds: DialogService,
+    private catalogService: CatalogService,
+    private storageService: StorageService,
+    private adminService: AdminService,
+    private ls: LoadingService,
+  ) {
+    bs.setItem('Каталог');
+    adminService.checkAdmin().subscribe((isAdmin) => (this.isAdmin = isAdmin));
+  }
+
+  public ngOnInit(): void {
+    this.getCategories();
+  }
+
+  private getCategories(): void {
+    const sub = this.catalogService.getItems().subscribe((categories) => {
+      this.catalog = categories;
+      this.storageService.setItem(categoriesKey, categories);
+      this.ls.removeSubscription(sub);
+    });
+    this.ls.addSubscription(sub);
+  }
+
+  public addCategory(): void {
+    const modal = this._ds.open(AddCategoryComponent, {
+      header: 'Добавить раздел',
+      width: '600px',
+    });
+    modal.onClose.subscribe((res: { success: boolean }) => {
+      if (res?.success) this.getCategories();
+    });
+  }
+
+  public updateCategoriesList(): void {
+    this.getCategories();
+  }
+
+  public deleteCategory(id: number): void {
+    const index = this.catalog.findIndex((category) => category.id === id);
+    this.catalog.splice(index, 1);
+  }
 }

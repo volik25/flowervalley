@@ -1,9 +1,23 @@
-<flower-valley-container background="dark" headerTitle="Каталог">
-  <div class="catalog__categories">
+<flower-valley-container
+  background="dark"
+  headerTitle="Каталог"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="actionsTemplate"
+>
+  <div
+    class="catalog__categories"
+    [ngClass]="{ start: catalog.length < 4, between: catalog.length >= 4 }"
+  >
     <flower-valley-catalog-item
       *ngFor="let item of catalog"
       [item]="item"
+      [isAdmin]="isAdmin"
+      (categoryDeleted)="deleteCategory(item.id)"
+      (categoryUpdated)="updateCategoriesList()"
     ></flower-valley-catalog-item>
   </div>
 </flower-valley-container>
-<router-outlet></router-outlet>
+
+<ng-template #actionsTemplate>
+  <p-button label="Добавить категорию" (onClick)="addCategory()"></p-button>
+</ng-template>

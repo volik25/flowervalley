@@ -9,21 +9,10 @@ $root: '.category';
   border-color: $main-green;
 }
 
-.container {
-  background-color: $light-grey;
-}
-
 #{$root} {
-  @include fv-container(30px);
-  &__header {
-    font-weight: 500;
-    font-size: 60px;
-    line-height: 100%;
-  }
   &__content {
     padding-top: 40px;
     display: flex;
-    justify-content: space-between;
     &_menu {
       padding-right: 40px;
       min-width: 250px;
@@ -44,9 +33,23 @@ $root: '.category';
       }
     }
     &_items {
+      flex: 1 1 auto;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+
+      &.start {
+        justify-content: flex-start;
+        ::ng-deep .product {
+          margin-right: 20px;
+        }
+      }
+
+      &.between {
+        justify-content: space-between;
+        ::ng-deep .product {
+          margin-right: 0;
+        }
+      }
     }
   }
 }

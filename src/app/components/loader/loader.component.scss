@@ -1,0 +1,12 @@
+@import "colors";
+
+.loader {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 217px);
+  background: $white-70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

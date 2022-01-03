@@ -20,6 +20,9 @@
         title="Каталог тюльпанов"
         styleClass="mt-4"
       ></flower-valley-leaf-button>
+      <div *ngIf="isAdmin" class="mt-3">
+        <p-button label="Редактировать"></p-button>
+      </div>
     </div>
     <div class="carousel">
       <p-carousel [value]="photos" [circular]="true">

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Box } from '../_models/box';
+import { Box } from '../../_models/box';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()

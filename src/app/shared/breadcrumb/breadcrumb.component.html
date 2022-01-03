@@ -1,17 +1,15 @@
 <div class="breadcrumb">
-  <div class="breadcrumb__icon" [routerLink]="['', parentPath]">
+  <div class="breadcrumb__icon" [routerLink]="parentPath">
     <img src="../../../assets/icons/back.svg" />
   </div>
   <div class="breadcrumb__nav-bar">
     <div
       *ngFor="let item of items; let last = last"
-      [ngClass]="{ active: isActive(item.routerLink) }"
+      [ngClass]="{ active: last }"
       class="breadcrumb__nav-bar_item"
     >
-      <span *ngIf="!isActive(item.routerLink)" [routerLink]="item.routerLink">{{
-        item.title
-      }}</span>
-      <span *ngIf="isActive(item.routerLink)">{{ item.title }}</span>
+      <span *ngIf="!last" [routerLink]="item.routerLink">{{ item.title }}</span>
+      <span *ngIf="last">{{ item.title }}</span>
       <span *ngIf="!last">/</span>
     </div>
   </div>

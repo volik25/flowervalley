@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-contacts',
@@ -14,4 +15,8 @@ export class ContactsComponent {
     'assets/images/mocks/contacts/5.png',
     'assets/images/mocks/contacts/6.png',
   ];
+
+  constructor(private _bs: BreadcrumbService) {
+    _bs.setItem('Контакты');
+  }
 }

@@ -12,6 +12,9 @@
           <img *ngIf="headerIconImage" [src]="headerIconImage" width="22px" class="mr-3" />
           <div>{{ headerTitle }}</div>
         </div>
+        <div *ngIf="isAdmin">
+          <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+        </div>
         <flower-valley-leaf-button
           *ngIf="headerButton"
           [routerLink]="headerButton['routerLink']"

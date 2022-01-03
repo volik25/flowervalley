@@ -8,8 +8,23 @@ import { ProductItemComponent } from './product-item/product-item.component';
 import { ContainerComponent } from './container/container.component';
 import { LeafButtonComponent } from './leaf-button/leaf-button.component';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { AddProductComponent } from './product-item/add-product/add-product.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { PasswordModule } from 'primeng/password';
+import { MenuModule } from 'primeng/menu';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { EditorModule } from 'primeng/editor';
+import { FileUploadModule } from 'primeng/fileupload';
+import { HttpClientModule } from '@angular/common/http';
+import { ImageModule } from 'primeng/image';
+import { FilesUploadComponent } from './files-upload/files-upload.component';
+import { EditProductComponent } from './product-item/edit-product/edit-product.component';
+import { AddCategoryComponent } from './catalog-item/add-category/add-category.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { EditCategoryComponent } from './catalog-item/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +33,31 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
     ContainerComponent,
     LeafButtonComponent,
     BreadcrumbComponent,
+    AddProductComponent,
+    SignInComponent,
+    FilesUploadComponent,
+    EditProductComponent,
+    AddCategoryComponent,
+    EditCategoryComponent,
   ],
-  imports: [CommonModule, ButtonModule, SharedModule, RouterModule, InputTextModule, FormsModule],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    SharedModule,
+    RouterModule,
+    InputTextModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    PasswordModule,
+    MenuModule,
+    AutoCompleteModule,
+    EditorModule,
+    FileUploadModule,
+    HttpClientModule,
+    ImageModule,
+    MultiSelectModule,
+  ],
   exports: [
     CatalogItemComponent,
     ContainerComponent,

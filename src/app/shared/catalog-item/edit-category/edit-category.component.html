@@ -1,0 +1,27 @@
+<form [formGroup]="categoryGroup" (ngSubmit)="editCategory()">
+  <span class="p-float-label mb-2 mr-2">
+    <p-dropdown
+      styleClass="w-12"
+      [autoDisplayFirst]="false"
+      [showClear]="true"
+      inputId="parent"
+      [options]="categories"
+      optionValue="id"
+      optionLabel="name"
+      emptyMessage="Категорий нет"
+      formControlName="parentId"
+    ></p-dropdown>
+    <label for="parent">Расположить в категории (необязательно)</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="name" pInputText formControlName="name" />
+    <label for="name">Название</label>
+  </span>
+  <flower-valley-files-upload
+    [files]="[category.img]"
+    [multi]="false"
+    label="Редактировать обложку"
+    (uploaded)="photoUploaded($event)"
+  ></flower-valley-files-upload>
+  <p-button type="submit" label="Сохранить"></p-button>
+</form>

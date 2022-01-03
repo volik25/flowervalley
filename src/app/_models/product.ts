@@ -1,9 +1,8 @@
-import { Goods } from './business-pack/goods';
+import { BusinessPackModel } from './business-pack/business-pack-model';
+import { Category } from './category';
 
-export interface Product extends Goods {
-  id: number;
+export interface Product extends BusinessPackModel {
   photos: string[];
-  description?: string;
-  count: number;
-  categories?: any[];
+  description: string;
+  categories: Category[];
 }

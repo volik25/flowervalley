@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../../_models/product';
-import { CartService } from '../../../services/cart.service';
+import { CartService } from '../../../_services/front/cart.service';
 import { Box } from '../../../_models/box';
-import { BoxService } from '../../../services/box.service';
-import { DestroyService } from '../../../services/destroy.service';
+import { BoxService } from '../../../_services/front/box.service';
+import { DestroyService } from '../../../_services/front/destroy.service';
 import { takeUntil } from 'rxjs';
+import { ProductItem } from '../../../_models/product-item';
 
 @Component({
   selector: 'flower-valley-confirmation-goods',
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs';
   providers: [DestroyService],
 })
 export class ConfirmationGoodsComponent {
-  public goods: Product[] = [];
+  public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   @Input()
   public shippingCost = 0;
@@ -35,18 +35,18 @@ export class ConfirmationGoodsComponent {
     });
   }
 
-  public increaseCount(item: Product) {
+  public increaseCount(item: ProductItem) {
     item.count++;
     this.cartService.updateCount(item);
   }
 
-  public decreaseCount(item: Product) {
+  public decreaseCount(item: ProductItem) {
     if (item.count <= 1) return;
     item.count--;
     this.cartService.updateCount(item);
   }
 
-  public changeCount(item: Product, count: number): void {
+  public changeCount(item: ProductItem, count: number): void {
     if (count <= 1) count = 1;
     item.count = count;
     this.cartService.updateCount(item);

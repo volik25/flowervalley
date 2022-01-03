@@ -1,7 +1,9 @@
-<flower-valley-container>
-  <div class="product__header">
-    {{ product.name }}
-  </div>
+<flower-valley-container
+  [headerTitle]="product.name"
+  [buttonTemplate]="actionsTemplate"
+  [isAdmin]="isAdmin"
+  *ngIf="product"
+>
   <div class="product__desc">
     <div class="product__desc_photo">
       <p-galleria [value]="product.photos" [circular]="true" [showThumbnailNavigators]="false">
@@ -18,13 +20,18 @@
       </p-galleria>
     </div>
     <div class="product__desc_info">
-      <div class="product__desc_info-tare">{{ product.pack }}</div>
+      <div class="product__desc_info-tare" *ngIf="product.note1 && product.note1 !== 'undefined'">
+        {{ product.note1 }}
+      </div>
       <div class="product__desc_info-description">{{ product.description }}</div>
       <div class="product__desc_info-categories">
         <div class="title">Категории:</div>
         <div class="cat-array">
-          <span *ngFor="let category of product.categories; let last = last">
-            <span>{{ category.title }}</span>
+          <span
+            *ngFor="let category of product.categories; let last = last"
+            (click)="getRouterLink(category.name)"
+          >
+            <span>{{ category.name }}</span>
             <span *ngIf="!last">,</span>
           </span>
         </div>
@@ -103,3 +110,7 @@
     ></flower-valley-product-item>
   </div>
 </flower-valley-container>
+
+<ng-template #actionsTemplate>
+  <p-button label="Редактировать товар" (onClick)="editProduct()"></p-button>
+</ng-template>

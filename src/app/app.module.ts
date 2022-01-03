@@ -15,11 +15,15 @@ import { DialogModule } from 'primeng/dialog';
 import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CartModalComponent } from './components/cart-modal/cart-modal.component';
-import { PipesModule } from './pipes/pipes.module';
+import { PipesModule } from './_pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { BpRequestInterceptor } from './interceptors/bp-request.interceptor';
-import { BusinessPackService } from './services/business-paсk.service';
+import { BpRequestInterceptor } from './_interceptors/bp-request.interceptor';
+import { BusinessPackService } from './_services/back/business-paсk.service';
+import { TokenInterceptor } from './_interceptors/token.interceptor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -42,15 +46,24 @@ import { BusinessPackService } from './services/business-paсk.service';
     PipesModule,
     FormsModule,
     HttpClientModule,
+    ConfirmDialogModule,
+    ToastModule,
   ],
   providers: [
     BreadcrumbService,
+    BusinessPackService,
+    ConfirmationService,
+    MessageService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BpRequestInterceptor,
       multi: true,
     },
-    BusinessPackService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

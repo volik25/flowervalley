@@ -11,7 +11,8 @@ import { ImageModule } from 'primeng/image';
 import { GalleriaModule } from 'primeng/galleria';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { PipesModule } from '../../pipes/pipes.module';
+import { PipesModule } from '../../_pipes/pipes.module';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [CatalogComponent, CategoryComponent, ProductComponent],
@@ -25,6 +26,7 @@ import { PipesModule } from '../../pipes/pipes.module';
     FormsModule,
     ButtonModule,
     PipesModule,
+    SplitButtonModule,
   ],
 })
 export class CatalogModule {}

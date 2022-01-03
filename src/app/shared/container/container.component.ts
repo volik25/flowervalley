@@ -1,8 +1,8 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { BreadcrumbService } from '../breadcrumb/breadcrumb.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, takeUntil } from 'rxjs';
-import { DestroyService } from '../../services/destroy.service';
+import { DestroyService } from '../../_services/front/destroy.service';
 
 @Component({
   selector: 'flower-valley-container',
@@ -11,7 +11,7 @@ import { DestroyService } from '../../services/destroy.service';
   encapsulation: ViewEncapsulation.None,
   providers: [DestroyService],
 })
-export class ContainerComponent {
+export class ContainerComponent implements OnInit {
   @Input()
   public headerTitle: string | undefined;
   @Input()
@@ -24,6 +24,11 @@ export class ContainerComponent {
   public headerButton: Record<string, any> | undefined;
   @Input()
   public footerButton: Record<string, any> | undefined;
+  @Input()
+  public isAdmin: boolean = false;
+  @Input()
+  // @ts-ignore
+  public buttonTemplate: TemplateRef<any>;
 
   constructor(
     private bs: BreadcrumbService,
@@ -32,13 +37,16 @@ export class ContainerComponent {
   ) {
     router.events
       .pipe(
-        takeUntil(destroy$),
+        takeUntil(this.destroy$),
         filter((e) => e instanceof NavigationEnd),
         map((e) => e as NavigationEnd),
       )
       .subscribe((event) => {
         bs.startUrl = event.urlAfterRedirects;
-        this.bs.background = this.background;
       });
+  }
+
+  public ngOnInit(): void {
+    this.bs.background = this.background;
   }
 }

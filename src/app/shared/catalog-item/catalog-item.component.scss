@@ -13,10 +13,13 @@
     height: 230px;
     border-radius: 10px;
   }
-  &>div:last-child {
+  &>div:nth-child(2) {
     padding: 20px 20px 30px;
     font-weight: 500;
     font-size: 16px;
     line-height: 110%;
+  }
+  &>div:last-child:not(:nth-child(2)) {
+    padding: 0 10px 20px;
   }
 }

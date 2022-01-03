@@ -1,30 +1,46 @@
-<div class="container">
-  <div class="category">
-    <div class="category__header">
-      {{ category.title }}
+<flower-valley-container
+  background="dark"
+  [headerTitle]="category?.name"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="actionsTemplate"
+>
+  <div class="category__content">
+    <div class="category__content_menu">
+      <div
+        class="item"
+        *ngFor="let item of catalog; let first = first; let last = last"
+        [ngClass]="{
+          'border-radius-top': first,
+          'border-radius-bottom': last,
+          active: isActive(item.name)
+        }"
+        [routerLink]="['../', getRoute(item.name)]"
+      >
+        {{ item.name }}
+      </div>
     </div>
-    <div class="category__content">
-      <div class="category__content_menu">
-        <div
-          class="item"
-          *ngFor="let item of catalog; let first = first; let last = last"
-          [ngClass]="{
-            'border-radius-top': first,
-            'border-radius-bottom': last,
-            active: isActive(item.title)
-          }"
-          [routerLink]="['../', item.route]"
-        >
-          {{ item.title }}
-        </div>
-      </div>
-      <div class="category__content_items">
-        <flower-valley-product-item
-          *ngFor="let product of products"
-          [product]="product"
-          (openProductCard)="navigateTo($event)"
-        ></flower-valley-product-item>
-      </div>
+    <div
+      class="category__content_items"
+      [ngClass]="{ start: products.length < 4, between: products.length >= 4 }"
+    >
+      <flower-valley-product-item
+        [isAdmin]="isAdmin"
+        *ngFor="let product of products"
+        [product]="product"
+        (openProductCard)="navigateTo($event)"
+        (productUpdated)="updateProducts()"
+        (productDeleted)="deleteProduct(product.id)"
+      ></flower-valley-product-item>
     </div>
   </div>
-</div>
+</flower-valley-container>
+
+<ng-template #actionsTemplate>
+  <p-splitButton
+    *ngIf="isAdmin"
+    (onClick)="showAddProductModal()"
+    icon="pi pi-plus"
+    label="Новый товар"
+    [model]="actions"
+  ></p-splitButton>
+</ng-template>

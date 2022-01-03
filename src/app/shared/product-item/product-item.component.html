@@ -1,6 +1,9 @@
 <div class="product">
   <div class="product__header">
-    <img class="product__header_image" [src]="product.photos[0]" />
+    <div
+      class="product__header_image"
+      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0] + '\')' }"
+    ></div>
     <div class="product__header_title" (click)="openProductCard.emit(product.id)">
       {{ product.name }}
     </div>
@@ -9,7 +12,7 @@
     <div class="product__interactive_price">{{ product.price }}₽</div>
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount()"></span>
-      <input type="text" pInputText [(ngModel)]="product.count" />
+      <input type="text" pInputText [(ngModel)]="product.count" (blur)="setCorrectCount()" />
       <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount()"></span>
     </div>
     <p-button (onClick)="addToCart()">
@@ -17,5 +20,20 @@
         <img src="../../../assets/icons/cart.svg" width="25px" />
       </ng-template>
     </p-button>
+  </div>
+  <div class="product__edit" *ngIf="isAdmin">
+    <p-button
+      *ngIf="product.id"
+      class="w-12"
+      styleClass="w-12 mb-2"
+      label="Редактировать"
+      (onClick)="showEditProductModal(product.id)"
+    ></p-button>
+    <p-button
+      class="w-12"
+      styleClass="w-12 p-button-danger"
+      label="Удалить"
+      (onClick)="deleteProduct()"
+    ></p-button>
   </div>
 </div>

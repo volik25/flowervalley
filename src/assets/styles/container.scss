@@ -1,8 +1,16 @@
 @import "sizes";
 
 @mixin fv-container($padding-top: 0px, $padding-bottom: 0px) {
-  width: $container-width;
-  margin: auto;
+  width: $mobile-width;
+  margin: 0 27px;
   padding-top: $padding-top;
   padding-bottom: $padding-bottom;
+  @media screen and (min-width: 1024px) {
+    width: $middle-width;
+    margin: auto;
+  }
+  @media screen and (min-width: 1230px) {
+    width: $container-width;
+    margin: auto;
+  }
 }

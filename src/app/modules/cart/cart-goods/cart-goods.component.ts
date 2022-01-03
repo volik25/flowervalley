@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Product } from '../../../_models/product';
-import { CartService } from '../../../services/cart.service';
-import { BoxService } from '../../../services/box.service';
+import { CartService } from '../../../_services/front/cart.service';
+import { BoxService } from '../../../_services/front/box.service';
 import { Box } from '../../../_models/box';
+import { ProductItem } from '../../../_models/product-item';
 
 @Component({
   selector: 'flower-valley-cart-goods',
@@ -10,7 +10,7 @@ import { Box } from '../../../_models/box';
   styleUrls: ['./cart-goods.component.scss'],
 })
 export class CartGoodsComponent {
-  public goods: Product[] = [];
+  public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   public minSummary = 17500;
 
@@ -35,24 +35,24 @@ export class CartGoodsComponent {
     return 0;
   }
 
-  public increaseCount(item: Product) {
+  public increaseCount(item: ProductItem) {
     item.count++;
     this.cartService.updateCount(item);
   }
 
-  public decreaseCount(item: Product) {
+  public decreaseCount(item: ProductItem) {
     if (item.count <= 1) return;
     item.count--;
     this.cartService.updateCount(item);
   }
 
-  public changeCount(item: Product, count: number): void {
+  public changeCount(item: ProductItem, count: number): void {
     if (count <= 1) count = 1;
     item.count = count;
     this.cartService.updateCount(item);
   }
 
-  public removeItem(id: number): void {
+  public removeItem(id: string): void {
     this.cartService.removeFromCart(id);
     const index = this.goods.findIndex((cartItem) => id === cartItem.id);
     this.goods.splice(index, 1);

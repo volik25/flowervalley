@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, Subject } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, Subject } from 'rxjs';
+import { slugify } from 'transliteration';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class BreadcrumbService {
   private url: string = '/';
   private _startUrl: string = '';
   private setUrlDuplicate: boolean = false;
   public backgroundChanges: Subject<'light' | 'dark'> = new Subject<'light' | 'dark'>();
+  private _initItems = [
+    {
+      title: 'Главная',
+      routerLink: [''],
+    },
+  ];
+  private items: { title: string; routerLink: string[] }[] = [];
+  private _breadCrumbUpdate: BehaviorSubject<any> = new BehaviorSubject<any>(this.items);
 
   private _background: 'light' | 'dark' = 'light';
 
@@ -50,5 +57,54 @@ export class BreadcrumbService {
 
   public get isShow(): boolean {
     return this.url !== '/';
+  }
+
+  public setItem(title: string): void {
+    this._breadCrumbUpdate.next([
+      ...this._initItems,
+      {
+        title: title,
+        routerLink: [''],
+      },
+    ]);
+  }
+
+  public addItem(name: string, isProduct: boolean = false): void {
+    if (isProduct) {
+      this._breadCrumbUpdate.next([
+        ...this.items,
+        {
+          title: name,
+          routerLink: [slugify(name || '')],
+        },
+      ]);
+    } else {
+      this.items = [
+        ...this._initItems,
+        {
+          title: 'Каталог',
+          routerLink: ['catalog'],
+        },
+        {
+          title: name,
+          routerLink: ['catalog', slugify(name || '')],
+        },
+      ];
+      this._breadCrumbUpdate.next([
+        ...this._initItems,
+        {
+          title: 'Каталог',
+          routerLink: ['catalog'],
+        },
+        {
+          title: name,
+          routerLink: ['catalog', slugify(name || '')],
+        },
+      ]);
+    }
+  }
+
+  public breadCrumbChanges(): Observable<any> {
+    return this._breadCrumbUpdate.asObservable();
   }
 }
