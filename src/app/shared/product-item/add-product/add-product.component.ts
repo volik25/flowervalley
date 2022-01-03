@@ -62,6 +62,11 @@ export class AddProductComponent {
     this.photos.map((photo) => {
       formData.append('photos[]', photo);
     });
+
+    const productGroupValue = this.product.getRawValue();
+    productGroupValue.categoryIds.map((id: string) => {
+      formData.append('categoryIds[]', id);
+    });
     if (this.isImport) {
       const updateGoods = {
         ...this.selectedProduct,
@@ -72,7 +77,7 @@ export class AddProductComponent {
         const product: any = {
           ...this.bpConverter.convertToProduct(updateGoods),
           id: id,
-          ...this.product.getRawValue(),
+          description: productGroupValue.description,
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
