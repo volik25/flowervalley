@@ -4,6 +4,7 @@ import { Category } from '../../_models/category';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { CatalogService } from '../../_services/back/catalog.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-catalog-item',
@@ -33,7 +34,11 @@ export class CatalogItemComponent {
   @Output()
   private categoryDeleted: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private ds: DialogService, private catalogService: CatalogService) {}
+  constructor(
+    private ds: DialogService,
+    private confirmationService: ConfirmationService,
+    private catalogService: CatalogService,
+  ) {}
 
   public showEditCategoryModal(): void {
     const modal = this.ds.open(EditCategoryComponent, {
@@ -49,8 +54,14 @@ export class CatalogItemComponent {
   }
 
   public deleteCategory(): void {
-    this.catalogService.deleteItem(this.item.id).subscribe(() => {
-      this.categoryDeleted.emit();
+    this.confirmationService.confirm({
+      header: 'Подтвердите удаление категории',
+      message: `Вы действительно хотите удалить категорию ${this.item.name}?`,
+      accept: () => {
+        this.catalogService.deleteItem(this.item.id).subscribe(() => {
+          this.categoryDeleted.emit();
+        });
+      },
     });
   }
 }

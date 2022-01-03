@@ -33,9 +33,23 @@ $root: '.category';
       }
     }
     &_items {
+      flex: 1 1 auto;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+
+      &.start {
+        justify-content: flex-start;
+        ::ng-deep .product {
+          margin-right: 20px;
+        }
+      }
+
+      &.between {
+        justify-content: space-between;
+        ::ng-deep .product {
+          margin-right: 0;
+        }
+      }
     }
   }
 }

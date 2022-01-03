@@ -38,6 +38,14 @@
       <label for="coeff">Количество товара в упаковке</label>
     </span>
   </div>
+  <span class="p-float-label">
+    <input type="text" id="note1" [maxlength]="250" pInputText formControlName="Note1" />
+    <label for="note1">Описание упаковки</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="note2" [maxlength]="250" pInputText formControlName="Note2" />
+    <label for="note2">Примечание товара</label>
+  </span>
   <form [formGroup]="productGroup">
     <span class="p-float-label mb-2">
       <p-multiSelect
@@ -47,8 +55,10 @@
         optionValue="id"
         optionLabel="name"
         emptyMessage="Категорий нет"
-        formControlName="categories"
+        formControlName="categoryIds"
         [filter]="false"
+        [maxSelectedLabels]="2"
+        [selectedItemsLabel]="'Выбрано категорий: {0}'"
       ></p-multiSelect>
       <label for="parent">Расположить в категории (необязательно)</label>
     </span>
@@ -63,5 +73,5 @@
       [files]="product.photos || []"
     ></flower-valley-files-upload>
   </form>
-  <p-button type="submit" label="Добавить"></p-button>
+  <p-button type="submit" label="Сохранить"></p-button>
 </form>

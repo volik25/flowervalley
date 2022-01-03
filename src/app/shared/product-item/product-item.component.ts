@@ -5,6 +5,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductService } from '../../_services/back/product.service';
 import { LoadingService } from '../../_services/front/loading.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -34,6 +35,7 @@ export class ProductItemComponent {
     private cartService: CartService,
     private ds: DialogService,
     private productService: ProductService,
+    private confirmationService: ConfirmationService,
     private ls: LoadingService,
   ) {}
 
@@ -84,10 +86,16 @@ export class ProductItemComponent {
   }
 
   public deleteProduct(): void {
-    if (this.product.id) {
-      this.productService.deleteItem(this.product.id).subscribe(() => {
-        this.productDeleted.emit();
-      });
-    }
+    this.confirmationService.confirm({
+      header: 'Подтвердите удаление товара',
+      message: `Вы действительно хотите удалить товар ${this.product.name}`,
+      accept: () => {
+        if (this.product.id) {
+          this.productService.deleteItem(this.product.id).subscribe(() => {
+            this.productDeleted.emit();
+          });
+        }
+      },
+    });
   }
 }

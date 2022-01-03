@@ -21,6 +21,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BpRequestInterceptor } from './_interceptors/bp-request.interceptor';
 import { BusinessPackService } from './_services/back/business-paсk.service';
 import { TokenInterceptor } from './_interceptors/token.interceptor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -43,10 +46,14 @@ import { TokenInterceptor } from './_interceptors/token.interceptor';
     PipesModule,
     FormsModule,
     HttpClientModule,
+    ConfirmDialogModule,
+    ToastModule,
   ],
   providers: [
     BreadcrumbService,
     BusinessPackService,
+    ConfirmationService,
+    MessageService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BpRequestInterceptor,

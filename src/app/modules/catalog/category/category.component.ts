@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
 import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { slugify } from 'transliteration';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { StorageService } from '../../../_services/front/storage.service';
@@ -41,6 +41,7 @@ export class CategoryComponent implements OnInit {
     private storageService: StorageService,
     private catalogService: CatalogService,
     private ls: LoadingService,
+    private messageService: MessageService,
   ) {
     adminService.checkAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
@@ -74,12 +75,24 @@ export class CategoryComponent implements OnInit {
   }
 
   public showAddProductModal(isImport: boolean = false): void {
-    this.ds.open(AddProductComponent, {
+    const modal = this.ds.open(AddProductComponent, {
       header: 'Добавить товар',
       width: '600px',
       data: {
         isImport: isImport,
       },
+    });
+    modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
+      if (res.success) {
+        this.updateProducts();
+      }
+      if (res.reject) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Дублирование товара',
+          detail: 'Данный товар уже добавлен в систему',
+        });
+      }
     });
   }
 

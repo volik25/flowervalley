@@ -4,12 +4,17 @@
   position: relative;
   margin-bottom: 10px;
   width: 100%;
-  ::ng-deep .p-inputtext {
-    width: 100%;
-    padding: 20px 22px;
-  }
 
   ::ng-deep {
+    .p-inputtext {
+      width: 100%;
+      padding: 20px 22px;
+    }
+
+    .p-multiselect-label {
+      padding: 20px 22px;
+    }
+
     .p-inputwrapper-focus, .p-inputwrapper-filled {
       & ~ label {
         top: 15px;
@@ -20,9 +25,6 @@
         padding-top: 25px;
       }
     }
-  }
-
-  ::ng-deep {
     input:focus, input.p-filled {
       & ~ label {
         top: 15px;

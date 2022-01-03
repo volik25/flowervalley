@@ -19,7 +19,10 @@
         {{ item.name }}
       </div>
     </div>
-    <div class="category__content_items">
+    <div
+      class="category__content_items"
+      [ngClass]="{ start: products.length < 4, between: products.length >= 4 }"
+    >
       <flower-valley-product-item
         [isAdmin]="isAdmin"
         *ngFor="let product of products"

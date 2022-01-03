@@ -41,12 +41,14 @@ export class AddProductComponent {
       NDS: [0, Validators.required],
       NDSMode: [0, Validators.required],
       Volume: [],
+      Note1: [''],
+      Note2: [''],
       Pack: [],
       Coefficient: [''],
     });
     this.product = fb.group({
       description: ['', Validators.required],
-      categories: [],
+      categoryIds: [],
     });
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items;
@@ -70,12 +72,12 @@ export class AddProductComponent {
         const product: any = {
           ...this.bpConverter.convertToProduct(updateGoods),
           id: id,
-          description: this.product.getRawValue().description,
+          ...this.product.getRawValue(),
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
           const value = product[key];
-          formData.append(key.toLowerCase(), value);
+          formData.append(key, value);
         });
         this.productService.addItem<any>(formData).subscribe(() => {
           this.ref.close({ success: true });
@@ -87,12 +89,12 @@ export class AddProductComponent {
         const product: any = {
           ...this.bpConverter.convertToProduct(goods),
           id: id,
-          description: this.product.getRawValue().description,
+          ...this.product.getRawValue(),
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
           const value = product[key];
-          formData.append(key.toLowerCase(), value);
+          formData.append(key, value);
         });
         this.productService.addItem<any>(formData).subscribe(() => {
           this.ref.close({ success: true });
@@ -111,8 +113,7 @@ export class AddProductComponent {
     if (this.selectedProduct && this.selectedProduct.Object) {
       this.productService.getItemById(this.selectedProduct.Object).subscribe((product) => {
         if (product) {
-          this.goods.disable();
-          this.product.disable();
+          this.ref.close({ success: false, reject: true });
         } else {
           // @ts-ignore
           this.goods.patchValue(this.selectedProduct);

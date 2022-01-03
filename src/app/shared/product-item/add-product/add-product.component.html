@@ -53,6 +53,14 @@
       <label for="coeff">Количество товара в упаковке</label>
     </span>
   </div>
+  <span class="p-float-label">
+    <input type="text" id="note1" [maxlength]="250" pInputText formControlName="Note1" />
+    <label for="note1">Описание упаковки</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="note2" [maxlength]="250" pInputText formControlName="Note2" />
+    <label for="note2">Примечание товара</label>
+  </span>
   <form [formGroup]="product">
     <span class="p-float-label mb-2">
       <p-multiSelect
@@ -62,7 +70,7 @@
         optionValue="id"
         optionLabel="name"
         emptyMessage="Категорий нет"
-        formControlName="categories"
+        formControlName="categoryIds"
         [filter]="false"
       ></p-multiSelect>
       <label for="parent">Расположить в категории (необязательно)</label>

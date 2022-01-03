@@ -39,19 +39,25 @@ export class EditProductComponent {
       NDS: [0, Validators.required],
       NDSMode: [0, Validators.required],
       Volume: [],
+      Note1: [''],
+      Note2: [''],
       Pack: [],
       Coefficient: [''],
     });
     this.productGroup = fb.group({
       description: ['', Validators.required],
-      categories: [],
+      categoryIds: [],
     });
     this.product = config.data.product;
     this.goods.patchValue(converter.convertToBase(this.product));
     this.productGroup.patchValue(this.product);
     this.catalogService.getItems().subscribe((items) => {
-      this.categories = items;
-      this.productGroup.patchValue(this.product);
+      this.categories = items.map((item) => {
+        item.id = Number(item.id);
+        return item;
+      });
+      const categories = this.product.categories.map((category) => category.id);
+      this.productGroup.get('categoryIds')?.setValue(categories);
     });
   }
 
@@ -71,12 +77,12 @@ export class EditProductComponent {
         const id = response.Object;
         const product: any = {
           ...this.converter.convertToProduct(goods),
-          description: this.productGroup.getRawValue().description,
+          ...this.productGroup.getRawValue(),
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
           const value = product[key];
-          formData.append(key.toLowerCase(), value);
+          formData.append(key, value);
         });
         this.productService.updateItem<any>(formData, id).subscribe(() => {
           this.ref.close({ success: true });
