@@ -89,8 +89,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "flowervalley:build:production",
-              "proxyConfig": "./proxy.conf.json"
+              "browserTarget": "flowervalley:build:production"
             },
             "development": {
               "browserTarget": "flowervalley:build:development"

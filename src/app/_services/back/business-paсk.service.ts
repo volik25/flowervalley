@@ -10,7 +10,8 @@ import { Invoice } from '../../_models/business-pack/invoice';
 export class BusinessPackService {
   private _selfId = '00~Pvjh00003';
   private _telepakId = '';
-  private baseUrl = environment.bpUrl_Id;
+  private baseId = environment.bpId;
+  private baseUrl = `${environment.bpUrl}/${this.baseId}`;
 
   public get selfId(): string {
     return this._selfId;
