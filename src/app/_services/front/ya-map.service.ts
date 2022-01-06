@@ -1,7 +1,6 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { MkadPolygon } from '../../_utils/mkad-polygon';
 import { Observable, Subject } from 'rxjs';
-import { OrderConfirmationComponent } from '../../modules/cart/order-confirmation/order-confirmation.component';
 
 declare var ymaps: any;
 
@@ -15,8 +14,6 @@ export class YaMapService {
 
   private calculationUpdate: Subject<number> = new Subject<number>();
   public addressChanged: Subject<string> = new Subject<string>();
-
-  public orderConfirmationComponent: OrderConfirmationComponent | undefined;
 
   constructor(private _element: ElementRef<HTMLElement>) {
     ymaps.ready(() => {

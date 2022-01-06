@@ -5,34 +5,36 @@ import { BoxService } from '../../../_services/front/box.service';
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { takeUntil } from 'rxjs';
 import { ProductItem } from '../../../_models/product-item';
+import { HtmlToPdfService } from '../../../_services/front/html-to-pdf.service';
+import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
 
 @Component({
   selector: 'flower-valley-confirmation-goods',
   templateUrl: './confirmation-goods.component.html',
   styleUrls: ['./confirmation-goods.component.scss'],
-  providers: [DestroyService],
+  providers: [DestroyService, HtmlToPdfService, PriceConverterPipe],
 })
 export class ConfirmationGoodsComponent {
+  @Input()
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   @Input()
   public shippingCost = 0;
-
+  @Input()
+  public pickUp: boolean = false;
   constructor(
     private cartService: CartService,
     private boxService: BoxService,
+    private htmlToPDF: HtmlToPdfService,
+    private priceConvert: PriceConverterPipe,
     $destroy: DestroyService,
   ) {
-    this.goods = this.cartService.getCart();
     this.boxService
       .getBoxes()
       .pipe(takeUntil($destroy))
       .subscribe((boxes) => {
         this.boxes = boxes;
       });
-    this.cartService.cartUpdate.subscribe((cart) => {
-      this.goods = cart;
-    });
   }
 
   public increaseCount(item: ProductItem) {
@@ -68,5 +70,16 @@ export class ConfirmationGoodsComponent {
     let sum = 0;
     this.boxes.map((box) => (sum += box.count));
     return sum;
+  }
+
+  public getInvoice(): void {
+    this.htmlToPDF.getPDF(
+      ['Товар', 'Цена', 'Количество', 'Стоимость'],
+      this.goods.map((goods) => [goods.name, goods.price, goods.count, goods.price * goods.count]),
+      this.priceConvert.transform(this.shippingCost, 'two', 'rub'),
+      this.priceConvert.transform(this.getBoxesSum, 'two', 'rub'),
+      this.priceConvert.transform(this.getSum, 'two', 'rub'),
+      this.priceConvert.transform(this.getSum + this.getBoxesSum + this.shippingCost, 'two', 'rub'),
+    );
   }
 }

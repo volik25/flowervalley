@@ -57,5 +57,5 @@
   </div>
 </flower-valley-container>
 <flower-valley-container *ngIf="goods.length" background="dark" headerTitle="Оформление заказа">
-  <flower-valley-order-confirmation></flower-valley-order-confirmation>
+  <flower-valley-order-confirmation [goods]="goods"></flower-valley-order-confirmation>
 </flower-valley-container>

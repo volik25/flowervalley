@@ -1,8 +1,15 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
-import { debounceTime, takeUntil } from 'rxjs';
+import { debounceTime, map, Observable, of, takeUntil } from 'rxjs';
 import { YaMapService } from '../../../_services/front/ya-map.service';
+import { BusinessPackService } from '../../../_services/back/business-paсk.service';
+import { ProductItem } from '../../../_models/product-item';
+import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { isFormInvalid } from '../../../_utils/formValidCheck';
+import { Invoice } from '../../../_models/business-pack/invoice';
+import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -13,31 +20,37 @@ import { YaMapService } from '../../../_services/front/ya-map.service';
 export class OrderConfirmationComponent {
   @ViewChild('mapContent') public mapContent: ElementRef<HTMLElement> | undefined;
   @ViewChild('yamap') public map: ElementRef<HTMLElement> | undefined;
+  @Input()
+  public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
   public contacts: FormGroup;
-  public entityData: FormGroup;
+  public entityData!: FormGroup;
+  private entityId: string | undefined;
   public shippingCost: number | undefined;
   public delivery_error: string = '';
   public showDelivery = false;
   public showMap = false;
+  public telepakId: string | undefined;
+  public isInvoiceLoading: boolean = false;
+  private isEntityDataChanged: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private $destroy: DestroyService,
     private yaMap: YaMapService,
     private cdr: ChangeDetectorRef,
+    private bpService: BusinessPackService,
+    private messageService: MessageService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
-    yaMap.orderConfirmationComponent = this;
     this.pickUp = fb.control(false);
     this.contacts = fb.group({
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       address: [''],
-    });
-    this.entityData = fb.group({
-      name: ['', Validators.required],
     });
     this.contacts.controls['address'].valueChanges
       .pipe(takeUntil($destroy), debounceTime(1000))
@@ -86,13 +99,13 @@ export class OrderConfirmationComponent {
 
   public showMapToggle(): void {
     this.showMap = true;
-    const map = this.map;
-    if (map) {
-      map.nativeElement.style.width = '600px';
-      map.nativeElement.style.height = '600px';
-      map.nativeElement.style.position = 'static';
+    const yaMap = this.map;
+    if (yaMap) {
+      yaMap.nativeElement.style.width = '600px';
+      yaMap.nativeElement.style.height = '600px';
+      yaMap.nativeElement.style.position = 'static';
       if (this.mapContent) {
-        this.mapContent.nativeElement.append(map.nativeElement);
+        this.mapContent.nativeElement.append(yaMap.nativeElement);
         this.yaMap.yaMapRedraw();
       }
     }
@@ -101,5 +114,94 @@ export class OrderConfirmationComponent {
 
   public visibleChange(): void {
     this.cdr.detectChanges();
+  }
+
+  public confirmOrder(): void {
+    if (isFormInvalid(this.contacts)) return;
+    if (this.clientType === 'entity') {
+      if (isFormInvalid(this.entityData)) return;
+      this.isInvoiceLoading = true;
+      this.entityData.disable();
+      this.createInvoice();
+    } else {
+      this.isInvoiceLoading = true;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Заказ оформлен',
+        detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
+      });
+      this.isInvoiceLoading = false;
+    }
+  }
+
+  private createInvoice(): void {
+    this.getPartnerId().subscribe((partnerId) => {
+      if (partnerId) {
+        const firmId = this.bpService.selfId;
+        const goods: GoodsInvoice[] = [];
+        this.goods.map((product) => {
+          if (product.id && product.volume) {
+            goods.push({
+              model_id: product.id,
+              volume_id: product.volume,
+              nds: 0,
+              nds_mode: 0,
+              count: product.count,
+              price: product.price,
+              qname: product.name,
+            });
+          }
+        });
+        const invoice: Invoice = {
+          firm_id: firmId,
+          partner_id: partnerId,
+          goods: goods,
+          partner_flag: 'A',
+        };
+        this.bpService.createInvoice(invoice).subscribe((response) => {
+          const invoiceId = response.Object;
+          this.bpService
+            .sendInvoiceToTelepak(invoiceId, {
+              report_name: 'Стандартный',
+              send_with_stamp: true,
+            })
+            .subscribe(({ id }) => {
+              if (id) {
+                this.bpService.telepakId = id;
+                this.isInvoiceLoading = false;
+                this.router.navigate(['download-invoice'], { relativeTo: this.route });
+              }
+            });
+        });
+      }
+    });
+  }
+
+  private getPartnerId(): Observable<string | undefined> {
+    if (this.entityId) {
+      if (this.isEntityDataChanged) {
+        return this.bpService
+          .updateFirm({ ...this.entityData.getRawValue(), Object: this.entityId })
+          .pipe(map((firm) => firm.Object));
+      } else return of(this.entityId);
+    } else {
+      return this.bpService
+        .createFirm(this.entityData.getRawValue())
+        .pipe(map((firm) => firm.Object));
+    }
+  }
+
+  public entityDataChanges(data: FormGroup | { id: string; isChanged: boolean }): void {
+    if (OrderConfirmationComponent.instanceOfId(data)) {
+      this.entityId = data.id;
+      this.isEntityDataChanged = data.isChanged;
+    } else {
+      this.entityData = data;
+      if (!this.isEntityDataChanged) this.entityId = undefined;
+    }
+  }
+
+  private static instanceOfId(data: any): data is { id: string; isChanged: boolean } {
+    return 'id' in data;
   }
 }

@@ -1,0 +1,95 @@
+<div class="p-field-checkbox">
+  <p-checkbox [formControl]="isNewClient" [binary]="true" inputId="isNewClient"></p-checkbox>
+  <label for="isNewClient">Я делаю заказ впервые</label>
+</div>
+<span class="p-float-label" *ngIf="isNewClient.value === false">
+  <p-autoComplete
+    styleClass="w-12"
+    (onSelect)="patchValue($event)"
+    [suggestions]="businessPackResults"
+    [showEmptyMessage]="true"
+    emptyMessage="ИНН не найден"
+    field="INN"
+    (completeMethod)="searchItems($event.query)"
+    inputId="inputtext"
+  >
+    <ng-template let-firm pTemplate="item">
+      <b>Название:</b>
+      <div>{{ firm.FullName }}</div>
+      <b>ИНН:</b>
+      <div>{{ firm.INN }}</div>
+    </ng-template>
+  </p-autoComplete>
+  <label for="inputtext" *ngIf="!entityId">Поиск по базе клиентов</label>
+  <label for="inputtext" *ngIf="entityId">ИНН (поиск по базе клиентов)</label>
+</span>
+<form [formGroup]="entityData">
+  <span class="p-float-label">
+    <input type="text" id="entityName" pInputText formControlName="FullName" />
+    <label for="entityName">Название организации</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="ShortName" pInputText formControlName="ShortName" />
+    <label for="ShortName">Псевдоним</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="Address" pInputText formControlName="Address" />
+    <label for="Address">Адрес организации</label>
+  </span>
+  <div class="p-field-checkbox">
+    <p-checkbox formControlName="NoNDS" [binary]="true" inputId="NoNDS"></p-checkbox>
+    <label for="NoNDS">Работа без НДС</label>
+  </div>
+  <span class="p-float-label" *ngIf="isNewClient.value === true">
+    <input type="text" id="entityInn" pInputText formControlName="INN" />
+    <label for="entityInn">ИНН</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="KPP" pInputText formControlName="KPP" />
+    <label for="KPP">КПП</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="BIK" pInputText formControlName="BIK" />
+    <label for="BIK">БИК</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="Bank" pInputText formControlName="Bank" />
+    <label for="Bank">Банк</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="CorDep" pInputText formControlName="CorDep" />
+    <label for="CorDep">Кор. счет</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="RasDep" pInputText formControlName="RasDep" />
+    <label for="RasDep">Расчетный счет</label>
+  </span>
+  <p-accordion>
+    <p-accordionTab header="Дополнительные поля">
+      <span class="p-float-label">
+        <input type="text" id="OKPO" pInputText formControlName="OKPO" />
+        <label for="OKPO">ОКПО</label>
+      </span>
+      <span class="p-float-label">
+        <input type="text" id="ExtraName" pInputText formControlName="ExtraName" />
+        <label for="ExtraName">Полное наименование организации</label>
+      </span>
+      <span class="p-float-label">
+        <input type="text" id="PersonalDep" pInputText formControlName="PersonalDep" />
+        <label for="PersonalDep">Лицевой счет</label>
+      </span>
+      <span class="p-float-label">
+        <input type="text" id="OrgEMail" pInputText formControlName="OrgEMail" />
+        <label for="OrgEMail">Электронная почта организации</label>
+      </span>
+      <span class="p-float-label">
+        <input type="text" id="OrgPhone" pInputText formControlName="OrgPhone" />
+        <label for="OrgPhone">Телефон организации</label>
+      </span>
+      <span class="p-float-label">
+        <input type="text" id="OrgURL" pInputText formControlName="OrgURL" />
+        <label for="OrgURL">Сайт организации</label>
+      </span>
+    </p-accordionTab>
+  </p-accordion>
+</form>

@@ -30,7 +30,7 @@ $root: '.confirmation';
     display: flex;
     justify-content: space-between;
     &_form {
-      .p-float-label {
+      ::ng-deep .p-float-label {
         position: relative;
         width: 540px;
         margin-bottom: 10px;
@@ -48,6 +48,16 @@ $root: '.confirmation';
           }
           padding-bottom: 15px;
           padding-top: 25px;
+        }
+        .p-inputwrapper-focus, .p-inputwrapper-filled {
+          &~ label {
+            top: 15px;
+            left: 22px;
+          }
+          input {
+            padding-bottom: 15px;
+            padding-top: 25px;
+          }
         }
         .calculation-result {
           position: absolute;
@@ -77,7 +87,7 @@ $root: '.confirmation';
           }
         }
       }
-      .p-field-checkbox {
+      ::ng-deep .p-field-checkbox {
         margin-bottom: 10px;
         ::ng-deep {
           .p-checkbox-box {
@@ -124,4 +134,8 @@ $root: '.confirmation';
       }
     }
   }
+}
+
+.top-10 {
+  margin-top: 10px;
 }
