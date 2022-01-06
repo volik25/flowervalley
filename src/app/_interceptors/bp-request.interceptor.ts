@@ -10,8 +10,9 @@ export class BpRequestInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<{}>, next: HttpHandler): Observable<HttpEvent<{}>> {
     if (request.url.includes(environment.bpUrl_Id)) {
       let params = request.clone({
-        headers: request.headers.set('Authorization', `Bearer ${this.businessPackToken}`),
-        withCredentials: true,
+        setHeaders: {
+          Authorization: `Bearer ${this.businessPackToken}`,
+        },
       });
       return next.handle(params);
     }
