@@ -11,7 +11,6 @@ export class BpRequestInterceptor implements HttpInterceptor {
     if (request.url.includes(environment.bpUrl_Id)) {
       let params = request.clone({
         setHeaders: {
-          ...request.headers,
           Authorization: `Bearer ${this.businessPackToken}`,
         },
         withCredentials: true,
