@@ -1,8 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+    RewriteRule ^/?remoteApi/(.*)$ https://5.375.ru/bpo-api/v1/$1 [L,P]
     RewriteRule ^index\.html$ - [L]
-    RewriteRule ^/?bpo-api/v1/(.*)$ https://5.375.ru/bpo-api/v1/$1 [L,P]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule . /index.html [L]
