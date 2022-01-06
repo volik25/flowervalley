@@ -1,0 +1,24 @@
+<div class="download-invoice">
+  <div class="download-invoice__content">
+    <div class="download-invoice__content_header">Ваш заказ зарегестрирован в системе</div>
+    <div class="download-invoice__content_text">
+      Работа с юрлицами производится по полной предоплате. Пожалуйста, оплатите выставленный счет.
+      Если у Вас возникнут вопросы, свяжитесь с нами любым удобным способом
+    </div>
+    <div class="download-invoice__content_button w-12">
+      <p-button
+        *ngIf="telepakId"
+        styleClass="w-6 m-auto flex justify-content-center"
+        (onClick)="window.open('https://375.ru/' + telepakId)"
+      >
+        <ng-template pTemplate="content">
+          <p-image
+            styleClass="flex align-items-center"
+            src="assets/icons/estimate-white.svg"
+          ></p-image>
+          <span [style]="{ 'margin-left': '15px' }">Cкачать счет в PDF</span>
+        </ng-template>
+      </p-button>
+    </div>
+  </div>
+</div>

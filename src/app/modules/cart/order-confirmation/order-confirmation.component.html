@@ -70,20 +70,25 @@
           ></p-button>
         </div>
       </form>
-      <form *ngIf="clientType === 'entity'" [formGroup]="entityData">
-        <span class="p-float-label">
-          <input type="text" id="entityName" pInputText formControlName="name" />
-          <label for="entityName">Наименование организации</label>
-        </span>
-      </form>
-      <div class="p-field-checkbox">
+      <div class="p-field-checkbox" [ngClass]="{ 'top-10': showDelivery }">
         <p-checkbox [formControl]="pickUp" [binary]="true" inputId="pickUp"></p-checkbox>
         <label for="pickUp">Самовывоз</label>
       </div>
-      <p-button styleClass="confirm-order" label="Оформить заказ"></p-button>
+      <flower-valley-entity-form
+        *ngIf="clientType === 'entity'"
+        (dataChanges)="entityDataChanges($event)"
+      ></flower-valley-entity-form>
+      <p-button
+        [loading]="isInvoiceLoading"
+        styleClass="confirm-order"
+        label="Оформить заказ"
+        (onClick)="confirmOrder()"
+      ></p-button>
     </div>
     <div class="confirmation__content_goods">
       <flower-valley-confirmation-goods
+        [pickUp]="pickUp.value"
+        [goods]="goods"
         [shippingCost]="showDelivery ? shippingCost || 0 : 0"
       ></flower-valley-confirmation-goods>
     </div>

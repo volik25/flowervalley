@@ -11,15 +11,11 @@ export class PriceConverterPipe implements PipeTransform {
     value: number | string,
     dotOptions?: 'none' | 'one' | 'two',
     curr?: 'RUB' | 'rub',
-  ): string | null {
+  ): string {
     return this.decimalTransform(value, dotOptions, curr);
   }
 
-  private decimalTransform(
-    value: number | string,
-    dotOptions?: string,
-    curr?: string,
-  ): string | null {
+  private decimalTransform(value: number | string, dotOptions?: string, curr?: string): string {
     let number = this.decimalPipe.transform(value);
     number = number?.split(',').join(' ') || null;
     if (!number?.split('.')[1]) {
