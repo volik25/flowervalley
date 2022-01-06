@@ -8,10 +8,9 @@ import { Invoice } from '../../_models/business-pack/invoice';
 
 @Injectable()
 export class BusinessPackService {
-  private baseId = environment.baseId;
   private _selfId = '00~Pvjh00003';
   private _telepakId = '';
-  private baseUrl = `bpApi/${this.baseId}`;
+  private baseUrl = environment.bpUrl_Id;
 
   public get selfId(): string {
     return this._selfId;
