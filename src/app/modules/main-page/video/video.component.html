@@ -1,7 +1,7 @@
-<div class="video">
+<div class="video" #container>
   <div class="video__container" *ngFor="let video of videos">
     <iframe
-      width="383"
+      [width]="container.offsetWidth < 383 ? container.offsetWidth : '383'"
       height="216"
       [src]="video.src | safeUrl"
       [title]="video.title"

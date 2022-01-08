@@ -162,7 +162,7 @@ export class OrderConfirmationComponent {
           const invoiceId = response.Object;
           this.bpService
             .sendInvoiceToTelepak(invoiceId, {
-              report_name: 'Стандартный',
+              report_name: 'Счет с образцом п. п. + печать подпись',
               send_with_stamp: true,
             })
             .subscribe(({ id }) => {

@@ -16,6 +16,7 @@
           <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
         </div>
         <flower-valley-leaf-button
+          class="leaf-button"
           *ngIf="headerButton"
           [routerLink]="headerButton['routerLink']"
           [title]="headerButton['title']"

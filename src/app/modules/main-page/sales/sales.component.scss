@@ -20,18 +20,27 @@ $root: '.sales';
         justify-content: center;
         padding-left: 60px;
         &_content {
-          max-width: 50%;
+          max-width: 90%;
+          @include laptop-media {
+            max-width: 50%;
+          }
           &>div:first-child {
             font-weight: 600;
-            font-size: 36px;
+            font-size: 22px;
             line-height: 110%;
+            @include laptop-media {
+              font-size: 36px;
+            }
           }
           &>div:nth-child(2) {
             font-weight: 500;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 140%;
             margin-top: 15px;
             margin-bottom: 40px;
+            @include laptop-media {
+              font-size: 16px;
+            }
           }
         }
       }

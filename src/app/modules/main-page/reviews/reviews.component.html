@@ -1,8 +1,13 @@
-<p-carousel [value]="reviews" [circular]="true">
+<p-carousel
+  [value]="reviews"
+  [circular]="true"
+  [numVisible]="visibleBlocks"
+  [numScroll]="visibleBlocks"
+>
   <ng-template let-page pTemplate="item">
     <div class="carousel__page">
-      <a *ngFor="let review of page" [href]="review.link" target="_blank">
-        <img class="carousel__page_img" [src]="review.src" />
+      <a [href]="page.link" target="_blank">
+        <img class="carousel__page_img" [src]="page.src" />
       </a>
     </div>
   </ng-template>
