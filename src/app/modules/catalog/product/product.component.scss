@@ -13,17 +13,33 @@ $root: '.product';
   }
   &__desc {
     display: flex;
+    flex-direction: column;
+    @include laptop-media {
+      flex-direction: row;
+    }
     &_photo {
-      width: 550px;
+      width: 100%;
+      @include laptop-media {
+        width: 550px;
+      }
       &::ng-deep {
         .p-galleria-thumbnail-container {
           background: none;
+          img {
+            width: 60px;
+            @include laptop-media {
+              width: 100px;
+            }
+          }
         }
       }
     }
     &_info {
-      margin-left: 40px;
-      width: calc(100% - 590px);
+      width: 100%;
+      @include laptop-media {
+        margin-left: 40px;
+        width: calc(100% - 590px);
+      }
       &-tare {
         font-weight: 500;
         font-size: 18px;
@@ -79,35 +95,48 @@ $root: '.product';
       &-cart {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
+        flex-direction: column;
+        @include laptop-media {
+          flex-direction: row;
+          align-items: center;
+        }
         .price {
           font-weight: 500;
           font-size: 36px;
           line-height: 45px;
           color: $main-green;
+          margin-bottom: 15px;
+          @include laptop-media {
+            margin-bottom: unset;
+          }
         }
         .right-block {
           display: flex;
           align-items: center;
           .count {
             margin-right: 20px;
-            .p-inputgroup {
+            ::ng-deep .p-inputnumber {
               input {
                 width: 50px;
                 text-align: center;
                 padding: 0;
                 border: 1px solid $border-count;
+                box-shadow: none !important;
+                outline: none !important;
                 &:focus-visible {
                   outline: 3px auto $border-count;
                 }
               }
-            }
-            .p-inputgroup-addon {
-              padding-left: 5px;
-              padding-right: 5px;
-              min-width: 20px;
-              background-color: $white-100;
-              cursor: pointer;
+              .p-button.p-button-icon-only {
+                width: unset;
+                padding: 0 5px;
+                min-width: 20px;
+                min-height: 45px;
+                background-color: $white-100;
+                border-color: $border-count;
+                color: $text-grey;
+              }
             }
           }
           .button {
@@ -129,12 +158,18 @@ $root: '.product';
     padding-top: 90px;
     padding-bottom: 70px;
     &_card {
-      background: $green-gradient;
+      @include laptop-media {
+        background: $green-gradient;
+      }
+      background: $main-green;
       padding: 40px;
       border-radius: 15px;
       &-title {
         font-weight: 500;
-        font-size: 60px;
+        font-size: 28px;
+        @include laptop-media {
+          font-size: 60px;
+        }
         line-height: 100%;
         color: $white-100;
         padding-bottom: 40px;
@@ -142,19 +177,46 @@ $root: '.product';
       &-content {
         display: flex;
         justify-content: space-between;
+        flex-direction: column;
+        @include laptop-media {
+          flex-direction: row;
+        }
+        &_tulips {
+          margin-bottom: 30px;
+          @include laptop-media {
+            margin-bottom: unset;
+          }
+        }
         &>div {
-          width: 50%;
+          width: 100%;
+          @include laptop-media {
+            width: 50%;
+          }
           display: flex;
           flex-direction: column;
           color: $white-100;
           &>div:first-child {
-            background: $white-10;
-            border-radius: 10px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            width: 50px;
-            height: 50px;
+            &>span {
+              margin-left: 15px;
+              font-style: normal;
+              font-weight: 500;
+              font-size: 16px;
+              line-height: 120%;
+              @include laptop-media {
+                font-size: 22px;
+              }
+            }
+            &>div:first-child {
+              background: $white-10;
+              border-radius: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 50px;
+              height: 50px;
+            }
           }
           &>div:last-child {
             padding-top: 15px;
@@ -164,6 +226,39 @@ $root: '.product';
           }
         }
       }
+    }
+  }
+}
+
+.products {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  &.start {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @include laptop-media {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      ::ng-deep .product {
+        margin-right: 20px;
+      }
+    }
+  }
+
+  &.between {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    ::ng-deep .product {
+      margin-right: 0;
+    }
+    @include laptop-media {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
     }
   }
 }

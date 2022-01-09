@@ -6,6 +6,7 @@ import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductService } from '../../_services/back/product.service';
 import { LoadingService } from '../../_services/front/loading.service';
 import { ConfirmationService } from 'primeng/api';
+import { Category } from '../../_models/category';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -24,6 +25,14 @@ export class ProductItemComponent {
     this._product = value;
   }
   private _product: any;
+  public get category(): Category {
+    return this._category;
+  }
+  @Input()
+  public set category(value: Category) {
+    this._category = value;
+  }
+  private _category: any;
 
   @Output()
   public openProductCard: EventEmitter<any> = new EventEmitter<any>();
@@ -39,20 +48,12 @@ export class ProductItemComponent {
     private ls: LoadingService,
   ) {}
 
-  public increaseCount() {
-    this.product.count += this.step;
-  }
-
-  public decreaseCount() {
-    if (this.product.count <= this.step) return;
-    this.product.count -= this.step;
-  }
-
   public addToCart(): void {
+    if (this.category) this.product.category = this.category;
     this.cartService.addToCart(this.product);
   }
 
-  private get step(): number {
+  public get step(): number {
     if (this.product.coefficient) {
       return Number(this.product.coefficient);
     } else {

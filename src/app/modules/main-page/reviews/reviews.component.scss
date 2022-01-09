@@ -5,8 +5,7 @@ $root: '.carousel';
 #{$root} {
   &__page {
     display: flex;
-    justify-content: space-around;
-    padding: 40px;
+    justify-content: center;
     &_img {
       width: 200px;
       height: auto;
@@ -25,7 +24,11 @@ $root: '.carousel';
 }
 
 :host ::ng-deep .p-carousel-content {
+  padding: 40px;
   .p-carousel-prev, .p-carousel-next {
     color: $text;
+  }
+  .p-carousel-prev {
+    left: 0;
   }
 }

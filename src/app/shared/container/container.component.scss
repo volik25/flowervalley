@@ -19,7 +19,10 @@ $root: '.container';
       align-items: center;
       justify-content: space-between;
       font-weight: 500;
-      font-size: 48px;
+      font-size: 30px;
+      @include laptop-media {
+        font-size: 48px;
+      }
       line-height: 110%;
       color: $text;
       padding-bottom: 40px;
@@ -28,6 +31,12 @@ $root: '.container';
         align-items: center;
         &>span {
           color: $main-green;
+        }
+      }
+      .leaf-button {
+        display: none;
+        @include laptop-media {
+          display: block;
         }
       }
     }

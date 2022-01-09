@@ -1,12 +1,19 @@
 @import "colors";
+@import "container";
 
 $root: '.contacts';
 
 #{$root} {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+  @include laptop-media {
+    flex-direction: row;
+  }
   &__info {
-    padding-right: 60px;
+    @include laptop-media {
+      padding-right: 60px;
+    }
     &_address {
       &-title {
         display: flex;
@@ -19,7 +26,10 @@ $root: '.contacts';
       }
       &-content {
         font-weight: 500;
-        font-size: 24px;
+        font-size: 18px;
+        @include laptop-media {
+          font-size: 24px;
+        }
         line-height: 140%;
         padding-top: 20px;
         padding-bottom: 40px;
@@ -38,7 +48,10 @@ $root: '.contacts';
       }
       &-content {
         font-weight: 500;
-        font-size: 24px;
+        font-size: 18px;
+        @include laptop-media {
+          font-size: 24px;
+        }
         line-height: 120%;
         padding-top: 20px;
         padding-bottom: 40px;
@@ -80,9 +93,13 @@ $root: '.contacts';
       padding-bottom: 40px;
       a {
         font-weight: 500;
-        font-size: 36px;
+        font-size: 18px;
+        @include laptop-media {
+          font-size: 36px;
+        }
         line-height: 120%;
         color: $main-green;
+        text-decoration: underline;
       }
     }
     &_timing {
@@ -96,8 +113,12 @@ $root: '.contacts';
         text-transform: uppercase;
       }
       &-content {
-        font-weight: 400;
-        font-size: 24px;
+        font-weight: 500;
+        font-size: 18px;
+        @include laptop-media {
+          font-weight: 400;
+          font-size: 24px;
+        }
         line-height: 140%;
         padding-top: 20px;
         padding-bottom: 40px;

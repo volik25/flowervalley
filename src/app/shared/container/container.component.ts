@@ -30,6 +30,8 @@ export class ContainerComponent implements OnInit {
   // @ts-ignore
   public buttonTemplate: TemplateRef<any>;
 
+  private url!: string;
+
   constructor(
     private bs: BreadcrumbService,
     private router: Router,
@@ -42,11 +44,12 @@ export class ContainerComponent implements OnInit {
         map((e) => e as NavigationEnd),
       )
       .subscribe((event) => {
-        bs.startUrl = event.urlAfterRedirects;
+        this.url = event.urlAfterRedirects;
       });
   }
 
   public ngOnInit(): void {
+    this.bs.startUrl = this.url;
     this.bs.background = this.background;
   }
 }

@@ -6,7 +6,12 @@
 >
   <div class="product__desc">
     <div class="product__desc_photo">
-      <p-galleria [value]="product.photos" [circular]="true" [showThumbnailNavigators]="false">
+      <p-galleria
+        [value]="product.photos"
+        [circular]="true"
+        [showThumbnailNavigators]="false"
+        [numVisible]="4"
+      >
         <ng-template pTemplate="item" let-photo>
           <p-image
             [imageStyle]="{ width: '100%', 'border-radius': '15px' }"
@@ -15,7 +20,7 @@
           ></p-image>
         </ng-template>
         <ng-template pTemplate="thumbnail" let-photo>
-          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo" width="100px"></p-image>
+          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo"></p-image>
         </ng-template>
       </p-galleria>
     </div>
@@ -52,11 +57,18 @@
         <div class="price">{{ product.price | priceConverter }}</div>
         <div class="right-block">
           <div class="count">
-            <div class="p-inputgroup">
-              <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount()"></span>
-              <input type="text" pInputText [(ngModel)]="product.count" />
-              <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount()"></span>
-            </div>
+            <p-inputNumber
+              [(ngModel)]="product.count"
+              [min]="step"
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              inputId="horizontal"
+              [step]="step"
+              (onBlur)="setCorrectCount()"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+            >
+            </p-inputNumber>
           </div>
           <div class="button">
             <p-button (onClick)="addToCart()">
@@ -78,18 +90,27 @@
     <div class="product__delivery_card">
       <div class="product__delivery_card-title">Доставка</div>
       <div class="product__delivery_card-content">
-        <div>
+        <div class="product__delivery_card-content_tulips">
           <div>
-            <p-image styleClass="flex align-items-center" src="assets/icons/map.svg"></p-image>
+            <div>
+              <p-image styleClass="flex align-items-center" src="assets/icons/map.svg"></p-image>
+            </div>
+            <span>Доставка тюльпанов</span>
           </div>
           <div>
             Доставка тюльпанов осуществляется сторонними транспортными компаниями по заказу
             покупателя. Агрофирма не осуществляет доставку тюльпанов
           </div>
         </div>
-        <div>
+        <div class="product__delivery_card-content_delivery">
           <div>
-            <p-image styleClass="flex align-items-center" src="assets/icons/delivery.svg"></p-image>
+            <div>
+              <p-image
+                styleClass="flex align-items-center"
+                src="assets/icons/delivery.svg"
+              ></p-image>
+            </div>
+            <span>Доставка по Москве</span>
           </div>
           <div class="flex flex-column">
             <span class="pb-2">Доставка рассады цветов по Москве 2500 рублей. За МКАД 50р/км.</span>
@@ -103,10 +124,16 @@
   </div>
 </flower-valley-container>
 <flower-valley-container background="dark" headerTitle="Другие товары">
-  <div class="flex flex-wrap justify-content-between">
+  <div
+    *ngIf="category"
+    class="products"
+    [ngClass]="{ start: products.length < 4, between: products.length >= 4 }"
+  >
     <flower-valley-product-item
+      [category]="category"
       *ngFor="let prod of products"
       [product]="prod"
+      (openProductCard)="getOtherProduct($event)"
     ></flower-valley-product-item>
   </div>
 </flower-valley-container>

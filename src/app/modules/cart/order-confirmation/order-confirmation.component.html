@@ -15,6 +15,10 @@
       (click)="clientType = 'entity'"
     ></button>
   </span>
+  <p-tabView styleClass="tab-view" (onChange)="setClientType($event.index)">
+    <p-tabPanel header="Физические лица"></p-tabPanel>
+    <p-tabPanel header="Юридические лица"></p-tabPanel>
+  </p-tabView>
   <div class="confirmation__content">
     <div class="confirmation__content_form">
       <form [formGroup]="contacts">

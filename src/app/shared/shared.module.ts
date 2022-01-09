@@ -25,6 +25,7 @@ import { EditProductComponent } from './product-item/edit-product/edit-product.c
 import { AddCategoryComponent } from './catalog-item/add-category/add-category.component';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EditCategoryComponent } from './catalog-item/edit-category/edit-category.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { EditCategoryComponent } from './catalog-item/edit-category/edit-categor
     HttpClientModule,
     ImageModule,
     MultiSelectModule,
+    InputNumberModule,
   ],
   exports: [
     CatalogItemComponent,

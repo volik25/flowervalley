@@ -162,7 +162,7 @@ export class OrderConfirmationComponent {
           const invoiceId = response.Object;
           this.bpService
             .sendInvoiceToTelepak(invoiceId, {
-              report_name: 'Стандартный',
+              report_name: 'Счет с образцом п. п. + печать подпись',
               send_with_stamp: true,
             })
             .subscribe(({ id }) => {
@@ -203,5 +203,14 @@ export class OrderConfirmationComponent {
 
   private static instanceOfId(data: any): data is { id: string; isChanged: boolean } {
     return 'id' in data;
+  }
+
+  public setClientType(i: number): void {
+    if (i === 0) {
+      this.clientType = 'individual';
+    }
+    if (i === 1) {
+      this.clientType = 'entity';
+    }
   }
 }

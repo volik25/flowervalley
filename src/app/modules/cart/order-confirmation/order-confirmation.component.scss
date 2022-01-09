@@ -1,4 +1,5 @@
 @import "colors";
+@import "container";
 
 $root: '.confirmation';
 
@@ -6,6 +7,10 @@ $root: '.confirmation';
   display: flex;
   flex-direction: column;
   .p-buttonset {
+    display: none;
+    @include laptop-media {
+      display: unset;
+    }
     .p-button {
       font-weight: 500;
       font-size: 20px;
@@ -25,14 +30,51 @@ $root: '.confirmation';
       }
     }
   }
+  ::ng-deep p-tabview {
+    width: 100%;
+    display: unset;
+    @include laptop-media {
+      display: none;
+    }
+    a {
+      box-shadow: none !important;
+      outline: none !important;
+      text-decoration: none;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 17px;
+      padding: 15px !important;
+    }
+    .p-highlight .p-tabview-nav-link {
+      color: $main-green;
+      border-color: $main-green;
+    }
+    .p-tabview-nav-link, .p-tabview-nav {
+      background: none !important;
+    }
+    .p-tabview-ink-bar {
+      background-color: $main-green;
+    }
+    .p-tabview-panels {
+      display: none;
+    }
+  }
   &__content {
     margin-top: 50px;
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    @include laptop-media {
+      flex-direction: unset;
+    }
     &_form {
       ::ng-deep .p-float-label {
         position: relative;
-        width: 540px;
+        width: 100%;
+        @include laptop-media {
+          width: 540px;
+        }
         margin-bottom: 10px;
         .p-inputtext {
           width: 100%;
@@ -115,8 +157,12 @@ $root: '.confirmation';
       }
       ::ng-deep .p-button {
         &.confirm-order {
-          margin-top: 50px;
-          width: 90%;
+          width: 100%;
+          margin-top: 30px;
+          @include laptop-media {
+            width: 90%;
+            margin-top: 50px;
+          }
           padding: 25px;
           border-radius: 15px;
           span {

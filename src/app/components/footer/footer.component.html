@@ -1,13 +1,11 @@
 <footer>
   <div class="footer">
     <div class="footer__company">
-      <div class="flex flex-column h-100">
-        <img src="assets/images/logo-footer.png" />
-        <div class="flex flex-column justify-content-between h-100 pt-2">
-          <span>Агрофирма<br />Цветочная Долина</span>
-          <span>Тепличное хозяйство</span>
-          <span>2021 © Агрофирма Цветочная Долина. Все права защищены</span>
-        </div>
+      <p-image src="assets/images/logo-footer.png"></p-image>
+      <div class="flex flex-column justify-content-between h-100 pt-2">
+        <span>Агрофирма<br />Цветочная Долина</span>
+        <span>Тепличное хозяйство</span>
+        <ng-container *ngTemplateOutlet="roots"></ng-container>
       </div>
     </div>
     <div>
@@ -17,48 +15,69 @@
         <div>Тюльпаны оптом</div>
         <div>Рассада цветов</div>
         <div>Контакты</div>
+        <div class="price">
+          <ng-container *ngTemplateOutlet="priceButton"></ng-container>
+        </div>
       </div>
+      <ng-container *ngTemplateOutlet="contacts"></ng-container>
       <div class="footer__contacts">
-        <p-image src="assets/images/map.png" width="250px"></p-image>
-        <div class="px-4 flex flex-column justify-content-between">
-          <p-button>
-            <ng-template pTemplate="content">
-              <p-image
-                styleClass="flex align-items-center"
-                src="assets/icons/download.png"
-                width="13px"
-              ></p-image>
-              <div class="pl-2">ПРАЙС-ЛИСТ</div>
-            </ng-template>
-          </p-button>
+        <p-image src="assets/images/map.png"></p-image>
+        <div class="footer__contacts_content">
+          <div class="price">
+            <ng-container *ngTemplateOutlet="priceButton"></ng-container>
+          </div>
           <div class="address">
             140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
           </div>
           <div class="work-time">Пн-Вс: с 9:00 до 20:00<br />без выходных и обеда</div>
-        </div>
-        <div class="flex flex-column justify-content-between">
-          <div class="whats-app-button p-2">
-            <span class="pi pi-whatsapp"></span>
-            <div class="pl-2">What'sApp</div>
-          </div>
-          <div class="phone">
-            <span class="pi pi-phone"></span>
-            <div class="pl-2">+7(915)109-10-00</div>
-          </div>
-          <div class="phone">
-            <span class="pi pi-phone"></span>
-            <div class="pl-2">+7(903)101-34-01</div>
-          </div>
-          <div class="phone">
-            <span class="pi pi-phone"></span>
-            <div class="pl-2">+7(926)165-11-51</div>
-          </div>
-          <div class="mail">
-            <span class="pi pi-envelope"></span>
-            <div class="pl-2">flowervalley@mail.ru</div>
+          <div class="roots">
+            <ng-container *ngTemplateOutlet="roots"></ng-container>
           </div>
         </div>
+        <ng-container *ngTemplateOutlet="contacts"></ng-container>
       </div>
     </div>
   </div>
 </footer>
+
+<ng-template #contacts>
+  <div class="contacts">
+    <div class="whats-app-button p-2">
+      <span class="pi pi-whatsapp"></span>
+      <div class="pl-2">What'sApp</div>
+    </div>
+    <div class="phone">
+      <span class="pi pi-phone"></span>
+      <div class="pl-2">+7(915)109-10-00</div>
+    </div>
+    <div class="phone">
+      <span class="pi pi-phone"></span>
+      <div class="pl-2">+7(903)101-34-01</div>
+    </div>
+    <div class="phone">
+      <span class="pi pi-phone"></span>
+      <div class="pl-2">+7(926)165-11-51</div>
+    </div>
+    <div class="mail">
+      <span class="pi pi-envelope"></span>
+      <div class="pl-2">flowervalley@mail.ru</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #priceButton>
+  <p-button>
+    <ng-template pTemplate="content">
+      <p-image
+        styleClass="flex align-items-center"
+        src="assets/icons/download.png"
+        width="13px"
+      ></p-image>
+      <div class="pl-2">ПРАЙС-ЛИСТ</div>
+    </ng-template>
+  </p-button>
+</ng-template>
+
+<ng-template #roots>
+  <span>2021 © Агрофирма Цветочная Долина. Все права защищены</span>
+</ng-template>

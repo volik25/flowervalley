@@ -1,4 +1,5 @@
 @import "src/assets/styles/colors";
+@import "container";
 
 $root: '.leaf';
 
@@ -9,6 +10,9 @@ $root: '.leaf';
       padding-right: 80px;
       border-radius: 10px;
       height: 55px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
     }
     &_icon{
       position: absolute;

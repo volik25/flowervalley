@@ -1,14 +1,13 @@
 <div class="about">
   <div class="about__photo">
-    <img src="assets/images/about.png" height="500px" />
-    <div class="about__photo_banner">
-      <img src="assets/icons/shield.png" width="22px" />
-      <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
-    </div>
+    <ng-container *ngTemplateOutlet="aboutPhoto"></ng-container>
   </div>
   <div class="about__desc">
     <div class="about__desc_title">Тепличное хозяйство</div>
     <div class="about__desc_name">«Агрофирма Цветочная Долина»</div>
+    <div class="about__desc_photo">
+      <ng-container *ngTemplateOutlet="aboutPhoto"></ng-container>
+    </div>
     <div class="about__desc_text">
       Тепличное хозяйство Агрофирма «Цветочная Долина» является признанным производителем цветочной
       продукции широкого ассортимента. Наш принцип - индивидуальный подход к клиенту и постоянный
@@ -24,3 +23,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #aboutPhoto>
+  <img src="assets/images/about.png" />
+  <div class="about__photo_banner">
+    <img src="assets/icons/shield.png" />
+    <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
+  </div>
+</ng-template>

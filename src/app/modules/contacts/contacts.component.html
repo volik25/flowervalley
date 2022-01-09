@@ -55,10 +55,10 @@
       </div>
     </div>
     <div class="contacts__maps">
-      <p-image src="assets/images/mocks/map.png" width="550"></p-image>
+      <p-image src="assets/images/mocks/map.png" [width]="mapWidth"></p-image>
       <iframe
         src="https://yandex.ru/map-widget/v1/?um=constructor%3Af0f81081a26b3a5a29beb2d09e827b36f9014680da091bb23a40bd9068f08b50&amp;source=constructor"
-        width="550"
+        [width]="mapWidth"
         height="300"
       ></iframe>
     </div>
@@ -69,7 +69,7 @@
     <p-image
       *ngFor="let photo of photos"
       [src]="photo"
-      width="380px"
+      [width]="photosWidth"
       class="mb-4"
       [imageStyle]="{ 'border-radius': '10px' }"
       [preview]="true"

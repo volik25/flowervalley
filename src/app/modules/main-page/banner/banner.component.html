@@ -9,8 +9,11 @@
     </p-button>
   </span>
   <div class="banner">
-    <div class="pr-8">
+    <div class="padding-adaptive">
       <div class="header">Тюльпаны оптом</div>
+      <div class="ng-container__mobile">
+        <ng-container *ngTemplateOutlet="carousel"></ng-container>
+      </div>
       <div class="info">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Semper duis libero, arcu sed.
         Aliquet ut sit vestibulum auctor id. Maecenas vel mollis et viverra aenean cursus. Consequat
@@ -24,16 +27,8 @@
         <p-button label="Редактировать"></p-button>
       </div>
     </div>
-    <div class="carousel">
-      <p-carousel [value]="photos" [circular]="true">
-        <ng-template let-photo pTemplate="item">
-          <img class="carousel__img" [src]="photo.src" />
-        </ng-template>
-      </p-carousel>
-      <div class="carousel__banner">
-        <img src="assets/icons/shield.png" width="22px" />
-        <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
-      </div>
+    <div class="ng-container__laptop">
+      <ng-container *ngTemplateOutlet="carousel"></ng-container>
     </div>
   </div>
   <div class="info-banner">
@@ -55,3 +50,17 @@
     </div>
   </div>
 </div>
+
+<ng-template #carousel>
+  <div class="carousel">
+    <p-carousel [value]="photos" [circular]="true">
+      <ng-template let-photo pTemplate="item">
+        <img class="carousel__img" [src]="photo.src" />
+      </ng-template>
+    </p-carousel>
+    <div class="carousel__banner">
+      <img src="assets/icons/shield.png" />
+      <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
+    </div>
+  </div>
+</ng-template>

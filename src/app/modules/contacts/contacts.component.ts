@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
 
 @Component({
@@ -6,7 +6,22 @@ import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.scss'],
 })
-export class ContactsComponent {
+export class ContactsComponent implements OnInit {
+  public photosWidth: string = '';
+  public mapWidth: string = '';
+  @HostListener('window:resize')
+  private updateWidth() {
+    if (window.innerWidth < 380) {
+      this.photosWidth = (window.innerWidth - 54).toString();
+    } else {
+      this.photosWidth = '380';
+    }
+    if (window.innerWidth < 550) {
+      this.mapWidth = (window.innerWidth - 54).toString();
+    } else {
+      this.mapWidth = '550';
+    }
+  }
   public photos = [
     'assets/images/mocks/contacts/1.png',
     'assets/images/mocks/contacts/2.png',
@@ -18,5 +33,9 @@ export class ContactsComponent {
 
   constructor(private _bs: BreadcrumbService) {
     _bs.setItem('Контакты');
+  }
+
+  public ngOnInit(): void {
+    this.updateWidth();
   }
 }

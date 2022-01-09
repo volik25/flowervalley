@@ -12,27 +12,20 @@
         <div class="content">
           <span class="title">{{ item.name }}</span>
           <div class="interactive">
-            <div class="p-inputgroup">
-              <span class="p-inputgroup-addon" (click)="increaseCount(item)">
-                <p-image
-                  styleClass="flex align-items-center"
-                  src="assets/icons/plus-min.svg"
-                ></p-image>
-              </span>
-              <input
-                type="text"
-                pInputText
-                [ngModel]="item.count"
-                [min]="1"
-                (ngModelChange)="changeCount(item, $event)"
-              />
-              <span class="p-inputgroup-addon" (click)="decreaseCount(item)">
-                <p-image
-                  styleClass="flex align-items-center"
-                  src="assets/icons/minus-min.svg"
-                ></p-image>
-              </span>
-            </div>
+            <p-inputNumber
+              #countNumber
+              [(ngModel)]="item.count"
+              (ngModelChange)="updateCount(item)"
+              [min]="getStep(item)"
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              inputId="horizontal"
+              [step]="getStep(item)"
+              (onBlur)="changeCount(item, countNumber.value)"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+            >
+            </p-inputNumber>
             <span class="price">{{ item.price }}₽ за шт.</span>
             <span class="sum">{{ item.price * item.count | priceConverter }}</span>
           </div>

@@ -24,6 +24,8 @@ import { TokenInterceptor } from './_interceptors/token.interceptor';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { ToastModule } from 'primeng/toast';
     HttpClientModule,
     ConfirmDialogModule,
     ToastModule,
+    InputTextModule,
+    InputNumberModule,
   ],
   providers: [
     BreadcrumbService,

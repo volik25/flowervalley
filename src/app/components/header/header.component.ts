@@ -9,6 +9,8 @@ import { ProductItem } from '../../_models/product-item';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  public searchShow: boolean = false;
+  public menuShow: boolean = false;
   public cart: ProductItem[] = [];
 
   constructor(private cartService: CartService, private router: Router) {}
@@ -32,5 +34,15 @@ export class HeaderComponent implements OnInit {
 
   public goToCart(): void {
     this.router.navigate(['cart']);
+  }
+
+  public searchToggle(): void {
+    this.menuShow = false;
+    this.searchShow = !this.searchShow;
+  }
+
+  public menuToggle(): void {
+    this.searchShow = false;
+    this.menuShow = !this.menuShow;
   }
 }

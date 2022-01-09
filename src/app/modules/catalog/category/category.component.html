@@ -6,24 +6,28 @@
 >
   <div class="category__content">
     <div class="category__content_menu">
-      <div
-        class="item"
-        *ngFor="let item of catalog; let first = first; let last = last"
-        [ngClass]="{
-          'border-radius-top': first,
-          'border-radius-bottom': last,
-          active: isActive(item.name)
-        }"
-        [routerLink]="['../', getRoute(item.name)]"
-      >
-        {{ item.name }}
+      <div>
+        <div
+          class="item"
+          *ngFor="let item of catalog; let first = first; let last = last"
+          [ngClass]="{
+            'border-radius-top': first,
+            'border-radius-bottom': last,
+            active: isActive(item.name)
+          }"
+          [routerLink]="['../', getRoute(item.name)]"
+        >
+          {{ item.name }}
+        </div>
       </div>
     </div>
     <div
+      *ngIf="category"
       class="category__content_items"
-      [ngClass]="{ start: products.length < 4, between: products.length >= 4 }"
+      [ngClass]="{ start: products.length < 3, between: products.length >= 3 }"
     >
       <flower-valley-product-item
+        [category]="category"
         [isAdmin]="isAdmin"
         *ngFor="let product of products"
         [product]="product"
