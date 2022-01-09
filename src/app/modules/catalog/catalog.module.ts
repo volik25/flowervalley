@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [CatalogComponent, CategoryComponent, ProductComponent],
@@ -27,6 +28,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     ButtonModule,
     PipesModule,
     SplitButtonModule,
+    InputNumberModule,
   ],
 })
 export class CatalogModule {}

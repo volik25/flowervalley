@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
 import { ProductItem } from '../../../_models/product-item';
 import { ProductService } from '../../../_services/back/product.service';
@@ -14,6 +14,7 @@ import { slugify } from 'transliteration';
 import { EditProductComponent } from '../../../shared/product-item/edit-product/edit-product.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AdminService } from '../../../_services/back/admin.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'flower-valley-product',
@@ -22,37 +23,10 @@ import { AdminService } from '../../../_services/back/admin.service';
   providers: [DialogService],
 })
 export class ProductComponent implements OnInit {
-  public mainImage: number = 0;
-
   public isAdmin: boolean = false;
 
-  // public product: ProductItem = {
-  //   id: '1111',
-  //   name: 'Кротон (Кодиеум) Петра (разветвленный)',
-  //   photos: [
-  //     'assets/images/mocks/product/1.png',
-  //     'assets/images/mocks/product/1.png',
-  //     'assets/images/mocks/product/1.png',
-  //     'assets/images/mocks/product/1.png',
-  //   ],
-  //   note1: 'Горшок 19см',
-  //   description:
-  //     '«Petra» – уникальный сорт кротона, сегодня считающийся одним из наиболее известных и часто продаваемых. У этого растения крупные яйцевидные листья до 30 см в длину формируют компактную, удивительно орнаментальную крону. Отличительная черта сорта – доминирование только зеленого и желтого окрасов и очень толстые прожилки, расположенные по центру листовой пластины и отходящие от нее «ребрами» с выемчатым краем. Только на очень старых листьях кротона края листовой пластины и центральная жилка приобретают легкий красноватый тон.',
-  //   categories: [
-  //     {
-  //       id: 1,
-  //       name: 'Комнатные и горшечные',
-  //     },
-  //     {
-  //       id: 2,
-  //       name: 'Комнатные растения',
-  //     },
-  //   ],
-  //   count: 1,
-  //   price: 1800,
-  // };
-
   public product: ProductItem | undefined;
+  public category: Category | undefined;
 
   public categories = [
     {
@@ -91,6 +65,7 @@ export class ProductComponent implements OnInit {
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router,
+    private cdr: ChangeDetectorRef,
     private bs: BreadcrumbService,
     private ls: LoadingService,
     private adminService: AdminService,
@@ -101,6 +76,7 @@ export class ProductComponent implements OnInit {
   public ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const id = params['id'];
+      this.product = undefined;
       this.getProductById(id, params);
     });
   }
@@ -120,23 +96,25 @@ export class ProductComponent implements OnInit {
     this.ls.addSubscription(sub);
   }
 
-  // public get getMainImage(): string {
-  //   return this.product.photos[this.mainImage];
-  // }
-
-  public increaseCount() {
-    // @ts-ignore
-    this.product.count++;
+  public get step(): number {
+    if (this.product?.coefficient) {
+      return Number(this.product.coefficient);
+    } else {
+      return 1;
+    }
   }
 
-  public decreaseCount() {
-    // @ts-ignore
-    if (this.product.count <= 1) return;
-    // @ts-ignore
-    this.product.count--;
+  public setCorrectCount(): void {
+    if (this.product && this.product.count < this.step) {
+      this.product.count = this.step;
+    } else if (this.product && this.product.count / this.step !== 0) {
+      this.product.count = Math.round(this.product.count / this.step) * this.step;
+    }
   }
 
   public addToCart(): void {
+    // @ts-ignore
+    this.product.category = this.category;
     // @ts-ignore
     this.cartService.addToCart(this.product);
   }
@@ -147,23 +125,7 @@ export class ProductComponent implements OnInit {
     if (catalog.length) {
       const category = catalog.find((item) => slugify(item.name) === categoryRoute);
       if (category) {
-        this.bs.addItem(category.name);
-        this.bs.addItem(productName, true);
-        const sub = this.catalogService
-          .getItemById<Category>(category.id)
-          .subscribe((categoryApi) => {
-            this.products =
-              categoryApi.products
-                ?.filter((productItem) => productItem.id !== this.product?.id)
-                .map((product) => {
-                  return {
-                    ...product,
-                    count: Number(product.coefficient) || 1,
-                  };
-                }) || [];
-            this.ls.removeSubscription(sub);
-          });
-        this.ls.addSubscription(sub);
+        this.getProductsList(category, productName);
       }
     } else {
       const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
@@ -171,28 +133,31 @@ export class ProductComponent implements OnInit {
         this.storageService.setItem(categoriesKey, categoriesApi);
         const category = catalog.find((item) => slugify(item.name) === categoryRoute);
         if (category) {
-          this.bs.addItem(category.name);
-          this.bs.addItem(productName, true);
-          const subs = this.catalogService
-            .getItemById<Category>(category.id)
-            .subscribe((categoryApi) => {
-              this.products =
-                categoryApi.products
-                  ?.filter((productItem) => productItem.id !== this.product?.id)
-                  .map((product) => {
-                    return {
-                      ...product,
-                      count: Number(product.coefficient) || 1,
-                    };
-                  }) || [];
-              this.ls.removeSubscription(subs);
-            });
-          this.ls.addSubscription(subs);
+          this.getProductsList(category, productName);
         }
         this.ls.removeSubscription(sub);
       });
       this.ls.addSubscription(sub);
     }
+  }
+
+  private getProductsList(category: Category, productName: string): void {
+    this.category = category;
+    this.bs.addItem(category.name);
+    this.bs.addItem(productName, true);
+    const sub = this.catalogService.getItemById<Category>(category.id).subscribe((categoryApi) => {
+      this.products =
+        categoryApi.products
+          ?.filter((productItem) => productItem.id !== this.product?.id)
+          .map((product) => {
+            return {
+              ...product,
+              count: Number(product.coefficient) || 1,
+            };
+          }) || [];
+      this.ls.removeSubscription(sub);
+    });
+    this.ls.addSubscription(sub);
   }
 
   public editProduct(): void {
@@ -210,5 +175,11 @@ export class ProductComponent implements OnInit {
 
   public getRouterLink(string: string): void {
     this.router.navigate(['catalog', slugify(string)], { relativeTo: this.route.parent?.parent });
+  }
+
+  public getOtherProduct(id: string): void {
+    this.route.params.pipe(take(1)).subscribe((params) => {
+      this.router.navigate(['catalog', params['category'], id]);
+    });
   }
 }

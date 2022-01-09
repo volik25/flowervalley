@@ -22,6 +22,8 @@ import { DownloadInvoiceComponent } from './download-invoice/download-invoice.co
 import { EntityFormComponent } from './order-confirmation/entity-form/entity-form.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
+import { TabViewModule } from 'primeng/tabview';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { AccordionModule } from 'primeng/accordion';
     DialogModule,
     AutoCompleteModule,
     AccordionModule,
+    TabViewModule,
+    InputNumberModule,
   ],
   providers: [BoxService],
 })

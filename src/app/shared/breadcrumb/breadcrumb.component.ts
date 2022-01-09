@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BreadcrumbService } from './breadcrumb.service';
 
@@ -8,8 +8,19 @@ import { BreadcrumbService } from './breadcrumb.service';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
+  @HostListener('window:resize')
+  private updateVisible() {
+    if (window.innerWidth < 1024) {
+      if (this.items.length) {
+        this.items = [this.items[0], this.items[this.items.length - 1]];
+      }
+    } else {
+      this.items = this.resizeItems;
+    }
+  }
   private readonly path: string | undefined;
   public items: any;
+  private resizeItems: any;
   public parentPath: string[] = [''];
 
   constructor(private route: ActivatedRoute, private _bS: BreadcrumbService) {
@@ -19,9 +30,11 @@ export class BreadcrumbComponent implements OnInit {
   public ngOnInit(): void {
     this._bS.breadCrumbChanges().subscribe((res) => {
       this.items = res;
+      this.resizeItems = this.items;
       if (this.items.length > 2) {
         this.parentPath = this.items[this.items.length - 2].routerLink;
       }
+      this.updateVisible();
     });
   }
 

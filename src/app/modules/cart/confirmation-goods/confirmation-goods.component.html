@@ -1,10 +1,10 @@
 <p-card styleClass="confirmation">
   <p-table
     [value]="goods"
-    sortField="group"
+    sortField="category.name"
     sortMode="single"
     rowGroupMode="subheader"
-    groupRowsBy="group"
+    groupRowsBy="category.name"
     styleClass="confirmation"
     #tableOrder
   >
@@ -19,7 +19,7 @@
     <ng-template pTemplate="groupheader" let-product>
       <tr pRowGroupHeader>
         <td colspan="5">
-          {{ product.group || 'Товар' }}
+          {{ product.category.name || 'Категория не определена' }}
         </td>
       </tr>
     </ng-template>
@@ -71,7 +71,7 @@
 
 <p-button
   *ngIf="pickUp || !!shippingCost"
-  [style]="{ 'margin-top': '20px' }"
+  [style]="{ 'margin-top': '20px', padding: '25px' }"
   styleClass="p-button-estimate w-12 flex justify-content-center"
   (onClick)="getInvoice()"
 >

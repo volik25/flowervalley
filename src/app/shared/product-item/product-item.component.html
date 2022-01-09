@@ -10,11 +10,18 @@
   </div>
   <div class="product__interactive">
     <div class="product__interactive_price">{{ product.price }}₽</div>
-    <div class="p-inputgroup">
-      <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount()"></span>
-      <input type="text" pInputText [(ngModel)]="product.count" (blur)="setCorrectCount()" />
-      <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount()"></span>
-    </div>
+    <p-inputNumber
+      [(ngModel)]="product.count"
+      [min]="step"
+      [showButtons]="true"
+      buttonLayout="horizontal"
+      inputId="horizontal"
+      [step]="step"
+      (onBlur)="setCorrectCount()"
+      incrementButtonIcon="pi pi-plus"
+      decrementButtonIcon="pi pi-minus"
+    >
+    </p-inputNumber>
     <p-button (onClick)="addToCart()">
       <ng-template pTemplate="content">
         <img src="../../../assets/icons/cart.svg" width="25px" />

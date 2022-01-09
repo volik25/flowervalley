@@ -204,4 +204,13 @@ export class OrderConfirmationComponent {
   private static instanceOfId(data: any): data is { id: string; isChanged: boolean } {
     return 'id' in data;
   }
+
+  public setClientType(i: number): void {
+    if (i === 0) {
+      this.clientType = 'individual';
+    }
+    if (i === 1) {
+      this.clientType = 'entity';
+    }
+  }
 }

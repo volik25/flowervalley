@@ -6,6 +6,10 @@
 }
 
 :host ::ng-deep .p-button {
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
   background-color: $main-green;
   border-color: $main-green;
   font-weight: 500;

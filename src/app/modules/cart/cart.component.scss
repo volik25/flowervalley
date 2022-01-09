@@ -1,4 +1,5 @@
 @import "colors";
+@import "container";
 
 .banner {
   background-color: $main-green;
@@ -22,7 +23,10 @@
     margin-left: 20px;
     &_title {
       font-weight: normal;
-      font-size: 24px;
+      font-size: 14px;
+      @include laptop-media {
+        font-size: 24px;
+      }
       line-height: 140%;
       color: $white-100;
     }
@@ -31,13 +35,20 @@
       font-size: 18px;
       line-height: 140%;
       color: $white-70;
+      display: none;
+      @include laptop-media {
+        display: block;
+      }
     }
   }
 }
 
 .info-text {
   font-weight: normal;
-  font-size: 18px;
+  font-size: 14px;
+  @include laptop-media {
+    font-size: 18px;
+  }
   line-height: 140%;
   color: $text;
   margin-top: 30px;
@@ -47,16 +58,28 @@
 .contacts {
   display: flex;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 140%;
   margin-bottom: 60px;
+  flex-direction: column;
+  @include laptop-media {
+    flex-direction: row;
+    font-size: 18px;
+  }
   &__address {
     max-width: 450px;
     margin-right: 45px;
   }
   &__phoneMail {
     display: flex;
-    align-items: center;
+    align-items: unset;
+    flex-direction: column;
+    margin-top: 15px;
+    @include laptop-media {
+      flex-direction: row;
+      align-items: center;
+      margin-top: unset;
+    }
     a {
       color: $main-green;
     }
@@ -89,6 +112,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-direction: column;
+    @include laptop-media {
+      flex-direction: unset;
+    }
     &>div {
       display: flex;
       flex-direction: column;
@@ -114,7 +141,10 @@
       }
     }
     &_tulips {
-      padding: 0 20px;
+      padding: 20px 0;
+      @include laptop-media {
+        padding: 0 20px;
+      }
       &>span:last-child {
         font-weight: 500;
         span {

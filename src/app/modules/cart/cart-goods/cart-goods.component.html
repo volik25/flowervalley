@@ -1,25 +1,25 @@
 <p-card>
   <p-table
     [value]="goods"
-    sortField="group"
+    sortField="category.name"
     sortMode="single"
     rowGroupMode="subheader"
-    groupRowsBy="group"
+    groupRowsBy="category.name"
     styleClass="p-table-override"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th width="600px">Товар</th>
-        <th width="160px">Цена</th>
-        <th width="180px">Количество</th>
-        <th width="160px">Стоимость</th>
+        <th>Товар</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Стоимость</th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="groupheader" let-product>
       <tr pRowGroupHeader>
         <td colspan="5">
-          {{ product.group || 'Товар' }}
+          {{ product.category.name || 'Категория не определена' }}
         </td>
       </tr>
     </ng-template>
@@ -35,17 +35,20 @@
         </td>
         <td>{{ product.price | priceConverter: 'two':'rub' }}</td>
         <td class="product__count">
-          <div class="p-inputgroup">
-            <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount(product)"></span>
-            <input
-              type="text"
-              pInputText
-              [ngModel]="product.count"
-              [min]="1"
-              (ngModelChange)="changeCount(product, $event)"
-            />
-            <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount(product)"></span>
-          </div>
+          <p-inputNumber
+            #countNumber
+            [(ngModel)]="product.count"
+            (ngModelChange)="updateCount(product)"
+            [min]="getStep(product)"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            inputId="horizontal"
+            [step]="getStep(product)"
+            (onBlur)="changeCount(product, countNumber.value)"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          >
+          </p-inputNumber>
         </td>
         <td>{{ product.price * product.count | priceConverter: 'two':'rub' }}</td>
         <td class="product__delete">

@@ -1,6 +1,11 @@
 @import "colors";
+@import "container";
 
 ::ng-deep .p-card.confirmation {
+  display: none;
+  @include laptop-media {
+    display: block;
+  }
   .p-card-content {
     padding: 0;
   }

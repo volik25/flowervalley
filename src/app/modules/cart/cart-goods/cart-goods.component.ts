@@ -35,20 +35,25 @@ export class CartGoodsComponent {
     return 0;
   }
 
-  public increaseCount(item: ProductItem) {
-    item.count++;
+  public updateCount(item: ProductItem): void {
     this.cartService.updateCount(item);
   }
 
-  public decreaseCount(item: ProductItem) {
-    if (item.count <= 1) return;
-    item.count--;
-    this.cartService.updateCount(item);
+  public getStep(item: ProductItem): number {
+    if (item.coefficient) {
+      return Number(item.coefficient);
+    } else {
+      return 1;
+    }
   }
 
   public changeCount(item: ProductItem, count: number): void {
-    if (count <= 1) count = 1;
-    item.count = count;
+    const step = this.getStep(item);
+    if (count < step) {
+      item.count = step;
+    } else if (count / step !== 0) {
+      item.count = Math.round(count / step) * step;
+    }
     this.cartService.updateCount(item);
   }
 
