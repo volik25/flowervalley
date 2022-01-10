@@ -9,7 +9,6 @@ import { ContainerComponent } from './container/container.component';
 import { LeafButtonComponent } from './leaf-button/leaf-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { AddProductComponent } from './product-item/add-product/add-product.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { SignInComponent } from './sign-in/sign-in.component';
@@ -26,6 +25,9 @@ import { AddCategoryComponent } from './catalog-item/add-category/add-category.c
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EditCategoryComponent } from './catalog-item/edit-category/edit-category.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { BoxesComponent } from './boxes/boxes.component';
+import { TableModule } from 'primeng/table';
+import { AddBoxComponent } from './boxes/add-box/add-box.component';
 
 @NgModule({
   declarations: [
@@ -33,13 +35,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ProductItemComponent,
     ContainerComponent,
     LeafButtonComponent,
-    BreadcrumbComponent,
     AddProductComponent,
     SignInComponent,
     FilesUploadComponent,
     EditProductComponent,
     AddCategoryComponent,
     EditCategoryComponent,
+    BoxesComponent,
+    AddBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -59,13 +62,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ImageModule,
     MultiSelectModule,
     InputNumberModule,
+    TableModule,
   ],
-  exports: [
-    CatalogItemComponent,
-    ContainerComponent,
-    ProductItemComponent,
-    LeafButtonComponent,
-    BreadcrumbComponent,
-  ],
+  exports: [CatalogItemComponent, ContainerComponent, ProductItemComponent, LeafButtonComponent],
 })
 export class FlowerValleySharedModule {}

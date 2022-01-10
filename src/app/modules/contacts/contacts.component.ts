@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'flower-valley-contacts',

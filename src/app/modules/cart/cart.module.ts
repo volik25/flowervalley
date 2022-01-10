@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { ButtonModule } from 'primeng/button';
-import { BoxService } from '../../_services/front/box.service';
+import { BoxGenerateService } from '../../_services/front/box-generate.service';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,6 +24,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
 import { TabViewModule } from 'primeng/tabview';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     AccordionModule,
     TabViewModule,
     InputNumberModule,
+    SplitButtonModule,
   ],
-  providers: [BoxService],
+  providers: [BoxGenerateService],
 })
 export class CartModule {}

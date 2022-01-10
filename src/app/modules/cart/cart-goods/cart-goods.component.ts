@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
-import { BoxService } from '../../../_services/front/box.service';
+import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { Box } from '../../../_models/box';
 import { ProductItem } from '../../../_models/product-item';
 
@@ -13,11 +13,16 @@ export class CartGoodsComponent {
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   public minSummary = 17500;
+  public isLoading: boolean = false;
 
-  constructor(private cartService: CartService, private boxService: BoxService) {
+  constructor(private cartService: CartService, private boxService: BoxGenerateService) {
     this.goods = this.cartService.getCart();
     this.cartService.cartUpdate.subscribe((cart) => {
       this.goods = cart;
+    });
+    this.boxService.getBoxes().subscribe((boxes) => {
+      this.boxes = boxes;
+      this.isLoading = false;
     });
   }
 
@@ -64,8 +69,8 @@ export class CartGoodsComponent {
   }
 
   public genBoxes(): void {
-    this.boxService.genBoxes();
-    this.boxes = this.boxService.boxes;
+    this.isLoading = true;
+    this.boxService.genBoxes(this.goods);
   }
 
   public removeBoxes(): void {

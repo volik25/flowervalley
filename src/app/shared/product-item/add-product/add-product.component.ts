@@ -7,6 +7,9 @@ import { ProductService } from '../../../_services/back/product.service';
 import { BusinessPackConverterService } from '../../../_services/back/business-pack-converter.service';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';
+import { Box } from '../../../_models/box';
+import { BoxService } from '../../../_services/back/box.service';
+import { isFormInvalid } from '../../../_utils/formValidCheck';
 
 @Component({
   selector: 'flower-valley-add-product',
@@ -14,6 +17,21 @@ import { Category } from '../../../_models/category';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent {
+  public get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  public set isLoading(value: boolean) {
+    if (value) {
+      this.goods.disable();
+      this.product.disable();
+    } else {
+      this.goods.enable();
+      this.product.enable();
+    }
+    this._isLoading = value;
+  }
+  private _isLoading: boolean = false;
   public businessPackResults: GoodsBusinessPack[] = [];
   public selectedProduct: GoodsBusinessPack | undefined;
   public categories: Category[] = [];
@@ -25,12 +43,14 @@ export class AddProductComponent {
     { name: '', value: null },
     { name: 'шт', value: '00~Pvjh0000F' },
   ];
+  public boxes: Box[] = [];
   constructor(
     private fb: FormBuilder,
     private bpService: BusinessPackService,
     private bpConverter: BusinessPackConverterService,
     private catalogService: CatalogService,
     private productService: ProductService,
+    private boxService: BoxService,
     private config: DynamicDialogConfig,
     private ref: DynamicDialogRef,
   ) {
@@ -49,14 +69,20 @@ export class AddProductComponent {
     this.product = fb.group({
       description: ['', Validators.required],
       categoryIds: [],
+      boxId: [null, Validators.required],
     });
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items;
     });
+    this.boxService.getItems().subscribe((boxes) => {
+      this.boxes = boxes;
+    });
   }
 
   public addProduct(): void {
-    if (this.goods.invalid) return;
+    if (isFormInvalid(this.goods)) return;
+    if (isFormInvalid(this.product)) return;
+    this.isLoading = true;
     const goods: GoodsBusinessPack = this.goods.getRawValue();
     const formData = new FormData();
     this.photos.map((photo) => {
@@ -78,15 +104,9 @@ export class AddProductComponent {
           ...this.bpConverter.convertToProduct(updateGoods),
           id: id,
           description: productGroupValue.description,
+          boxId: productGroupValue.boxId,
         };
-        Object.getOwnPropertyNames(product).map((key) => {
-          // @ts-ignore
-          const value = product[key];
-          formData.append(key, value);
-        });
-        this.productService.addItem<any>(formData).subscribe(() => {
-          this.ref.close({ success: true });
-        });
+        this.saveProduct(product, formData);
       });
     } else {
       this.bpService.createGoods(goods).subscribe((response) => {
@@ -96,16 +116,21 @@ export class AddProductComponent {
           id: id,
           ...this.product.getRawValue(),
         };
-        Object.getOwnPropertyNames(product).map((key) => {
-          // @ts-ignore
-          const value = product[key];
-          formData.append(key, value);
-        });
-        this.productService.addItem<any>(formData).subscribe(() => {
-          this.ref.close({ success: true });
-        });
+        this.saveProduct(product, formData);
       });
     }
+  }
+
+  private saveProduct(product: any, formData: FormData): void {
+    Object.getOwnPropertyNames(product).map((key) => {
+      // @ts-ignore
+      const value = product[key];
+      formData.append(key, value);
+    });
+    this.productService.addItem<any>(formData).subscribe(() => {
+      this.isLoading = false;
+      this.ref.close({ success: true });
+    });
   }
 
   public searchItems(searchString: string): void {

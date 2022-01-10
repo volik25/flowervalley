@@ -5,4 +5,5 @@ export interface Product extends BusinessPackModel {
   photos: string[];
   description: string;
   categories: Category[];
+  boxId: number;
 }

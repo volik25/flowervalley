@@ -82,6 +82,7 @@
           styleClass="p-button-outlined text-normal"
           label="ДОБАВИТЬ КОРОБКИ"
           (onClick)="genBoxes()"
+          [loading]="isLoading"
         ></p-button>
         <p-button
           *ngIf="boxes.length"

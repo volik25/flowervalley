@@ -12,7 +12,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ImageModule } from 'primeng/image';
 import { DialogModule } from 'primeng/dialog';
-import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CartModalComponent } from './components/cart-modal/cart-modal.component';
 import { PipesModule } from './_pipes/pipes.module';
@@ -26,6 +26,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     HeaderComponent,
     FooterComponent,
     CartModalComponent,
+    BreadcrumbComponent,
   ],
   imports: [
     BrowserModule,

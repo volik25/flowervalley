@@ -56,10 +56,13 @@ export class BreadcrumbService {
   }
 
   public get isShow(): boolean {
-    if (this.url !== '/cart/download-invoice') {
-      return this.url !== '/';
-    } else {
-      return false;
+    switch (this.url) {
+      case '/':
+        return false;
+      case '/cart/download-invoice':
+        return false;
+      default:
+        return !this.url.includes('/#');
     }
   }
 

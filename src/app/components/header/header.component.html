@@ -104,7 +104,7 @@
     <span *ngIf="!menuShow" class="pi pi-shopping-bag"></span>
     <div [ngClass]="{ 'pl-2': !menuShow }">Каталог</div>
   </div>
-  <div>О компании</div>
+  <div [routerLink]="['']" fragment="about">О компании</div>
   <div>Тюльпаны оптом</div>
   <div>Рассада цветов</div>
   <div [routerLink]="['contacts']">Контакты</div>

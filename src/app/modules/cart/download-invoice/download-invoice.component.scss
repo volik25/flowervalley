@@ -13,7 +13,12 @@ $root: '.download-invoice';
     &_header {
       font-style: normal;
       font-weight: 500;
-      font-size: 60px;
+      font-size: 20px;
+      text-align: center;
+      @include laptop-media {
+        font-size: 60px;
+        text-align: unset;
+      }
       line-height: 100%;
       color: $text;
     }
