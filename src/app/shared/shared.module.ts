@@ -26,6 +26,9 @@ import { AddCategoryComponent } from './catalog-item/add-category/add-category.c
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EditCategoryComponent } from './catalog-item/edit-category/edit-category.component';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { BoxesComponent } from './boxes/boxes.component';
+import { TableModule } from 'primeng/table';
+import { AddBoxComponent } from './boxes/add-box/add-box.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     EditProductComponent,
     AddCategoryComponent,
     EditCategoryComponent,
+    BoxesComponent,
+    AddBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +64,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ImageModule,
     MultiSelectModule,
     InputNumberModule,
+    TableModule,
   ],
   exports: [
     CatalogItemComponent,

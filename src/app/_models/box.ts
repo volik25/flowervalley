@@ -1,6 +1,6 @@
 export interface Box {
-  id?: number;
+  id: number;
   name: string;
   price: number;
-  count: number;
+  volume: number;
 }

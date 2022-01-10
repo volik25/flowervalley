@@ -8,6 +8,9 @@ import { Product } from '../../../_models/product';
 import { GoodsBusinessPack } from '../../../_models/business-pack/goods-base';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { ProductService } from '../../../_services/back/product.service';
+import { Box } from '../../../_models/box';
+import { BoxService } from '../../../_services/back/box.service';
+import { isFormInvalid } from '../../../_utils/formValidCheck';
 
 @Component({
   selector: 'flower-valley-edit-product',
@@ -15,6 +18,21 @@ import { ProductService } from '../../../_services/back/product.service';
   styleUrls: ['../add-product/add-product.component.scss'],
 })
 export class EditProductComponent {
+  public get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  public set isLoading(value: boolean) {
+    if (value) {
+      this.goods.disable();
+      this.productGroup.disable();
+    } else {
+      this.goods.enable();
+      this.productGroup.enable();
+    }
+    this._isLoading = value;
+  }
+  private _isLoading: boolean = false;
   public goods: FormGroup;
   public productGroup: FormGroup;
   public product: Product;
@@ -23,11 +41,13 @@ export class EditProductComponent {
     { name: '', value: null },
     { name: 'шт', value: '00~Pvjh0000F' },
   ];
+  public boxes: Box[] = [];
   private photos: File[] = [];
   constructor(
     private fb: FormBuilder,
     private catalogService: CatalogService,
     private productService: ProductService,
+    private boxService: BoxService,
     private config: DynamicDialogConfig,
     private converter: BusinessPackConverterService,
     private bpService: BusinessPackService,
@@ -47,6 +67,7 @@ export class EditProductComponent {
     this.productGroup = fb.group({
       description: ['', Validators.required],
       categoryIds: [],
+      boxId: [null, Validators.required],
     });
     this.product = config.data.product;
     this.goods.patchValue(converter.convertToBase(this.product));
@@ -59,10 +80,15 @@ export class EditProductComponent {
       const categories = this.product.categories.map((category) => category.id);
       this.productGroup.get('categoryIds')?.setValue(categories);
     });
+    this.boxService.getItems().subscribe((boxes) => {
+      this.boxes = boxes;
+    });
   }
 
   public editProduct(): void {
-    if (this.goods.invalid) return;
+    if (isFormInvalid(this.goods)) return;
+    if (isFormInvalid(this.productGroup)) return;
+    this.isLoading = true;
     const goods: GoodsBusinessPack = this.goods.getRawValue();
     const formData = new FormData();
     this.photos.map((photo) => {
@@ -84,6 +110,7 @@ export class EditProductComponent {
         const product: any = {
           ...this.converter.convertToProduct(goods),
           description: productGroupValue.description,
+          boxId: productGroupValue.boxId,
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
@@ -91,6 +118,7 @@ export class EditProductComponent {
           formData.append(key, value);
         });
         this.productService.updateItem<any>(formData, id).subscribe(() => {
+          this.isLoading = false;
           this.ref.close({ success: true });
         });
       });

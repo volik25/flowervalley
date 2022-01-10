@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
-import { Box } from '../../../_models/box';
-import { BoxService } from '../../../_services/front/box.service';
+import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { takeUntil } from 'rxjs';
 import { ProductItem } from '../../../_models/product-item';
 import { HtmlToPdfService } from '../../../_services/front/html-to-pdf.service';
 import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
+import { BoxItem } from '../../../_models/box-item';
 
 @Component({
   selector: 'flower-valley-confirmation-goods',
@@ -17,14 +17,14 @@ import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
 export class ConfirmationGoodsComponent {
   @Input()
   public goods: ProductItem[] = [];
-  public boxes: Box[] = [];
+  public boxes: BoxItem[] = [];
   @Input()
   public shippingCost = 0;
   @Input()
   public pickUp: boolean = false;
   constructor(
     private cartService: CartService,
-    private boxService: BoxService,
+    private boxService: BoxGenerateService,
     private htmlToPDF: HtmlToPdfService,
     private priceConvert: PriceConverterPipe,
     $destroy: DestroyService,

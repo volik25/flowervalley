@@ -1,4 +1,9 @@
-<flower-valley-container background="dark" headerTitle="Корзина">
+<flower-valley-container
+  background="dark"
+  headerTitle="Корзина"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="boxesTemplate"
+>
   <div class="banner">
     <div class="banner__img">
       <p-image
@@ -63,3 +68,11 @@
 <flower-valley-container *ngIf="goods.length" background="dark" headerTitle="Оформление заказа">
   <flower-valley-order-confirmation [goods]="goods"></flower-valley-order-confirmation>
 </flower-valley-container>
+
+<ng-template #boxesTemplate>
+  <p-splitButton
+    label="Коробки транспортировочные"
+    (onClick)="showBoxesListModal()"
+    [model]="actions"
+  ></p-splitButton>
+</ng-template>

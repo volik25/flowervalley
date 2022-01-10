@@ -47,6 +47,18 @@
     <label for="note2">Примечание товара</label>
   </span>
   <form [formGroup]="productGroup">
+    <span class="p-float-label mb-2 mr-2">
+      <p-dropdown
+        styleClass="w-12"
+        inputId="box"
+        [options]="boxes"
+        optionValue="id"
+        optionLabel="name"
+        formControlName="boxId"
+        [autoDisplayFirst]="false"
+      ></p-dropdown>
+      <label for="box">Транспортировочная коробка</label>
+    </span>
     <span class="p-float-label mb-2">
       <p-multiSelect
         styleClass="w-12"
@@ -73,5 +85,5 @@
       [files]="product.photos || []"
     ></flower-valley-files-upload>
   </form>
-  <p-button type="submit" label="Сохранить"></p-button>
+  <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>
