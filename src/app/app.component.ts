@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
-import { BreadcrumbService } from './shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SignInComponent } from './shared/sign-in/sign-in.component';
 import { LoadingService } from './_services/front/loading.service';

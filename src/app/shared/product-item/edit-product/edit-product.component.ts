@@ -73,10 +73,7 @@ export class EditProductComponent {
     this.goods.patchValue(converter.convertToBase(this.product));
     this.productGroup.patchValue(this.product);
     this.catalogService.getItems().subscribe((items) => {
-      this.categories = items.map((item) => {
-        item.id = Number(item.id);
-        return item;
-      });
+      this.categories = items;
       const categories = this.product.categories.map((category) => category.id);
       this.productGroup.get('categoryIds')?.setValue(categories);
     });

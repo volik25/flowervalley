@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { BreadcrumbService } from '../breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, takeUntil } from 'rxjs';
 import { DestroyService } from '../../_services/front/destroy.service';

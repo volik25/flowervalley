@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CartService } from '../../_services/front/cart.service';
 import { ProductItem } from '../../_models/product-item';
-import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { AdminService } from '../../_services/back/admin.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';

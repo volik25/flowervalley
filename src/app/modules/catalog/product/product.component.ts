@@ -5,7 +5,7 @@ import { ProductService } from '../../../_services/back/product.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Product } from '../../../_models/product';
 import { LoadingService } from '../../../_services/front/loading.service';
-import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { StorageService } from '../../../_services/front/storage.service';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';

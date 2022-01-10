@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BreadcrumbService } from '../../shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AddCategoryComponent } from '../../shared/catalog-item/add-category/add-category.component';
 import { CatalogService } from '../../_services/back/catalog.service';

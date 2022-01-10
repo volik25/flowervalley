@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
-import { BreadcrumbService } from '../../../shared/breadcrumb/breadcrumb.service';
+import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenuItem, MessageService } from 'primeng/api';
 import { slugify } from 'transliteration';
