@@ -1,6 +1,6 @@
 <div class="sales">
   <div class="sales__content">
-    <p-carousel [value]="sales" [circular]="true">
+    <p-carousel [value]="sales" [autoplayInterval]="5000" [circular]="true">
       <ng-template let-sale pTemplate="item">
         <div [ngStyle]="{ 'background-image': 'url(' + sale.img + ')' }" class="item">
           <div class="item__container">

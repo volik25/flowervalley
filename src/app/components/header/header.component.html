@@ -1,4 +1,4 @@
-<header class="header">
+<header #header class="header">
   <div class="header__contacts">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
@@ -18,19 +18,23 @@
       </div>
     </div>
     <div>
-      <div class="whats-app-button p-2">
+      <a
+        class="whats-app-button p-2"
+        href="https://api.whatsapp.com/send/?phone=79151091000"
+        target="_blank"
+      >
         <span class="pi pi-whatsapp"></span>
         <div class="pl-1">What'sApp</div>
-      </div>
+      </a>
     </div>
     <div class="contacts pl-4">
       <div class="flex">
         <span class="pi pi-phone"></span>
-        <div class="pl-2">+7 (915) 109-10-00</div>
+        <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
       </div>
       <div class="flex">
         <span class="pi pi-envelope"></span>
-        <div class="pl-2">flowervalley@mail.ru</div>
+        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@gmail.com</a>
       </div>
     </div>
     <div class="search">
@@ -49,27 +53,15 @@
       <p-image src="../../../assets/images/mobile-menu{{ menuShow ? '-close' : '' }}.svg"></p-image>
     </div>
     <div class="search-panel" [ngClass]="{ visible: searchShow }">
-      <span class="search-input w-12">
-        <input class="w-12" pInputText placeholder="Поиск по товарам" type="text" />
-      </span>
+      <flower-valley-search></flower-valley-search>
     </div>
-    <p-button class="search-button" [ngClass]="{ visible: searchShow }" (onClick)="searchToggle()">
-      <ng-template pTemplate="content">
-        <p-image
-          src="assets/icons/search.png"
-          styleClass="flex justify-content-center align-items-center"
-          width="17px"
-          height="17px"
-        ></p-image>
-      </ng-template>
-    </p-button>
     <div class="mobile-menu-panel" [ngClass]="{ visible: menuShow }">
       <div class="content" (click)="menuShow = false">
         <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       </div>
     </div>
   </div>
-  <div class="header__menu-bar">
+  <div #headerMenu class="header__menu-bar">
     <div class="header__menu-bar_content">
       <div class="prices">
         <p-image
@@ -80,6 +72,24 @@
         <div class="pl-2">ПРАЙС-ЛИСТ</div>
       </div>
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
+      <div class="scrolled-search">
+        <div class="menu">
+          <div
+            class="button"
+            (mouseenter)="isMenuToggle = true"
+            (click)="isMenuToggle = !isMenuToggle"
+          >
+            <span>Меню</span>
+            <span class="pi pi-angle-down"></span>
+          </div>
+          <div class="panel" *ngIf="isMenuToggle">
+            <div class="content">
+              <ng-container *ngTemplateOutlet="menuBar"></ng-container>
+            </div>
+          </div>
+        </div>
+        <flower-valley-search></flower-valley-search>
+      </div>
       <div class="cart" (click)="cart?.length ? cartPanel.toggle($event) : goToCart()">
         <span class="cart__icon">
           <p-image src="assets/icons/cart.svg"></p-image>

@@ -1,7 +1,7 @@
 <footer>
   <div class="footer">
     <div class="footer__company">
-      <p-image src="assets/images/logo-footer.png"></p-image>
+      <p-image src="assets/images/logo-footer.png" [routerLink]="['']"></p-image>
       <div class="flex flex-column justify-content-between h-100 pt-2">
         <span>Агрофирма<br />Цветочная Долина</span>
         <span>Тепличное хозяйство</span>
@@ -42,25 +42,29 @@
 
 <ng-template #contacts>
   <div class="contacts">
-    <div class="whats-app-button p-2">
+    <a
+      class="whats-app-button p-2"
+      href="https://api.whatsapp.com/send/?phone=79151091000"
+      target="_blank"
+    >
       <span class="pi pi-whatsapp"></span>
       <div class="pl-2">What'sApp</div>
+    </a>
+    <div class="phone">
+      <span class="pi pi-phone"></span>
+      <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
     </div>
     <div class="phone">
       <span class="pi pi-phone"></span>
-      <div class="pl-2">+7(915)109-10-00</div>
+      <a type="tel" href="tel:+7(903)101-34-01">+7(903)101-34-01</a>
     </div>
     <div class="phone">
       <span class="pi pi-phone"></span>
-      <div class="pl-2">+7(903)101-34-01</div>
-    </div>
-    <div class="phone">
-      <span class="pi pi-phone"></span>
-      <div class="pl-2">+7(926)165-11-51</div>
+      <a href="tel:+7(926)165-11-51">+7(926)165-11-51</a>
     </div>
     <div class="mail">
       <span class="pi pi-envelope"></span>
-      <div class="pl-2">flowervalley@mail.ru</div>
+      <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@gmail.com</a>
     </div>
   </div>
 </ng-template>

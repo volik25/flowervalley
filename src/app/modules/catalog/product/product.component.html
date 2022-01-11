@@ -44,13 +44,19 @@
       <div class="product__desc_info-share">
         <div class="title">Поделиться:</div>
         <div class="share-array">
-          <p-image
+          <a
             *ngFor="let category of categories"
-            src="assets/icons/product/{{ category.src }}.svg"
-            width="15px"
-            height="15px"
-            styleClass="mx-2 cursor-pointer"
-          ></p-image>
+            href="{{ category.link }}"
+            target="_blank"
+            data-action="share/whatsapp/share"
+          >
+            <p-image
+              src="assets/icons/product/{{ category.src }}.svg"
+              width="15px"
+              height="15px"
+              styleClass="mx-2 cursor-pointer"
+            ></p-image>
+          </a>
         </div>
       </div>
       <div class="product__desc_info-cart">

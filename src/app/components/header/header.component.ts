@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CartService } from '../../_services/front/cart.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { ProductItem } from '../../_models/product-item';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'flower-valley-header',
@@ -9,11 +10,31 @@ import { ProductItem } from '../../_models/product-item';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('headerMenu')
+  private header!: ElementRef;
+  @HostListener('window:scroll')
+  private scrollTop() {
+    if (document.documentElement.scrollTop > 100) {
+      this.header.nativeElement.classList.add('scrolled');
+    } else {
+      this.header.nativeElement.classList.remove('scrolled');
+    }
+  }
   public searchShow: boolean = false;
   public menuShow: boolean = false;
+  public isMenuToggle: boolean = false;
   public cart: ProductItem[] = [];
 
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(private cartService: CartService, private router: Router) {
+    router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        map((e) => e as NavigationEnd),
+      )
+      .subscribe(() => {
+        this.isMenuToggle = false;
+      });
+  }
 
   ngOnInit(): void {
     this.cart = this.cartService.getCart();

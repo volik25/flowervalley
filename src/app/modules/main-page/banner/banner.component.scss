@@ -4,7 +4,7 @@
 @mixin carousel {
   .carousel {
     position: relative;
-    &__img {
+    ::ng-deep &__img {
       width: 100%;
       height: 100%;
       background-repeat: no-repeat;
@@ -42,29 +42,10 @@
 
 .container {
   @include fv-container();
-  .search {
-    position: relative;
+  ::ng-deep .search {
     display: none;
     @include laptop-media {
       display: block;
-    }
-    input {
-      height: 67px;
-    }
-    &__button {
-      ::ng-deep button {
-        padding: 10px;
-      }
-      position: absolute;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      top: 0;
-      bottom: 0;
-      right: 10px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
   .banner {
