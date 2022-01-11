@@ -13,7 +13,7 @@ export class BpRequestInterceptor implements HttpInterceptor {
         setHeaders: {
           Authorization: `Bearer ${this.businessPackToken}`,
         },
-        withCredentials: true,
+        withCredentials: false,
       });
       return next.handle(params);
     }
