@@ -47,7 +47,7 @@
   <div class="carousel">
     <p-carousel [value]="photos" [autoplayInterval]="5000" [circular]="true">
       <ng-template let-photo pTemplate="item">
-        <img class="carousel__img" [src]="photo.src" />
+        <img class="carousel__img" [src]="photo.src" (click)="openImage(photo.src)" />
       </ng-template>
     </p-carousel>
     <div class="carousel__banner">
@@ -56,3 +56,17 @@
     </div>
   </div>
 </ng-template>
+
+<p-galleria
+  [value]="photos"
+  [(visible)]="displayCustom"
+  [(activeIndex)]="activeIndex"
+  [circular]="true"
+  [fullScreen]="true"
+  [showItemNavigators]="true"
+  [showThumbnails]="false"
+>
+  <ng-template pTemplate="item" let-item>
+    <img [src]="item.src" style="width: 100%; display: block" />
+  </ng-template>
+</p-galleria>

@@ -1,15 +1,33 @@
+<div *ngIf="!reviews.length" class="error">
+  К сожалению, отзывы пока отсутвуют.<br />Но мы обязательно исправим ситуацию!
+</div>
 <p-carousel
+  *ngIf="reviews.length"
   [value]="reviews"
   [circular]="true"
-  [numVisible]="visibleBlocks"
-  [numScroll]="visibleBlocks"
+  [numVisible]="5"
+  [numScroll]="5"
+  [responsiveOptions]="responsiveOptions"
   [autoplayInterval]="5000"
 >
   <ng-template let-page pTemplate="item">
     <div class="carousel__page">
-      <a [href]="page.link" target="_blank">
-        <img class="carousel__page_img" [src]="page.src" />
-      </a>
+      <img class="carousel__page_img" [src]="page.img" (click)="openImage(page.id)" />
     </div>
   </ng-template>
 </p-carousel>
+
+<p-galleria
+  [value]="reviews"
+  [(visible)]="displayCustom"
+  [(activeIndex)]="activeIndex"
+  [responsiveOptions]="responsiveOptions"
+  [circular]="true"
+  [fullScreen]="true"
+  [showItemNavigators]="true"
+  [showThumbnails]="false"
+>
+  <ng-template pTemplate="item" let-item>
+    <img [src]="item.img" style="width: 100%; display: block" />
+  </ng-template>
+</p-galleria>

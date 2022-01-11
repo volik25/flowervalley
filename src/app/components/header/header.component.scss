@@ -9,6 +9,9 @@ $root: '.header';
   width: 250px;
   right: -27px;
   .content {
+    &:hover {
+      text-decoration: none !important;
+    }
     background-color: $white-100;
     display: flex;
     flex-direction: column;
@@ -18,6 +21,9 @@ $root: '.header';
     font-size: 14px;
     line-height: 17px;
     &>div {
+      &:hover {
+        text-decoration: none !important;
+      }
       display: flex;
       justify-content: center;
       align-items: center;
@@ -229,6 +235,10 @@ $root: '.header';
         border-radius: 10px;
         &:hover {
           outline: 1px solid $white-100;
+          text-decoration: none;
+          div {
+            text-decoration: none;
+          }
         }
       }
       .catalog {
@@ -241,6 +251,10 @@ $root: '.header';
       .cart {
         &:hover {
           outline: 1px solid $white-100;
+          text-decoration: none;
+          div {
+            text-decoration: none;
+          }
         }
         display: flex;
         justify-content: center;
@@ -302,6 +316,9 @@ $root: '.header';
               }
             }
             .panel {
+              &:hover {
+                text-decoration: none;
+              }
               .catalog {
                 display: none !important;
                 &~ div {
@@ -309,7 +326,6 @@ $root: '.header';
                   &:hover {
                     background-color: $main-green;
                     color: $white-100;
-                    text-decoration: none !important;
                   }
                 }
               }

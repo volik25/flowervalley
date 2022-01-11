@@ -15,12 +15,26 @@
         <ng-template pTemplate="item" let-photo>
           <p-image
             [imageStyle]="{ width: '100%', 'border-radius': '15px' }"
+            imageClass="cursor-pointer"
             [src]="photo"
-            [preview]="true"
+            (click)="openImage(photo)"
           ></p-image>
         </ng-template>
         <ng-template pTemplate="thumbnail" let-photo>
           <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo"></p-image>
+        </ng-template>
+      </p-galleria>
+      <p-galleria
+        [value]="product.photos"
+        [(visible)]="displayCustom"
+        [(activeIndex)]="activeIndex"
+        [circular]="true"
+        [fullScreen]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="false"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item" style="width: 100%; display: block" />
         </ng-template>
       </p-galleria>
     </div>

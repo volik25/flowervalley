@@ -1,4 +1,6 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { responsiveOptions } from '../../../_utils/constants';
+import { Feedback } from '../../../_models/feedback';
 
 @Component({
   selector: 'flower-valley-reviews',
@@ -6,78 +8,83 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./reviews.component.scss'],
 })
 export class ReviewsComponent {
-  public visibleBlocks = 5;
-  @HostListener('window:resize')
-  private updateVisible() {
-    if (window.innerWidth < 1200) {
-      this.visibleBlocks = 1;
-    } else {
-      this.visibleBlocks = 5;
-    }
-  }
-  constructor() {
-    this.updateVisible();
-  }
-  public reviews = [
-    {
-      src: 'assets/images/mocks/reviews/1.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/2.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/3.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/4.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/5.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/1.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/2.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/3.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/4.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/5.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/1.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/2.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/3.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/4.png',
-      link: '',
-    },
-    {
-      src: 'assets/images/mocks/reviews/5.png',
-      link: '',
-    },
+  public responsiveOptions = responsiveOptions;
+  @Input()
+  public isAdmin: boolean = false;
+  @Input()
+  public reviews: Feedback[] = [
+    // {
+    //   src: 'assets/images/mocks/reviews/1.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/2.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/3.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/4.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/5.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/1.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/2.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/3.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/4.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/5.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/1.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/2.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/3.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/4.png',
+    //   link: '',
+    // },
+    // {
+    //   src: 'assets/images/mocks/reviews/5.png',
+    //   link: '',
+    // },
   ];
+
+  public displayCustom: boolean = false;
+
+  public activeIndex: number = 0;
+
+  public openImage(id: number): void {
+    this.activeIndex = this.reviews.findIndex((item) => item.id === id);
+    this.displayCustom = true;
+  }
+
+  private editReview(): void {}
+
+  private deleteReview(): void {}
 }

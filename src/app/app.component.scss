@@ -122,6 +122,10 @@
   }
 }
 
+:host ::ng-deep .p-galleria-mask {
+  z-index: 10000;
+}
+
 .cookie {
   font-style: normal;
   font-weight: 500;

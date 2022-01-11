@@ -32,16 +32,34 @@
 </flower-valley-container>
 <flower-valley-about id="about"></flower-valley-about>
 <flower-valley-advantages></flower-valley-advantages>
-<flower-valley-container headerTitle="Видео о нас" headerIcon="pi-video">
-  <flower-valley-video></flower-valley-video>
+<flower-valley-container
+  headerTitle="Видео о нас"
+  headerIcon="pi-video"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addVideoButton"
+>
+  <flower-valley-video [videos]="mainInfo?.videos || []" [isAdmin]="isAdmin"></flower-valley-video>
 </flower-valley-container>
 <flower-valley-container
   background="dark"
   headerTitle="Отзывы"
   headerIconImage="assets/icons/file.png"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addFeedbackButton"
 >
-  <flower-valley-reviews></flower-valley-reviews>
+  <flower-valley-reviews
+    [reviews]="mainInfo?.comments || []"
+    [isAdmin]="isAdmin"
+  ></flower-valley-reviews>
 </flower-valley-container>
 <flower-valley-container headerTitle="Наши клиенты" headerIconImage="assets/icons/file-edit.png">
   <flower-valley-clients></flower-valley-clients>
 </flower-valley-container>
+
+<ng-template #addVideoButton>
+  <p-button label="Добавить видео" (onClick)="addVideo()"></p-button>
+</ng-template>
+
+<ng-template #addFeedbackButton>
+  <p-button label="Добавить отзыв" (onClick)="addFeedBack()"></p-button>
+</ng-template>

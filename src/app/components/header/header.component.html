@@ -80,7 +80,8 @@
             (click)="isMenuToggle = !isMenuToggle"
           >
             <span>Меню</span>
-            <span class="pi pi-angle-down"></span>
+            <span *ngIf="!isMenuToggle" class="pi pi-angle-down"></span>
+            <span *ngIf="isMenuToggle" class="pi pi-angle-up"></span>
           </div>
           <div class="panel" *ngIf="isMenuToggle">
             <div class="content">

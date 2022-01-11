@@ -32,6 +32,9 @@ export class ProductComponent implements OnInit {
 
   public products: ProductItem[] = [];
 
+  public displayCustom: boolean = false;
+  public activeIndex: number = 0;
+
   constructor(
     private cartService: CartService,
     private productService: ProductService,
@@ -204,6 +207,14 @@ export class ProductComponent implements OnInit {
           link: 'https://telegram.me/share/url?url=' + window.location.href,
         },
       ];
+    }
+  }
+
+  public openImage(src: string): void {
+    const index = this.product?.photos.findIndex((photo) => photo === src);
+    if (index || index === 0) {
+      this.activeIndex = index;
+      this.displayCustom = true;
     }
   }
 }

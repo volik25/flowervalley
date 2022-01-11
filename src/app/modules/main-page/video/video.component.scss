@@ -11,6 +11,14 @@ $root: '.video';
   @include laptop-media {
     margin-top: 40px;
   }
+  &__error {
+    width: 100%;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 110%;
+    color: $text;
+    text-align: center;
+  }
   &__container {
     iframe {
       border: none;
@@ -27,14 +35,46 @@ $root: '.video';
       line-height: 135%;
       color: $text;
     }
-    &>div:last-child {
+    &>div:nth-child(3) {
       font-weight: normal;
       font-size: 14px;
       line-height: 135%;
       color: $text-grey;
+      height: 95px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
     }
     &:not(:last-child) {
       margin-bottom: 30px;
     }
+  }
+  &.start {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @include laptop-media {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      .video__container {
+        margin-right: 40px;
+      }
+    }
+  }
+  &.between {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @include laptop-media {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+  }
+  .product__edit {
+    margin-top: 15px;
+    max-width: unset;
   }
 }

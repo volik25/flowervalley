@@ -17,6 +17,15 @@ import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { ClientsComponent } from './clients/clients.component';
+import { AddVideoComponent } from './video/add-video/add-video.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditVideoComponent } from './video/edit-video/edit-video.component';
+import { AddReviewComponent } from './reviews/add-review/add-review.component';
+import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
+import { AddClientComponent } from './clients/add-client/add-client.component';
+import { EditClientComponent } from './clients/edit-client/edit-client.component';
+import { GalleriaModule } from 'primeng/galleria';
 
 @NgModule({
   declarations: [
@@ -28,6 +37,12 @@ import { ClientsComponent } from './clients/clients.component';
     VideoComponent,
     ReviewsComponent,
     ClientsComponent,
+    AddVideoComponent,
+    EditVideoComponent,
+    AddReviewComponent,
+    EditReviewComponent,
+    AddClientComponent,
+    EditClientComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +54,9 @@ import { ClientsComponent } from './clients/clients.component';
     CarouselModule,
     FlowerValleySharedModule,
     PipesModule,
+    ReactiveFormsModule,
+    InputTextareaModule,
+    GalleriaModule,
   ],
 })
 export class MainPageModule {}

@@ -72,6 +72,7 @@ import { SearchComponent } from './search/search.component';
     ProductItemComponent,
     LeafButtonComponent,
     SearchComponent,
+    FilesUploadComponent,
   ],
 })
 export class FlowerValleySharedModule {}

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Client } from '../../../_models/client';
+import { responsiveOptions } from '../../../_utils/constants';
 
 @Component({
   selector: 'flower-valley-clients',
@@ -6,30 +8,34 @@ import { Component } from '@angular/core';
   styleUrls: ['./clients.component.scss'],
 })
 export class ClientsComponent {
-  public clients = [
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
+  public responsiveOptions = responsiveOptions;
+  @Input()
+  public isAdmin: boolean = false;
+  @Input()
+  public clients: Client[] = [
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
+    // {
+    //   img: 'assets/images/mocks/clients/1.png',
+    //   link: 'https://www.rzd.ru/',
+    // },
   ];
 }

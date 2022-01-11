@@ -31,4 +31,12 @@ export class BannerComponent {
       src: 'assets/images/strong-gold.png',
     },
   ];
+  public displayCustom: boolean = false;
+
+  public activeIndex: number = 0;
+
+  public openImage(src: string): void {
+    this.activeIndex = this.photos.findIndex((photo) => photo.src === src);
+    this.displayCustom = true;
+  }
 }

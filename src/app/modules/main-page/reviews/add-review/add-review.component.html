@@ -1,0 +1,12 @@
+<form [formGroup]="reviewGroup" (ngSubmit)="addReview()">
+  <span class="p-float-label">
+    <input type="text" id="link" pInputText formControlName="link" />
+    <label for="link">Ссылка на отзыв</label>
+  </span>
+  <flower-valley-files-upload
+    label="Загрузить изображение"
+    [multi]="false"
+    (uploaded)="filesUploaded($event)"
+  ></flower-valley-files-upload>
+  <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
+</form>

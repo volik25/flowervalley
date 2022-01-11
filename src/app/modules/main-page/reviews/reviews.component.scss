@@ -9,8 +9,18 @@ $root: '.carousel';
     &_img {
       width: 200px;
       height: auto;
+      cursor: pointer;
     }
   }
+}
+
+.error {
+  width: 100%;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 110%;
+  color: $text;
+  text-align: center;
 }
 
 :host ::ng-deep .p-carousel-indicators {
