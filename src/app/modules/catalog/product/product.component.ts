@@ -28,32 +28,7 @@ export class ProductComponent implements OnInit {
   public product: ProductItem | undefined;
   public category: Category | undefined;
 
-  public categories = [
-    {
-      src: 'facebook',
-      link: '',
-    },
-    {
-      src: 'pinterest',
-      link: '',
-    },
-    {
-      src: 'whatsapp',
-      link: '',
-    },
-    {
-      src: 'vk',
-      link: '',
-    },
-    {
-      src: 'telegram',
-      link: '',
-    },
-    {
-      src: 'viber',
-      link: '',
-    },
-  ];
+  public categories: { src: string; link: string }[] = [];
 
   public products: ProductItem[] = [];
 
@@ -78,6 +53,7 @@ export class ProductComponent implements OnInit {
       const id = params['id'];
       this.product = undefined;
       this.getProductById(id, params);
+      this.setSharedButtons();
     });
   }
 
@@ -181,5 +157,53 @@ export class ProductComponent implements OnInit {
     this.route.params.pipe(take(1)).subscribe((params) => {
       this.router.navigate(['catalog', params['category'], id]);
     });
+  }
+
+  public get isMobile(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
+      navigator.userAgent,
+    );
+  }
+
+  private setSharedButtons(): void {
+    if (this.isMobile) {
+      this.categories = [
+        {
+          src: 'facebook',
+          link: 'https://www.facebook.com/sharer.php?u=' + window.location.href,
+        },
+        {
+          src: 'whatsapp',
+          link: 'whatsapp://send?text=' + window.location.href,
+        },
+        {
+          src: 'vk',
+          link: 'https://www.vk.com/share.php?url=' + window.location.href,
+        },
+        {
+          src: 'telegram',
+          link: 'https://telegram.me/share/url?url=' + window.location.href,
+        },
+        {
+          src: 'viber',
+          link: 'viber://forward?text=' + window.location.href,
+        },
+      ];
+    } else {
+      this.categories = [
+        {
+          src: 'facebook',
+          link: 'https://www.facebook.com/sharer.php?u=' + window.location.href,
+        },
+        {
+          src: 'vk',
+          link: 'https://www.vk.com/share.php?url=' + window.location.href,
+        },
+        {
+          src: 'telegram',
+          link: 'https://telegram.me/share/url?url=' + window.location.href,
+        },
+      ];
+    }
   }
 }

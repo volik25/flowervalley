@@ -28,6 +28,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { BoxesComponent } from './boxes/boxes.component';
 import { TableModule } from 'primeng/table';
 import { AddBoxComponent } from './boxes/add-box/add-box.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { AddBoxComponent } from './boxes/add-box/add-box.component';
     EditCategoryComponent,
     BoxesComponent,
     AddBoxComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +66,12 @@ import { AddBoxComponent } from './boxes/add-box/add-box.component';
     InputNumberModule,
     TableModule,
   ],
-  exports: [CatalogItemComponent, ContainerComponent, ProductItemComponent, LeafButtonComponent],
+  exports: [
+    CatalogItemComponent,
+    ContainerComponent,
+    ProductItemComponent,
+    LeafButtonComponent,
+    SearchComponent,
+  ],
 })
 export class FlowerValleySharedModule {}

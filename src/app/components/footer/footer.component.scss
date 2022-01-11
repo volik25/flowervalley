@@ -27,38 +27,43 @@ footer {
       @include laptop-media {
         width: 165px;
       }
-    }
-    span:first-child {
-      font-weight: 600;
-      font-size: 20px;
-      line-height: 110%;
-      @include laptop-media {
-        font-size: 25.8621px;
+      &:hover {
+        cursor: pointer;
       }
-    }
-    span:nth-child(2) {
-      font-weight: normal;
-      font-size: 16px;
-      line-height: 19px;
-      @include laptop-media {
-        font-size: 20.1149px;
-        line-height: 24px;
-      }
-    }
-    span:last-child {
-      display: none;
-      @include laptop-media {
-        display: block;
-      }
-      color: $white-50;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 120%;
     }
     &>div {
       margin-left: 15px;
       @include laptop-media {
         margin-left: 0;
+      }
+      span:first-child {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 110%;
+        @include laptop-media {
+          font-size: 25.8621px;
+        }
+      }
+      span:nth-child(2) {
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        @include laptop-media {
+          font-size: 20.1149px;
+          line-height: 24px;
+          margin-top: 20px;
+        }
+      }
+      span:last-child {
+        display: none;
+        @include laptop-media {
+          display: block;
+        }
+        color: $white-50;
+        margin-top: 30px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 120%;
       }
     }
   }
@@ -187,7 +192,12 @@ footer {
   line-height: 19px;
   color: $white-100;
   &:hover {
-    cursor: pointer;
+    text-decoration: none;
+    outline: 1px solid $white-50;
+  }
+  margin-bottom: 20px;
+  @include laptop-media {
+    margin-bottom: 0;
   }
 }
 .address, .work-time {
@@ -209,4 +219,12 @@ footer {
   font-size: 24px;
   line-height: 120%;
   color: $white-100;
+  a {
+    padding-left: 10px;
+    color: $white-100;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
