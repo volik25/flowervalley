@@ -26,6 +26,10 @@ import { EditReviewComponent } from './reviews/edit-review/edit-review.component
 import { AddClientComponent } from './clients/add-client/add-client.component';
 import { EditClientComponent } from './clients/edit-client/edit-client.component';
 import { GalleriaModule } from 'primeng/galleria';
+import { EditBannerComponent } from './banner/edit-banner/edit-banner.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,7 @@ import { GalleriaModule } from 'primeng/galleria';
     EditReviewComponent,
     AddClientComponent,
     EditClientComponent,
+    EditBannerComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +62,9 @@ import { GalleriaModule } from 'primeng/galleria';
     ReactiveFormsModule,
     InputTextareaModule,
     GalleriaModule,
+    CheckboxModule,
+    DropdownModule,
+    InputNumberModule,
   ],
 })
 export class MainPageModule {}

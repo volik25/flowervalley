@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductItem } from '../../_models/product-item';
 import { AdminService } from '../../_services/back/admin.service';
 import { DestroyService } from '../../_services/front/destroy.service';
@@ -21,6 +21,7 @@ interface MainInfo {
   videos: Video[];
   comments: Feedback[];
   clients: Client[];
+  popular: ProductItem[];
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class MainPageComponent implements OnInit {
     private ls: LoadingService,
     private ds: DialogService,
     private ms: MessageService,
+    private cdr: ChangeDetectorRef,
     private $destroy: DestroyService,
   ) {
     adminService
@@ -109,6 +111,14 @@ export class MainPageComponent implements OnInit {
     });
     feedbackModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
       if (res && res.success) this.loadMainInfo();
+    });
+  }
+
+  public bannerChanged(): void {
+    this.loadMainInfo();
+    this.ms.add({
+      severity: 'success',
+      summary: 'Баннер обновлен',
     });
   }
 }

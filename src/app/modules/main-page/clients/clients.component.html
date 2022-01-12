@@ -1,3 +1,6 @@
+<div *ngIf="!clients.length" class="error">
+  К сожалению, данные о клиентах пока отсутвуют.<br />Но мы обязательно исправим ситуацию!
+</div>
 <a *ngFor="let client of clients" [href]="client.link" target="_blank">
   <img [src]="client.img" width="135px" />
 </a>

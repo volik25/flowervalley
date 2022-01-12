@@ -1,5 +1,10 @@
-<flower-valley-banner></flower-valley-banner>
+<flower-valley-banner
+  [isAdmin]="isAdmin"
+  [banner]="mainInfo?.main"
+  (bannerChanged)="bannerChanged()"
+></flower-valley-banner>
 <flower-valley-container
+  *ngIf="catalog.length"
   background="dark"
   headerTitle="Каталог"
   headerIcon="pi-shopping-bag"
@@ -17,6 +22,7 @@
   <flower-valley-sales></flower-valley-sales>
 </flower-valley-container>
 <flower-valley-container
+  *ngIf="mainInfo?.popular?.length"
   background="dark"
   headerTitle="Популярные товары"
   headerIconImage="assets/icons/fire.png"
