@@ -67,6 +67,7 @@ export class AddProductComponent {
       Coefficient: [''],
     });
     this.product = fb.group({
+      isPopular: [false],
       description: ['', Validators.required],
       categoryIds: [],
       boxId: [null, Validators.required],
@@ -105,6 +106,7 @@ export class AddProductComponent {
           id: id,
           description: productGroupValue.description,
           boxId: productGroupValue.boxId,
+          isPopular: productGroupValue.isPopular,
         };
         this.saveProduct(product, formData);
       });
@@ -153,7 +155,7 @@ export class AddProductComponent {
     } else {
       this.goods.reset();
       this.goods.enable();
-      this.product.reset();
+      this.product.reset({ isPopular: false });
     }
   }
 

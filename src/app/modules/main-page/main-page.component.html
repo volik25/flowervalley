@@ -31,8 +31,9 @@
 >
   <div class="flex-container">
     <flower-valley-product-item
-      *ngFor="let product of products"
+      *ngFor="let product of mainInfo?.popular"
       [product]="product"
+      (openProductCard)="navigateToProduct($event)"
     ></flower-valley-product-item>
   </div>
 </flower-valley-container>

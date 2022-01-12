@@ -15,6 +15,8 @@ import { AddVideoComponent } from './video/add-video/add-video.component';
 import { MessageService } from 'primeng/api';
 import { AddReviewComponent } from './reviews/add-review/add-review.component';
 import { Feedback } from '../../_models/feedback';
+import { Router } from '@angular/router';
+import { slugify } from 'transliteration';
 
 interface MainInfo {
   main: MainBanner;
@@ -40,6 +42,7 @@ export class MainPageComponent implements OnInit {
     private ds: DialogService,
     private ms: MessageService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
     private $destroy: DestroyService,
   ) {
     adminService
@@ -69,6 +72,13 @@ export class MainPageComponent implements OnInit {
     const sub = forkJoin(reqests)
       .pipe(takeUntil(this.$destroy))
       .subscribe(([main, catalog]) => {
+        // @ts-ignore
+        (main as MainInfo).popular = (main as MainInfo).popular.map((product) => {
+          return {
+            ...product,
+            count: product.coefficient || 1,
+          };
+        });
         this.mainInfo = main as MainInfo;
         this.catalog = catalog as Category[];
         this.ls.removeSubscription(sub);
@@ -120,5 +130,18 @@ export class MainPageComponent implements OnInit {
       severity: 'success',
       summary: 'Баннер обновлен',
     });
+  }
+
+  public navigateToProduct(id: string): void {
+    const product = this.mainInfo?.popular.find((item) => item.id === id);
+    if (product && product.categoryName) {
+      this.router.navigate(['catalog', slugify(product.categoryName), id]);
+    } else {
+      this.ms.add({
+        severity: 'error',
+        summary: 'Произошла ошибка',
+        detail: 'Товар был перемещен или удален',
+      });
+    }
   }
 }

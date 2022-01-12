@@ -41,6 +41,33 @@
   }
 }
 
+.p-field-checkbox {
+  margin-bottom: 10px;
+  ::ng-deep {
+    .p-checkbox-box {
+      box-shadow: none;
+    }
+    .p-checkbox .p-checkbox-box.p-highlight {
+      background-color: $main-green;
+      border-color: $main-green;
+    }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box {
+      &:hover, &.p-focus {
+        border-color: $main-green;
+      }
+    }
+  }
+  label {
+    margin-left: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 ::ng-deep .p-button {
   background-color: $main-green;
   border-color: $main-green;

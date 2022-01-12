@@ -65,6 +65,7 @@ export class EditProductComponent {
       Coefficient: [''],
     });
     this.productGroup = fb.group({
+      isPopular: [false],
       description: ['', Validators.required],
       categoryIds: [],
       boxId: [null, Validators.required],
@@ -108,6 +109,7 @@ export class EditProductComponent {
           ...this.converter.convertToProduct(goods),
           description: productGroupValue.description,
           boxId: productGroupValue.boxId,
+          isPopular: productGroupValue.isPopular,
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
