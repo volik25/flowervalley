@@ -25,22 +25,59 @@ $root: '.header';
         text-decoration: none !important;
       }
       display: flex;
-      justify-content: center;
       align-items: center;
       color: $text;
-      padding: 20px;
-      border: 1px solid #E3EAF8;
-      &:last-child {
-        border-radius: 0 0 5px 5px;
-      }
-      &:first-child {
-        border-top: none;
-      }
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 22px;
+      padding: 10px;
       &.catalog {
+        font-size: 24px;
+        line-height: 30px;
         div {
           text-align: center;
         }
       }
+    }
+  }
+}
+
+@mixin cart-button {
+  .cart {
+    &:hover {
+      outline: 1px solid $white-100;
+      text-decoration: none;
+      div {
+        text-decoration: none;
+      }
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #FFFFFF;
+    border-radius: 10px;
+    padding: 10px;
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .pi-shopping-cart {
+      font-size: 35px;
+      padding-right: 5px;
+    }
+    &__sum {
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 25px;
+    }
+    &__count {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 17px;
     }
   }
 }
@@ -266,43 +303,7 @@ $root: '.header';
           text-decoration: none;
         }
       }
-      .cart {
-        &:hover {
-          outline: 1px solid $white-100;
-          text-decoration: none;
-          div {
-            text-decoration: none;
-          }
-        }
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid #FFFFFF;
-        border-radius: 10px;
-        padding: 10px;
-        &__icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-          padding: 10px;
-        }
-        .pi-shopping-cart {
-          font-size: 35px;
-          padding-right: 5px;
-        }
-        &__sum {
-          font-weight: 600;
-          font-size: 20px;
-          line-height: 25px;
-        }
-        &__count {
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 17px;
-        }
-      }
+      @include cart-button;
     }
     &.scrolled {
       .header__menu-bar_content {
@@ -386,4 +387,48 @@ $root: '.header';
 
 :host ::ng-deep p-button {
   border: none;
+}
+
+.mobile-cart {
+  width: 100%;
+  @include cart-button;
+  .cart {
+    max-width: 160px;
+    border-color: $main-green;
+    &__icon {
+      background-color: #F4F8E6;
+    }
+  }
+  .prices {
+    background-color: $whats-app-button;
+    color: $main-green;
+    margin: 20px 0;
+    padding: 20px;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    text-transform: uppercase;
+    &:active {
+      outline: 1px solid $main-green;
+    }
+  }
+  .work-time {
+    display: flex;
+    width: 100%;
+  }
+  .address {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+  }
+  .work-time, .address {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+  }
 }

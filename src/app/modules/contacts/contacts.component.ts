@@ -21,7 +21,7 @@ export class ContactsComponent implements OnInit {
       this.photosWidth = (window.innerWidth - 54).toString();
       this.mapWidth = (window.innerWidth - 54).toString();
     } else if (window.innerWidth < 550) {
-      this.photosWidth = '380';
+      this.photosWidth = '326';
       this.mapWidth = (window.innerWidth - 54).toString();
     } else {
       this.photosWidth = '380';
