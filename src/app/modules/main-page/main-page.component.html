@@ -59,7 +59,12 @@
     [isAdmin]="isAdmin"
   ></flower-valley-reviews>
 </flower-valley-container>
-<flower-valley-container headerTitle="Наши клиенты" headerIconImage="assets/icons/file-edit.png">
+<flower-valley-container
+  headerTitle="Наши клиенты"
+  headerIconImage="assets/icons/file-edit.png"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addClientButton"
+>
   <flower-valley-clients></flower-valley-clients>
 </flower-valley-container>
 
@@ -69,4 +74,8 @@
 
 <ng-template #addFeedbackButton>
   <p-button label="Добавить отзыв" (onClick)="addFeedBack()"></p-button>
+</ng-template>
+
+<ng-template #addClientButton>
+  <p-button label="Добавить клиента" (onClick)="addFeedBack()"></p-button>
 </ng-template>

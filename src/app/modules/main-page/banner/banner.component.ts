@@ -16,37 +16,15 @@ export class BannerComponent {
   public banner: MainBanner | undefined;
   @Output()
   private bannerChanged: EventEmitter<any> = new EventEmitter<any>();
-  public photos = [
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-    {
-      src: 'assets/images/strong-gold.png',
-    },
-  ];
+  public photos = [];
   public displayCustom: boolean = false;
 
   public activeIndex: number = 0;
 
   constructor(private ds: DialogService) {}
 
-  public openImage(src: string): void {
-    this.activeIndex = this.photos.findIndex((photo) => photo.src === src);
+  public openImage(id: number): void {
+    this.activeIndex = this.banner?.photos.findIndex((photo) => photo.id === id) || 0;
     this.displayCustom = true;
   }
 

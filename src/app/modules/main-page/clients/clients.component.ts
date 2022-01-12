@@ -12,30 +12,13 @@ export class ClientsComponent {
   @Input()
   public isAdmin: boolean = false;
   @Input()
-  public clients: Client[] = [
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-    // {
-    //   img: 'assets/images/mocks/clients/1.png',
-    //   link: 'https://www.rzd.ru/',
-    // },
-  ];
+  public clients: Client[] = [];
+  public displayCustom: boolean = false;
+
+  public activeIndex: number = 0;
+
+  public openImage(id: number): void {
+    this.activeIndex = this.clients.findIndex((item) => item.id === id);
+    this.displayCustom = true;
+  }
 }

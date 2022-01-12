@@ -43,6 +43,10 @@
     <p-inputNumber formControlName="autoPlay" inputId="autoPlay" [min]="1"> </p-inputNumber>
     <label for="autoPlay">Пауза между сменой фотографии (секунды)</label>
   </span>
-  <flower-valley-files-upload [multi]="true" [files]="photosLinks"></flower-valley-files-upload>
+  <flower-valley-files-upload
+    [multi]="true"
+    [files]="photosLinks"
+    (uploaded)="uploadFiles($event)"
+  ></flower-valley-files-upload>
   <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>

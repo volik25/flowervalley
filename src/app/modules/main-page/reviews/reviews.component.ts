@@ -12,68 +12,7 @@ export class ReviewsComponent {
   @Input()
   public isAdmin: boolean = false;
   @Input()
-  public reviews: Feedback[] = [
-    // {
-    //   src: 'assets/images/mocks/reviews/1.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/2.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/3.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/4.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/5.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/1.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/2.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/3.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/4.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/5.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/1.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/2.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/3.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/4.png',
-    //   link: '',
-    // },
-    // {
-    //   src: 'assets/images/mocks/reviews/5.png',
-    //   link: '',
-    // },
-  ];
+  public reviews: Feedback[] = [];
 
   public displayCustom: boolean = false;
 

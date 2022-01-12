@@ -1,4 +1,4 @@
-<header #header class="header">
+<header class="header">
   <div class="header__contacts">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
@@ -27,7 +27,7 @@
         <div class="pl-1">What'sApp</div>
       </a>
     </div>
-    <div class="contacts pl-4">
+    <div class="contacts">
       <div class="flex">
         <span class="pi pi-phone"></span>
         <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
@@ -74,11 +74,7 @@
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       <div class="scrolled-search">
         <div class="menu">
-          <div
-            class="button"
-            (mouseenter)="isMenuToggle = true"
-            (click)="isMenuToggle = !isMenuToggle"
-          >
+          <div class="button" (click)="isMenuToggle = !isMenuToggle">
             <span>Меню</span>
             <span *ngIf="!isMenuToggle" class="pi pi-angle-down"></span>
             <span *ngIf="isMenuToggle" class="pi pi-angle-up"></span>

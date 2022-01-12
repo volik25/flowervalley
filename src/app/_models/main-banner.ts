@@ -6,5 +6,5 @@ export interface MainBanner {
   label: string;
   autoPlay: number;
   isUserCanLeaf: boolean;
-  photos: string[];
+  photos: { id: number; src: string }[];
 }

@@ -19,6 +19,12 @@
     font-size: 14px;
     line-height: 100%;
   }
+  &.p-fileupload-choose {
+    &:hover, &:active {
+      background-color: $dark-green;
+      border-color: $dark-green;
+    }
+  }
   &:enabled {
     &:hover, &:active {
       background-color: $dark-green;

@@ -18,7 +18,7 @@ export class EditBannerComponent implements OnInit {
   public catalog: Category[] = [];
   public isLoading: boolean = false;
   public photos: File[] = [];
-  public photosLinks: string[] = [];
+  public photosLinks: any[] = [];
   constructor(
     private fb: FormBuilder,
     private mainBannerService: MainBannerService,

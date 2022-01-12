@@ -45,13 +45,13 @@
 <ng-template #carousel>
   <div class="carousel" *ngIf="banner">
     <p-carousel
-      [value]="photos"
+      [value]="banner.photos"
       [autoplayInterval]="banner.autoPlay"
       [circular]="true"
       [showNavigators]="banner.isUserCanLeaf"
     >
       <ng-template let-photo pTemplate="item">
-        <img class="carousel__img" [src]="photo.src" (click)="openImage(photo.src)" />
+        <img class="carousel__img" [src]="photo.src" (click)="openImage(photo.id)" />
       </ng-template>
     </p-carousel>
     <div class="carousel__banner">
@@ -63,7 +63,7 @@
 
 <p-galleria
   *ngIf="banner"
-  [value]="photos"
+  [value]="banner.photos"
   [(visible)]="displayCustom"
   [(activeIndex)]="activeIndex"
   [circular]="true"

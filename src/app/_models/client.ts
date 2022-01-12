@@ -1,3 +1,6 @@
-import { ImgLink } from './_img-link';
+import { IdImg } from './_idImg';
 
-export interface Client extends ImgLink {}
+export interface Client extends IdImg {
+  autoPlay: number;
+  isUserCanLeaf: boolean;
+}
