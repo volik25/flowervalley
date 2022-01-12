@@ -70,8 +70,14 @@
   [isAdmin]="isAdmin"
   [buttonTemplate]="addPhotos"
 >
-  <div class="flex justify-content-between flex-wrap">
-    <div *ngFor="let photo of photos" class="photo mb-4">
+  <div
+    class="flex flex-wrap"
+    [ngClass]="{
+      'justify-content-start': photos.length < 3,
+      'justify-content-between': photos.length >= 3
+    }"
+  >
+    <div *ngFor="let photo of photos" class="photo mb-4" [ngClass]="{ 'mr-4': photos.length < 3 }">
       <p-image
         [src]="photo.img"
         styleClass="cursor-pointer"
@@ -79,7 +85,7 @@
         (click)="openImage(photo.id)"
         [imageStyle]="{ 'border-radius': '10px' }"
       ></p-image>
-      <div class="hover">
+      <div class="hover" *ngIf="isAdmin">
         <p-button
           styleClass="p-button-danger"
           icon="pi pi-trash"
@@ -100,7 +106,7 @@
   [showThumbnails]="false"
 >
   <ng-template pTemplate="item" let-item>
-    <img [src]="item" style="width: 100%; display: block" />
+    <img [src]="item.img" style="width: 100%; display: block" />
   </ng-template>
 </p-galleria>
 

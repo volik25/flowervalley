@@ -19,43 +19,18 @@ export class ContactsComponent implements OnInit {
   private updateWidth() {
     if (window.innerWidth < 380) {
       this.photosWidth = (window.innerWidth - 54).toString();
-    } else {
+      this.mapWidth = (window.innerWidth - 54).toString();
+    } else if (window.innerWidth < 550) {
       this.photosWidth = '380';
-    }
-    if (window.innerWidth < 550) {
       this.mapWidth = (window.innerWidth - 54).toString();
     } else {
+      this.photosWidth = '380';
       this.mapWidth = '550';
     }
   }
   public displayCustom: boolean = false;
   public activeIndex: number = 0;
-  public photos: IdImg[] = [
-    // {
-    //   img: 'assets/images/mocks/contacts/1.png',
-    //   id: 1,
-    // },
-    // {
-    //   img: 'assets/images/mocks/contacts/2.png',
-    //   id: 2,
-    // },
-    // {
-    //   img: 'assets/images/mocks/contacts/3.png',
-    //   id: 3,
-    // },
-    // {
-    //   img: 'assets/images/mocks/contacts/4.png',
-    //   id: 4,
-    // },
-    // {
-    //   img: 'assets/images/mocks/contacts/5.png',
-    //   id: 5,
-    // },
-    // {
-    //   img: 'assets/images/mocks/contacts/6.png',
-    //   id: 6,
-    // },
-  ];
+  public photos: IdImg[] = [];
 
   constructor(
     private _bs: BreadcrumbService,
@@ -69,9 +44,9 @@ export class ContactsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.updateWidth();
     this.contactService.getPhotos().subscribe((photos) => {
       this.photos = photos;
-      this.updateWidth();
     });
   }
 
@@ -83,7 +58,7 @@ export class ContactsComponent implements OnInit {
   public addPhoto(photos: File[]): void {
     const formData = new FormData();
     photos.map((photo) => {
-      formData.append('img[]', photo);
+      formData.append('img', photo);
       this.contactService.addItem(formData).subscribe((id: number) => {
         const url = ((<any>photo).objectURL = this.sanitizer.bypassSecurityTrustUrl(
           window.URL.createObjectURL(photo),
