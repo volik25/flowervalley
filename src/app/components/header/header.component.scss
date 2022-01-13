@@ -6,9 +6,13 @@ $root: '.header';
 @mixin mobile-panel($top: 100px) {
   position: absolute;
   top: $top;
-  width: 250px;
+  height: calc(100vh - 100px);
+  background-color: $white-50;
   right: -27px;
   .content {
+    height: 100%;
+    width: 80%;
+    padding: 0 10px;
     &:hover {
       text-decoration: none !important;
     }
@@ -24,8 +28,6 @@ $root: '.header';
       &:hover {
         text-decoration: none !important;
       }
-      display: flex;
-      align-items: center;
       color: $text;
       font-weight: 500;
       font-size: 18px;
@@ -37,6 +39,10 @@ $root: '.header';
         div {
           text-align: center;
         }
+      }
+      &:not(.mobile-cart) {
+        display: flex;
+        align-items: center;
       }
     }
   }
@@ -232,7 +238,8 @@ $root: '.header';
     .mobile-menu-panel {
       display: none;
       &.visible {
-        display: block;
+        display: flex;
+        justify-content: flex-end;
         @include laptop-media {
           display: none;
         }
@@ -391,6 +398,10 @@ $root: '.header';
 
 .mobile-cart {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   @include cart-button;
   .cart {
     max-width: 160px;

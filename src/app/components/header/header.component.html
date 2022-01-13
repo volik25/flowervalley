@@ -21,11 +21,11 @@
     <div class="contacts">
       <div class="flex">
         <span class="pi pi-phone"></span>
-        <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
+        <a href="tel:+7(915)109-10-00">+7 915 109 1000</a>
       </div>
       <div class="flex">
         <span class="pi pi-envelope"></span>
-        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@gmail.com</a>
+        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@mail.com</a>
       </div>
     </div>
     <div class="search">
@@ -91,9 +91,9 @@
   <div>Тюльпаны оптом</div>
   <div>Рассада цветов</div>
   <div [routerLink]="['contacts']">Контакты</div>
-  <div *ngIf="menuShow">
-    <div class="mobile-cart">
-      <ng-container *ngTemplateOutlet="cartButton"></ng-container>
+  <div *ngIf="menuShow" class="mobile-cart">
+    <ng-container *ngTemplateOutlet="cartButton"></ng-container>
+    <div>
       <ng-container *ngTemplateOutlet="pricesButton"></ng-container>
       <ng-container *ngTemplateOutlet="contacts"></ng-container>
     </div>
