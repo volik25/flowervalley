@@ -1,0 +1,7 @@
+@import "../../../../shared/product-item/add-product/add-product.component";
+
+::ng-deep {
+  p-inputnumber, .p-inputnumber {
+    width: 100%;
+  }
+}

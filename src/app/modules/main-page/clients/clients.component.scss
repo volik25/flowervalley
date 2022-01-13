@@ -1,13 +1,44 @@
-@import "container";
+@import "colors";
 
-:host {
-  display: flex;
-  flex-wrap: wrap;
-  //flex-direction: column;
-  //@include laptop-media {
-  //  flex-direction: row;
-  //}
-  justify-content: space-around;
-  padding-top: 40px;
-  padding-bottom: 40px;
+$root: '.carousel';
+
+#{$root} {
+  &__page {
+    display: flex;
+    justify-content: center;
+    &_img {
+      width: 200px;
+      height: auto;
+      cursor: pointer;
+    }
+  }
+}
+
+.error {
+  width: 100%;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 110%;
+  color: $text;
+  text-align: center;
+}
+
+:host ::ng-deep .p-carousel-indicators {
+  .p-carousel-indicator.p-highlight button {
+    background-color: $text;
+  }
+  .p-carousel-indicator button {
+    background-color: $text;
+    opacity: 0.32;
+  }
+}
+
+:host ::ng-deep .p-carousel-content {
+  padding: 40px;
+  .p-carousel-prev, .p-carousel-next {
+    color: $text;
+  }
+  .p-carousel-prev {
+    left: 0;
+  }
 }

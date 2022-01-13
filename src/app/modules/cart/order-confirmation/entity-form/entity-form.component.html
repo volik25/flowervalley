@@ -2,15 +2,36 @@
   <p-checkbox [formControl]="isNewClient" [binary]="true" inputId="isNewClient"></p-checkbox>
   <label for="isNewClient">Я делаю заказ впервые</label>
 </div>
+<span class="p-float-label" *ngIf="isNewClient.value === true">
+  <p-autoComplete
+    styleClass="w-12"
+    (onSelect)="patchDaDataValue($event)"
+    [suggestions]="daDataResults"
+    [showEmptyMessage]="true"
+    emptyMessage="Совпадений не найдено"
+    field="data.inn"
+    (completeMethod)="searchItemsByDaData($event.query)"
+    inputId="inputtext"
+  >
+    <ng-template let-firm pTemplate="item">
+      <b>Название:</b>
+      <div>{{ firm.value }}</div>
+      <b>ИНН:</b>
+      <div>{{ firm.data.inn }}</div>
+    </ng-template>
+  </p-autoComplete>
+  <label for="inputtext" *ngIf="!isShowForm">Введите ИНН для поиска</label>
+  <label for="inputtext" *ngIf="isShowForm">ИНН</label>
+</span>
 <span class="p-float-label" *ngIf="isNewClient.value === false">
   <p-autoComplete
     styleClass="w-12"
-    (onSelect)="patchValue($event)"
+    (onSelect)="patchBpValue($event)"
     [suggestions]="businessPackResults"
     [showEmptyMessage]="true"
     emptyMessage="Совпадений не найдено"
     field="INN"
-    (completeMethod)="searchItems($event.query)"
+    (completeMethod)="searchItemsByBP($event.query)"
     inputId="inputtext"
   >
     <ng-template let-firm pTemplate="item">
@@ -20,10 +41,10 @@
       <div>{{ firm.INN }}</div>
     </ng-template>
   </p-autoComplete>
-  <label for="inputtext" *ngIf="!entityId">Поиск по базе клиентов</label>
-  <label for="inputtext" *ngIf="entityId">ИНН (поиск по базе клиентов)</label>
+  <label for="inputtext" *ngIf="!isShowForm">Поиск по базе клиентов</label>
+  <label for="inputtext" *ngIf="isShowForm">ИНН (поиск по базе клиентов)</label>
 </span>
-<form [formGroup]="entityData">
+<form [formGroup]="entityData" *ngIf="isShowForm">
   <span class="p-float-label">
     <input type="text" id="entityName" pInputText formControlName="FullName" />
     <label for="entityName">Название организации</label>
@@ -35,14 +56,6 @@
   <span class="p-float-label">
     <input type="text" id="Address" pInputText formControlName="Address" />
     <label for="Address">Адрес организации</label>
-  </span>
-  <div class="p-field-checkbox">
-    <p-checkbox formControlName="NoNDS" [binary]="true" inputId="NoNDS"></p-checkbox>
-    <label for="NoNDS">Работа без НДС</label>
-  </div>
-  <span class="p-float-label" *ngIf="isNewClient.value === true">
-    <input type="text" id="entityInn" pInputText formControlName="INN" />
-    <label for="entityInn">ИНН</label>
   </span>
   <span class="p-float-label">
     <input type="text" id="KPP" pInputText formControlName="KPP" />

@@ -29,6 +29,7 @@ import { BoxesComponent } from './boxes/boxes.component';
 import { TableModule } from 'primeng/table';
 import { AddBoxComponent } from './boxes/add-box/add-box.component';
 import { SearchComponent } from './search/search.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { SearchComponent } from './search/search.component';
     MultiSelectModule,
     InputNumberModule,
     TableModule,
+    CheckboxModule,
   ],
   exports: [
     CatalogItemComponent,
@@ -72,6 +74,7 @@ import { SearchComponent } from './search/search.component';
     ProductItemComponent,
     LeafButtonComponent,
     SearchComponent,
+    FilesUploadComponent,
   ],
 })
 export class FlowerValleySharedModule {}

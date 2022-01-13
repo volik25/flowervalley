@@ -27,6 +27,7 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { DadataInterceptor } from './_interceptors/dadata.interceptor';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,11 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BpRequestInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DadataInterceptor,
       multi: true,
     },
     {

@@ -9,6 +9,9 @@ $root: '.header';
   width: 250px;
   right: -27px;
   .content {
+    &:hover {
+      text-decoration: none !important;
+    }
     background-color: $white-100;
     display: flex;
     flex-direction: column;
@@ -18,23 +21,63 @@ $root: '.header';
     font-size: 14px;
     line-height: 17px;
     &>div {
+      &:hover {
+        text-decoration: none !important;
+      }
       display: flex;
-      justify-content: center;
       align-items: center;
       color: $text;
-      padding: 20px;
-      border: 1px solid #E3EAF8;
-      &:last-child {
-        border-radius: 0 0 5px 5px;
-      }
-      &:first-child {
-        border-top: none;
-      }
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 22px;
+      padding: 10px;
       &.catalog {
+        font-size: 24px;
+        line-height: 30px;
         div {
           text-align: center;
         }
       }
+    }
+  }
+}
+
+@mixin cart-button {
+  .cart {
+    &:hover {
+      outline: 1px solid $white-100;
+      text-decoration: none;
+      div {
+        text-decoration: none;
+      }
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #FFFFFF;
+    border-radius: 10px;
+    padding: 10px;
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .pi-shopping-cart {
+      font-size: 35px;
+      padding-right: 5px;
+    }
+    &__sum {
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 25px;
+    }
+    &__count {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 17px;
     }
   }
 }
@@ -52,6 +95,10 @@ $root: '.header';
     display: flex;
     justify-content: space-between;
     @include fv-container(20px, 20px);
+    @media screen and (max-width: 370px) {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
     height: 100px;
     font-weight: normal;
     font-size: 14px;
@@ -62,8 +109,11 @@ $root: '.header';
       align-items: center;
       ::ng-deep img {
         width: 53px;
+        @media screen and (max-width: 370px) {
+          width: 40px;
+        }
         @include laptop-media {
-          width: 74px;
+          width: 80px;
         }
       }
       &>div {
@@ -80,10 +130,7 @@ $root: '.header';
     }
 
     .whats-app-button {
-      display: none;
-      @include laptop-media {
-        display: flex;
-      }
+      display: flex;
       justify-content: center;
       align-items: center;
       width: 140px;
@@ -108,6 +155,12 @@ $root: '.header';
         display: flex;
       }
       width: 270px;
+      &+div {
+        display: none;
+        @include laptop-media {
+          display: block;
+        }
+      }
     }
     .work-time {
       display: none;
@@ -127,12 +180,16 @@ $root: '.header';
         display: block;
         font-size: 15.4978px;
         line-height: 19px;
+        padding-left: 10px;
       }
       div:first-child {
         margin-bottom: 10px;
       }
       span {
         color: $main-green;
+        @media screen and (max-width: 370px) {
+          display: none;
+        }
       }
       a {
         color: $text;
@@ -147,8 +204,12 @@ $root: '.header';
       }
       align-items: center;
       justify-content: center;
-      margin-right: 20px;
-      margin-left: 20px;
+      @media screen and (max-width: 370px) {
+        margin-right: 5px;
+        margin-left: 5px;
+      }
+      margin-right: 10px;
+      margin-left: 10px;
       &__button {
         ::ng-deep button {
           padding: 10px;
@@ -229,6 +290,10 @@ $root: '.header';
         border-radius: 10px;
         &:hover {
           outline: 1px solid $white-100;
+          text-decoration: none;
+          div {
+            text-decoration: none;
+          }
         }
       }
       .catalog {
@@ -238,39 +303,7 @@ $root: '.header';
           text-decoration: none;
         }
       }
-      .cart {
-        &:hover {
-          outline: 1px solid $white-100;
-        }
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid #FFFFFF;
-        border-radius: 10px;
-        padding: 10px;
-        &__icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-          padding: 10px;
-        }
-        .pi-shopping-cart {
-          font-size: 35px;
-          padding-right: 5px;
-        }
-        &__sum {
-          font-weight: 600;
-          font-size: 20px;
-          line-height: 25px;
-        }
-        &__count {
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 17px;
-        }
-      }
+      @include cart-button;
     }
     &.scrolled {
       .header__menu-bar_content {
@@ -302,6 +335,9 @@ $root: '.header';
               }
             }
             .panel {
+              &:hover {
+                text-decoration: none;
+              }
               .catalog {
                 display: none !important;
                 &~ div {
@@ -309,7 +345,6 @@ $root: '.header';
                   &:hover {
                     background-color: $main-green;
                     color: $white-100;
-                    text-decoration: none !important;
                   }
                 }
               }
@@ -352,4 +387,48 @@ $root: '.header';
 
 :host ::ng-deep p-button {
   border: none;
+}
+
+.mobile-cart {
+  width: 100%;
+  @include cart-button;
+  .cart {
+    max-width: 160px;
+    border-color: $main-green;
+    &__icon {
+      background-color: #F4F8E6;
+    }
+  }
+  .prices {
+    background-color: $whats-app-button;
+    color: $main-green;
+    margin: 20px 0;
+    padding: 20px;
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    text-transform: uppercase;
+    &:active {
+      outline: 1px solid $main-green;
+    }
+  }
+  .work-time {
+    display: flex;
+    width: 100%;
+  }
+  .address {
+    display: flex;
+    width: 100%;
+    margin: 20px 0;
+  }
+  .work-time, .address {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+  }
 }

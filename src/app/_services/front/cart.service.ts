@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductItem } from '../../_models/product-item';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  public readonly cartUpdate: Subject<ProductItem[]> = new Subject();
+  private readonly _cartUpdate: BehaviorSubject<ProductItem[]> = new BehaviorSubject<ProductItem[]>(
+    CartService.getCart(),
+  );
 
-  public getCart(): ProductItem[] {
+  public cartUpdate(): Observable<ProductItem[]> {
+    return this._cartUpdate.asObservable();
+  }
+
+  private static getCart(): ProductItem[] {
     const cart = sessionStorage.getItem('cart');
     if (cart) return JSON.parse(cart);
     return [];
@@ -25,10 +31,10 @@ export class CartService {
         cartUpdated.push(item);
       }
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
-      this.cartUpdate.next(cartUpdated);
+      this._cartUpdate.next(cartUpdated);
     } else {
       sessionStorage.setItem('cart', JSON.stringify([item]));
-      this.cartUpdate.next([item]);
+      this._cartUpdate.next([item]);
     }
   }
 
@@ -39,7 +45,7 @@ export class CartService {
       const index = cartUpdated.findIndex((cartItem) => id === cartItem.id);
       cartUpdated.splice(index, 1);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
-      this.cartUpdate.next(cartUpdated);
+      this._cartUpdate.next(cartUpdated);
     }
   }
 
@@ -52,7 +58,7 @@ export class CartService {
         product.count = item.count;
       }
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
-      this.cartUpdate.next(cartUpdated);
+      this._cartUpdate.next(cartUpdated);
     }
   }
 }

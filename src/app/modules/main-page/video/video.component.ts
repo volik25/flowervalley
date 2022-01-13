@@ -1,29 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Video } from '../../../_models/video';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { VideoService } from '../../../_services/back/video.service';
+import { EditVideoComponent } from './edit-video/edit-video.component';
 
 @Component({
   selector: 'flower-valley-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
+  providers: [DialogService],
 })
 export class VideoComponent {
-  public videos = [
-    {
-      src: 'https://www.youtube.com/embed/j_BDRnG9DR4',
-      title: 'Секрет качественного тюльпана',
-      description:
-        'Агрофирма Цветочная Долина работает на рынке более 20 лет. Выращиваем более 1,5 млн цветов в год. Ежегодно мы выращиваем 240 тысяч тюльпанов, которые выгоняются из лучших голландских луковиц размера 1...',
-    },
-    {
-      src: 'https://www.youtube.com/embed/j_BDRnG9DR4',
-      title: 'Секрет качественного тюльпана',
-      description:
-        'Агрофирма Цветочная Долина работает на рынке более 20 лет. Выращиваем более 1,5 млн цветов в год. Ежегодно мы выращиваем 240 тысяч тюльпанов, которые выгоняются из лучших голландских луковиц размера 1...',
-    },
-    {
-      src: 'https://www.youtube.com/embed/j_BDRnG9DR4',
-      title: 'Секрет качественного тюльпана',
-      description:
-        'Агрофирма Цветочная Долина работает на рынке более 20 лет. Выращиваем более 1,5 млн цветов в год. Ежегодно мы выращиваем 240 тысяч тюльпанов, которые выгоняются из лучших голландских луковиц размера 1...',
-    },
-  ];
+  @Input()
+  public isAdmin: boolean = false;
+  @Input()
+  public videos: Video[] = [];
+
+  constructor(
+    private ds: DialogService,
+    private ms: MessageService,
+    private cs: ConfirmationService,
+    private videoService: VideoService,
+  ) {}
+
+  public editVideo(video: Video): void {
+    const editModal = this.ds.open(EditVideoComponent, {
+      header: 'Редактировать видео',
+      width: '600px',
+      data: {
+        video: video,
+      },
+    });
+    editModal.onClose.subscribe((res: { success: boolean; video: Video }) => {
+      if (res && res.success) {
+        const index = this.videos.findIndex((item) => item.id === video.id);
+        this.videos[index] = res.video;
+        this.ms.add({
+          severity: 'success',
+          summary: 'Запрос выполнен',
+          detail: 'Видео отредактировано',
+        });
+      }
+    });
+  }
+
+  public deleteVideo(id: number): void {
+    this.cs.confirm({
+      header: 'Подтвердите удаление ссылки',
+      message: 'Вы действительно хотите удалить ссылку на видео?',
+      accept: () => {
+        this.videoService.deleteItem(id).subscribe(() => {
+          const index = this.videos.findIndex((video) => video.id === id);
+          this.videos.splice(index, 1);
+          this.ms.add({
+            severity: 'success',
+            summary: 'Запрос выполнен',
+            detail: 'Ссылка на видео успешно удалена',
+          });
+        });
+      },
+    });
+  }
 }

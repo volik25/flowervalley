@@ -1,12 +1,4 @@
 {
-  "/bpApi": {
-    "target": "https://5.375.ru/bpo-api/v1",
-    "secure": false,
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/bpApi": ""
-    }
-  },
   "/back": {
     "target": "http://stand3.progoff.ru/back",
     "secure": false,

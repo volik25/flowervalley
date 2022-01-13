@@ -6,7 +6,6 @@
     rowGroupMode="subheader"
     groupRowsBy="category.name"
     styleClass="confirmation"
-    #tableOrder
   >
     <ng-template pTemplate="header">
       <tr>
@@ -35,17 +34,20 @@
         </td>
         <td class="product__price">{{ product.price | priceConverter: 'two':'rub' }}</td>
         <td class="product__count">
-          <div class="p-inputgroup">
-            <span class="p-inputgroup-addon pi pi-plus" (click)="increaseCount(product)"></span>
-            <input
-              type="text"
-              pInputText
-              [ngModel]="product.count"
-              [min]="1"
-              (ngModelChange)="changeCount(product, $event)"
-            />
-            <span class="p-inputgroup-addon pi pi-minus" (click)="decreaseCount(product)"></span>
-          </div>
+          <p-inputNumber
+            #countNumber
+            [(ngModel)]="product.count"
+            (ngModelChange)="updateCount(product)"
+            [min]="getStep(product)"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            inputId="horizontal"
+            [step]="getStep(product)"
+            (onBlur)="changeCount(product, countNumber.value)"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          >
+          </p-inputNumber>
         </td>
         <td class="product__price">
           {{ product.price * product.count | priceConverter: 'two':'rub' }}
@@ -64,7 +66,9 @@
     </div>
     <div class="summary-block__summary">
       <span>Итог:</span>
-      <span>{{ getSum | priceConverter: 'two':'rub' }}</span>
+      <span>{{
+        getSum + getBoxesCount * getBoxesSum + shippingCost | priceConverter: 'two':'rub'
+      }}</span>
     </div>
   </div>
 </p-card>

@@ -17,6 +17,20 @@ import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { ClientsComponent } from './clients/clients.component';
+import { AddVideoComponent } from './video/add-video/add-video.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { EditVideoComponent } from './video/edit-video/edit-video.component';
+import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
+import { EditClientComponent } from './clients/edit-client/edit-client.component';
+import { GalleriaModule } from 'primeng/galleria';
+import { EditBannerComponent } from './banner/edit-banner/edit-banner.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   declarations: [
@@ -28,6 +42,12 @@ import { ClientsComponent } from './clients/clients.component';
     VideoComponent,
     ReviewsComponent,
     ClientsComponent,
+    AddVideoComponent,
+    EditVideoComponent,
+    EditReviewComponent,
+    EditClientComponent,
+    EditBannerComponent,
+    SalesSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +59,14 @@ import { ClientsComponent } from './clients/clients.component';
     CarouselModule,
     FlowerValleySharedModule,
     PipesModule,
+    ReactiveFormsModule,
+    InputTextareaModule,
+    GalleriaModule,
+    CheckboxModule,
+    DropdownModule,
+    InputNumberModule,
+    SplitButtonModule,
+    ImageModule,
   ],
 })
 export class MainPageModule {}

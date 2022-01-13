@@ -1,0 +1,15 @@
+<form [formGroup]="settingsGroup" (ngSubmit)="saveSettings()">
+  <span class="p-float-label">
+    <p-inputNumber formControlName="autoPlay" inputId="autoPlay" [min]="1"> </p-inputNumber>
+    <label for="autoPlay">Пауза между сменой фотографии (секунды)</label>
+  </span>
+  <div class="p-field-checkbox">
+    <p-checkbox
+      formControlName="isUserCanLeaf"
+      [binary]="true"
+      inputId="isUserCanLeaf"
+    ></p-checkbox>
+    <label for="isUserCanLeaf">Пользователь может листать фотографии</label>
+  </div>
+  <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
+</form>

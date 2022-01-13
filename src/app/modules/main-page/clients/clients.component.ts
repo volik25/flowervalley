@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { responsiveOptions } from '../../../_utils/constants';
+import { MainBanner } from '../../../_models/main-banner';
 
 @Component({
   selector: 'flower-valley-clients',
@@ -6,30 +8,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./clients.component.scss'],
 })
 export class ClientsComponent {
-  public clients = [
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-    {
-      src: 'assets/images/mocks/clients/1.png',
-      link: 'https://www.rzd.ru/',
-    },
-  ];
+  public responsiveOptions = responsiveOptions;
+  @Input()
+  public isAdmin: boolean = false;
+  @Input()
+  public clientsCarousel!: MainBanner<unknown>;
+  public displayCustom: boolean = false;
+
+  public activeIndex: number = 0;
+
+  public openImage(id: number): void {
+    this.activeIndex = this.clientsCarousel.photos.findIndex((item) => item.id === id);
+    this.displayCustom = true;
+  }
 }

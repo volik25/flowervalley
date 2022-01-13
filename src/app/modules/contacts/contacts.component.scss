@@ -85,6 +85,7 @@ $root: '.contacts';
           line-height: 19px;
           &:hover {
             cursor: pointer;
+            outline: 1px solid $main-green;
           }
         }
       }
@@ -95,6 +96,9 @@ $root: '.contacts';
         font-weight: 500;
         font-size: 18px;
         @include laptop-media {
+          font-size: 27px;
+        }
+        @include xl-media {
           font-size: 36px;
         }
         line-height: 120%;
@@ -136,6 +140,25 @@ $root: '.contacts';
       margin-top: 20px;
       border: none;
       border-radius: 10px;
+    }
+  }
+}
+
+.photo {
+  position: relative;
+  .hover {
+    display: none;
+    position: absolute;
+    justify-content: flex-end;
+    top: 0;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+    background: $white-50;
+  }
+  &:hover {
+    .hover {
+      display: flex;
     }
   }
 }

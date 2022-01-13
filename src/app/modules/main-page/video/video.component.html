@@ -1,4 +1,7 @@
-<div class="video" #container>
+<div class="video" #container [ngClass]="{ start: videos.length < 3, between: videos.length >= 3 }">
+  <div *ngIf="!videos.length" class="video__error">
+    К сожалению, видео пока отсутвует.<br />Но мы обязательно исправим ситуацию!
+  </div>
   <div class="video__container" *ngFor="let video of videos">
     <iframe
       [width]="container.offsetWidth < 383 ? container.offsetWidth : '383'"
@@ -10,5 +13,19 @@
     ></iframe>
     <div>{{ video.title }}</div>
     <div>{{ video.description }}</div>
+    <div class="product__edit" *ngIf="isAdmin">
+      <p-button
+        class="w-12"
+        styleClass="w-12 mb-2"
+        label="Редактировать"
+        (onClick)="editVideo(video)"
+      ></p-button>
+      <p-button
+        class="w-12"
+        styleClass="w-12 p-button-danger"
+        label="Удалить"
+        (onClick)="deleteVideo(video.id)"
+      ></p-button>
+    </div>
   </div>
 </div>

@@ -1,0 +1,18 @@
+@import "src/app/shared/product-item/add-product/add-product.component";
+
+.p-float-label {
+  ::ng-deep {
+    p-inputnumber, .p-inputnumber {
+      display: unset !important;
+    }
+  }
+}
+
+.img {
+  position: relative;
+  p-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

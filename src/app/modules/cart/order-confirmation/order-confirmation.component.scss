@@ -69,12 +69,13 @@ $root: '.confirmation';
       flex-direction: unset;
     }
     &_form {
+      width: 100%;
+      @include laptop-media {
+        width: 540px;
+      }
       ::ng-deep .p-float-label {
         position: relative;
         width: 100%;
-        @include laptop-media {
-          width: 540px;
-        }
         margin-bottom: 10px;
         .p-inputtext {
           width: 100%;

@@ -2,6 +2,7 @@
 @import "container";
 
 ::ng-deep .p-card.confirmation {
+  margin-left: 30px;
   display: none;
   @include laptop-media {
     display: block;
@@ -96,28 +97,39 @@
       }
       &__count {
         text-align: center;
-        .p-inputgroup {
-          width: auto;
+        ::ng-deep .p-inputnumber {
+          width: 80px;
           height: 35px;
+          @include laptop-media {
+            width: auto;
+            height: 50px;
+          }
           input {
-            max-width: 50px;
+            max-width: 45px;
+            @include laptop-media {
+              max-width: 70px;
+            }
             font-weight: 500;
             font-size: 17.7778px;
             line-height: 110%;
             text-align: center;
             padding: 0;
+            outline: none !important;
+            box-shadow: none !important;
             border: 1px solid $border-count;
             color: $text;
             &:focus-visible {
               outline: 3px auto $border-count;
             }
           }
-          .p-inputgroup-addon {
+          .p-button.p-button-icon-only {
+            width: unset;
             padding: 0 5px;
             min-height: 20px;
             min-width: 20px;
             background-color: $white-100;
-            cursor: pointer;
+            border-color: $border-count;
+            color: $text-grey;
           }
         }
       }

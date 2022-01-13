@@ -3,6 +3,7 @@ import { CartService } from '../../_services/front/cart.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { ProductItem } from '../../_models/product-item';
 import { filter, map } from 'rxjs';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'flower-valley-header',
@@ -12,12 +13,16 @@ import { filter, map } from 'rxjs';
 export class HeaderComponent implements OnInit {
   @ViewChild('headerMenu')
   private header!: ElementRef;
+  @ViewChild('cartPanel')
+  private cartPanel: OverlayPanel | undefined;
   @HostListener('window:scroll')
   private scrollTop() {
+    if (this.cartPanel) this.cartPanel.hide();
     if (document.documentElement.scrollTop > 100) {
       this.header.nativeElement.classList.add('scrolled');
     } else {
       this.header.nativeElement.classList.remove('scrolled');
+      if (this.isMenuToggle) this.isMenuToggle = false;
     }
   }
   public searchShow: boolean = false;
@@ -33,12 +38,13 @@ export class HeaderComponent implements OnInit {
       )
       .subscribe(() => {
         this.isMenuToggle = false;
+        this.menuShow = false;
+        this.searchShow = false;
       });
   }
 
   ngOnInit(): void {
-    this.cart = this.cartService.getCart();
-    this.cartService.cartUpdate.subscribe((cart) => {
+    this.cartService.cartUpdate().subscribe((cart) => {
       this.cart = cart;
     });
   }

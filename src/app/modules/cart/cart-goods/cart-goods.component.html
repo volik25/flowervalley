@@ -103,7 +103,7 @@
             <th></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-box>
           <tr class="product boxes">
             <td class="product__name">
               <div class="product__name_icon">
@@ -113,16 +113,16 @@
                 ></p-image>
               </div>
               <div>
-                <span>{{ product.name }}</span>
-                <span class="mobile-price">{{ product.price | priceConverter: 'two':'rub' }}</span>
+                <span>{{ box.name }}</span>
+                <span class="mobile-price">{{ box.price | priceConverter: 'two':'rub' }}</span>
               </div>
             </td>
-            <td class="mobile-price-cell">{{ product.price | priceConverter: 'two':'rub' }}</td>
+            <td class="mobile-price-cell">{{ box.price | priceConverter: 'two':'rub' }}</td>
             <td class="product__count">
-              <span>{{ product.count }}</span>
+              <span>{{ box.count }}</span>
             </td>
             <td class="product__sum">
-              {{ product.price * product.count | priceConverter: 'two':'rub' }}
+              {{ box.price * box.count | priceConverter: 'two':'rub' }}
             </td>
             <td></td>
           </tr>
@@ -139,7 +139,7 @@
       </div>
     </div>
     <div class="summary-block__summary">
-      <span>Итог:</span>
+      <span>Стоимость цветов:</span>
       <span>{{ getSum | priceConverter: 'two':'rub' }}</span>
     </div>
     <div class="summary-block__additional" *ngIf="getDifference">

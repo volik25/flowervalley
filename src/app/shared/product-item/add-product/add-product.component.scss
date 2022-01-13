@@ -6,7 +6,7 @@
   width: 100%;
 
   ::ng-deep {
-    .p-inputtext {
+    .p-inputtext, .p-inputtextarea {
       width: 100%;
       padding: 20px 22px;
     }
@@ -25,7 +25,7 @@
         padding-top: 25px;
       }
     }
-    input:focus, input.p-filled {
+    input:focus, input.p-filled, textarea:focus, textarea.p-filled {
       & ~ label {
         top: 15px;
         left: 22px;
@@ -37,6 +37,33 @@
     .p-dropdown-label {
       padding-bottom: 15px;
       padding-top: 25px;
+    }
+  }
+}
+
+.p-field-checkbox {
+  margin-bottom: 10px;
+  ::ng-deep {
+    .p-checkbox-box {
+      box-shadow: none;
+    }
+    .p-checkbox .p-checkbox-box.p-highlight {
+      background-color: $main-green;
+      border-color: $main-green;
+    }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box {
+      &:hover, &.p-focus {
+        border-color: $main-green;
+      }
+    }
+  }
+  label {
+    margin-left: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    &:hover {
+      cursor: pointer;
     }
   }
 }

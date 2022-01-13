@@ -1,0 +1,13 @@
+@import "src/app/shared/product-item/add-product/add-product.component";
+
+.preview {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 110%;
+  padding-top: 10px;
+  iframe {
+    border: none;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+}

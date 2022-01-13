@@ -47,6 +47,10 @@
     <label for="note2">Примечание товара</label>
   </span>
   <form [formGroup]="productGroup">
+    <div class="p-field-checkbox mb-2">
+      <p-checkbox formControlName="isPopular" [binary]="true" inputId="isPopular"></p-checkbox>
+      <label for="isPopular">Популярный товар</label>
+    </div>
     <span class="p-float-label mb-2 mr-2">
       <p-dropdown
         styleClass="w-12"

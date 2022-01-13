@@ -1,4 +1,4 @@
-<header #header class="header">
+<header class="header">
   <div class="header__contacts">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
@@ -7,16 +7,7 @@
         <div>Тепличное хозяйство</div>
       </div>
     </div>
-    <div class="work-time">
-      <span class="pi pi-clock"></span>
-      <div class="pl-2">Пн-Вс: с 9:00 до 20:00 без выходных и обеда.</div>
-    </div>
-    <div class="address">
-      <span class="pi pi-map-marker"></span>
-      <div class="pl-2">
-        140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
-      </div>
-    </div>
+    <ng-container *ngTemplateOutlet="contacts"></ng-container>
     <div>
       <a
         class="whats-app-button p-2"
@@ -27,7 +18,7 @@
         <div class="pl-1">What'sApp</div>
       </a>
     </div>
-    <div class="contacts pl-4">
+    <div class="contacts">
       <div class="flex">
         <span class="pi pi-phone"></span>
         <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
@@ -63,24 +54,14 @@
   </div>
   <div #headerMenu class="header__menu-bar">
     <div class="header__menu-bar_content">
-      <div class="prices">
-        <p-image
-          styleClass="flex align-items-center"
-          src="assets/icons/download.png"
-          width="13px"
-        ></p-image>
-        <div class="pl-2">ПРАЙС-ЛИСТ</div>
-      </div>
+      <ng-container *ngTemplateOutlet="pricesButton"></ng-container>
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       <div class="scrolled-search">
         <div class="menu">
-          <div
-            class="button"
-            (mouseenter)="isMenuToggle = true"
-            (click)="isMenuToggle = !isMenuToggle"
-          >
+          <div class="button" (click)="isMenuToggle = !isMenuToggle">
             <span>Меню</span>
-            <span class="pi pi-angle-down"></span>
+            <span *ngIf="!isMenuToggle" class="pi pi-angle-down"></span>
+            <span *ngIf="isMenuToggle" class="pi pi-angle-up"></span>
           </div>
           <div class="panel" *ngIf="isMenuToggle">
             <div class="content">
@@ -90,15 +71,7 @@
         </div>
         <flower-valley-search></flower-valley-search>
       </div>
-      <div class="cart" (click)="cart?.length ? cartPanel.toggle($event) : goToCart()">
-        <span class="cart__icon">
-          <p-image src="assets/icons/cart.svg"></p-image>
-        </span>
-        <div class="pl-2">
-          <div class="cart__sum">{{ getSum }}₽</div>
-          <div class="cart__count">{{ getCount }} товар(-ов)</div>
-        </div>
-      </div>
+      <ng-container *ngTemplateOutlet="cartButton"></ng-container>
     </div>
   </div>
 </header>
@@ -111,12 +84,54 @@
 
 <ng-template #menuBar>
   <div class="catalog" [routerLink]="['/catalog']">
-    <span *ngIf="!menuShow" class="pi pi-shopping-bag"></span>
-    <div [ngClass]="{ 'pl-2': !menuShow }">Каталог</div>
+    <span class="pi pi-shopping-bag"></span>
+    <div class="pl-2">Каталог</div>
   </div>
   <div [routerLink]="['']" fragment="about">О компании</div>
   <div>Тюльпаны оптом</div>
   <div>Рассада цветов</div>
   <div [routerLink]="['contacts']">Контакты</div>
-  <div *ngIf="menuShow" (click)="goToCart()">Корзина</div>
+  <div *ngIf="menuShow">
+    <div class="mobile-cart">
+      <ng-container *ngTemplateOutlet="cartButton"></ng-container>
+      <ng-container *ngTemplateOutlet="pricesButton"></ng-container>
+      <ng-container *ngTemplateOutlet="contacts"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cartButton>
+  <div class="cart" (click)="cart?.length && !menuShow ? cartPanel.toggle($event) : goToCart()">
+    <span class="cart__icon">
+      <p-image src="assets/icons/cart{{ menuShow ? '-green' : '' }}.svg"></p-image>
+    </span>
+    <div class="pl-2">
+      <div class="cart__sum">{{ getSum }}₽</div>
+      <div class="cart__count">{{ getCount }} товар(-ов)</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #pricesButton>
+  <div class="prices">
+    <p-image
+      styleClass="flex align-items-center"
+      src="assets/icons/download{{ menuShow ? '-green' : '' }}.svg"
+      width="13px"
+    ></p-image>
+    <div class="pl-2">ПРАЙС-ЛИСТ</div>
+  </div>
+</ng-template>
+
+<ng-template #contacts>
+  <div class="work-time">
+    <span class="pi pi-clock"></span>
+    <div class="pl-2">Пн-Вс: с 9:00 до 20:00 без выходных и обеда.</div>
+  </div>
+  <div class="address">
+    <span class="pi pi-map-marker"></span>
+    <div class="pl-2">
+      140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
+    </div>
+  </div>
 </ng-template>
