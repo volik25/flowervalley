@@ -21,15 +21,16 @@ import { AddVideoComponent } from './video/add-video/add-video.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditVideoComponent } from './video/edit-video/edit-video.component';
-import { AddReviewComponent } from './reviews/add-review/add-review.component';
 import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
-import { AddClientComponent } from './clients/add-client/add-client.component';
 import { EditClientComponent } from './clients/edit-client/edit-client.component';
 import { GalleriaModule } from 'primeng/galleria';
 import { EditBannerComponent } from './banner/edit-banner/edit-banner.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   declarations: [
@@ -43,11 +44,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ClientsComponent,
     AddVideoComponent,
     EditVideoComponent,
-    AddReviewComponent,
     EditReviewComponent,
-    AddClientComponent,
     EditClientComponent,
     EditBannerComponent,
+    SalesSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -65,6 +65,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     CheckboxModule,
     DropdownModule,
     InputNumberModule,
+    SplitButtonModule,
+    ImageModule,
   ],
 })
 export class MainPageModule {}

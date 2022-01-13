@@ -18,7 +18,8 @@ export class EditBannerComponent implements OnInit {
   public catalog: Category[] = [];
   public isLoading: boolean = false;
   public photos: File[] = [];
-  public photosLinks: any[] = [];
+  private deleteIds: number[] = [];
+  public photosLinks: { id: number; src: string }[] = [];
   constructor(
     private fb: FormBuilder,
     private mainBannerService: MainBannerService,
@@ -40,12 +41,11 @@ export class EditBannerComponent implements OnInit {
   public ngOnInit(): void {
     this.catalogService.getItems().subscribe((catalog) => {
       this.catalog = catalog;
-      const banner: MainBanner = this.config.data.banner;
+      const banner: MainBanner<unknown> = this.config.data.banner;
       this.photosLinks = banner.photos || [];
       this.bannerGroup.patchValue(banner);
       const link = catalog.find((category) => slugify(category.name) === banner.routerLink);
       this.bannerGroup.get('routerLink')?.setValue(link?.name);
-      this.bannerGroup.get('autoPlay')?.setValue(banner.autoPlay / 1000);
     });
   }
 
@@ -60,14 +60,14 @@ export class EditBannerComponent implements OnInit {
       if (key === 'routerLink') {
         value = slugify(banner[key]);
       }
-      if (key === 'autoPlay') {
-        value = value * 1000;
-      }
       formData.append(key, value);
     });
     if (this.photos.length) {
       this.photos.map((photo) => formData.append('photos[]', photo));
     }
+    this.deleteIds.map((id) => {
+      formData.append('deleteIds[]', id.toString());
+    });
     this.mainBannerService.updateItem(formData).subscribe(() => {
       this.isLoading = false;
       this.ref.close({
@@ -78,5 +78,11 @@ export class EditBannerComponent implements OnInit {
 
   public uploadFiles(files: File[]): void {
     this.photos = files;
+  }
+
+  public removePhoto(id: number): void {
+    this.deleteIds.push(id);
+    const i = this.photosLinks.findIndex((photo) => photo.id === id);
+    this.photosLinks.splice(i, 1);
   }
 }

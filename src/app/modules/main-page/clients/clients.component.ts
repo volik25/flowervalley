@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Client } from '../../../_models/client';
 import { responsiveOptions } from '../../../_utils/constants';
+import { MainBanner } from '../../../_models/main-banner';
 
 @Component({
   selector: 'flower-valley-clients',
@@ -12,13 +12,13 @@ export class ClientsComponent {
   @Input()
   public isAdmin: boolean = false;
   @Input()
-  public clients: Client[] = [];
+  public clientsCarousel!: MainBanner<unknown>;
   public displayCustom: boolean = false;
 
   public activeIndex: number = 0;
 
   public openImage(id: number): void {
-    this.activeIndex = this.clients.findIndex((item) => item.id === id);
+    this.activeIndex = this.clientsCarousel.photos.findIndex((item) => item.id === id);
     this.displayCustom = true;
   }
 }

@@ -1,10 +1,11 @@
-export interface MainBanner {
+export interface MainBanner<T> {
   id: number;
-  title: string;
-  routerLink: string;
-  description: string;
-  label: string;
+  title?: string;
+  routerLink?: string;
+  description?: string;
+  label?: string;
   autoPlay: number;
   isUserCanLeaf: boolean;
   photos: { id: number; src: string }[];
+  items?: T;
 }

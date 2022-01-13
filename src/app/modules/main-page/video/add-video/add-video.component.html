@@ -1,11 +1,12 @@
 <form [formGroup]="videoGroup" (ngSubmit)="addVideo()">
   <span class="p-float-label">
     <input
+      #input
       type="text"
       id="src"
       pInputText
       formControlName="src"
-      (blur)="isLinkCopied = videoGroup.getRawValue().src"
+      (blur)="convertLink(input.value)"
     />
     <label for="src">Ссылка на видео в YouTube</label>
   </span>

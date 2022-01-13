@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { debounceTime, map, Observable, of, takeUntil } from 'rxjs';
@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isFormInvalid } from '../../../_utils/formValidCheck';
 import { Invoice } from '../../../_models/business-pack/invoice';
 import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
+import { CartService } from '../../../_services/front/cart.service';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -20,7 +21,6 @@ import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
 export class OrderConfirmationComponent {
   @ViewChild('mapContent') public mapContent: ElementRef<HTMLElement> | undefined;
   @ViewChild('yamap') public map: ElementRef<HTMLElement> | undefined;
-  @Input()
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
@@ -41,6 +41,7 @@ export class OrderConfirmationComponent {
     private yaMap: YaMapService,
     private cdr: ChangeDetectorRef,
     private bpService: BusinessPackService,
+    private cartService: CartService,
     private messageService: MessageService,
     private router: Router,
     private route: ActivatedRoute,
@@ -89,6 +90,9 @@ export class OrderConfirmationComponent {
       } else {
         this.contacts.controls['address'].enable();
       }
+    });
+    this.cartService.cartUpdate().subscribe((goods) => {
+      this.goods = goods;
     });
   }
 

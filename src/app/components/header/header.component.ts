@@ -44,8 +44,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cart = this.cartService.getCart();
-    this.cartService.cartUpdate.subscribe((cart) => {
+    this.cartService.cartUpdate().subscribe((cart) => {
       this.cart = cart;
     });
   }

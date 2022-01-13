@@ -2,9 +2,10 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { AdminService } from '../../_services/back/admin.service';
 import { ContactsService } from '../../_services/back/contacts.service';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IdImg } from '../../_models/_idImg';
+import { LoadingService } from '../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-contacts',
@@ -38,6 +39,8 @@ export class ContactsComponent implements OnInit {
     private contactService: ContactsService,
     private cs: ConfirmationService,
     private sanitizer: DomSanitizer,
+    private ls: LoadingService,
+    private ms: MessageService,
   ) {
     _bs.setItem('Контакты');
     adminService.checkAdmin().subscribe((isAdmin) => (this.isAdmin = isAdmin));
@@ -45,9 +48,11 @@ export class ContactsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.updateWidth();
-    this.contactService.getPhotos().subscribe((photos) => {
+    const sub = this.contactService.getPhotos().subscribe((photos) => {
       this.photos = photos;
+      this.ls.removeSubscription(sub);
     });
+    this.ls.addSubscription(sub);
   }
 
   public openImage(id: number): void {
@@ -71,6 +76,22 @@ export class ContactsComponent implements OnInit {
     });
   }
 
+  public editImage(photo: File[], id: number): void {
+    const formData = new FormData();
+    formData.append('img', photo[0]);
+    this.contactService.updateItem(formData as any, id).subscribe(() => {
+      const url = ((<any>photo[0]).objectURL = this.sanitizer.bypassSecurityTrustUrl(
+        window.URL.createObjectURL(photo[0]),
+      ));
+      const index = this.photos.findIndex((photoItem) => photoItem.id === id);
+      this.photos[index].img = url as string;
+      this.ms.add({
+        severity: 'success',
+        summary: 'Фотография обновлена',
+      });
+    });
+  }
+
   public deleteImage(id: number): void {
     this.cs.confirm({
       header: 'Подтвердите удаление фотографии',
@@ -79,6 +100,10 @@ export class ContactsComponent implements OnInit {
         this.contactService.deleteItem(id).subscribe(() => {
           const index = this.photos.findIndex((photo) => photo.id === id);
           this.photos.splice(index, 1);
+          this.ms.add({
+            severity: 'success',
+            summary: 'Фотография удалена',
+          });
         });
       },
     });

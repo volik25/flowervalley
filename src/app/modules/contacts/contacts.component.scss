@@ -96,6 +96,9 @@ $root: '.contacts';
         font-weight: 500;
         font-size: 18px;
         @include laptop-media {
+          font-size: 27px;
+        }
+        @include xl-media {
           font-size: 36px;
         }
         line-height: 120%;

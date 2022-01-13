@@ -9,21 +9,24 @@ import { Category } from '../../_models/category';
 import { MainInfoService } from '../../_services/back/main-info.service';
 import { Video } from '../../_models/video';
 import { MainBanner } from '../../_models/main-banner';
-import { Client } from '../../_models/client';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AddVideoComponent } from './video/add-video/add-video.component';
-import { MessageService } from 'primeng/api';
-import { AddReviewComponent } from './reviews/add-review/add-review.component';
-import { Feedback } from '../../_models/feedback';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { slugify } from 'transliteration';
+import { Sale } from '../../_models/sale';
+import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
+import { Banner } from '../../_models/banner';
+import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
+import { EditClientComponent } from './clients/edit-client/edit-client.component';
 
 interface MainInfo {
-  main: MainBanner;
+  main: MainBanner<unknown>;
   videos: Video[];
-  comments: Feedback[];
-  clients: Client[];
+  comments: MainBanner<unknown>;
+  clients: MainBanner<unknown>;
   popular: ProductItem[];
+  sales: MainBanner<Sale[]>;
 }
 
 @Component({
@@ -62,6 +65,14 @@ export class MainPageComponent implements OnInit {
     ...this.button,
     icon: 'pi-arrow-right',
   };
+
+  public saleSettings: MenuItem[] = [
+    {
+      label: 'Настройки карусели',
+      icon: 'pi pi-pencil',
+      command: () => this.editBannerOptions(),
+    },
+  ];
 
   public mainInfo: MainInfo | undefined;
   public catalog: Category[] = [];
@@ -114,14 +125,34 @@ export class MainPageComponent implements OnInit {
       });
   }
 
-  public addFeedBack(): void {
-    const feedbackModal = this.ds.open(AddReviewComponent, {
-      header: 'Добавить отзыв',
-      width: '600px',
-    });
-    feedbackModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
-      if (res && res.success) this.loadMainInfo();
-    });
+  public editFeedBack(): void {
+    if (this.mainInfo) {
+      const feedbackModal = this.ds.open(EditReviewComponent, {
+        header: 'Редактировать отзывы',
+        width: '600px',
+        data: {
+          review: this.mainInfo.comments,
+        },
+      });
+      feedbackModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
+        if (res && res.success) this.loadMainInfo();
+      });
+    }
+  }
+
+  public editClients(): void {
+    if (this.mainInfo) {
+      const clientModal = this.ds.open(EditClientComponent, {
+        header: 'Редактировать клиентов',
+        width: '600px',
+        data: {
+          client: this.mainInfo.clients,
+        },
+      });
+      clientModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
+        if (res && res.success) this.loadMainInfo();
+      });
+    }
   }
 
   public bannerChanged(): void {
@@ -141,6 +172,24 @@ export class MainPageComponent implements OnInit {
         severity: 'error',
         summary: 'Произошла ошибка',
         detail: 'Товар был перемещен или удален',
+      });
+    }
+  }
+
+  public addSale(): void {}
+
+  public editBannerOptions(): void {
+    if (this.mainInfo) {
+      const { autoPlay, isUserCanLeaf } = this.mainInfo.comments;
+      this.ds.open(SalesSettingsComponent, {
+        header: 'Настройки карусели',
+        width: '600px',
+        data: <{ settings: Banner; url: string }>{
+          settings: {
+            autoPlay: autoPlay,
+            isUserCanLeaf: isUserCanLeaf,
+          },
+        },
       });
     }
   }

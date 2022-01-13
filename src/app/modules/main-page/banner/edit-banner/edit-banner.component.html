@@ -45,8 +45,17 @@
   </span>
   <flower-valley-files-upload
     [multi]="true"
-    [files]="photosLinks"
     (uploaded)="uploadFiles($event)"
   ></flower-valley-files-upload>
+  <div class="grid">
+    <div class="img col-3" *ngFor="let photo of photosLinks">
+      <p-image [src]="photo.src" width="100"></p-image>
+      <p-button
+        styleClass="p-button-danger"
+        icon="pi pi-trash"
+        (onClick)="removePhoto(photo.id)"
+      ></p-button>
+    </div>
+  </div>
   <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>

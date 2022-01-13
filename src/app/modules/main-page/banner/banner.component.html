@@ -46,7 +46,7 @@
   <div class="carousel" *ngIf="banner">
     <p-carousel
       [value]="banner.photos"
-      [autoplayInterval]="banner.autoPlay"
+      [autoplayInterval]="banner.autoPlay * 1000"
       [circular]="true"
       [showNavigators]="banner.isUserCanLeaf"
     >

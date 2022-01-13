@@ -32,7 +32,9 @@ export class CartComponent {
     private _ms: MessageService,
   ) {
     adminService.checkAdmin().subscribe((isAdmin) => (this.isAdmin = isAdmin));
-    this.goods = cartService.getCart();
+    cartService.cartUpdate().subscribe((goods) => {
+      this.goods = goods;
+    });
     _bs.setItem('Корзина');
   }
 

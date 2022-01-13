@@ -70,14 +70,11 @@
   [isAdmin]="isAdmin"
   [buttonTemplate]="addPhotos"
 >
-  <div
-    class="flex flex-wrap"
-    [ngClass]="{
-      'justify-content-start': photos.length < 3,
-      'justify-content-between': photos.length >= 3
-    }"
-  >
-    <div *ngFor="let photo of photos" class="photo mb-4" [ngClass]="{ 'mr-4': photos.length < 3 }">
+  <div class="grid">
+    <div
+      *ngFor="let photo of photos"
+      class="photo col-12 lg:col-6 xl:col-4 flex justify-content-center"
+    >
       <p-image
         [src]="photo.img"
         styleClass="cursor-pointer"
@@ -86,8 +83,14 @@
         [imageStyle]="{ 'border-radius': '10px' }"
       ></p-image>
       <div class="hover" *ngIf="isAdmin">
+        <flower-valley-files-upload
+          label="Изменить фотографию"
+          [multi]="false"
+          [showOnlyButton]="true"
+          (uploaded)="editImage($event, photo.id)"
+        ></flower-valley-files-upload>
         <p-button
-          styleClass="p-button-danger"
+          styleClass="p-button-danger ml-2"
           icon="pi pi-trash"
           (onClick)="deleteImage(photo.id)"
         ></p-button>

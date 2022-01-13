@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { responsiveOptions } from '../../../_utils/constants';
-import { Feedback } from '../../../_models/feedback';
+import { MainBanner } from '../../../_models/main-banner';
 
 @Component({
   selector: 'flower-valley-reviews',
@@ -12,18 +12,14 @@ export class ReviewsComponent {
   @Input()
   public isAdmin: boolean = false;
   @Input()
-  public reviews: Feedback[] = [];
+  public reviewCarousel!: MainBanner<unknown>;
 
   public displayCustom: boolean = false;
 
   public activeIndex: number = 0;
 
   public openImage(id: number): void {
-    this.activeIndex = this.reviews.findIndex((item) => item.id === id);
+    this.activeIndex = this.reviewCarousel?.photos.findIndex((item) => item.id === id);
     this.displayCustom = true;
   }
-
-  private editReview(): void {}
-
-  private deleteReview(): void {}
 }

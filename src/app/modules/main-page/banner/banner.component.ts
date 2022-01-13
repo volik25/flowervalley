@@ -13,7 +13,7 @@ export class BannerComponent {
   @Input()
   public isAdmin: boolean = false;
   @Input()
-  public banner: MainBanner | undefined;
+  public banner: MainBanner<unknown> | undefined;
   @Output()
   private bannerChanged: EventEmitter<any> = new EventEmitter<any>();
   public photos = [];

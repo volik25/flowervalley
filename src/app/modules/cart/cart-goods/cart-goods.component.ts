@@ -16,8 +16,7 @@ export class CartGoodsComponent {
   public isLoading: boolean = false;
 
   constructor(private cartService: CartService, private boxService: BoxGenerateService) {
-    this.goods = this.cartService.getCart();
-    this.cartService.cartUpdate.subscribe((cart) => {
+    this.cartService.cartUpdate().subscribe((cart) => {
       this.goods = cart;
     });
     this.boxService.getBoxes().subscribe((boxes) => {
