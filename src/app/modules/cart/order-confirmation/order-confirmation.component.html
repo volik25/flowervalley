@@ -105,6 +105,7 @@
   [modal]="true"
   [closeOnEscape]="false"
   (visibleChange)="visibleChange()"
+  (onShow)="mapRedraw()"
 >
   <div #mapContent></div>
 </p-dialog>
