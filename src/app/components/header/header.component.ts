@@ -11,7 +11,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('headerMenu')
+  @ViewChild('header')
   private header!: ElementRef;
   @ViewChild('cartPanel')
   private cartPanel: OverlayPanel | undefined;

@@ -114,7 +114,8 @@ $root: '.header';
   position: sticky;
   top: 0;
   @include laptop-media {
-    top: -100px;
+    position: unset;
+    height: 216px;
   }
   z-index: 110;
   &__contacts {
@@ -261,6 +262,9 @@ $root: '.header';
       &.visible {
         display: flex;
         justify-content: flex-end;
+        z-index: 1000;
+        right: 0;
+        width: 100%;
         @include laptop-media {
           display: none;
         }
@@ -276,8 +280,8 @@ $root: '.header';
       position: absolute;
       background-color: $main-green;
       top: 100px;
-      left: -27px;
-      right: -27px;
+      width: 100%;
+      left: 0;
       padding: 9px 11px;
     }
   }
@@ -334,80 +338,89 @@ $root: '.header';
       }
       @include cart-button;
     }
-    &.scrolled {
-      .header__menu-bar_content {
-        @include fv-container(10px, 10px);
-        .catalog ~ div:not(.cart) {
-          display: none;
+  }
+  &.scrolled {
+    .header__menu-bar {
+      @include laptop-media {
+        position: fixed;
+        top: 0;
+        z-index: 120;
+        width: 100%;
+        padding: 0 27px;
+      }
+    }
+    .header__menu-bar_content {
+      @include fv-container(10px, 10px);
+      .catalog ~ div:not(.cart) {
+        display: none;
+      }
+      .scrolled-search {
+        padding-left: 50px;
+        padding-right: 20px;
+        &:hover {
+          text-decoration: none;
+          cursor: default;
         }
-        .scrolled-search {
-          padding-left: 50px;
-          padding-right: 20px;
+        .menu {
+          position: relative;
           &:hover {
             text-decoration: none;
             cursor: default;
           }
-          .menu {
-            position: relative;
+          .button {
+            margin-right: 30px;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 30px;
+            span:first-child {
+              margin-right: 10px;
+            }
+          }
+          .panel {
             &:hover {
               text-decoration: none;
-              cursor: default;
             }
-            .button {
-              margin-right: 30px;
-              font-style: normal;
-              font-weight: 500;
-              font-size: 24px;
-              line-height: 30px;
-              span:first-child {
-                margin-right: 10px;
-              }
-            }
-            .panel {
-              &:hover {
-                text-decoration: none;
-              }
-              .catalog {
-                display: none !important;
-                &~ div {
-                  display: block;
-                  &:hover {
-                    background-color: $main-green;
-                    color: $white-100;
-                  }
+            .catalog {
+              display: none !important;
+              &~ div {
+                display: block;
+                &:hover {
+                  background-color: $main-green;
+                  color: $white-100;
                 }
               }
-              @include mobile-panel(59px);
             }
+            @include mobile-panel(59px);
           }
-          display: flex !important;
+        }
+        display: flex !important;
+        flex: 1 1 auto;
+        align-items: center;
+        ::ng-deep flower-valley-search {
           flex: 1 1 auto;
-          align-items: center;
-          ::ng-deep flower-valley-search {
-            flex: 1 1 auto;
+        }
+        ::ng-deep .search {
+          input {
+            height: 50px;
           }
-          ::ng-deep .search {
-            input {
-              height: 50px;
-            }
-            &__button {
-              ::ng-deep button {
-                padding: 10px;
-                ::ng-deep img {
-                  width: 15px;
-                  height: 15px;
-                }
+          &__button {
+            ::ng-deep button {
+              padding: 10px;
+              ::ng-deep img {
+                width: 15px;
+                height: 15px;
               }
             }
           }
         }
-        .prices {
-          display: none;
-        }
-        .cart__icon {
-          ::ng-deep img {
-            width: 20px;
-          }
+      }
+      .prices {
+        display: none;
+      }
+      .cart__icon {
+        ::ng-deep img {
+          width: 20px;
         }
       }
     }

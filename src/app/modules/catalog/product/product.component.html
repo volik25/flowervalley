@@ -58,7 +58,7 @@
       <div class="product__desc_info-share">
         <div class="title">Поделиться:</div>
         <div class="share-array">
-          <a *ngFor="let category of categories" href="{{ category.link }}">
+          <a *ngFor="let category of categories" href="{{ category.link }}" target="_blank">
             <p-image
               src="assets/icons/product/{{ category.src }}.svg"
               width="15px"
