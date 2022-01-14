@@ -177,7 +177,7 @@ export class ProductComponent implements OnInit {
         },
         {
           src: 'whatsapp',
-          link: 'whatsapp://send?text=' + window.location.href,
+          link: 'whatsapp://send?text=' + encodeURIComponent(window.location.href),
         },
         {
           src: 'vk',
@@ -189,7 +189,7 @@ export class ProductComponent implements OnInit {
         },
         {
           src: 'viber',
-          link: 'viber://forward?text=' + window.location.href,
+          link: 'viber://forward?text=' + encodeURIComponent(window.location.href),
         },
       ];
     } else {
@@ -199,12 +199,20 @@ export class ProductComponent implements OnInit {
           link: 'https://www.facebook.com/sharer.php?u=' + window.location.href,
         },
         {
+          src: 'whatsapp',
+          link: 'https://web.whatsapp.com/send?text=' + window.location.href,
+        },
+        {
           src: 'vk',
           link: 'https://www.vk.com/share.php?url=' + window.location.href,
         },
         {
           src: 'telegram',
           link: 'https://telegram.me/share/url?url=' + window.location.href,
+        },
+        {
+          src: 'viber',
+          link: 'viber://forward?text=' + encodeURIComponent(window.location.href),
         },
       ];
     }

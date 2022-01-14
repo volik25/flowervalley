@@ -7,34 +7,40 @@
   <div class="category__content">
     <div class="category__content_menu">
       <div>
-        <div
-          class="item"
-          *ngFor="let item of catalog; let first = first; let last = last"
-          [ngClass]="{
-            'border-radius-top': first,
-            'border-radius-bottom': last,
-            active: isActive(item.name)
-          }"
-          [routerLink]="['../', getRoute(item.name)]"
-        >
-          {{ item.name }}
-        </div>
+        <p-tieredMenu [model]="menu"></p-tieredMenu>
       </div>
     </div>
-    <div
-      *ngIf="category"
-      class="category__content_items"
-      [ngClass]="{ start: products.length < 3, between: products.length >= 3 }"
-    >
-      <flower-valley-product-item
-        [category]="category"
-        [isAdmin]="isAdmin"
-        *ngFor="let product of products"
-        [product]="product"
-        (openProductCard)="navigateTo($event)"
-        (productUpdated)="updateProducts()"
-        (productDeleted)="deleteProduct(product.id)"
-      ></flower-valley-product-item>
+    <div *ngIf="category" class="category__content_items w-12">
+      <div class="grid w-12">
+        <flower-valley-catalog-item
+          class="col-12 lg:col-6 xl:col-4 flex justify-content-center"
+          pDraggable="catalog"
+          dragHandle=".image"
+          dragEffect="move"
+          pDroppable="catalog"
+          (onDrop)="drop(i)"
+          [pDraggableDisabled]="!isAdmin"
+          (onDragStart)="dragStart(item, i)"
+          (onDragEnd)="dragEnd()"
+          *ngFor="let item of subCatalog; let i = index"
+          [item]="item"
+          [isAdmin]="isAdmin"
+          (categoryDeleted)="deleteCategory(item.id)"
+          (categoryUpdated)="updateCategoriesList()"
+        ></flower-valley-catalog-item>
+      </div>
+      <div class="grid w-12">
+        <flower-valley-product-item
+          class="col-12 lg:col-6 xl:col-4 flex justify-content-center"
+          [category]="category"
+          [isAdmin]="isAdmin"
+          *ngFor="let product of products"
+          [product]="product"
+          (openProductCard)="navigateTo($event)"
+          (productUpdated)="updateProducts()"
+          (productDeleted)="deleteProduct(product.id)"
+        ></flower-valley-product-item>
+      </div>
     </div>
   </div>
 </flower-valley-container>

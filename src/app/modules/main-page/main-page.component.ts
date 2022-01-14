@@ -15,10 +15,10 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { Sale } from '../../_models/sale';
-import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
 import { Banner } from '../../_models/banner';
 import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
 import { EditClientComponent } from './clients/edit-client/edit-client.component';
+import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
 
 interface MainInfo {
   main: MainBanner<unknown>;
@@ -91,7 +91,9 @@ export class MainPageComponent implements OnInit {
           };
         });
         this.mainInfo = main as MainInfo;
-        this.catalog = catalog as Category[];
+        this.catalog = (catalog as Category[])
+          .filter((item) => !item.parentId)
+          .sort((a, b) => a.categoryOrder - b.categoryOrder);
         this.ls.removeSubscription(sub);
       });
     this.ls.addSubscription(sub);

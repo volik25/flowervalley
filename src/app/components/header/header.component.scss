@@ -6,13 +6,25 @@ $root: '.header';
 @mixin mobile-panel($top: 100px) {
   position: absolute;
   top: $top;
-  height: calc(100vh - 100px);
   background-color: $white-50;
   right: -27px;
+  @include laptop-media {
+    right: unset;
+    left: 0;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
   .content {
     height: 100%;
     width: 80%;
     padding: 0 10px;
+    @include laptop-media {
+      height: unset;
+      width: 250px;
+      padding: unset;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
     &:hover {
       text-decoration: none !important;
     }
@@ -33,6 +45,9 @@ $root: '.header';
       font-size: 18px;
       line-height: 22px;
       padding: 10px;
+      @include laptop-media {
+        padding: 20px;
+      }
       &.catalog {
         font-size: 24px;
         line-height: 30px;
@@ -43,6 +58,12 @@ $root: '.header';
       &:not(.mobile-cart) {
         display: flex;
         align-items: center;
+      }
+      &:last-child {
+        @include laptop-media {
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;
+        }
       }
     }
   }
@@ -245,6 +266,7 @@ $root: '.header';
         }
       }
       @include mobile-panel;
+      height: calc(100vh - 100px);
     }
     .search-panel {
       display: none;

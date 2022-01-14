@@ -30,12 +30,16 @@ export class EditCategoryComponent {
     catalogService.getItems().subscribe((items) => {
       this.categories = items;
       this.categoryGroup.patchValue(this.category);
+      if (!this.category.parentId) {
+        this.categoryGroup.get('parentId')?.setValue(null);
+      }
     });
   }
 
   public editCategory(): void {
     if (this.categoryGroup.invalid) return;
     const category: Category = this.categoryGroup.getRawValue();
+    if (!category.parentId) category.parentId = 0;
     const formData = new FormData();
     Object.getOwnPropertyNames(category).map((key) => {
       if (key !== 'img') {

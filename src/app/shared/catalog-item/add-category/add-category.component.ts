@@ -19,7 +19,7 @@ export class AddCategoryComponent {
   ) {
     this.category = fb.group({
       name: ['', Validators.required],
-      img: ['', Validators.required],
+      img: [''],
       parentId: [null],
     });
     catalogService.getItems().subscribe((items) => {
@@ -30,6 +30,7 @@ export class AddCategoryComponent {
   public addCategory(): void {
     if (this.category.invalid) return;
     const category: Category = this.category.getRawValue();
+    if (!category.parentId) delete category.parentId;
     const formData = new FormData();
     Object.getOwnPropertyNames(category).map((key) => {
       if (key !== 'img') {

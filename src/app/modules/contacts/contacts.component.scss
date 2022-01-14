@@ -48,9 +48,12 @@ $root: '.contacts';
       }
       &-content {
         font-weight: 500;
-        font-size: 18px;
+        font-size: 16px;
         @include laptop-media {
-          font-size: 24px;
+          font-size: 18px;
+        }
+        @include xl-media {
+          font-size: 27px;
         }
         line-height: 120%;
         padding-top: 20px;
@@ -79,13 +82,14 @@ $root: '.contacts';
           justify-content: center;
           background-color: $whats-app-button;
           border-radius: 5px;
-          color: $main-green;
+          color: $main-green !important;
           font-weight: 500;
           font-size: 15.4978px;
           line-height: 19px;
           &:hover {
             cursor: pointer;
             outline: 1px solid $main-green;
+            text-decoration: none !important;
           }
         }
       }

@@ -18,7 +18,8 @@ import { LoadingService } from '../../_services/front/loading.service';
 export class CatalogComponent implements OnInit {
   public catalog: Category[] = [];
   public isAdmin: boolean = false;
-
+  public draggedItem: Category | null = null;
+  public draggedIndex: number | null = null;
   constructor(
     private bs: BreadcrumbService,
     private _ds: DialogService,
@@ -37,7 +38,9 @@ export class CatalogComponent implements OnInit {
 
   private getCategories(): void {
     const sub = this.catalogService.getItems().subscribe((categories) => {
-      this.catalog = categories;
+      this.catalog = categories
+        .filter((item) => !item.parentId)
+        .sort((a, b) => a.categoryOrder - b.categoryOrder);
       this.storageService.setItem(categoriesKey, categories);
       this.ls.removeSubscription(sub);
     });
@@ -61,5 +64,29 @@ export class CatalogComponent implements OnInit {
   public deleteCategory(id: number): void {
     const index = this.catalog.findIndex((category) => category.id === id);
     this.catalog.splice(index, 1);
+  }
+
+  public dragStart(category: Category, i: number): void {
+    this.draggedIndex = i;
+    this.draggedItem = category;
+  }
+  public dragEnd(): void {
+    this.draggedItem = null;
+  }
+  public drop(i: number): void {
+    if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
+      const droppedItem = this.catalog[i];
+      this.catalog[this.draggedIndex] = droppedItem;
+      droppedItem.categoryOrder = this.draggedIndex;
+      const draggedItem = this.draggedItem;
+      this.catalog[i] = draggedItem;
+      draggedItem.categoryOrder = i;
+      [droppedItem, draggedItem].map((item) => {
+        delete item.sale;
+        this.catalogService.updateItem(item).subscribe();
+      });
+      this.draggedItem = null;
+      this.draggedIndex = null;
+    }
   }
 }

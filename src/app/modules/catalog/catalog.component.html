@@ -4,12 +4,18 @@
   [isAdmin]="isAdmin"
   [buttonTemplate]="actionsTemplate"
 >
-  <div
-    class="catalog__categories"
-    [ngClass]="{ start: catalog.length < 4, between: catalog.length >= 4 }"
-  >
+  <div class="catalog__categories grid">
     <flower-valley-catalog-item
-      *ngFor="let item of catalog"
+      class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
+      pDraggable="catalog"
+      dragHandle=".image"
+      dragEffect="move"
+      pDroppable="catalog"
+      (onDrop)="drop(i)"
+      [pDraggableDisabled]="!isAdmin"
+      (onDragStart)="dragStart(item, i)"
+      (onDragEnd)="dragEnd()"
+      *ngFor="let item of catalog; let i = index"
       [item]="item"
       [isAdmin]="isAdmin"
       (categoryDeleted)="deleteCategory(item.id)"
