@@ -34,6 +34,7 @@ export class OrderConfirmationComponent {
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
+  private isMapAlreadyGenerated: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -70,14 +71,8 @@ export class OrderConfirmationComponent {
       .pipe(takeUntil(this.$destroy))
       .subscribe((calculationResult) => {
         this.shippingCost = calculationResult;
-        switch (this.shippingCost) {
-          case 0:
-            this.delivery_error = 'Адрес не найден';
-            break;
-          case 2500:
-            break;
-          default:
-            this.shippingCost = 2500 + 50 * calculationResult;
+        if (this.shippingCost === 0) {
+          this.delivery_error = 'Адрес не найден';
         }
         this.cdr.detectChanges();
       });
@@ -94,6 +89,7 @@ export class OrderConfirmationComponent {
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
     });
+    this.isMapAlreadyGenerated = false;
   }
 
   public deliveryButtonClick(): void {
@@ -103,16 +99,24 @@ export class OrderConfirmationComponent {
 
   public showMapToggle(): void {
     this.showMap = true;
-    const yaMap = this.map;
-    if (yaMap) {
-      yaMap.nativeElement.style.width = '600px';
-      yaMap.nativeElement.style.height = '600px';
-      yaMap.nativeElement.style.position = 'static';
-      if (this.mapContent) {
-        this.mapContent.nativeElement.append(yaMap.nativeElement);
-        this.yaMap.yaMapRedraw();
+    if (!this.isMapAlreadyGenerated) {
+      const yaMap = this.map;
+      if (yaMap) {
+        yaMap.nativeElement.style.width = '600px';
+        yaMap.nativeElement.style.height = '600px';
+        yaMap.nativeElement.style.position = 'static';
+        if (this.mapContent) {
+          this.mapContent.nativeElement.append(yaMap.nativeElement);
+          this.mapRedraw();
+          this.isMapAlreadyGenerated = true;
+        }
       }
     }
+    this.cdr.detectChanges();
+  }
+
+  public mapRedraw(): void {
+    this.yaMap.yaMapRedraw();
     this.cdr.detectChanges();
   }
 
