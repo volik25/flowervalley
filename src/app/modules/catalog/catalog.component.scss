@@ -5,9 +5,11 @@ $root: '.catalog';
 
 #{$root} {
   &__categories {
-    display: flex;
-    flex-wrap: wrap;
-    padding-bottom: 150px;
+    padding-bottom: 100px;
+    flower-valley-item {
+      display: flex;
+      justify-content: center;
+    }
   }
 }
 

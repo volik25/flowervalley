@@ -12,8 +12,9 @@
     [headerButton]="button"
     [isAdmin]="isAdmin"
   >
-    <div class="flex-container">
+    <div class="grid w-12">
       <flower-valley-catalog-item
+        class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
         *ngFor="let item of catalog"
         [item]="item"
       ></flower-valley-catalog-item>

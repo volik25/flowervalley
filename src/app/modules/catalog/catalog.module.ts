@@ -14,6 +14,8 @@ import { ButtonModule } from 'primeng/button';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DragDropModule } from 'primeng/dragdrop';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @NgModule({
   declarations: [CatalogComponent, CategoryComponent, ProductComponent],
@@ -29,6 +31,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     PipesModule,
     SplitButtonModule,
     InputNumberModule,
+    DragDropModule,
+    TieredMenuModule,
   ],
 })
 export class CatalogModule {}

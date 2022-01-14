@@ -31,6 +31,10 @@ export class CategoryComponent implements OnInit {
       command: () => this.showAddProductModal(true),
     },
   ];
+  public menu: MenuItem[] = [];
+  public subCatalog: Category[] = [];
+  public draggedItem: Category | null = null;
+  public draggedIndex: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -101,8 +105,23 @@ export class CategoryComponent implements OnInit {
   }
 
   private setCategories(categoryRoute: string): void {
+    this.menu = this.generateMenuModel(this.catalog);
     this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
+    this.subCatalog = this.catalog
+      .filter((item) => item.parentId === this.category?.id)
+      .sort((a, b) => a.categoryOrder - b.categoryOrder);
     this.updateProductsList();
+  }
+
+  private getCategories(id: number): void {
+    const sub = this.catalogService.getItems().subscribe((categories) => {
+      this.catalog = categories
+        .filter((item) => (item.parentId = id))
+        .sort((a, b) => a.categoryOrder - b.categoryOrder);
+      this.storageService.setItem(categoriesKey, categories);
+      this.ls.removeSubscription(sub);
+    });
+    this.ls.addSubscription(sub);
   }
 
   private updateProductsList(): void {
@@ -131,5 +150,64 @@ export class CategoryComponent implements OnInit {
   public deleteProduct(id?: string) {
     const index = this.products.findIndex((product) => product.id === id);
     this.products.splice(index, 1);
+  }
+
+  public updateCategoriesList(): void {
+    if (this.category) this.getCategories(this.category.id);
+  }
+
+  public deleteCategory(id: number): void {
+    const index = this.subCatalog.findIndex((category) => category.id === id);
+    this.subCatalog.splice(index, 1);
+  }
+
+  public dragStart(category: Category, i: number): void {
+    this.draggedIndex = i;
+    this.draggedItem = category;
+  }
+  public dragEnd(): void {
+    this.draggedItem = null;
+  }
+  public drop(i: number): void {
+    if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
+      const droppedItem = this.subCatalog[i];
+      this.subCatalog[this.draggedIndex] = droppedItem;
+      droppedItem.categoryOrder = this.draggedIndex;
+      const draggedItem = this.draggedItem;
+      this.subCatalog[i] = draggedItem;
+      draggedItem.categoryOrder = i;
+      [droppedItem, draggedItem].map((item) => {
+        delete item.sale;
+        this.catalogService.updateItem(item).subscribe();
+      });
+      this.draggedItem = null;
+      this.draggedIndex = null;
+    }
+  }
+
+  private generateMenuModel(catalog: Category[]): MenuItem[] {
+    this.menu = [];
+    const mapped = catalog
+      .filter((item) => !item.parentId)
+      .sort((a, b) => a.categoryOrder - b.categoryOrder);
+    mapped.map((item) => {
+      this.menu.push({
+        id: item.id.toString(),
+        label: item.name,
+        routerLink: ['../', this.getRoute(item.name)],
+      });
+    });
+    this.menu.map((menuItem) => {
+      const child = catalog.filter((item) => item.parentId === Number(menuItem.id));
+      child.map((item) => {
+        if (!menuItem.items) menuItem.items = [];
+        menuItem.items.push({
+          id: item.id.toString(),
+          label: item.name,
+          routerLink: ['../', this.getRoute(item.name)],
+        });
+      });
+    });
+    return this.menu;
   }
 }

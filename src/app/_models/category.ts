@@ -6,4 +6,6 @@ export interface Category {
   name: string;
   img: string;
   products?: Product[];
+  categoryOrder: number;
+  sale?: any;
 }
