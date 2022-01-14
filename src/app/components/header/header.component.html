@@ -106,7 +106,7 @@
       <p-image src="assets/icons/cart{{ menuShow ? '-green' : '' }}.svg"></p-image>
     </span>
     <div class="pl-2">
-      <div class="cart__sum">{{ getSum }}₽</div>
+      <div class="cart__sum">{{ getSum | priceConverter: 'none':'RUB' }}</div>
       <div class="cart__count">{{ getCount }} товар(-ов)</div>
     </div>
   </div>

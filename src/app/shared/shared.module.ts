@@ -30,6 +30,7 @@ import { TableModule } from 'primeng/table';
 import { AddBoxComponent } from './boxes/add-box/add-box.component';
 import { SearchComponent } from './search/search.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { PipesModule } from '../_pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     InputNumberModule,
     TableModule,
     CheckboxModule,
+    PipesModule,
   ],
   exports: [
     CatalogItemComponent,

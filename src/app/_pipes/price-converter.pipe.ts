@@ -31,11 +31,11 @@ export class PriceConverterPipe implements PipeTransform {
       }
     }
     if (curr === 'RUB') {
-      return `${number}₽`;
+      return `${number}\u20bd`;
     }
     if (curr === 'rub') {
       return `${number} руб`;
     }
-    return `${number}₽`;
+    return `${number}\u20bd`;
   }
 }

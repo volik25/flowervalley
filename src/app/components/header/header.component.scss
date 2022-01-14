@@ -3,11 +3,10 @@
 
 $root: '.header';
 
-@mixin mobile-panel($top: 100px) {
+@mixin mobile-panel($top: 70px) {
   position: absolute;
   top: $top;
   background-color: $white-50;
-  right: -27px;
   @include laptop-media {
     right: unset;
     left: 0;
@@ -123,11 +122,10 @@ $root: '.header';
     display: flex;
     justify-content: space-between;
     @include fv-container(20px, 20px);
-    @media screen and (max-width: 370px) {
-      margin-left: 10px;
-      margin-right: 10px;
+    height: 70px;
+    @include laptop-media {
+      height: 100px;
     }
-    height: 100px;
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
@@ -137,9 +135,6 @@ $root: '.header';
       align-items: center;
       ::ng-deep img {
         width: 53px;
-        @media screen and (max-width: 370px) {
-          width: 40px;
-        }
         @include laptop-media {
           width: 80px;
         }
@@ -215,9 +210,6 @@ $root: '.header';
       }
       span {
         color: $main-green;
-        @media screen and (max-width: 370px) {
-          display: none;
-        }
       }
       a {
         color: $text;
@@ -232,10 +224,6 @@ $root: '.header';
       }
       align-items: center;
       justify-content: center;
-      @media screen and (max-width: 370px) {
-        margin-right: 5px;
-        margin-left: 5px;
-      }
       margin-right: 10px;
       margin-left: 10px;
       &__button {
@@ -270,7 +258,7 @@ $root: '.header';
         }
       }
       @include mobile-panel;
-      height: calc(100vh - 100px);
+      height: calc(100vh - 70px);
     }
     .search-panel {
       display: none;
@@ -279,7 +267,7 @@ $root: '.header';
       }
       position: absolute;
       background-color: $main-green;
-      top: 100px;
+      top: 70px;
       width: 100%;
       left: 0;
       padding: 9px 11px;

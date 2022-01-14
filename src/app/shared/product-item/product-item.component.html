@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="product__interactive">
-    <div class="product__interactive_price">{{ product.price }}₽</div>
+    <div class="product__interactive_price">{{ product.price | priceConverter: 'none':'RUB' }}</div>
     <p-inputNumber
       [(ngModel)]="product.count"
       [min]="step"
