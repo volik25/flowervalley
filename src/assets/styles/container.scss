@@ -2,9 +2,7 @@
 
 @mixin fv-container($padding-top: 0px, $padding-bottom: 0px) {
   width: auto;
-  margin: 0 27px;
-  padding-top: $padding-top;
-  padding-bottom: $padding-bottom;
+  padding: $padding-top 27px $padding-bottom;
   @include laptop-media {
     width: $middle-width;
     margin: auto;

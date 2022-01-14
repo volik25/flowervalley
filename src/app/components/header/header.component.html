@@ -1,4 +1,4 @@
-<header class="header">
+<header #header class="header">
   <div class="header__contacts">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
@@ -52,7 +52,7 @@
       </div>
     </div>
   </div>
-  <div #headerMenu class="header__menu-bar">
+  <div class="header__menu-bar">
     <div class="header__menu-bar_content">
       <ng-container *ngTemplateOutlet="pricesButton"></ng-container>
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
