@@ -69,6 +69,13 @@ export class ProductItemComponent {
     }
   }
 
+  public checkPrice(): void {
+    if (this.product) this.product.price = this.product.initialPrice;
+    this.product?.prices.map((price) => {
+      if (this.product && this.product.count >= price.countFrom) this.product.price = price.price;
+    });
+  }
+
   public showEditProductModal(id: string): void {
     const sub = this.productService.getItemById(id).subscribe((product) => {
       this.ls.removeSubscription(sub);

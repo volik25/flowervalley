@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -67,8 +67,9 @@ export class EditProductComponent {
     this.productGroup = fb.group({
       isPopular: [false],
       description: ['', Validators.required],
-      categoryIds: [],
+      categoryIds: [null, Validators.required],
       boxId: [null, Validators.required],
+      prices: this.fb.array([]),
     });
     this.product = config.data.product;
     this.goods.patchValue(converter.convertToBase(this.product));
@@ -92,7 +93,9 @@ export class EditProductComponent {
     this.photos.map((photo) => {
       formData.append('photos[]', photo);
     });
-
+    this.product.photos.map((photo) => {
+      formData.append('images[]', photo);
+    });
     const productGroupValue = this.productGroup.getRawValue();
     productGroupValue.categoryIds.map((id: string) => {
       formData.append('categoryIds[]', id);
@@ -110,11 +113,16 @@ export class EditProductComponent {
           description: productGroupValue.description,
           boxId: productGroupValue.boxId,
           isPopular: productGroupValue.isPopular,
+          prices: productGroupValue.prices,
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
           const value = product[key];
-          formData.append(key, value);
+          if (key === 'prices') {
+            value.map((price: any) => {
+              formData.append(`${key}[]`, JSON.stringify(price));
+            });
+          } else formData.append(key, value);
         });
         this.productService.updateItem<any>(formData, id).subscribe(() => {
           this.isLoading = false;
@@ -125,5 +133,33 @@ export class EditProductComponent {
 
   public filesUploaded(photos: File[]): void {
     this.photos = photos;
+  }
+  public get prices(): FormArray {
+    return this.productGroup.controls['prices'] as FormArray;
+  }
+
+  public getFormGroup(item: AbstractControl): FormGroup {
+    return item as FormGroup;
+  }
+
+  public addPriceRange(): void {
+    this.prices.push(
+      this.fb.group({
+        price: [null, Validators.required],
+        countFrom: [null, Validators.required],
+      }),
+    );
+  }
+
+  public deletePriceRange(index: number): void {
+    this.prices.removeAt(index);
+  }
+
+  public get isFormArrayValid(): boolean {
+    return this.prices.status === 'VALID';
+  }
+
+  public removePhoto(i: number): void {
+    this.product.photos.splice(i, 1);
   }
 }

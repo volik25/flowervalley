@@ -27,6 +27,7 @@ export class CartService {
       const product = cartUpdated.find((cartItem) => item.id === cartItem.id);
       if (product) {
         product.count += item.count;
+        product.price = this.checkPrice(product);
       } else {
         cartUpdated.push(item);
       }
@@ -56,9 +57,18 @@ export class CartService {
       const product = cartUpdated.find((cartItem) => item.id === cartItem.id);
       if (product) {
         product.count = item.count;
+        product.price = this.checkPrice(product);
       }
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     }
+  }
+
+  private checkPrice(product: ProductItem): number {
+    if (product) product.price = product.initialPrice;
+    product.prices.map((price) => {
+      if (product && product.count >= price.countFrom) product.price = price.price;
+    });
+    return product.price;
   }
 }

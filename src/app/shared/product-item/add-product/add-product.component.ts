@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GoodsBusinessPack } from '../../../_models/business-pack/goods-base';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProductService } from '../../../_services/back/product.service';
@@ -69,8 +69,9 @@ export class AddProductComponent {
     this.product = fb.group({
       isPopular: [false],
       description: ['', Validators.required],
-      categoryIds: [],
+      categoryIds: [null, Validators.required],
       boxId: [null, Validators.required],
+      prices: this.fb.array([]),
     });
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items;
@@ -107,6 +108,7 @@ export class AddProductComponent {
           description: productGroupValue.description,
           boxId: productGroupValue.boxId,
           isPopular: productGroupValue.isPopular,
+          prices: productGroupValue.prices,
         };
         this.saveProduct(product, formData);
       });
@@ -116,7 +118,10 @@ export class AddProductComponent {
         const product: any = {
           ...this.bpConverter.convertToProduct(goods),
           id: id,
-          ...this.product.getRawValue(),
+          description: productGroupValue.description,
+          boxId: productGroupValue.boxId,
+          isPopular: productGroupValue.isPopular,
+          prices: productGroupValue.prices,
         };
         this.saveProduct(product, formData);
       });
@@ -127,7 +132,11 @@ export class AddProductComponent {
     Object.getOwnPropertyNames(product).map((key) => {
       // @ts-ignore
       const value = product[key];
-      formData.append(key, value);
+      if (key === 'prices') {
+        value.map((price: any) => {
+          formData.append(`${key}[]`, new Blob(price));
+        });
+      } else formData.append(key, value);
     });
     this.productService.addItem<any>(formData).subscribe(() => {
       this.isLoading = false;
@@ -161,5 +170,30 @@ export class AddProductComponent {
 
   public filesUploaded(photos: File[]): void {
     this.photos = photos;
+  }
+
+  public get prices(): FormArray {
+    return this.product.controls['prices'] as FormArray;
+  }
+
+  public getFormGroup(item: AbstractControl): FormGroup {
+    return item as FormGroup;
+  }
+
+  public addPriceRange(): void {
+    this.prices.push(
+      this.fb.group({
+        price: [null, Validators.required],
+        countFrom: [null, Validators.required],
+      }),
+    );
+  }
+
+  public deletePriceRange(index: number): void {
+    this.prices.removeAt(index);
+  }
+
+  public get isFormArrayValid(): boolean {
+    return this.prices.status === 'VALID';
   }
 }

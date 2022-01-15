@@ -88,8 +88,8 @@
     <div class="pl-2">Каталог</div>
   </div>
   <div [routerLink]="['']" fragment="about">О компании</div>
-  <div>Тюльпаны оптом</div>
-  <div>Рассада цветов</div>
+  <div [routerLink]="['catalog', 'tulips']">Тюльпаны оптом</div>
+  <div [routerLink]="['catalog', 'flowers']">Рассада цветов</div>
   <div [routerLink]="['contacts']">Контакты</div>
   <div *ngIf="menuShow" class="mobile-cart">
     <ng-container *ngTemplateOutlet="cartButton"></ng-container>

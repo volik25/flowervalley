@@ -12,6 +12,8 @@
     <div class="product__interactive_price">{{ product.price | priceConverter: 'none':'RUB' }}</div>
     <p-inputNumber
       [(ngModel)]="product.count"
+      (ngModelChange)="checkPrice()"
+      [allowEmpty]="true"
       [min]="step"
       [showButtons]="true"
       buttonLayout="horizontal"

@@ -67,6 +67,7 @@ export class ProductComponent implements OnInit {
           ...product,
           id: id,
           count: Number(product.coefficient) || 1,
+          initialPrice: product.price,
         };
         if (params) this.setCategories(params, product.name);
       }
@@ -89,6 +90,13 @@ export class ProductComponent implements OnInit {
     } else if (this.product && this.product.count / this.step !== 0) {
       this.product.count = Math.round(this.product.count / this.step) * this.step;
     }
+  }
+
+  public checkPrice(): void {
+    if (this.product) this.product.price = this.product.initialPrice;
+    this.product?.prices.map((price) => {
+      if (this.product && this.product.count >= price.countFrom) this.product.price = price.price;
+    });
   }
 
   public addToCart(): void {
@@ -132,6 +140,7 @@ export class ProductComponent implements OnInit {
             return {
               ...product,
               count: Number(product.coefficient) || 1,
+              initialPrice: product.price,
             };
           }) || [];
       this.ls.removeSubscription(sub);

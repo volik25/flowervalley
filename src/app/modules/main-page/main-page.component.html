@@ -1,83 +1,87 @@
-<ng-container *ngIf="mainInfo">
-  <flower-valley-banner
+<flower-valley-banner
+  *ngIf="mainInfo"
+  [isAdmin]="isAdmin"
+  [banner]="mainInfo.main"
+  (bannerChanged)="bannerChanged()"
+></flower-valley-banner>
+<flower-valley-container
+  *ngIf="catalog.length"
+  background="dark"
+  headerTitle="Каталог"
+  headerIcon="pi-shopping-bag"
+  [headerButton]="button"
+  [isAdmin]="isAdmin"
+>
+  <div class="grid w-12">
+    <flower-valley-catalog-item
+      class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
+      *ngFor="let item of catalog"
+      [item]="item"
+    ></flower-valley-catalog-item>
+  </div>
+</flower-valley-container>
+<flower-valley-container
+  headerIcon="pi-percentage"
+  headerTitle="Акции и скидки"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="salesActionsButton"
+>
+  <flower-valley-sales></flower-valley-sales>
+</flower-valley-container>
+<flower-valley-container
+  *ngIf="mainInfo && mainInfo.popular?.length"
+  background="dark"
+  headerTitle="Популярные товары"
+  headerIconImage="assets/icons/fire.png"
+  [headerButton]="button"
+  [footerButton]="footerButton"
+>
+  <div class="flex-container">
+    <flower-valley-product-item
+      *ngFor="let product of mainInfo.popular"
+      [product]="product"
+      (openProductCard)="navigateToProduct($event)"
+    ></flower-valley-product-item>
+  </div>
+</flower-valley-container>
+<div #about>
+  <flower-valley-about></flower-valley-about>
+</div>
+<flower-valley-advantages></flower-valley-advantages>
+<flower-valley-container
+  *ngIf="mainInfo"
+  headerTitle="Видео о нас"
+  headerIcon="pi-video"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addVideoButton"
+>
+  <flower-valley-video [videos]="mainInfo.videos || []" [isAdmin]="isAdmin"></flower-valley-video>
+</flower-valley-container>
+<flower-valley-container
+  *ngIf="mainInfo"
+  background="dark"
+  headerTitle="Отзывы"
+  headerIconImage="assets/icons/file.png"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addFeedbackButton"
+>
+  <flower-valley-reviews
+    [reviewCarousel]="mainInfo.comments"
     [isAdmin]="isAdmin"
-    [banner]="mainInfo.main"
-    (bannerChanged)="bannerChanged()"
-  ></flower-valley-banner>
-  <flower-valley-container
-    *ngIf="catalog.length"
-    background="dark"
-    headerTitle="Каталог"
-    headerIcon="pi-shopping-bag"
-    [headerButton]="button"
+  ></flower-valley-reviews>
+</flower-valley-container>
+<flower-valley-container
+  *ngIf="mainInfo"
+  headerTitle="Наши клиенты"
+  headerIconImage="assets/icons/file-edit.png"
+  [isAdmin]="isAdmin"
+  [buttonTemplate]="addClientButton"
+>
+  <flower-valley-clients
     [isAdmin]="isAdmin"
-  >
-    <div class="grid w-12">
-      <flower-valley-catalog-item
-        class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
-        *ngFor="let item of catalog"
-        [item]="item"
-      ></flower-valley-catalog-item>
-    </div>
-  </flower-valley-container>
-  <flower-valley-container
-    headerIcon="pi-percentage"
-    headerTitle="Акции и скидки"
-    [isAdmin]="isAdmin"
-    [buttonTemplate]="salesActionsButton"
-  >
-    <flower-valley-sales></flower-valley-sales>
-  </flower-valley-container>
-  <flower-valley-container
-    *ngIf="mainInfo.popular?.length"
-    background="dark"
-    headerTitle="Популярные товары"
-    headerIconImage="assets/icons/fire.png"
-    [headerButton]="button"
-    [footerButton]="footerButton"
-  >
-    <div class="flex-container">
-      <flower-valley-product-item
-        *ngFor="let product of mainInfo.popular"
-        [product]="product"
-        (openProductCard)="navigateToProduct($event)"
-      ></flower-valley-product-item>
-    </div>
-  </flower-valley-container>
-  <flower-valley-about id="about" #about></flower-valley-about>
-  <flower-valley-advantages></flower-valley-advantages>
-  <flower-valley-container
-    headerTitle="Видео о нас"
-    headerIcon="pi-video"
-    [isAdmin]="isAdmin"
-    [buttonTemplate]="addVideoButton"
-  >
-    <flower-valley-video [videos]="mainInfo.videos || []" [isAdmin]="isAdmin"></flower-valley-video>
-  </flower-valley-container>
-  <flower-valley-container
-    background="dark"
-    headerTitle="Отзывы"
-    headerIconImage="assets/icons/file.png"
-    [isAdmin]="isAdmin"
-    [buttonTemplate]="addFeedbackButton"
-  >
-    <flower-valley-reviews
-      [reviewCarousel]="mainInfo.comments"
-      [isAdmin]="isAdmin"
-    ></flower-valley-reviews>
-  </flower-valley-container>
-  <flower-valley-container
-    headerTitle="Наши клиенты"
-    headerIconImage="assets/icons/file-edit.png"
-    [isAdmin]="isAdmin"
-    [buttonTemplate]="addClientButton"
-  >
-    <flower-valley-clients
-      [isAdmin]="isAdmin"
-      [clientsCarousel]="mainInfo.clients"
-    ></flower-valley-clients>
-  </flower-valley-container>
-</ng-container>
+    [clientsCarousel]="mainInfo.clients"
+  ></flower-valley-clients>
+</flower-valley-container>
 
 <ng-template #addVideoButton>
   <p-button label="Добавить видео" (onClick)="addVideo()"></p-button>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { FileUpload } from 'primeng/fileupload';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FileUpload } from 'primeng/fileupload';
 
 @Component({
   selector: 'flower-valley-files-upload',
@@ -40,10 +40,14 @@ export class FilesUploadComponent {
   }
 
   public uploadFiles(files: File[]): void {
-    this.photos = files;
-    this.files = [];
+    this.photos = this.photos.concat(files);
     this.fileUpload?.clear();
-    this.uploaded.emit(files);
+    this.uploaded.emit(this.photos);
+  }
+
+  public removeImage(i: number): void {
+    this.photos.splice(i, 1);
+    this.uploaded.emit(this.photos);
   }
 
   private isImage(file: File): boolean {
