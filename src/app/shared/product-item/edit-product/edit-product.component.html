@@ -114,12 +114,12 @@
       label="Обновить изображения"
     ></flower-valley-files-upload>
     <div class="grid">
-      <div class="img col-3" *ngFor="let photo of product.photos; let i = index">
-        <p-image [src]="photo" width="100"></p-image>
+      <div class="img col-3" *ngFor="let photo of product.photos">
+        <p-image [src]="photo.src" width="100"></p-image>
         <p-button
           styleClass="p-button-danger"
           icon="pi pi-trash"
-          (onClick)="removePhoto(i)"
+          (onClick)="removePhoto(photo.id)"
         ></p-button>
       </div>
     </div>

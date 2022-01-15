@@ -227,8 +227,8 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  public openImage(src: string): void {
-    const index = this.product?.photos.findIndex((photo) => photo === src);
+  public openImage(id: number): void {
+    const index = this.product?.photos.findIndex((photo) => photo.id === id);
     if (index || index === 0) {
       this.activeIndex = index;
       this.displayCustom = true;

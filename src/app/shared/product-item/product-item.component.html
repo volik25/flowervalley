@@ -2,7 +2,7 @@
   <div class="product__header">
     <div
       class="product__header_image"
-      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0] + '\')' }"
+      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0]?.src + '\')' }"
     ></div>
     <div class="product__header_title" (click)="openProductCard.emit(product.id)">
       {{ product.name }}

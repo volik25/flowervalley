@@ -134,7 +134,7 @@ export class AddProductComponent {
       const value = product[key];
       if (key === 'prices') {
         value.map((price: any) => {
-          formData.append(`${key}[]`, new Blob(price));
+          formData.append(`${key}[]`, JSON.stringify(price));
         });
       } else formData.append(key, value);
     });
