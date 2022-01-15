@@ -14,14 +14,19 @@
       >
         <ng-template pTemplate="item" let-photo>
           <p-image
-            [imageStyle]="{ width: '100%', 'border-radius': '15px' }"
+            [imageStyle]="{
+              width: '100%',
+              height: '400px',
+              'border-radius': '15px',
+              'object-fit': 'cover'
+            }"
             imageClass="cursor-pointer"
-            [src]="photo"
-            (click)="openImage(photo)"
+            [src]="photo.src"
+            (click)="openImage(photo.id)"
           ></p-image>
         </ng-template>
         <ng-template pTemplate="thumbnail" let-photo>
-          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo"></p-image>
+          <p-image [imageStyle]="{ 'border-radius': '15px' }" [src]="photo.src"></p-image>
         </ng-template>
       </p-galleria>
       <p-galleria
@@ -34,7 +39,7 @@
         [showThumbnails]="false"
       >
         <ng-template pTemplate="item" let-item>
-          <img [src]="item" style="width: 100%; display: block" />
+          <img [src]="item.src" style="width: 100%; display: block" />
         </ng-template>
       </p-galleria>
     </div>
@@ -74,6 +79,7 @@
           <div class="count">
             <p-inputNumber
               [(ngModel)]="product.count"
+              (ngModelChange)="checkPrice()"
               [min]="step"
               [showButtons]="true"
               buttonLayout="horizontal"

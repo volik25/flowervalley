@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -11,6 +11,7 @@ import { ProductService } from '../../../_services/back/product.service';
 import { Box } from '../../../_models/box';
 import { BoxService } from '../../../_services/back/box.service';
 import { isFormInvalid } from '../../../_utils/formValidCheck';
+import { Price } from '../../../_models/price';
 
 @Component({
   selector: 'flower-valley-edit-product',
@@ -18,6 +19,7 @@ import { isFormInvalid } from '../../../_utils/formValidCheck';
   styleUrls: ['../add-product/add-product.component.scss'],
 })
 export class EditProductComponent {
+  private deleteIds: number[] = [];
   public get isLoading(): boolean {
     return this._isLoading;
   }
@@ -67,12 +69,16 @@ export class EditProductComponent {
     this.productGroup = fb.group({
       isPopular: [false],
       description: ['', Validators.required],
-      categoryIds: [],
+      categoryIds: [null, Validators.required],
       boxId: [null, Validators.required],
+      prices: this.fb.array([]),
     });
     this.product = config.data.product;
     this.goods.patchValue(converter.convertToBase(this.product));
     this.productGroup.patchValue(this.product);
+    this.product.prices.map((price) => {
+      this.addPriceRange(price);
+    });
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items;
       const categories = this.product.categories.map((category) => category.id);
@@ -92,12 +98,13 @@ export class EditProductComponent {
     this.photos.map((photo) => {
       formData.append('photos[]', photo);
     });
-
     const productGroupValue = this.productGroup.getRawValue();
     productGroupValue.categoryIds.map((id: string) => {
       formData.append('categoryIds[]', id);
     });
-
+    this.deleteIds.map((id) => {
+      formData.append('deleteIds[]', id.toString());
+    });
     this.bpService
       .updateGoods({
         ...goods,
@@ -110,11 +117,16 @@ export class EditProductComponent {
           description: productGroupValue.description,
           boxId: productGroupValue.boxId,
           isPopular: productGroupValue.isPopular,
+          prices: productGroupValue.prices,
         };
         Object.getOwnPropertyNames(product).map((key) => {
           // @ts-ignore
           const value = product[key];
-          formData.append(key, value);
+          if (key === 'prices') {
+            value.map((price: any) => {
+              formData.append(`${key}[]`, JSON.stringify(price));
+            });
+          } else formData.append(key, value);
         });
         this.productService.updateItem<any>(formData, id).subscribe(() => {
           this.isLoading = false;
@@ -125,5 +137,35 @@ export class EditProductComponent {
 
   public filesUploaded(photos: File[]): void {
     this.photos = photos;
+  }
+  public get prices(): FormArray {
+    return this.productGroup.controls['prices'] as FormArray;
+  }
+
+  public getFormGroup(item: AbstractControl): FormGroup {
+    return item as FormGroup;
+  }
+
+  public addPriceRange(price?: Price): void {
+    const control = this.fb.group({
+      price: [null, Validators.required],
+      countFrom: [null, Validators.required],
+    });
+    if (price) control.patchValue(price);
+    this.prices.push(control);
+  }
+
+  public deletePriceRange(index: number): void {
+    this.prices.removeAt(index);
+  }
+
+  public get isFormArrayValid(): boolean {
+    return this.prices.status === 'VALID';
+  }
+
+  public removePhoto(id: number): void {
+    this.deleteIds.push(id);
+    const i = this.product.photos.findIndex((photo) => photo.id === id);
+    this.product.photos.splice(i, 1);
   }
 }

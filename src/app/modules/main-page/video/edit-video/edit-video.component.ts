@@ -41,4 +41,14 @@ export class EditVideoComponent {
       });
     });
   }
+
+  public convertLink(link: string): void {
+    if (link && link.includes('youtu.be')) {
+      link = link.replace('.be', 'be.com/embed');
+    } else if (!link) {
+      this.isLinkCopied = false;
+    }
+    this.isLinkCopied = true;
+    this.videoGroup.get('src')?.setValue(link);
+  }
 }

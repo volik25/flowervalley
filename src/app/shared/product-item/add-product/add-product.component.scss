@@ -87,3 +87,12 @@
   background-color: $dark-green;
   border-color: $dark-green;
 }
+
+.img {
+  position: relative;
+  p-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProductItem } from '../../_models/product-item';
 import { AdminService } from '../../_services/back/admin.service';
 import { DestroyService } from '../../_services/front/destroy.service';
@@ -12,7 +12,7 @@ import { MainBanner } from '../../_models/main-banner';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AddVideoComponent } from './video/add-video/add-video.component';
 import { MenuItem, MessageService } from 'primeng/api';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { Sale } from '../../_models/sale';
 import { Banner } from '../../_models/banner';
@@ -36,6 +36,8 @@ interface MainInfo {
   providers: [DestroyService, DialogService],
 })
 export class MainPageComponent implements OnInit {
+  @ViewChild('about')
+  public about!: ElementRef;
   public isAdmin = false;
   constructor(
     private adminService: AdminService,
@@ -46,6 +48,7 @@ export class MainPageComponent implements OnInit {
     private ms: MessageService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private route: ActivatedRoute,
     private $destroy: DestroyService,
   ) {
     adminService
@@ -94,6 +97,12 @@ export class MainPageComponent implements OnInit {
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
           .sort((a, b) => a.categoryOrder - b.categoryOrder);
+        this.route.fragment.subscribe((fragment) => {
+          setTimeout(() => {
+            if (fragment === 'about')
+              this.about?.nativeElement.scrollIntoView({ block: 'center', inline: 'center' });
+          });
+        });
         this.ls.removeSubscription(sub);
       });
     this.ls.addSubscription(sub);

@@ -10,10 +10,11 @@
 ></p-fileUpload>
 <div class="flex flex-wrap mb-2" *ngIf="!files.length && !showOnlyButton">
   <p-image
-    *ngFor="let photo of photos"
-    styleClass="mr-2"
+    *ngFor="let photo of photos; let i = index"
+    styleClass="mr-2 cursor-pointer"
     [src]="photo.objectURL"
     width="100px"
+    (click)="removeImage(i)"
   ></p-image>
 </div>
 <div class="flex flex-wrap mb-2" *ngIf="files.length && !showOnlyButton">

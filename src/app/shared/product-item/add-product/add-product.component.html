@@ -62,6 +62,32 @@
     <label for="note2">Примечание товара</label>
   </span>
   <form [formGroup]="product">
+    <ng-container formArrayName="prices">
+      <ng-container *ngFor="let price of prices.controls; let i = index">
+        <div [formGroup]="getFormGroup(price)" class="flex align-items-center">
+          <span class="p-float-label mr-2">
+            <p-inputNumber suffix=" шт." formControlName="countFrom" inputId="countFrom" [min]="1">
+            </p-inputNumber>
+            <label for="countFrom">При заказе от</label>
+          </span>
+          <span class="p-float-label mr-2">
+            <p-inputNumber formControlName="price" inputId="price" [min]="1"> </p-inputNumber>
+            <label for="price">Цена</label>
+          </span>
+          <p-button
+            styleClass="mb-2 p-button-danger"
+            icon="pi pi-trash"
+            (onClick)="deletePriceRange(i)"
+          ></p-button>
+        </div>
+      </ng-container>
+    </ng-container>
+    <p-button
+      label="Добавить цену"
+      *ngIf="isFormArrayValid"
+      (onClick)="addPriceRange()"
+      styleClass="mb-2 w-12"
+    ></p-button>
     <div class="p-field-checkbox">
       <p-checkbox formControlName="isPopular" [binary]="true" inputId="isPopular"></p-checkbox>
       <label for="isPopular">Популярный товар</label>
@@ -89,7 +115,7 @@
         formControlName="categoryIds"
         [filter]="false"
       ></p-multiSelect>
-      <label for="parent">Расположить в категории (необязательно)</label>
+      <label for="parent">Расположить в категории</label>
     </span>
     <p-editor
       styleClass="mb-2"

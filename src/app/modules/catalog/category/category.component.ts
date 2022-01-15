@@ -106,7 +106,17 @@ export class CategoryComponent implements OnInit {
 
   private setCategories(categoryRoute: string): void {
     this.menu = this.generateMenuModel(this.catalog);
-    this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
+    switch (categoryRoute) {
+      case 'tulips':
+        this.category = this.catalog.find((item) => item.id === 1);
+        break;
+      case 'flowers':
+        this.category = this.catalog.find((item) => item.id === 2);
+        break;
+      default:
+        this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
+        break;
+    }
     this.subCatalog = this.catalog
       .filter((item) => item.parentId === this.category?.id)
       .sort((a, b) => a.categoryOrder - b.categoryOrder);
@@ -135,6 +145,7 @@ export class CategoryComponent implements OnInit {
               return {
                 ...product,
                 count: Number(product.coefficient) || 1,
+                initialPrice: product.price,
               };
             }) || [];
           this.ls.removeSubscription(sub);

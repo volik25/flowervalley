@@ -2,7 +2,7 @@
   <div class="product__header">
     <div
       class="product__header_image"
-      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0] + '\')' }"
+      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0]?.src + '\')' }"
     ></div>
     <div class="product__header_title" (click)="openProductCard.emit(product.id)">
       {{ product.name }}
@@ -12,6 +12,8 @@
     <div class="product__interactive_price">{{ product.price | priceConverter: 'none':'RUB' }}</div>
     <p-inputNumber
       [(ngModel)]="product.count"
+      (ngModelChange)="checkPrice()"
+      [allowEmpty]="true"
       [min]="step"
       [showButtons]="true"
       buttonLayout="horizontal"
