@@ -28,9 +28,9 @@
           <div
             *ngIf="product.photos"
             class="product__name_img"
-            [ngStyle]="{ 'background-image': 'url(' + product.photos[0] + ')' }"
+            [ngStyle]="{ 'background-image': 'url(' + product.photos[0].src + ')' }"
           ></div>
-          <span>{{ product.name }}</span>
+          <span [pTooltip]="product.name" tooltipPosition="left">{{ product.name }}</span>
         </td>
         <td class="product__price">{{ product.price | priceConverter: 'two':'rub' }}</td>
         <td class="product__count">

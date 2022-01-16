@@ -1,8 +1,8 @@
-<div class="video" #container [ngClass]="{ start: videos.length < 3, between: videos.length >= 3 }">
-  <div *ngIf="!videos.length" class="video__error">
+<div class="video grid" #container>
+  <div *ngIf="!videos.length" class="video__error col-12">
     К сожалению, видео пока отсутвует.<br />Но мы обязательно исправим ситуацию!
   </div>
-  <div class="video__container" *ngFor="let video of videos">
+  <div class="video__container col-12 lg:col-6 xl:col-4" *ngFor="let video of videos">
     <iframe
       [width]="container.offsetWidth < 383 ? container.offsetWidth : '383'"
       height="216"

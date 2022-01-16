@@ -24,6 +24,8 @@ $root: '.sales';
           @include laptop-media {
             max-width: 50%;
           }
+          display: flex;
+          flex-direction: column;
           &>div:first-child {
             font-weight: 600;
             font-size: 22px;

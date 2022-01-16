@@ -29,7 +29,7 @@
           <div
             *ngIf="product.photos"
             class="product__name_img"
-            [ngStyle]="{ 'background-image': 'url(' + product.photos[0] + ')' }"
+            [ngStyle]="{ 'background-image': 'url(' + product.photos[0].src + ')' }"
           ></div>
           <div>
             <span>{{ product.name }}</span>

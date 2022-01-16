@@ -1,13 +1,31 @@
 <div class="sales">
   <div class="sales__content">
-    <p-carousel [value]="sales" [autoplayInterval]="5000" [circular]="true">
+    <p-carousel
+      [value]="sales.items || []"
+      [autoplayInterval]="sales.autoPlay * 1000"
+      [showNavigators]="sales.isUserCanLeaf"
+      [circular]="true"
+    >
       <ng-template let-sale pTemplate="item">
         <div [ngStyle]="{ 'background-image': 'url(' + sale.img + ')' }" class="item">
           <div class="item__container">
             <div class="item__container_content">
               <div>{{ sale.title }}</div>
               <div>{{ sale.description }}</div>
-              <p-button label="Подробнее"></p-button>
+              <p-button label="Подробнее" (onClick)="navigateTo(sale.category.name)"></p-button>
+              <div class="mt-3">
+                <p-button
+                  label="Редактировать"
+                  (onClick)="showEditSaleModal(sale)"
+                  *ngIf="isAdmin"
+                ></p-button
+                ><p-button
+                  styleClass="ml-2 p-button-danger"
+                  label="Удалить"
+                  (onClick)="deleteSale(sale.id)"
+                  *ngIf="isAdmin"
+                ></p-button>
+              </div>
             </div>
           </div>
         </div>

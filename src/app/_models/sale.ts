@@ -3,6 +3,7 @@ export interface Sale {
   category: {
     id: number;
     name: string;
+    categoryOrder: number;
   };
   categoryId?: number;
   discount: number;

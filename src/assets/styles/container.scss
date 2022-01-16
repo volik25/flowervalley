@@ -5,6 +5,7 @@
   padding: $padding-top 27px $padding-bottom;
   @include laptop-media {
     width: $middle-width;
+    padding: $padding-top 0 $padding-bottom;
     margin: auto;
   }
   @include xl-media {

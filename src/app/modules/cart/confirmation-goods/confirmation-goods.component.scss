@@ -2,7 +2,7 @@
 @import "container";
 
 ::ng-deep .p-card.confirmation {
-  margin-left: 30px;
+  min-width: 650px;
   display: none;
   @include laptop-media {
     display: block;
@@ -168,9 +168,4 @@
       color: $main-green;
     }
   }
-}
-
-.estimate {
-  color: $text;
-  margin-left: 15px;
 }

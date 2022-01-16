@@ -11,10 +11,6 @@
       padding: 20px 22px;
     }
 
-    .p-multiselect-label {
-      padding: 20px 22px;
-    }
-
     .p-inputwrapper-focus, .p-inputwrapper-filled {
       & ~ label {
         top: 15px;
@@ -37,6 +33,9 @@
     .p-dropdown-label {
       padding-bottom: 15px;
       padding-top: 25px;
+    }
+    .p-multiselect-label {
+      padding: 25px 22px 15px;
     }
   }
 }

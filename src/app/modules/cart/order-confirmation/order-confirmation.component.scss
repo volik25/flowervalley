@@ -180,6 +180,14 @@ $root: '.confirmation';
         }
       }
     }
+    &_goods {
+      @include laptop-media {
+        margin-left: 30px;
+      }
+      @include xl-media {
+        margin-left: unset;
+      }
+    }
   }
 }
 
