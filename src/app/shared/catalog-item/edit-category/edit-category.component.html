@@ -18,10 +18,14 @@
     <label for="name">Название</label>
   </span>
   <flower-valley-files-upload
-    [files]="[category.img]"
     [multi]="false"
     label="Редактировать обложку"
     (uploaded)="photoUploaded($event)"
   ></flower-valley-files-upload>
+  <div class="grid mt-2">
+    <div class="img col-3" *ngFor="let photo of category.img">
+      <p-image [src]="photo" width="100"></p-image>
+    </div>
+  </div>
   <p-button type="submit" label="Сохранить"></p-button>
 </form>

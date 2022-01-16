@@ -5,6 +5,9 @@
   border-radius: 10px;
   width: 280px;
   margin-bottom: 20px;
+  .image {
+    cursor: pointer;
+  }
   &>div:first-child {
     background-repeat: no-repeat;
     background-size: cover;

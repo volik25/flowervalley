@@ -58,7 +58,7 @@
   }
   &__button {
     ::ng-deep button {
-      padding: 10px;
+      padding: 15px;
       background-color: $white-10;
       @include laptop-media {
         background-color: $main-green;
@@ -67,8 +67,8 @@
         width: 15px;
         height: 15px;
         @include laptop-media {
-          width: 30px;
-          height: 30px;
+          width: 23px;
+          height: 23px;
         }
       }
     }

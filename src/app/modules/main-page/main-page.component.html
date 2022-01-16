@@ -21,12 +21,17 @@
   </div>
 </flower-valley-container>
 <flower-valley-container
+  *ngIf="mainInfo"
   headerIcon="pi-percentage"
   headerTitle="Акции и скидки"
   [isAdmin]="isAdmin"
   [buttonTemplate]="salesActionsButton"
 >
-  <flower-valley-sales></flower-valley-sales>
+  <flower-valley-sales
+    [isAdmin]="isAdmin"
+    [sales]="mainInfo.sales"
+    (saleEdited)="loadMainInfo()"
+  ></flower-valley-sales>
 </flower-valley-container>
 <flower-valley-container
   *ngIf="mainInfo && mainInfo.popular?.length"
@@ -36,8 +41,9 @@
   [headerButton]="button"
   [footerButton]="footerButton"
 >
-  <div class="flex-container">
+  <div class="grid w-12">
     <flower-valley-product-item
+      class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
       *ngFor="let product of mainInfo.popular"
       [product]="product"
       (openProductCard)="navigateToProduct($event)"

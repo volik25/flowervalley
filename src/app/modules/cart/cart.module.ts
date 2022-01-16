@@ -25,6 +25,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { TabViewModule } from 'primeng/tabview';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     TabViewModule,
     InputNumberModule,
     SplitButtonModule,
+    TooltipModule,
   ],
   providers: [BoxGenerateService],
 })

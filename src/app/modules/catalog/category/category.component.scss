@@ -3,14 +3,6 @@
 
 $root: '.category';
 
-@mixin active {
-  background: $main-green;
-  span {
-    color: $white-100;
-  }
-  border-color: $main-green;
-}
-
 #{$root} {
   &__content {
     @include laptop-media {
@@ -22,30 +14,6 @@ $root: '.category';
       display: none;
       @include laptop-media {
         display: block;
-      }
-      &>div {
-        position: sticky;
-        top: 130px;
-        padding-right: 40px;
-        min-width: 250px;
-        ::ng-deep {
-          .p-tieredmenu, .p-submenu-list {
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 17px;
-            width: unset;
-            padding: 0;
-            a {
-              padding: 15px 20px;
-              span {
-                color: $text;
-              }
-              &:hover {
-                @include active;
-              }
-            }
-          }
-        }
       }
     }
   }

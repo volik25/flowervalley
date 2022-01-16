@@ -5,7 +5,7 @@
         <div
           *ngIf="item.photos"
           class="cart__content_item-img"
-          [style.background-image]="'url(' + item.photos[0] + ')'"
+          [style.background-image]="'url(' + item.photos[0].src + ')'"
         ></div>
       </div>
       <div class="cart__content_item-info">

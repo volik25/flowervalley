@@ -55,6 +55,7 @@ export class AddProductComponent {
     private ref: DynamicDialogRef,
   ) {
     this.isImport = config.data.isImport;
+    const category = config.data?.category;
     this.goods = fb.group({
       Name: ['', Validators.required],
       Price: ['', Validators.required],
@@ -74,7 +75,13 @@ export class AddProductComponent {
       prices: this.fb.array([]),
     });
     this.catalogService.getItems().subscribe((items) => {
-      this.categories = items;
+      const parentId = category.parentId;
+      if (parentId) {
+        this.categories = items.filter((item) => item.parentId === parentId);
+      } else {
+        this.categories = items.filter((item) => !item.parentId);
+      }
+      this.product.controls['categoryIds'].setValue([category.id]);
     });
     this.boxService.getItems().subscribe((boxes) => {
       this.boxes = boxes;

@@ -16,8 +16,6 @@ export class FilesUploadComponent {
   @Input()
   public label: string = 'Загрузить изображения';
   @Input()
-  public files: string[] = [];
-  @Input()
   public showOnlyButton: boolean = false;
   @Output()
   public uploaded: EventEmitter<File[]> = new EventEmitter<File[]>();

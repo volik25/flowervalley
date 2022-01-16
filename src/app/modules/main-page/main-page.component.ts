@@ -19,6 +19,7 @@ import { Banner } from '../../_models/banner';
 import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
 import { EditClientComponent } from './clients/edit-client/edit-client.component';
 import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
+import { AddSaleComponent } from './sales/add-sale/add-sale.component';
 
 interface MainInfo {
   main: MainBanner<unknown>;
@@ -108,7 +109,7 @@ export class MainPageComponent implements OnInit {
     this.ls.addSubscription(sub);
   }
 
-  private loadMainInfo(): void {
+  public loadMainInfo(): void {
     const sub = this.mainInfoService.getMainInfo<MainInfo>().subscribe((main) => {
       this.mainInfo = main;
       this.ls.removeSubscription(sub);
@@ -187,20 +188,33 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  public addSale(): void {}
+  public addSale(): void {
+    if (this.mainInfo) {
+      const saleModal = this.ds.open(AddSaleComponent, {
+        header: 'Добавить акцию',
+        width: '600px',
+      });
+      saleModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
+        if (res && res.success) this.loadMainInfo();
+      });
+    }
+  }
 
   public editBannerOptions(): void {
     if (this.mainInfo) {
-      const { autoPlay, isUserCanLeaf } = this.mainInfo.comments;
-      this.ds.open(SalesSettingsComponent, {
+      const { autoPlay, isUserCanLeaf } = this.mainInfo.sales;
+      const modal = this.ds.open(SalesSettingsComponent, {
         header: 'Настройки карусели',
         width: '600px',
-        data: <{ settings: Banner; url: string }>{
+        data: <{ settings: Banner }>{
           settings: {
             autoPlay: autoPlay,
             isUserCanLeaf: isUserCanLeaf,
           },
         },
+      });
+      modal.onClose.subscribe((res: { success: boolean }) => {
+        if (res && res.success) this.loadMainInfo();
       });
     }
   }

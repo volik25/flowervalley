@@ -31,6 +31,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
 import { ImageModule } from 'primeng/image';
+import { AddSaleComponent } from './sales/add-sale/add-sale.component';
+import { EditSaleComponent } from './sales/edit-sale/edit-sale.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { ImageModule } from 'primeng/image';
     EditClientComponent,
     EditBannerComponent,
     SalesSettingsComponent,
+    AddSaleComponent,
+    EditSaleComponent,
   ],
   imports: [
     CommonModule,

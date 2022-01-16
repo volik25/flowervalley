@@ -12,6 +12,7 @@ import { AdminService } from '../../../_services/back/admin.service';
 import { ProductItem } from '../../../_models/product-item';
 import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 import { LoadingService } from '../../../_services/front/loading.service';
+import { AddCategoryComponent } from '../../../shared/catalog-item/add-category/add-category.component';
 
 @Component({
   selector: 'flower-valley-category',
@@ -30,8 +31,12 @@ export class CategoryComponent implements OnInit {
       icon: 'pi pi-upload',
       command: () => this.showAddProductModal(true),
     },
+    {
+      label: 'Добавить группу товаров',
+      icon: 'pi pi-folder',
+      command: () => this.showAddCategoryModal(),
+    },
   ];
-  public menu: MenuItem[] = [];
   public subCatalog: Category[] = [];
   public draggedItem: Category | null = null;
   public draggedIndex: number | null = null;
@@ -74,38 +79,54 @@ export class CategoryComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  public isActive(title: string): boolean {
-    return this.category?.name === title;
-  }
-
   public showAddProductModal(isImport: boolean = false): void {
     const modal = this.ds.open(AddProductComponent, {
       header: 'Добавить товар',
       width: '600px',
       data: {
         isImport: isImport,
+        category: this.category,
       },
     });
     modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
-      if (res.success) {
-        this.updateProducts();
-      }
-      if (res.reject) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Дублирование товара',
-          detail: 'Данный товар уже добавлен в систему',
-        });
+      if (res) {
+        if (res.success) {
+          this.updateProducts();
+        }
+        if (res.reject) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Дублирование товара',
+            detail: 'Данный товар уже добавлен в систему',
+          });
+        }
       }
     });
   }
 
-  public getRoute(name: string): string {
-    return slugify(name);
+  public showAddCategoryModal(): void {
+    const modal = this.ds.open(AddCategoryComponent, {
+      header: 'Добавить группу товаров',
+      width: '600px',
+      data: {
+        categoryId: this.category?.id,
+      },
+    });
+    modal.onClose.subscribe((res: { success: boolean }) => {
+      if (res && res.success) {
+        const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
+          this.catalog = categoriesApi;
+          this.subCatalog = this.catalog
+            .filter((item) => item.parentId === this.category?.id)
+            .sort((a, b) => a.categoryOrder - b.categoryOrder);
+          this.ls.removeSubscription(sub);
+        });
+        this.ls.addSubscription(sub);
+      }
+    });
   }
 
   private setCategories(categoryRoute: string): void {
-    this.menu = this.generateMenuModel(this.catalog);
     switch (categoryRoute) {
       case 'tulips':
         this.category = this.catalog.find((item) => item.id === 1);
@@ -194,31 +215,5 @@ export class CategoryComponent implements OnInit {
       this.draggedItem = null;
       this.draggedIndex = null;
     }
-  }
-
-  private generateMenuModel(catalog: Category[]): MenuItem[] {
-    this.menu = [];
-    const mapped = catalog
-      .filter((item) => !item.parentId)
-      .sort((a, b) => a.categoryOrder - b.categoryOrder);
-    mapped.map((item) => {
-      this.menu.push({
-        id: item.id.toString(),
-        label: item.name,
-        routerLink: ['../', this.getRoute(item.name)],
-      });
-    });
-    this.menu.map((menuItem) => {
-      const child = catalog.filter((item) => item.parentId === Number(menuItem.id));
-      child.map((item) => {
-        if (!menuItem.items) menuItem.items = [];
-        menuItem.items.push({
-          id: item.id.toString(),
-          label: item.name,
-          routerLink: ['../', this.getRoute(item.name)],
-        });
-      });
-    });
-    return this.menu;
   }
 }

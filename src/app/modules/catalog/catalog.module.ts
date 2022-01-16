@@ -16,9 +16,10 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DragDropModule } from 'primeng/dragdrop';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { CategoryMenuComponent } from './category/category-menu/category-menu.component';
 
 @NgModule({
-  declarations: [CatalogComponent, CategoryComponent, ProductComponent],
+  declarations: [CatalogComponent, CategoryComponent, ProductComponent, CategoryMenuComponent],
   imports: [
     CommonModule,
     CatalogRoutingModule,

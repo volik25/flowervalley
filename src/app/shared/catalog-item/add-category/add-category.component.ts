@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../_models/category';
 import { CatalogService } from '../../../_services/back/catalog.service';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { isFormInvalid } from '../../../_utils/formValidCheck';
 
 @Component({
   selector: 'flower-valley-add-category',
@@ -15,6 +16,7 @@ export class AddCategoryComponent {
   constructor(
     private fb: FormBuilder,
     private catalogService: CatalogService,
+    private config: DynamicDialogConfig,
     public ref: DynamicDialogRef,
   ) {
     this.category = fb.group({
@@ -22,13 +24,17 @@ export class AddCategoryComponent {
       img: [''],
       parentId: [null],
     });
+    const categoryId = config.data?.categoryId;
     catalogService.getItems().subscribe((items) => {
-      this.categories = items;
+      this.categories = items.filter((item) => !item.parentId);
+      if (categoryId) {
+        this.category.controls['parentId'].setValue(categoryId);
+      }
     });
   }
 
   public addCategory(): void {
-    if (this.category.invalid) return;
+    if (isFormInvalid(this.category)) return;
     const category: Category = this.category.getRawValue();
     if (!category.parentId) delete category.parentId;
     const formData = new FormData();

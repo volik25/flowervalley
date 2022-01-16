@@ -33,6 +33,8 @@ export class SalesSettingsComponent {
   public saveSettings(): void {
     if (isFormInvalid(this.settingsGroup)) return;
     const settings = this.settingsGroup.getRawValue();
-    this.bannerSettingsService.addItem(settings).subscribe(() => {});
+    this.bannerSettingsService.addItem(settings).subscribe(() => {
+      this.ref.close({ success: true });
+    });
   }
 }
