@@ -8,6 +8,7 @@ import { StorageService } from '../../_services/front/storage.service';
 import { categoriesKey } from '../../_utils/constants';
 import { AdminService } from '../../_services/back/admin.service';
 import { LoadingService } from '../../_services/front/loading.service';
+import { CategoryOrder } from '../../_models/category-order';
 
 @Component({
   selector: 'flower-valley-catalog',
@@ -20,6 +21,8 @@ export class CatalogComponent implements OnInit {
   public isAdmin: boolean = false;
   public draggedItem: Category | null = null;
   public draggedIndex: number | null = null;
+  public isDragDropFinished: boolean = false;
+  public initialCatalog: Category[] = [];
   constructor(
     private bs: BreadcrumbService,
     private _ds: DialogService,
@@ -69,24 +72,45 @@ export class CatalogComponent implements OnInit {
   public dragStart(category: Category, i: number): void {
     this.draggedIndex = i;
     this.draggedItem = category;
+    this.isDragDropFinished = false;
+    this.initialCatalog = [...this.catalog];
   }
   public dragEnd(): void {
+    if (!this.isDragDropFinished) {
+      this.catalog = this.initialCatalog;
+    }
     this.draggedItem = null;
   }
-  public drop(i: number): void {
+  public drop(): void {
     if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
-      const droppedItem = this.catalog[i];
-      this.catalog[this.draggedIndex] = droppedItem;
-      droppedItem.categoryOrder = this.draggedIndex;
-      const draggedItem = this.draggedItem;
-      this.catalog[i] = draggedItem;
-      draggedItem.categoryOrder = i;
-      [droppedItem, draggedItem].map((item) => {
-        delete item.sale;
-        this.catalogService.updateItem(item).subscribe();
-      });
+      const order: CategoryOrder[] = [];
+      for (let i = 0; i < this.catalog.length; i++) {
+        order.push({
+          id: this.catalog[i].id,
+          categoryOrder: i,
+        });
+      }
+      this.catalogService.setCategoryOrder(order).subscribe();
       this.draggedItem = null;
       this.draggedIndex = null;
+      this.isDragDropFinished = true;
+    }
+  }
+  public setPosition(index: number): void {
+    if (
+      this.draggedItem &&
+      (this.draggedIndex || this.draggedIndex === 0) &&
+      this.draggedIndex !== index
+    ) {
+      if (index < this.draggedIndex) {
+        this.catalog.splice(this.draggedIndex, 1);
+        this.catalog.splice(index, 0, this.draggedItem);
+        this.draggedIndex = index;
+      } else {
+        this.catalog.splice(index + 1, 0, this.draggedItem);
+        this.catalog.splice(this.draggedIndex, 1);
+        this.draggedIndex = index;
+      }
     }
   }
 }

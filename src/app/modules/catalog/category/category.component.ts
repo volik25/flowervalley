@@ -13,6 +13,9 @@ import { ProductItem } from '../../../_models/product-item';
 import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 import { LoadingService } from '../../../_services/front/loading.service';
 import { AddCategoryComponent } from '../../../shared/catalog-item/add-category/add-category.component';
+import { ProductService } from '../../../_services/back/product.service';
+import { ProductOrder } from '../../../_models/product-order';
+import { CategoryOrder } from '../../../_models/category-order';
 
 @Component({
   selector: 'flower-valley-category',
@@ -38,8 +41,10 @@ export class CategoryComponent implements OnInit {
     },
   ];
   public subCatalog: Category[] = [];
-  public draggedItem: Category | null = null;
+  public draggedItem: Category | ProductItem | null = null;
   public draggedIndex: number | null = null;
+  public isDragDropFinished: boolean = false;
+  public initialArray: Category[] | ProductItem[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +54,7 @@ export class CategoryComponent implements OnInit {
     private adminService: AdminService,
     private storageService: StorageService,
     private catalogService: CatalogService,
+    private productService: ProductService,
     private ls: LoadingService,
     private messageService: MessageService,
   ) {
@@ -193,27 +199,81 @@ export class CategoryComponent implements OnInit {
     this.subCatalog.splice(index, 1);
   }
 
-  public dragStart(category: Category, i: number): void {
+  public dragStart(draggedItem: Category | ProductItem, i: number): void {
     this.draggedIndex = i;
-    this.draggedItem = category;
+    this.draggedItem = draggedItem;
+    this.isDragDropFinished = false;
+    if (CategoryComponent.instanceOfProduct(this.draggedItem)) {
+      this.initialArray = [...this.products];
+    } else {
+      this.initialArray = [...this.subCatalog];
+    }
   }
   public dragEnd(): void {
+    if (!this.isDragDropFinished) {
+      if (CategoryComponent.instanceOfProduct(this.draggedItem)) {
+        this.products = this.initialArray as ProductItem[];
+      } else {
+        this.subCatalog = this.initialArray as Category[];
+      }
+    }
     this.draggedItem = null;
   }
-  public drop(i: number): void {
+  public drop(): void {
     if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
-      const droppedItem = this.subCatalog[i];
-      this.subCatalog[this.draggedIndex] = droppedItem;
-      droppedItem.categoryOrder = this.draggedIndex;
-      const draggedItem = this.draggedItem;
-      this.subCatalog[i] = draggedItem;
-      draggedItem.categoryOrder = i;
-      [droppedItem, draggedItem].map((item) => {
-        delete item.sale;
-        this.catalogService.updateItem(item).subscribe();
-      });
+      if (CategoryComponent.instanceOfProduct(this.draggedItem)) {
+        const order: ProductOrder[] = [];
+        for (let i = 0; i < this.products.length; i++) {
+          order.push({
+            productOrder: i,
+            productCategoryId: this.products[i].productCategoryId,
+          });
+        }
+        this.productService.setProductsOrder(order).subscribe();
+      } else {
+        const order: CategoryOrder[] = [];
+        for (let i = 0; i < this.subCatalog.length; i++) {
+          order.push({
+            id: this.subCatalog[i].id,
+            categoryOrder: i,
+          });
+        }
+        this.catalogService.setCategoryOrder(order).subscribe();
+      }
       this.draggedItem = null;
       this.draggedIndex = null;
+      this.isDragDropFinished = true;
     }
+  }
+  public setPosition(index: number): void {
+    if (
+      this.draggedItem &&
+      (this.draggedIndex || this.draggedIndex === 0) &&
+      this.draggedIndex !== index
+    ) {
+      if (index < this.draggedIndex) {
+        if (CategoryComponent.instanceOfProduct(this.draggedItem)) {
+          this.products.splice(this.draggedIndex, 1);
+          this.products.splice(index, 0, this.draggedItem as ProductItem);
+        } else {
+          this.subCatalog.splice(this.draggedIndex, 1);
+          this.subCatalog.splice(index, 0, this.draggedItem as Category);
+        }
+        this.draggedIndex = index;
+      } else {
+        if (CategoryComponent.instanceOfProduct(this.draggedItem)) {
+          this.products.splice(index + 1, 0, this.draggedItem as ProductItem);
+          this.products.splice(this.draggedIndex, 1);
+        } else {
+          this.subCatalog.splice(index + 1, 0, this.draggedItem as Category);
+          this.subCatalog.splice(this.draggedIndex, 1);
+        }
+        this.draggedIndex = index;
+      }
+    }
+  }
+
+  private static instanceOfProduct(item: any): boolean {
+    return 'description' in item;
   }
 }

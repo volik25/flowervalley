@@ -17,6 +17,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DragDropModule } from 'primeng/dragdrop';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CategoryMenuComponent } from './category/category-menu/category-menu.component';
+import { OrderListModule } from 'primeng/orderlist';
 
 @NgModule({
   declarations: [CatalogComponent, CategoryComponent, ProductComponent, CategoryMenuComponent],
@@ -34,6 +35,7 @@ import { CategoryMenuComponent } from './category/category-menu/category-menu.co
     InputNumberModule,
     DragDropModule,
     TieredMenuModule,
+    OrderListModule,
   ],
 })
 export class CatalogModule {}
