@@ -8,4 +8,5 @@ export interface Product extends BusinessPackModel {
   categories: Category[];
   boxId: number;
   prices: Price[];
+  productCategoryId: number;
 }

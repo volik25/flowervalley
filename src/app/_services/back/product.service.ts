@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import { Observable } from 'rxjs';
+import { ProductOrder } from '../../_models/product-order';
 
 @Injectable({
   providedIn: 'root',
@@ -12,5 +13,9 @@ export class ProductService extends BaseApiService {
     return this.http.get<T>(
       `${this.baseUrl}/${this.apiUrl}/list?searchString=${encodeURI(searchString)}`,
     );
+  }
+
+  public setProductsOrder(order: ProductOrder[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/order`, order);
   }
 }
