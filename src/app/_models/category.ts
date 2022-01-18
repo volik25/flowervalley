@@ -1,4 +1,5 @@
 import { Product } from './product';
+import { Step } from './step';
 
 export interface Category {
   id: number;
@@ -8,4 +9,6 @@ export interface Category {
   products?: Product[];
   categoryOrder: number;
   sale?: any;
+  steps?: Step[];
+  isTulip: boolean;
 }

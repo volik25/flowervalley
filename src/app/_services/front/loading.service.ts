@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, EventEmitter, Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +12,22 @@ export class LoadingService {
   /** cdRef */
   private cdRef!: ChangeDetectorRef;
   /** set isLoading */
-  public set isLoading(value: boolean) {
+  public set momentLoading(value: boolean) {
     // eslint-disable-next-line no-underscore-dangle
-    this._isLoading = value;
+    this._momentLoading = value;
   }
   /** get isLoading */
-  public get isLoading(): boolean {
+  public get momentLoading(): boolean {
     // eslint-disable-next-line no-underscore-dangle
-    return this._isLoading;
+    return this._momentLoading;
+  }
+  public isLoading(): Observable<boolean> {
+    return this._isLoading.asObservable();
   }
   /** идет загрузка */
   // @ts-ignore
-  private _isLoading: boolean;
+  private _momentLoading: boolean;
+  private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   /** текущие подписки приложения */
   private subscriptions: Subscription = new Subscription();
   /** количество активных подписок */
@@ -42,7 +46,7 @@ export class LoadingService {
       return;
     }
     this.subscriptions.unsubscribe();
-    this.isLoading = false;
+    this._isLoading.next(false);
     this.setDefaultCancelBtn();
     this.subscriptions = new Subscription();
     this.subscriptionsCount = 0;
@@ -52,7 +56,8 @@ export class LoadingService {
     // eslint-disable-next-line no-plusplus
     this.subscriptionsCount++;
     this.subscriptions.add(subscription);
-    this.isLoading = true;
+    this._isLoading.next(true);
+    this.momentLoading = true;
     this.cdRef.detectChanges();
   }
   /** удаление подписки */
@@ -61,7 +66,8 @@ export class LoadingService {
     this.subscriptionsCount--;
     this.subscriptions.remove(subscription);
     if (this.subscriptionsCount === 0) {
-      this.isLoading = false;
+      this._isLoading.next(false);
+      this.momentLoading = false;
       this.cdRef.detectChanges();
     }
   }

@@ -11,7 +11,6 @@ import { ProductService } from '../../../_services/back/product.service';
 import { Box } from '../../../_models/box';
 import { BoxService } from '../../../_services/back/box.service';
 import { isFormInvalid } from '../../../_utils/formValidCheck';
-import { Price } from '../../../_models/price';
 
 @Component({
   selector: 'flower-valley-edit-product',
@@ -19,6 +18,7 @@ import { Price } from '../../../_models/price';
   styleUrls: ['../add-product/add-product.component.scss'],
 })
 export class EditProductComponent {
+  public isTulips: boolean;
   private deleteIds: number[] = [];
   public get isLoading(): boolean {
     return this._isLoading;
@@ -74,15 +74,25 @@ export class EditProductComponent {
       prices: this.fb.array([]),
     });
     this.product = config.data.product;
+    this.isTulips = this.product.categories.find((item) => item.isTulip)?.isTulip || false;
     this.goods.patchValue(converter.convertToBase(this.product));
     this.productGroup.patchValue(this.product);
-    this.product.prices.map((price) => {
-      this.addPriceRange(price);
-    });
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items;
       const categories = this.product.categories.map((category) => category.id);
-      this.productGroup.get('categoryIds')?.setValue(categories);
+      this.productGroup.controls['categoryIds'].setValue(categories);
+      if (this.isTulips) {
+        this.productGroup.controls['categoryIds'].disable();
+        const category = this.product.categories.find((item) => item.isTulip);
+        category?.steps?.map((step) => {
+          const price = this.product.prices.find((item) => item.countFrom === step.countFrom);
+          if (price) {
+            this.addPriceRange({ price: price.price, countFrom: step.countFrom });
+          } else {
+            this.addPriceRange({ price: null, countFrom: step.countFrom });
+          }
+        });
+      }
     });
     this.boxService.getItems().subscribe((boxes) => {
       this.boxes = boxes;
@@ -146,17 +156,14 @@ export class EditProductComponent {
     return item as FormGroup;
   }
 
-  public addPriceRange(price?: Price): void {
+  public addPriceRange(step: { price: number | null; countFrom: number }): void {
     const control = this.fb.group({
       price: [null, Validators.required],
       countFrom: [null, Validators.required],
     });
-    if (price) control.patchValue(price);
+    control.patchValue(step);
+    control.controls['countFrom'].disable();
     this.prices.push(control);
-  }
-
-  public deletePriceRange(index: number): void {
-    this.prices.removeAt(index);
   }
 
   public get isFormArrayValid(): boolean {

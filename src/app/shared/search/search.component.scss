@@ -58,10 +58,11 @@
   }
   &__button {
     ::ng-deep button {
-      padding: 15px;
+      padding: 10px;
       background-color: $white-10;
       @include laptop-media {
         background-color: $main-green;
+        padding: 15px;
       }
       ::ng-deep img {
         width: 15px;

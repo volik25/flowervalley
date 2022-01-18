@@ -70,24 +70,13 @@
             </p-inputNumber>
             <label for="countFrom">При заказе от</label>
           </span>
-          <span class="p-float-label mr-2">
+          <span class="p-float-label">
             <p-inputNumber formControlName="price" inputId="price" [min]="1"> </p-inputNumber>
             <label for="price">Цена</label>
           </span>
-          <p-button
-            styleClass="mb-2 p-button-danger"
-            icon="pi pi-trash"
-            (onClick)="deletePriceRange(i)"
-          ></p-button>
         </div>
       </ng-container>
     </ng-container>
-    <p-button
-      label="Добавить цену"
-      *ngIf="isFormArrayValid"
-      (onClick)="addPriceRange()"
-      styleClass="mb-2 w-12"
-    ></p-button>
     <div class="p-field-checkbox">
       <p-checkbox formControlName="isPopular" [binary]="true" inputId="isPopular"></p-checkbox>
       <label for="isPopular">Популярный товар</label>
