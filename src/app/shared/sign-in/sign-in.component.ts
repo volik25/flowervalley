@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../_services/back/admin.service';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'flower-valley-sign-in',
@@ -11,7 +12,11 @@ export class SignInComponent {
   public passwordForm: FormGroup;
   public isAdmin: boolean = false;
 
-  constructor(private fb: FormBuilder, private adminService: AdminService) {
+  constructor(
+    private fb: FormBuilder,
+    private adminService: AdminService,
+    private ref: DynamicDialogRef,
+  ) {
     adminService.checkAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
     });
@@ -23,10 +28,14 @@ export class SignInComponent {
   public signIn(): void {
     if (this.passwordForm.invalid) return;
     const password = this.passwordForm.getRawValue();
-    this.adminService.signIn(password).subscribe(() => {});
+    this.adminService.signIn(password).subscribe(() => {
+      this.ref.close({ action: 'sign-in' });
+    });
   }
 
   public signOut(): void {
-    this.adminService.logOut().subscribe();
+    this.adminService.logOut().subscribe(() => {
+      this.ref.close({ action: 'sign-out' });
+    });
   }
 }

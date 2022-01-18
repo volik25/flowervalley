@@ -14,12 +14,6 @@
   justify-content: space-between;
   &__header {
     &_image {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      width: 280px;
-      height: 180px;
-      border-radius: 10px;
       cursor: pointer;
     }
     &_title {
@@ -27,9 +21,11 @@
       font-weight: 500;
       font-size: 16px;
       line-height: 110%;
-      &:hover {
-        cursor: pointer;
-        text-decoration: underline;
+      span {
+        &:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
       }
     }
   }

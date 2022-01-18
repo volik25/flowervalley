@@ -8,14 +8,6 @@
   .image {
     cursor: pointer;
   }
-  &>div:first-child {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    width: 280px;
-    height: 230px;
-    border-radius: 10px;
-  }
   &>div:nth-child(2) {
     padding: 20px 20px 30px;
     font-weight: 500;
