@@ -3,7 +3,6 @@ import { Category } from '../../../../_models/category';
 import { CategoryMenu } from '../../../../_models/category-menu';
 import { slugify } from 'transliteration';
 import { ActivatedRoute } from '@angular/router';
-import { categoriesKey } from '../../../../_utils/constants';
 import { StorageService } from '../../../../_services/front/storage.service';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { LoadingService } from '../../../../_services/front/loading.service';
@@ -39,17 +38,19 @@ export class CategoryMenuComponent implements OnInit {
   public ngOnInit(): void {
     this.route.params.subscribe(() => {
       this.showSubMenu = false;
-      this.catalog = this.storageService.getItem<Category[]>(categoriesKey) || [];
-      if (this.catalog.length) {
-        this.menu = this.generateMenuModel(this.catalog);
-      } else {
-        const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
-          this.catalog = categoriesApi;
+      this.storageService.storageUpdated<Category[]>().subscribe((catalog) => {
+        this.catalog = catalog;
+        if (this.catalog?.length) {
           this.menu = this.generateMenuModel(this.catalog);
-          this.ls.removeSubscription(sub);
-        });
-        this.ls.addSubscription(sub);
-      }
+        } else {
+          const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
+            this.catalog = categoriesApi;
+            this.menu = this.generateMenuModel(this.catalog);
+            this.ls.removeSubscription(sub);
+          });
+          this.ls.addSubscription(sub);
+        }
+      });
     });
   }
 
@@ -73,7 +74,9 @@ export class CategoryMenuComponent implements OnInit {
       });
     });
     this.menu.map((menuItem) => {
-      const child = catalog.filter((item) => item.parentId === Number(menuItem.id));
+      const child = catalog
+        .filter((item) => item.parentId === Number(menuItem.id))
+        .sort((a, b) => a.categoryOrder - b.categoryOrder);
       child.map((item) => {
         if (!menuItem.items) menuItem.items = [];
         menuItem.items.push({

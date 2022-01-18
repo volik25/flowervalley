@@ -6,13 +6,18 @@
       'border-radius-top-left': first,
       'border-radius-bottom-left': last,
       'border-radius-top-right': first && (!showSubMenu || (showSubMenu && currentIndex !== i)),
-      'border-radius-bottom-right': last && (!showSubMenu || (showSubMenu && currentIndex !== i)),
+      'border-radius-bottom-right': last && !showSubMenu,
       active: isActive(item.name, item.items)
     }"
   >
     <span [routerLink]="['../', getRoute(item.name)]">{{ item.name }}</span>
     <span *ngIf="item.items?.length" class="pi pi-angle-right" (click)="menuToggle(i)"></span>
-    <div class="sub-menu" *ngIf="showSubMenu && currentIndex === i">
+    <div
+      #subMenuContainer
+      class="sub-menu"
+      *ngIf="showSubMenu && currentIndex === i"
+      [style]="{ right: '-' + (subMenuContainer.clientWidth + 1) + 'px' }"
+    >
       <ng-container
         *ngTemplateOutlet="subMenuRef; context: { $implicit: item.items || null }"
       ></ng-container>

@@ -21,7 +21,7 @@ export class BreadcrumbComponent implements OnInit {
   private readonly path: string | undefined;
   public items: any;
   private resizeItems: any;
-  public parentPath: string[] = [''];
+  public parentPath: string[] = ['/'];
 
   constructor(private route: ActivatedRoute, private _bS: BreadcrumbService) {
     this.path = BreadcrumbComponent.getPath(route.snapshot);
@@ -33,6 +33,8 @@ export class BreadcrumbComponent implements OnInit {
       this.resizeItems = this.items;
       if (this.items.length > 2) {
         this.parentPath = this.items[this.items.length - 2].routerLink;
+      } else {
+        this.parentPath = ['/'];
       }
       this.updateVisible();
     });

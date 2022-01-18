@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
+  private _storage: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
+
   public setItem<T>(key: string, item: T): void {
     sessionStorage.setItem(key, JSON.stringify(item));
+    this._storage.next(this.getItem<T>(key));
   }
 
   public getItem<T>(key: string): T | null {
@@ -27,6 +31,7 @@ export class StorageService {
       storageItems.push(item);
       sessionStorage.setItem(key, JSON.stringify(storageItems));
     }
+    this._storage.next(this.getItem<T>(key));
   }
   public editItem<T extends { id?: number; object?: string }>(key: string, item: T) {
     let storageItems = [];
@@ -38,6 +43,7 @@ export class StorageService {
       );
       if (index) storageItems[index] = item;
       sessionStorage.setItem(key, JSON.stringify(storageItems));
+      this._storage.next(this.getItem<T>(key));
     }
   }
   public removeItem<T extends { id?: number; object?: string }>(key: string, id: number | string) {
@@ -51,6 +57,10 @@ export class StorageService {
       });
       if (index) storageItems.splice(index, 1);
       sessionStorage.setItem(key, JSON.stringify(storageItems));
+      this._storage.next(this.getItem<T>(key));
     }
+  }
+  public storageUpdated<T>(): Observable<T> {
+    return this._storage.asObservable();
   }
 }

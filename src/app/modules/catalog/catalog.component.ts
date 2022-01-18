@@ -90,7 +90,11 @@ export class CatalogComponent implements OnInit {
           categoryOrder: i,
         });
       }
-      this.catalogService.setCategoryOrder(order).subscribe();
+      this.catalogService.setCategoryOrder(order).subscribe(() => {
+        this.catalogService.getItems().subscribe((categories) => {
+          this.storageService.setItem(categoriesKey, categories);
+        });
+      });
       this.draggedItem = null;
       this.draggedIndex = null;
       this.isDragDropFinished = true;
