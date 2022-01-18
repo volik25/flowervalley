@@ -93,6 +93,9 @@ $root: '.cart';
                 background-color: $white-100;
                 border-color: $border-count;
                 color: $text-grey;
+                span {
+                  font-size: 10px;
+                }
               }
             }
             .price {

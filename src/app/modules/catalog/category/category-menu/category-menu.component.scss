@@ -44,9 +44,10 @@
     }
     .sub-menu {
       position: absolute;
-      right: -151px;
+      //right: -151px;
       top: -1px;
       min-width: 150px;
+      max-width: 270px;
       .item {
         padding: 10px 20px;
         height: 49px;

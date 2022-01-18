@@ -125,6 +125,7 @@ export class CategoryComponent implements OnInit {
           this.subCatalog = this.catalog
             .filter((item) => item.parentId === this.category?.id)
             .sort((a, b) => a.categoryOrder - b.categoryOrder);
+          this.storageService.setItem(categoriesKey, categoriesApi);
           this.ls.removeSubscription(sub);
         });
         this.ls.addSubscription(sub);
@@ -197,6 +198,7 @@ export class CategoryComponent implements OnInit {
   public deleteCategory(id: number): void {
     const index = this.subCatalog.findIndex((category) => category.id === id);
     this.subCatalog.splice(index, 1);
+    this.storageService.removeItem<Category>(categoriesKey, id);
   }
 
   public dragStart(draggedItem: Category | ProductItem, i: number): void {
@@ -238,7 +240,11 @@ export class CategoryComponent implements OnInit {
             categoryOrder: i,
           });
         }
-        this.catalogService.setCategoryOrder(order).subscribe();
+        this.catalogService.setCategoryOrder(order).subscribe(() => {
+          this.catalogService.getItems().subscribe((categories) => {
+            this.storageService.setItem(categoriesKey, categories);
+          });
+        });
       }
       this.draggedItem = null;
       this.draggedIndex = null;

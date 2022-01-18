@@ -72,6 +72,6 @@
   [showThumbnails]="false"
 >
   <ng-template pTemplate="item" let-item>
-    <img [src]="item.src" style="width: 100%; display: block" />
+    <img [src]="item.src" style="width: 100%; object-fit: cover; display: block" />
   </ng-template>
 </p-galleria>

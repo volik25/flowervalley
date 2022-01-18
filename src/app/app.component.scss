@@ -138,6 +138,12 @@
   z-index: 10000;
 }
 
+::ng-deep {
+  .p-galleria-close {
+    z-index: 100;
+  }
+}
+
 .cookie {
   font-style: normal;
   font-weight: 500;

@@ -50,5 +50,6 @@ export class CartModalComponent {
     this.cartService.removeFromCart(id);
     const index = this.cart.findIndex((cartItem) => id === cartItem.id);
     this.cart.splice(index, 1);
+    if (this.cart.length === 0) this.hide();
   }
 }
