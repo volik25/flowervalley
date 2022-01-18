@@ -3,6 +3,7 @@ import { BaseApiService } from './base-api.service';
 import { Observable } from 'rxjs';
 import { Category } from '../../_models/category';
 import { CategoryOrder } from '../../_models/category-order';
+import { Step } from '../../_models/step';
 
 @Injectable({
   providedIn: 'root',
@@ -16,5 +17,9 @@ export class CatalogService extends BaseApiService {
 
   public setCategoryOrder(order: CategoryOrder[]): Observable<any> {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/order`, order);
+  }
+
+  public setSteps(categoryId: number, step: { steps: Step[] }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/${categoryId}/steps`, step);
   }
 }

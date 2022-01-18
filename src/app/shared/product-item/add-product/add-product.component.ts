@@ -17,6 +17,7 @@ import { isFormInvalid } from '../../../_utils/formValidCheck';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent {
+  public isTulips: boolean;
   public get isLoading(): boolean {
     return this._isLoading;
   }
@@ -56,6 +57,7 @@ export class AddProductComponent {
   ) {
     this.isImport = config.data.isImport;
     const category = config.data?.category;
+    this.isTulips = category.isTulip || false;
     this.goods = fb.group({
       Name: ['', Validators.required],
       Price: ['', Validators.required],
@@ -82,6 +84,18 @@ export class AddProductComponent {
         this.categories = items.filter((item) => !item.parentId);
       }
       this.product.controls['categoryIds'].setValue([category.id]);
+      if (this.isTulips) {
+        this.product.controls['categoryIds'].disable();
+        this.catalogService.getItemById<Category>(category.id).subscribe(({ steps }) => {
+          if (steps)
+            steps.map((step) => {
+              this.addPriceRange(step.countFrom);
+            });
+        });
+      } else {
+        const index = this.categories.findIndex((item) => item.isTulip);
+        this.categories.splice(index, 1);
+      }
     });
     this.boxService.getItems().subscribe((boxes) => {
       this.boxes = boxes;
@@ -187,17 +201,13 @@ export class AddProductComponent {
     return item as FormGroup;
   }
 
-  public addPriceRange(): void {
-    this.prices.push(
-      this.fb.group({
-        price: [null, Validators.required],
-        countFrom: [null, Validators.required],
-      }),
-    );
-  }
-
-  public deletePriceRange(index: number): void {
-    this.prices.removeAt(index);
+  public addPriceRange(countFrom: number): void {
+    const control = this.fb.group({
+      price: [null, Validators.required],
+      countFrom: [countFrom, Validators.required],
+    });
+    control.controls['countFrom'].disable();
+    this.prices.push(control);
   }
 
   public get isFormArrayValid(): boolean {

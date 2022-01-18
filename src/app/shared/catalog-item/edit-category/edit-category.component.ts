@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../_models/category';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { StorageService } from '../../../_services/front/storage.service';
@@ -26,8 +26,19 @@ export class EditCategoryComponent {
       name: ['', Validators.required],
       img: [''],
       parentId: [null],
+      steps: fb.array([]),
     });
     catalogService.getItems().subscribe((items) => {
+      if (this.category.isTulip) {
+        this.catalogService.getItemById<Category>(this.category.id).subscribe((category) => {
+          this.category.steps = category.steps;
+          this.category.steps
+            ?.sort((item) => item.countFrom)
+            .map((step) => {
+              this.addPriceRange(step);
+            });
+        });
+      }
       this.categories = items;
       this.categoryGroup.patchValue(this.category);
       if (!this.category.parentId) {
@@ -41,20 +52,42 @@ export class EditCategoryComponent {
     const category: Category = this.categoryGroup.getRawValue();
     if (!category.parentId) category.parentId = 0;
     const formData = new FormData();
-    Object.getOwnPropertyNames(category).map((key) => {
-      if (key !== 'img') {
-        // @ts-ignore
-        const value = category[key];
-        formData.append(key, value);
-      }
-    });
+    formData.append('name', category.name);
+    formData.append('parentId', category.parentId.toString());
     formData.append('img', category.img);
     this.catalogService.updateItem<any>(formData, this.category.id).subscribe(() => {
+      if (this.category.isTulip) {
+        this.catalogService.setSteps(this.category.id, { steps: category.steps || [] }).subscribe();
+      }
       this.ref.close({ success: true });
     });
   }
 
   public photoUploaded(photos: File[]): void {
     this.categoryGroup.get('img')?.setValue(photos[0]);
+  }
+
+  public get steps(): FormArray {
+    return this.categoryGroup.controls['steps'] as FormArray;
+  }
+
+  public getFormGroup(item: AbstractControl): FormGroup {
+    return item as FormGroup;
+  }
+
+  public addPriceRange(step?: { id: number; countFrom: number }): void {
+    const control = this.fb.group({
+      countFrom: [null, Validators.required],
+    });
+    if (step) control.patchValue(step);
+    this.steps.push(control);
+  }
+
+  public deletePriceRange(index: number): void {
+    this.steps.removeAt(index);
+  }
+
+  public get isFormArrayValid(): boolean {
+    return this.steps.status === 'VALID';
   }
 }

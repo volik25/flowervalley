@@ -23,6 +23,13 @@ export class ProductItemComponent {
   @Input()
   public set product(value: ProductItem) {
     this._product = value;
+    this.product.initialPrice = this.product.price;
+    if (this.product.prices?.length) {
+      const minPrice = this.product.prices.sort((price) => -price.price)[0];
+      this.product.prices = this.product.prices.sort((price) => -price.countFrom);
+      this.product.price = minPrice.price;
+      this.product.count = minPrice.countFrom;
+    }
   }
   private _product: any;
   public get category(): Category {
@@ -71,7 +78,7 @@ export class ProductItemComponent {
 
   public checkPrice(): void {
     if (this.product) this.product.price = this.product.initialPrice;
-    this.product?.prices.map((price) => {
+    this.product?.prices?.map((price) => {
       if (this.product && this.product.count >= price.countFrom) this.product.price = price.price;
     });
   }
