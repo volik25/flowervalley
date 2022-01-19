@@ -79,7 +79,7 @@ export class ConfirmationGoodsComponent {
 
   public getInvoice(): void {
     this.htmlToPDF.getPDF(
-      ['Товар', 'Цена', 'Количество', 'Стоимость'],
+      ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'],
       this.goods.map((goods) => [goods.name, goods.price, goods.count, goods.price * goods.count]),
       this.priceConvert.transform(this.shippingCost, 'two', 'rub'),
       this.priceConvert.transform(this.getBoxesSum, 'two', 'rub'),
