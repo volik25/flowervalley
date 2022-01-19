@@ -25,11 +25,13 @@
     <ng-template pTemplate="body" let-product>
       <tr class="product">
         <td class="product__name">
-          <div
-            *ngIf="product.photos"
-            class="product__name_img"
-            [ngStyle]="{ 'background-image': 'url(' + product.photos[0].src + ')' }"
-          ></div>
+          <p-image
+            [src]="product.photos[0].src"
+            [alt]="product.name"
+            width="40px"
+            height="40px"
+            [imageStyle]="{ 'border-radius': '5px', 'object-fit': 'cover' }"
+          ></p-image>
           <span [pTooltip]="product.name" tooltipPosition="left">{{ product.name }}</span>
         </td>
         <td class="product__price">{{ product.price | priceConverter: 'two':'rub' }}</td>

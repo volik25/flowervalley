@@ -70,9 +70,11 @@ export class ProductComponent implements OnInit {
           initialPrice: product.price,
         };
         const minPrice = this.product.prices.sort((price) => -price.price)[0];
-        this.product.prices = this.product.prices.sort((price) => -price.countFrom);
-        this.product.price = minPrice.price;
-        this.product.count = minPrice.countFrom;
+        if (minPrice) {
+          this.product.prices = this.product.prices.sort((price) => -price.countFrom);
+          this.product.price = minPrice.price;
+          this.product.count = minPrice.countFrom;
+        }
         if (params) this.setCategories(params, product.name);
       }
       this.ls.removeSubscription(sub);

@@ -33,6 +33,7 @@ import { SalesSettingsComponent } from './sales/settings/sales-settings.componen
 import { ImageModule } from 'primeng/image';
 import { AddSaleComponent } from './sales/add-sale/add-sale.component';
 import { EditSaleComponent } from './sales/edit-sale/edit-sale.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { EditSaleComponent } from './sales/edit-sale/edit-sale.component';
     InputNumberModule,
     SplitButtonModule,
     ImageModule,
+    TooltipModule,
   ],
 })
 export class MainPageModule {}

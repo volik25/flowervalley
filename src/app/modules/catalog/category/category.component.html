@@ -9,7 +9,7 @@
       <flower-valley-category-menu [category]="category"></flower-valley-category-menu>
     </div>
     <div *ngIf="category" class="category__content_items w-12">
-      <div class="grid w-12">
+      <div class="grid w-12" *ngIf="subCatalog?.length">
         <flower-valley-catalog-item
           class="col-12 lg:col-6 xl:col-4 flex justify-content-center"
           pDraggable="catalog"

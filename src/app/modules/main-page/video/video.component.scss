@@ -4,13 +4,6 @@
 $root: '.video';
 
 #{$root} {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-top: 0;
-  @include laptop-media {
-    margin-top: 40px;
-  }
   &__error {
     width: 100%;
     font-weight: 500;
@@ -40,37 +33,19 @@ $root: '.video';
       font-size: 14px;
       line-height: 135%;
       color: $text-grey;
-      height: 95px;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 5;
-      -webkit-box-orient: vertical;
+      &:hover {
+        cursor: pointer;
+      }
+      &.text-hidden {
+        height: 95px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+      }
     }
     &:not(:last-child) {
       margin-bottom: 30px;
-    }
-  }
-  &.start {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    @include laptop-media {
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      .video__container {
-        margin-right: 40px;
-      }
-    }
-  }
-  &.between {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    @include laptop-media {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
     }
   }
   .product__edit {

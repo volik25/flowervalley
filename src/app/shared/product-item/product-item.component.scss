@@ -59,6 +59,7 @@
         border-color: $border-count;
         color: $text-grey;
         .p-button-icon {
+          display: flex;
           &::before {
             font-size: 10px;
           }

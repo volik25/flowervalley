@@ -39,14 +39,6 @@ $root: '.cart';
       border-bottom: 1px solid $border-cart;
       padding-bottom: 10px;
       padding-top: 10px;
-      &-img {
-        width: 42px;
-        height: 42px;
-        border-radius: 5px;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-      }
       &-info {
         display: flex;
         justify-content: space-between;
@@ -72,7 +64,7 @@ $root: '.cart';
               width: auto;
               height: 20px;
               input {
-                width: 30px;
+                width: 40px;
                 font-weight: 500;
                 font-size: 10.3704px;
                 line-height: 110%;
