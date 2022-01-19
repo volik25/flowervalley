@@ -12,7 +12,13 @@
       allowfullscreen
     ></iframe>
     <div>{{ video.title }}</div>
-    <div>{{ video.description }}</div>
+    <div
+      [pTooltip]="getHidden(video.id) ? 'Развернуть' : 'Свернуть'"
+      [ngClass]="{ 'text-hidden': getHidden(video.id) }"
+      (click)="hiddenToggle(video.id)"
+    >
+      {{ video.description }}
+    </div>
     <div class="product__edit" *ngIf="isAdmin">
       <p-button
         class="w-12"

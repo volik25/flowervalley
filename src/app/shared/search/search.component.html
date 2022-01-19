@@ -12,11 +12,12 @@
     inputId="inputtext"
     placeholder="Поиск по товарам"
   >
-    <ng-template let-product pTemplate="item">
-      <b>Наименование:</b>
-      <div>{{ product.name }}</div>
-      <b>Цена:</b>
-      <div>{{ product.price }}</div>
+    <ng-template let-product let-index="index" pTemplate="item">
+      <div class="search__result">
+        <span>{{ index + 1 }}.</span>
+        <span>{{ product.name }}</span>
+        <span>({{ product.price | priceConverter }})</span>
+      </div>
     </ng-template>
   </p-autoComplete>
   <p-button class="search__button">

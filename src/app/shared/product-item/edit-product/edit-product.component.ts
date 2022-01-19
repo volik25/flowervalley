@@ -136,7 +136,8 @@ export class EditProductComponent {
             value.map((price: any) => {
               formData.append(`${key}[]`, JSON.stringify(price));
             });
-          } else formData.append(key, value);
+          } else if ((key.includes('note') && value !== null) || !key.includes('note'))
+            formData.append(key, value);
         });
         this.productService.updateItem<any>(formData, id).subscribe(() => {
           this.isLoading = false;

@@ -51,11 +51,16 @@
       [showNavigators]="banner.isUserCanLeaf"
     >
       <ng-template let-photo pTemplate="item">
-        <img class="carousel__img" [src]="photo.src" (click)="openImage(photo.id)" />
+        <img
+          class="carousel__img"
+          [src]="photo.src"
+          [alt]="banner.title"
+          (click)="openImage(photo.id)"
+        />
       </ng-template>
     </p-carousel>
     <div class="carousel__banner">
-      <img src="assets/icons/shield.png" />
+      <img src="assets/icons/shield.png" alt="Премиальное качество" />
       <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
     </div>
   </div>

@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="contacts__info_mail">
-        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@gmail.com</a>
+        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@mail.com</a>
       </div>
       <div class="contacts__info_timing">
         <div class="contacts__info_timing-title">
@@ -84,7 +84,7 @@
         styleClass="cursor-pointer"
         [width]="photosWidth"
         (click)="openImage(photo.id)"
-        [imageStyle]="{ 'border-radius': '10px' }"
+        [imageStyle]="{ 'border-radius': '10px', height: '100%', 'object-fit': 'cover' }"
       ></p-image>
       <div class="hover" *ngIf="isAdmin">
         <flower-valley-files-upload

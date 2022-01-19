@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Video } from '../../../_models/video';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,18 +11,36 @@ import { EditVideoComponent } from './edit-video/edit-video.component';
   styleUrls: ['./video.component.scss'],
   providers: [DialogService],
 })
-export class VideoComponent {
+export class VideoComponent implements OnInit {
   @Input()
   public isAdmin: boolean = false;
   @Input()
   public videos: Video[] = [];
-
+  public textHidden: { id: number; isHidden: boolean }[] = [];
   constructor(
     private ds: DialogService,
     private ms: MessageService,
     private cs: ConfirmationService,
     private videoService: VideoService,
   ) {}
+
+  public ngOnInit(): void {
+    this.videos.map((video) => {
+      this.textHidden.push({
+        id: video.id,
+        isHidden: true,
+      });
+    });
+  }
+
+  public getHidden(id: number): boolean | undefined {
+    return this.textHidden.find((item) => item.id === id)?.isHidden;
+  }
+
+  public hiddenToggle(id: number): void {
+    const element = this.textHidden.find((item) => item.id === id);
+    if (element) element.isHidden = !element.isHidden;
+  }
 
   public editVideo(video: Video): void {
     const editModal = this.ds.open(EditVideoComponent, {

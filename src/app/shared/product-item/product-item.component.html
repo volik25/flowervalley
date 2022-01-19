@@ -1,12 +1,16 @@
-<div class="product">
+<div class="product" [ngClass]="{ 'cursor-move': isAdmin }">
   <div class="product__header">
-    <div
+    <p-image
+      [src]="product.photos[0].src"
+      [alt]="product.name"
       class="product__header_image"
-      [ngStyle]="{ 'background-image': 'url(\'' + product.photos[0]?.src + '\')' }"
+      width="280"
+      height="180"
+      [imageStyle]="{ 'border-radius': '10px', 'object-fit': 'cover' }"
       (click)="openProductCard.emit(product.id)"
-    ></div>
-    <div class="product__header_title" (click)="openProductCard.emit(product.id)">
-      {{ product.name }}
+    ></p-image>
+    <div class="product__header_title">
+      <span (click)="openProductCard.emit(product.id)">{{ product.name }}</span>
     </div>
   </div>
   <div class="product__interactive">

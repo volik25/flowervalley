@@ -14,12 +14,6 @@
   justify-content: space-between;
   &__header {
     &_image {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      width: 280px;
-      height: 180px;
-      border-radius: 10px;
       cursor: pointer;
     }
     &_title {
@@ -27,9 +21,11 @@
       font-weight: 500;
       font-size: 16px;
       line-height: 110%;
-      &:hover {
-        cursor: pointer;
-        text-decoration: underline;
+      span {
+        &:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -63,6 +59,7 @@
         border-color: $border-count;
         color: $text-grey;
         .p-button-icon {
+          display: flex;
           &::before {
             font-size: 10px;
           }

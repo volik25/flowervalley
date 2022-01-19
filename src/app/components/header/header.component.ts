@@ -1,4 +1,12 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  Renderer2,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CartService } from '../../_services/front/cart.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { ProductItem } from '../../_models/product-item';
@@ -11,6 +19,10 @@ import { OverlayPanel } from 'primeng/overlaypanel';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @ViewChild('menuBar')
+  private menuBar: TemplateRef<ElementRef> | undefined;
+  @ViewChild('menuBtn')
+  private menuBtn: ElementRef | undefined;
   @ViewChild('header')
   private header!: ElementRef;
   @ViewChild('cartPanel')
@@ -30,7 +42,11 @@ export class HeaderComponent implements OnInit {
   public isMenuToggle: boolean = false;
   public cart: ProductItem[] = [];
 
-  constructor(private cartService: CartService, private router: Router) {
+  constructor(
+    private renderer: Renderer2,
+    private cartService: CartService,
+    private router: Router,
+  ) {
     router.events
       .pipe(
         filter((e) => e instanceof NavigationEnd),
@@ -41,6 +57,15 @@ export class HeaderComponent implements OnInit {
         this.menuShow = false;
         this.searchShow = false;
       });
+    renderer.listen('document', 'click', (event: Event) => {
+      if (
+        this.isMenuToggle &&
+        !this.menuBar?.elementRef.nativeElement.contains(event.target) &&
+        !this.menuBtn?.nativeElement.contains(event.target)
+      ) {
+        this.isMenuToggle = false;
+      }
+    });
   }
 
   ngOnInit(): void {

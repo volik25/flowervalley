@@ -8,7 +8,7 @@ footer {
 }
 
 #{$root} {
-  @include fv-container(65px, 65px);
+  @include fv-container(65px, 0);
   display: flex;
   flex-direction: column;
   @include laptop-media {
@@ -230,6 +230,25 @@ footer {
   color: $white-100;
   a {
     padding-left: 10px;
+    color: $white-100;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.advertisement {
+  @include fv-container(10px, 45px);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  color: $white-50;
+  margin-top: 30px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 120%;
+  a {
     color: $white-100;
     text-decoration: none;
     &:hover {
