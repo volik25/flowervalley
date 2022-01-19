@@ -18,7 +18,7 @@
     <ng-template pTemplate="groupheader" let-product>
       <tr pRowGroupHeader>
         <td colspan="5">
-          {{ product.category.name || 'Категория не определена' }}
+          {{ product.category?.name || 'Категория не определена' }}
         </td>
       </tr>
     </ng-template>
