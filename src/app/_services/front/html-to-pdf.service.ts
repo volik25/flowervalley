@@ -35,7 +35,7 @@ export class HtmlToPdfService {
         tableAutoSize: true,
       });
       const documentDefinition = { content: html };
-      pdfMake.createPdf(documentDefinition).download('Смета.pdf');
+      pdfMake.createPdf(documentDefinition).download('Смета_FlowerValley.pdf');
     });
   }
 
