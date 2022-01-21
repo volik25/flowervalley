@@ -11,4 +11,5 @@ export interface Category {
   sale?: any;
   steps?: Step[];
   isTulip: boolean;
+  isSpecial: boolean;
 }

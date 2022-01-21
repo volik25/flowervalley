@@ -37,7 +37,7 @@
       <div class="product__desc_info-tare" *ngIf="product.note1 && product.note1 !== 'undefined'">
         {{ product.note1 }}
       </div>
-      <div class="product__desc_info-description">{{ product.description }}</div>
+      <div class="product__desc_info-description" [innerHTML]="product.description"></div>
       <div class="product__desc_info-categories">
         <div class="title">Категории:</div>
         <div class="cat-array">

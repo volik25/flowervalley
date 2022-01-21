@@ -6,6 +6,7 @@ import { CatalogService } from '../../../../_services/back/catalog.service';
 import { SaleService } from '../../../../_services/back/sale.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { Sale } from '../../../../_models/sale';
+import { Product } from '../../../../_models/product';
 
 @Component({
   selector: 'flower-valley-edit-sale',
@@ -18,6 +19,8 @@ export class EditSaleComponent implements OnInit {
   public sale!: Sale;
   public categories: Category[] = [];
   private photo: File | undefined;
+  public selectedCategory: Category | undefined;
+  public selectedProduct: Product | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -31,13 +34,30 @@ export class EditSaleComponent implements OnInit {
       title: ['', Validators.required],
       description: ['', Validators.required],
       categoryId: [null, Validators.required],
+      productId: [null],
+      currentPrice: [{ value: null, disabled: true }],
+      discount: [null, Validators.required],
+    });
+    this.saleGroup.controls['categoryId'].valueChanges.subscribe((id) => {
+      this.saleGroup.controls['productId'].reset();
+      this.saleGroup.controls['currentPrice'].reset();
+      catalogService.getItemById<Category>(id).subscribe((category) => {
+        this.selectedCategory = category;
+      });
+    });
+    this.saleGroup.controls['productId'].valueChanges.subscribe((id) => {
+      this.selectedProduct = this.selectedCategory?.products?.find((product) => product.id === id);
+      if (this.selectedProduct) {
+        this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+      }
     });
   }
 
   public ngOnInit(): void {
     this.catalogService.getItems().subscribe((items) => {
-      this.categories = items;
+      this.categories = items.filter((item) => item.id !== 1).filter((item) => item.parentId !== 1);
       this.saleGroup.patchValue(this.sale);
+      // console.log(this.sale);
     });
   }
 
@@ -45,6 +65,7 @@ export class EditSaleComponent implements OnInit {
     if (isFormInvalid(this.saleGroup)) return;
     this.isLoading = true;
     const sale = this.saleGroup.getRawValue();
+    delete sale.currentPrice;
     const formData = new FormData();
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore

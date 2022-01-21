@@ -1,4 +1,5 @@
 @import "colors";
+@import "container";
 
 $root: '.carousel';
 
@@ -41,4 +42,16 @@ $root: '.carousel';
   .p-carousel-prev {
     left: 0;
   }
+}
+
+.full-width-img {
+  width: 90vw;
+  height: auto;
+  @include laptop-media {
+    height: 100vh;
+    width: unset;
+  }
+  margin: auto;
+  object-fit: cover;
+  display: block
 }

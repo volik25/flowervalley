@@ -36,7 +36,7 @@ export class ProductItemComponent {
     return this._category;
   }
   @Input()
-  public set category(value: Category) {
+  public set category(value: Category | undefined) {
     this._category = value;
   }
   private _category: any;

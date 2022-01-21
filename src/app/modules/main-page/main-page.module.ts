@@ -18,7 +18,7 @@ import { PipesModule } from '../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { ClientsComponent } from './clients/clients.component';
 import { AddVideoComponent } from './video/add-video/add-video.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditVideoComponent } from './video/edit-video/edit-video.component';
 import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
@@ -34,6 +34,9 @@ import { ImageModule } from 'primeng/image';
 import { AddSaleComponent } from './sales/add-sale/add-sale.component';
 import { EditSaleComponent } from './sales/edit-sale/edit-sale.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { EditorModule } from 'primeng/editor';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @NgModule({
   declarations: [
@@ -73,6 +76,10 @@ import { TooltipModule } from 'primeng/tooltip';
     SplitButtonModule,
     ImageModule,
     TooltipModule,
+    DialogModule,
+    EditorModule,
+    SkeletonModule,
+    FormsModule,
   ],
 })
 export class MainPageModule {}

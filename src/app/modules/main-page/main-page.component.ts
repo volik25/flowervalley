@@ -80,6 +80,7 @@ export class MainPageComponent implements OnInit {
 
   public mainInfo: MainInfo | undefined;
   public catalog: Category[] = [];
+  public categories: Category[] = [];
   public products: ProductItem[] = [];
 
   public ngOnInit(): void {
@@ -95,6 +96,7 @@ export class MainPageComponent implements OnInit {
           };
         });
         this.mainInfo = main as MainInfo;
+        this.categories = catalog as Category[];
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
           .sort((a, b) => a.categoryOrder - b.categoryOrder);
@@ -217,5 +219,9 @@ export class MainPageComponent implements OnInit {
         if (res && res.success) this.loadMainInfo();
       });
     }
+  }
+
+  public getCategory(categoryId: number | undefined): Category | undefined {
+    return this.categories.find((category) => category.id === categoryId);
   }
 }

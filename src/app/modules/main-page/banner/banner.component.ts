@@ -18,6 +18,7 @@ export class BannerComponent {
   private bannerChanged: EventEmitter<any> = new EventEmitter<any>();
   public photos = [];
   public displayCustom: boolean = false;
+  public showContent: boolean = false;
 
   public activeIndex: number = 0;
 

@@ -17,6 +17,7 @@ export class CartGoodsComponent {
 
   constructor(private cartService: CartService, private boxService: BoxGenerateService) {
     this.cartService.cartUpdate().subscribe((cart) => {
+      if (this.boxes.length) this.genBoxes();
       this.goods = cart;
     });
     this.boxService.getBoxes().subscribe((boxes) => {
@@ -63,8 +64,6 @@ export class CartGoodsComponent {
 
   public removeItem(id: string): void {
     this.cartService.removeFromCart(id);
-    const index = this.goods.findIndex((cartItem) => id === cartItem.id);
-    this.goods.splice(index, 1);
   }
 
   public genBoxes(): void {
