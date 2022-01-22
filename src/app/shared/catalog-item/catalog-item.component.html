@@ -20,6 +20,7 @@
       (onClick)="showEditCategoryModal()"
     ></p-button>
     <p-button
+      *ngIf="!item.isSpecial"
       class="w-12"
       styleClass="w-12 p-button-danger"
       label="Удалить"

@@ -27,6 +27,49 @@
     ></p-dropdown>
     <label for="categories">Целевая категория</label>
   </span>
+  <span class="p-float-label" *ngIf="selectedCategory">
+    <p-dropdown
+      styleClass="w-12"
+      inputId="products"
+      [options]="selectedCategory.products || []"
+      optionValue="id"
+      optionLabel="name"
+      formControlName="productId"
+      [autoDisplayFirst]="false"
+      [showClear]="true"
+    ></p-dropdown>
+    <label for="products">Целевой товар (при скидке на товар)</label>
+  </span>
+  <span class="p-float-label" *ngIf="selectedProduct">
+    <p-inputNumber
+      class="w-12"
+      styleClass="w-12"
+      inputId="currentPrice"
+      formControlName="currentPrice"
+    ></p-inputNumber>
+    <label for="currentPrice">Текущая стоимость</label>
+  </span>
+  <span class="p-float-label" *ngIf="selectedProduct">
+    <p-inputNumber
+      class="w-12"
+      styleClass="w-12"
+      inputId="discount"
+      formControlName="discount"
+      [max]="selectedProduct.price"
+    ></p-inputNumber>
+    <label for="discount">Новая стоимость</label>
+  </span>
+  <span class="p-float-label" *ngIf="!selectedProduct">
+    <p-inputNumber
+      class="w-12"
+      styleClass="w-12"
+      inputId="discount"
+      formControlName="discount"
+      [max]="100"
+      suffix="%"
+    ></p-inputNumber>
+    <label for="discount">Скидка, %</label>
+  </span>
   <flower-valley-files-upload
     [multi]="false"
     (uploaded)="filesUploaded($event)"

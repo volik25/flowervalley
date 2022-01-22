@@ -6,6 +6,8 @@ import { CatalogService } from '../../../../_services/back/catalog.service';
 import { SaleService } from '../../../../_services/back/sale.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { Sale } from '../../../../_models/sale';
+import { Product } from '../../../../_models/product';
+import { ProductService } from '../../../../_services/back/product.service';
 
 @Component({
   selector: 'flower-valley-edit-sale',
@@ -18,12 +20,15 @@ export class EditSaleComponent implements OnInit {
   public sale!: Sale;
   public categories: Category[] = [];
   private photo: File | undefined;
+  public selectedCategory: Category | undefined;
+  public selectedProduct: Product | undefined;
 
   constructor(
     private fb: FormBuilder,
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private catalogService: CatalogService,
+    private productService: ProductService,
     private saleService: SaleService,
   ) {
     this.sale = config.data.sale;
@@ -31,12 +36,42 @@ export class EditSaleComponent implements OnInit {
       title: ['', Validators.required],
       description: ['', Validators.required],
       categoryId: [null, Validators.required],
+      productId: [null],
+      currentPrice: [{ value: null, disabled: true }],
+      discount: [null, Validators.required],
+    });
+    this.saleGroup.controls['categoryId'].valueChanges.subscribe((id) => {
+      if (this.selectedProduct) {
+        this.saleGroup.controls['productId'].reset();
+        this.saleGroup.controls['currentPrice'].reset();
+        this.selectedProduct = undefined;
+      }
+      catalogService.getItemById<Category>(id).subscribe((category) => {
+        this.selectedCategory = category;
+      });
+    });
+    this.saleGroup.controls['productId'].valueChanges.subscribe((id) => {
+      if (id) {
+        this.selectedProduct = this.selectedCategory?.products?.find(
+          (product) => product.id === id,
+        );
+        if (this.selectedProduct) {
+          this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+        } else {
+          productService.getItemById<Product>(id).subscribe((product) => {
+            this.selectedProduct = product;
+            this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+          });
+        }
+      } else {
+        this.selectedProduct = undefined;
+      }
     });
   }
 
   public ngOnInit(): void {
     this.catalogService.getItems().subscribe((items) => {
-      this.categories = items;
+      this.categories = items.filter((item) => item.id !== 1).filter((item) => item.parentId !== 1);
       this.saleGroup.patchValue(this.sale);
     });
   }
@@ -45,6 +80,8 @@ export class EditSaleComponent implements OnInit {
     if (isFormInvalid(this.saleGroup)) return;
     this.isLoading = true;
     const sale = this.saleGroup.getRawValue();
+    delete sale.currentPrice;
+    if (!sale.productId) delete sale.productId;
     const formData = new FormData();
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore

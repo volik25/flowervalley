@@ -14,7 +14,10 @@
     </div>
   </div>
   <div class="product__interactive">
-    <div class="product__interactive_price">{{ product.price | priceConverter: 'none':'RUB' }}</div>
+    <div class="product__interactive_price">
+      <span *ngIf="discount">{{ discount | priceConverter }}</span>
+      <span>{{ product.price | priceConverter }}</span>
+    </div>
     <div class="flex align-items-center">
       <p-inputNumber
         [(ngModel)]="product.count"

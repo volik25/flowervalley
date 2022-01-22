@@ -36,9 +36,30 @@
     padding: 15px;
     &_price {
       font-weight: 500;
-      font-size: 32px;
       line-height: 110%;
-      color: $main-green;
+      display: flex;
+      flex-direction: column;
+      &>span:first-child {
+        font-size: 32px;
+        color: $main-green;
+      }
+      &>span:last-child:not(:first-child) {
+        margin-top: 15px;
+        font-size: 18px;
+        color: $text-discount;
+        text-align: center;
+        position: relative;
+        &::before {
+          content: '';
+          width: 100%;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          border-bottom: 1px solid $text-grey;
+          -webkit-transform: skewY(-10deg);
+          transform: skewY(-10deg);
+        }
+      }
     }
     ::ng-deep .p-inputnumber {
       margin-right: 10px;

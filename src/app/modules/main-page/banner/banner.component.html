@@ -6,9 +6,12 @@
       <div class="ng-container__mobile">
         <ng-container *ngTemplateOutlet="carousel"></ng-container>
       </div>
-      <div class="info">
-        {{ banner.description }}
-      </div>
+      <div
+        pTooltip="Показать больше"
+        class="info text-hidden"
+        [innerHTML]="banner.description"
+        (click)="showContent = true"
+      ></div>
       <flower-valley-leaf-button
         title="Каталог тюльпанов"
         styleClass="mt-4"
@@ -17,6 +20,17 @@
       <div *ngIf="isAdmin" class="mt-3 w-12">
         <p-button label="Редактировать" styleClass="w-12" (onClick)="editBanner()"></p-button>
       </div>
+      <p-dialog
+        [header]="banner.title || ''"
+        [(visible)]="showContent"
+        [dismissableMask]="true"
+        [modal]="true"
+        [style]="{ width: '50vw' }"
+        [breakpoints]="{ '1024px': '90vw' }"
+      >
+        <div [innerHTML]="banner.description"></div>
+        <ng-template pTemplate="footer"></ng-template>
+      </p-dialog>
     </div>
     <div class="ng-container__laptop">
       <ng-container *ngTemplateOutlet="carousel"></ng-container>
@@ -51,8 +65,11 @@
       [showNavigators]="banner.isUserCanLeaf"
     >
       <ng-template let-photo pTemplate="item">
+        <p-skeleton *ngIf="!imageElement.complete"></p-skeleton>
         <img
+          #imageElement
           class="carousel__img"
+          [ngClass]="{ 'visibility-hidden': !imageElement.complete }"
           [src]="photo.src"
           [alt]="banner.title"
           (click)="openImage(photo.id)"
@@ -77,6 +94,6 @@
   [showThumbnails]="false"
 >
   <ng-template pTemplate="item" let-item>
-    <img [src]="item.src" style="width: 100%; object-fit: cover; display: block" />
+    <img class="full-width-img" [src]="item.src" [alt]="banner.title" />
   </ng-template>
 </p-galleria>

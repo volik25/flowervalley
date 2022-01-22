@@ -36,7 +36,7 @@ export class ProductItemComponent {
     return this._category;
   }
   @Input()
-  public set category(value: Category) {
+  public set category(value: Category | undefined) {
     this._category = value;
   }
   private _category: any;
@@ -56,8 +56,14 @@ export class ProductItemComponent {
   ) {}
 
   public addToCart(): void {
+    let price = this.product.price;
+    let initialPrice = this.product.initialPrice;
     if (this.category) this.product.category = this.category;
-    this.cartService.addToCart(this.product);
+    if (this.discount) {
+      price = this.discount;
+      initialPrice = this.discount;
+    }
+    this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
   }
 
   public get step(): number {
@@ -112,5 +118,14 @@ export class ProductItemComponent {
         }
       },
     });
+  }
+
+  public get discount(): number | null {
+    const sale = this.product.sale;
+    if (sale && sale.productId) {
+      return sale.discount;
+    }
+
+    return null;
   }
 }

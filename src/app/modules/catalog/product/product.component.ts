@@ -106,10 +106,26 @@ export class ProductComponent implements OnInit {
   }
 
   public addToCart(): void {
+    let price = this.product?.price;
+    let initialPrice = this.product?.initialPrice;
     // @ts-ignore
     this.product.category = this.category;
     // @ts-ignore
-    this.cartService.addToCart(this.product);
+    if (this.discount) {
+      price = this.discount;
+      initialPrice = this.discount;
+    }
+    // @ts-ignore
+    this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
+  }
+
+  public get discount(): number | null {
+    const sale = this.product?.sale;
+    if (sale && sale.productId) {
+      return sale.discount;
+    }
+
+    return null;
   }
 
   private setCategories(params: Params, productName: string): void {

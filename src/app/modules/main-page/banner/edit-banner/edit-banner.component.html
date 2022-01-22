@@ -3,18 +3,7 @@
     <input type="text" id="title" pInputText formControlName="title" />
     <label for="title">Заголовок</label>
   </span>
-  <span class="p-float-label">
-    <textarea
-      type="text"
-      id="description"
-      [rows]="5"
-      [cols]="30"
-      [autoResize]="true"
-      pInputTextarea
-      formControlName="description"
-    ></textarea>
-    <label for="description">Описание</label>
-  </span>
+  <p-editor styleClass="mb-2" formControlName="description" placeholder="Описание"></p-editor>
   <span class="p-float-label">
     <input type="text" id="label" pInputText formControlName="label" />
     <label for="label">Подпись на кнопке</label>

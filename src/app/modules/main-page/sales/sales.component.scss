@@ -43,6 +43,38 @@ $root: '.sales';
               font-size: 16px;
             }
           }
+          &>div:nth-child(3) {
+            display: flex;
+            &>div {
+              display: flex;
+              flex-direction: column;
+              padding-right: 45px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 110%;
+              span:first-child {
+                font-size: 32px;
+                color: $white-100;
+                margin-bottom: 15px;
+              }
+              span:last-child {
+                font-size: 18px;
+                color: $text-discount;
+                text-align: center;
+                position: relative;
+                &::before {
+                  content: '';
+                  width: 100%;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  border-bottom: 1px solid $text-grey;
+                  -webkit-transform: skewY(-10deg);
+                  transform: skewY(-10deg);
+                }
+              }
+            }
+          }
         }
       }
     }
