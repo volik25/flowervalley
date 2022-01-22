@@ -110,7 +110,7 @@
     </span>
     <div class="pl-2">
       <div class="cart__sum">{{ getSum | priceConverter }}</div>
-      <div class="cart__count">{{ getCount }} товар(-ов)</div>
+      <div class="cart__count">{{ getCount | cartCount }}</div>
     </div>
   </div>
 </ng-template>
