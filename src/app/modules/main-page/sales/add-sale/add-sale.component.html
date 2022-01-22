@@ -37,7 +37,7 @@
       formControlName="productId"
       [autoDisplayFirst]="false"
     ></p-dropdown>
-    <label for="products">Целевой товар</label>
+    <label for="products">Целевой товар (при скидке на товар)</label>
   </span>
   <span class="p-float-label" *ngIf="selectedProduct">
     <p-inputNumber
@@ -71,6 +71,7 @@
   </span>
   <flower-valley-files-upload
     [multi]="false"
+    label="Добавить изображение"
     (uploaded)="filesUploaded($event)"
   ></flower-valley-files-upload>
   <p-button type="submit" label="Добавить" [loading]="isLoading"></p-button>

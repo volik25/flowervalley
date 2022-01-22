@@ -64,7 +64,10 @@
         </div>
       </div>
       <div class="product__desc_info-cart">
-        <div class="price">{{ product.price | priceConverter }}</div>
+        <div class="price">
+          <span *ngIf="discount">{{ discount | priceConverter }}</span>
+          <span>{{ product.price | priceConverter }}</span>
+        </div>
         <div class="right-block">
           <div class="count">
             <p-inputNumber

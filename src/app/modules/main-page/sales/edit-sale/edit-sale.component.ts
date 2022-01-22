@@ -7,6 +7,7 @@ import { SaleService } from '../../../../_services/back/sale.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { Sale } from '../../../../_models/sale';
 import { Product } from '../../../../_models/product';
+import { ProductService } from '../../../../_services/back/product.service';
 
 @Component({
   selector: 'flower-valley-edit-sale',
@@ -27,6 +28,7 @@ export class EditSaleComponent implements OnInit {
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
     private catalogService: CatalogService,
+    private productService: ProductService,
     private saleService: SaleService,
   ) {
     this.sale = config.data.sale;
@@ -39,16 +41,30 @@ export class EditSaleComponent implements OnInit {
       discount: [null, Validators.required],
     });
     this.saleGroup.controls['categoryId'].valueChanges.subscribe((id) => {
-      this.saleGroup.controls['productId'].reset();
-      this.saleGroup.controls['currentPrice'].reset();
+      if (this.selectedProduct) {
+        this.saleGroup.controls['productId'].reset();
+        this.saleGroup.controls['currentPrice'].reset();
+        this.selectedProduct = undefined;
+      }
       catalogService.getItemById<Category>(id).subscribe((category) => {
         this.selectedCategory = category;
       });
     });
     this.saleGroup.controls['productId'].valueChanges.subscribe((id) => {
-      this.selectedProduct = this.selectedCategory?.products?.find((product) => product.id === id);
-      if (this.selectedProduct) {
-        this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+      if (id) {
+        this.selectedProduct = this.selectedCategory?.products?.find(
+          (product) => product.id === id,
+        );
+        if (this.selectedProduct) {
+          this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+        } else {
+          productService.getItemById<Product>(id).subscribe((product) => {
+            this.selectedProduct = product;
+            this.saleGroup.controls['currentPrice'].setValue(this.selectedProduct.price);
+          });
+        }
+      } else {
+        this.selectedProduct = undefined;
       }
     });
   }
@@ -57,7 +73,6 @@ export class EditSaleComponent implements OnInit {
     this.catalogService.getItems().subscribe((items) => {
       this.categories = items.filter((item) => item.id !== 1).filter((item) => item.parentId !== 1);
       this.saleGroup.patchValue(this.sale);
-      // console.log(this.sale);
     });
   }
 
@@ -66,6 +81,7 @@ export class EditSaleComponent implements OnInit {
     this.isLoading = true;
     const sale = this.saleGroup.getRawValue();
     delete sale.currentPrice;
+    if (!sale.productId) delete sale.productId;
     const formData = new FormData();
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore

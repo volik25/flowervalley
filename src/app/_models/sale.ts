@@ -8,6 +8,7 @@ export interface Sale {
   categoryId?: number;
   discount: number;
   productId?: number;
+  currentPrice?: number;
   img: string;
   title: string;
 }

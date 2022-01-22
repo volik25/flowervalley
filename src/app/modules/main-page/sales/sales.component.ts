@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { SaleService } from '../../../_services/back/sale.service';
 import { ConfirmationService } from 'primeng/api';
+import { ProductService } from '../../../_services/back/product.service';
 
 @Component({
   selector: 'flower-valley-sales',
@@ -26,6 +27,7 @@ export class SalesComponent {
     private ds: DialogService,
     private router: Router,
     private saleService: SaleService,
+    private productService: ProductService,
     private cs: ConfirmationService,
   ) {}
 
@@ -34,7 +36,7 @@ export class SalesComponent {
       width: '600px',
       header: 'Редактировать акцию',
       data: {
-        sale: { ...sale, categoryId: Number(sale.categoryId) },
+        sale: sale,
       },
     });
     modal.onClose.subscribe((res: { success: boolean }) => {
@@ -57,7 +59,11 @@ export class SalesComponent {
     });
   }
 
-  public navigateTo(categoryName: string): void {
-    this.router.navigate(['catalog', slugify(categoryName)]);
+  public navigateTo(categoryName: string, productId?: string): void {
+    if (productId) {
+      this.router.navigate(['catalog', slugify(categoryName), productId]);
+    } else {
+      this.router.navigate(['catalog', slugify(categoryName)]);
+    }
   }
 }

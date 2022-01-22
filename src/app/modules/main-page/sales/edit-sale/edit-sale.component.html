@@ -36,8 +36,9 @@
       optionLabel="name"
       formControlName="productId"
       [autoDisplayFirst]="false"
+      [showClear]="true"
     ></p-dropdown>
-    <label for="products">Целевой товар</label>
+    <label for="products">Целевой товар (при скидке на товар)</label>
   </span>
   <span class="p-float-label" *ngIf="selectedProduct">
     <p-inputNumber
