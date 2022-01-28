@@ -23,3 +23,7 @@ $root: '.leaf';
     }
   }
 }
+
+:host ::ng-deep .p-button {
+  border: none !important;
+}

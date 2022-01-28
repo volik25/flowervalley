@@ -26,6 +26,7 @@ export class EditCategoryComponent {
       name: ['', Validators.required],
       img: [''],
       parentId: [null],
+      isSeedling: [false],
       steps: fb.array([]),
     });
     catalogService.getItems().subscribe((items) => {
@@ -55,6 +56,7 @@ export class EditCategoryComponent {
     formData.append('name', category.name);
     formData.append('parentId', category.parentId.toString());
     formData.append('img', category.img);
+    formData.append('isSeedling', category.isSeedling.toString());
     this.catalogService.updateItem<any>(formData, this.category.id).subscribe(() => {
       if (this.category.isTulip) {
         this.catalogService.setSteps(this.category.id, { steps: category.steps || [] }).subscribe();

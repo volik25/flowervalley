@@ -101,7 +101,6 @@ export class HtmlToPdfService {
     const title = document.createElement('div');
     title.innerHTML = `<b>Агрофирма Цветочная Долина</b>`;
     title.style.textAlign = 'left';
-    title.style.margin = '8px 0 0 0';
     const headerTable: HTMLTableElement = document.createElement('table');
     headerTable.style.border = '0';
     const htHead = headerTable.createTHead();

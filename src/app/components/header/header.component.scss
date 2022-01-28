@@ -136,7 +136,7 @@ $root: '.header';
       ::ng-deep img {
         width: 53px;
         @include laptop-media {
-          width: 90px;
+          width: 100px;
         }
       }
       &>div {

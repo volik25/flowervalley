@@ -70,6 +70,7 @@ export class CategoryMenuComponent implements OnInit {
       this.menu.push({
         id: item.id,
         name: item.name,
+        isTulip: item.isTulip,
         routerLink: slugify(item.name),
       });
     });
@@ -82,15 +83,19 @@ export class CategoryMenuComponent implements OnInit {
         menuItem.items.push({
           id: item.id,
           name: item.name,
-          routerLink: ['../', this.getRoute(item.name)],
+          isTulip: item.isTulip,
+          routerLink: ['../', this.getRoute(item)],
         });
       });
     });
     return this.menu;
   }
 
-  public getRoute(name: string): string {
-    return slugify(name);
+  public getRoute(item: CategoryMenu | Category): string {
+    if (item.isTulip) {
+      return 'tulips';
+    }
+    return slugify(item.name);
   }
 
   public menuToggle(i: number): void {

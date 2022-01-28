@@ -89,7 +89,7 @@
   </div>
   <div [routerLink]="['']" fragment="about">О компании</div>
   <div [routerLink]="['catalog', 'tulips']">Тюльпаны оптом</div>
-  <div [routerLink]="['catalog', 'flowers']">Рассада цветов</div>
+  <div [routerLink]="['catalog', 'seedlings']">Рассада цветов</div>
   <div [routerLink]="['contacts']">Контакты</div>
   <div *ngIf="menuShow" class="mobile-cart">
     <ng-container *ngTemplateOutlet="cartButton"></ng-container>
@@ -116,7 +116,7 @@
 </ng-template>
 
 <ng-template #pricesButton>
-  <div class="prices">
+  <div class="prices" (click)="goToPriceList()">
     <p-image
       styleClass="flex align-items-center"
       src="assets/icons/download{{ menuShow ? '-green' : '' }}.svg"
