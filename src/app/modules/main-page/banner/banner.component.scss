@@ -171,6 +171,7 @@
   width: 90vw;
   @include laptop-media {
     height: 90vh;
+    width: auto;
   }
   margin: auto;
   object-fit: cover;

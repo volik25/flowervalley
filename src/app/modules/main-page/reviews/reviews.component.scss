@@ -23,8 +23,11 @@ $root: '.carousel';
   color: $text;
   text-align: center;
 }
-
 :host ::ng-deep .p-carousel-indicators {
+  @include laptop-media {
+    bottom: 0;
+  }
+  bottom: -30px;
   .p-carousel-indicator.p-highlight button {
     background-color: $text;
   }
@@ -35,6 +38,10 @@ $root: '.carousel';
 }
 
 :host ::ng-deep .p-carousel-content {
+  @include laptop-media {
+    overflow: auto;
+  }
+  overflow: unset;
   padding: 40px;
   .p-carousel-prev, .p-carousel-next {
     color: $text;

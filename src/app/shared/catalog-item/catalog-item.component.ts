@@ -26,6 +26,9 @@ export class CatalogItemComponent {
   }
 
   public get routerLink(): string {
+    if (this.item.isTulip) {
+      return 'tulips';
+    }
     return slugify(this.item?.name || '');
   }
 

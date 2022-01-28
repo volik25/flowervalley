@@ -18,9 +18,16 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CategoryMenuComponent } from './category/category-menu/category-menu.component';
 import { OrderListModule } from 'primeng/orderlist';
+import { SeedlingsComponent } from './seedlings/seedlings.component';
 
 @NgModule({
-  declarations: [CatalogComponent, CategoryComponent, ProductComponent, CategoryMenuComponent],
+  declarations: [
+    CatalogComponent,
+    CategoryComponent,
+    ProductComponent,
+    CategoryMenuComponent,
+    SeedlingsComponent,
+  ],
   imports: [
     CommonModule,
     CatalogRoutingModule,

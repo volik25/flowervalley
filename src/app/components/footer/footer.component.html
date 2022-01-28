@@ -13,7 +13,7 @@
         <div [routerLink]="['/catalog']">Каталог</div>
         <div [routerLink]="['']" fragment="about">О компании</div>
         <div [routerLink]="['catalog', 'tulips']">Тюльпаны оптом</div>
-        <div [routerLink]="['catalog', 'flowers']">Рассада цветов</div>
+        <div [routerLink]="['catalog', 'seedlings']">Рассада цветов</div>
         <div [routerLink]="['contacts']">Контакты</div>
         <div class="price">
           <ng-container *ngTemplateOutlet="priceButton"></ng-container>
@@ -81,7 +81,7 @@
 </ng-template>
 
 <ng-template #priceButton>
-  <p-button>
+  <p-button (onClick)="goToPriceList()">
     <ng-template pTemplate="content">
       <p-image
         styleClass="flex align-items-center"

@@ -71,4 +71,8 @@ export class CartService {
     });
     return product.price;
   }
+
+  public get isTulipsInclude(): boolean {
+    return !!CartService.getCart().find((item) => item.categoryId === 1 || item.category?.id === 1);
+  }
 }

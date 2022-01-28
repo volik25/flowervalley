@@ -17,6 +17,10 @@
     <input type="text" id="name" pInputText formControlName="name" />
     <label for="name">Название</label>
   </span>
+  <div class="p-field-checkbox mb-2">
+    <p-checkbox formControlName="isSeedling" [binary]="true" inputId="isSeedling"></p-checkbox>
+    <label for="isSeedling">Добавить в раздел рассад?</label>
+  </div>
   <ng-container formArrayName="steps">
     <ng-container *ngFor="let step of steps.controls; let i = index">
       <div [formGroup]="getFormGroup(step)" class="flex align-items-center">

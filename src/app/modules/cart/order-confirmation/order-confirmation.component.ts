@@ -76,6 +76,11 @@ export class OrderConfirmationComponent {
         }
         this.cdr.detectChanges();
       });
+    if (this.cartService.isTulipsInclude) {
+      this.pickUp.setValue(true);
+      this.pickUp.disable();
+      this.contacts.controls['address'].disable();
+    }
     this.pickUp.valueChanges.subscribe((value) => {
       if (value) {
         this.shippingCost = undefined;
