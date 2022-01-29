@@ -92,4 +92,10 @@ export class BoxGenerateService {
   public getBoxes(): Observable<BoxItem[]> {
     return this._boxesUpdate.asObservable();
   }
+
+  public getBoxesSum(): number {
+    let sum = 0;
+    this.boxes.map((item) => (sum += item.price * item.count));
+    return sum;
+  }
 }

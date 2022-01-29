@@ -11,6 +11,9 @@ import { isFormInvalid } from '../../../_utils/formValidCheck';
 import { Invoice } from '../../../_models/business-pack/invoice';
 import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
 import { CartService } from '../../../_services/front/cart.service';
+import { ProductService } from '../../../_services/back/product.service';
+import { Order, ProductOrder } from '../../../_models/order';
+import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -43,6 +46,8 @@ export class OrderConfirmationComponent {
     private cdr: ChangeDetectorRef,
     private bpService: BusinessPackService,
     private cartService: CartService,
+    private productService: ProductService,
+    private boxService: BoxGenerateService,
     private messageService: MessageService,
     private router: Router,
     private route: ActivatedRoute,
@@ -131,19 +136,23 @@ export class OrderConfirmationComponent {
 
   public confirmOrder(): void {
     if (isFormInvalid(this.contacts)) return;
+    const order = this.getOrderData();
     if (this.clientType === 'entity') {
       if (isFormInvalid(this.entityData)) return;
       this.isInvoiceLoading = true;
       this.entityData.disable();
       this.createInvoice();
+      this.productService.sendOrder(order);
     } else {
       this.isInvoiceLoading = true;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Заказ оформлен',
-        detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
+      this.productService.sendOrder(order).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Заказ оформлен',
+          detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
+        });
+        this.isInvoiceLoading = false;
       });
-      this.isInvoiceLoading = false;
     }
   }
 
@@ -225,5 +234,28 @@ export class OrderConfirmationComponent {
     if (i === 1) {
       this.clientType = 'entity';
     }
+  }
+
+  private getOrderData(): Order {
+    const contacts = this.contacts.getRawValue();
+    const products: ProductOrder[] = [];
+    this.goods.map((product) => {
+      products.push({
+        id: product.id,
+        price: product.price,
+        count: product.count,
+      });
+    });
+    const order: Order = {
+      email: contacts.email,
+      fullName: contacts.name,
+      phone: contacts.phone,
+      address: contacts.address ? contacts.address : 'Самовывоз',
+      products: products,
+    };
+    if (this.shippingCost) order.deliveryPrice = this.shippingCost;
+    const boxesSum = this.boxService.getBoxesSum();
+    if (boxesSum) order.boxesPrice = boxesSum;
+    return order;
   }
 }
