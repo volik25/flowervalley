@@ -128,6 +128,13 @@ export class ProductComponent implements OnInit {
     return null;
   }
 
+  public get percentDiscount(): number | null {
+    if (this.discount && this.product) {
+      return 100 - Math.ceil((this.discount / this.product.price) * 100);
+    }
+    return null;
+  }
+
   private setCategories(params: Params, productName: string): void {
     const categoryRoute = params['category'];
     let catalog = this.storageService.getItem<Category[]>(categoriesKey) || [];

@@ -18,6 +18,7 @@ $root: '.product';
       flex-direction: row;
     }
     &_photo {
+      position: relative;
       ::ng-deep {
         .main-image {
           img {
@@ -45,6 +46,23 @@ $root: '.product';
             object-fit: cover;
           }
         }
+      }
+      &>span {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: $white-100;
+        background-color: $main-green;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 110%;
       }
     }
     &_info {

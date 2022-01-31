@@ -68,9 +68,7 @@
     </div>
     <div class="summary-block__summary">
       <span>Итог:</span>
-      <span>{{
-        getSum + getBoxesCount * getBoxesSum + shippingCost | priceConverter: 'two':'rub'
-      }}</span>
+      <span>{{ getSum + getBoxesSum + shippingCost | priceConverter: 'two':'rub' }}</span>
     </div>
   </div>
 </p-card>

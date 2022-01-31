@@ -9,6 +9,7 @@
       [imageStyle]="{ 'border-radius': '10px', 'object-fit': 'cover' }"
       (click)="openProductCard.emit(product.id)"
     ></p-image>
+    <span *ngIf="percentDiscount">Скидка {{ percentDiscount }}%</span>
     <div class="product__header_title">
       <span (click)="openProductCard.emit(product.id)">{{ product.name }}</span>
     </div>

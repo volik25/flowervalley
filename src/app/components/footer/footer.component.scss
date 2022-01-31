@@ -8,7 +8,7 @@ footer {
 }
 
 #{$root} {
-  @include fv-container(65px, 0);
+  @include fv-container(65px, 65px);
   display: flex;
   flex-direction: column;
   @include laptop-media {

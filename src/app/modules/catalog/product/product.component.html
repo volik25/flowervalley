@@ -32,6 +32,7 @@
           <img [src]="item.src" style="width: 100%; display: block" />
         </ng-template>
       </p-galleria>
+      <span *ngIf="percentDiscount">Скидка {{ percentDiscount }}%</span>
     </div>
     <div class="product__desc_info">
       <div class="product__desc_info-tare" *ngIf="product.note1 && product.note1 !== 'undefined'">

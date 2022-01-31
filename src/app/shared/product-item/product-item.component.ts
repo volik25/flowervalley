@@ -128,4 +128,11 @@ export class ProductItemComponent {
 
     return null;
   }
+
+  public get percentDiscount(): number | null {
+    if (this.discount) {
+      return 100 - Math.ceil((this.discount / this.product.price) * 100);
+    }
+    return null;
+  }
 }

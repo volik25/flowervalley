@@ -13,8 +13,26 @@
   flex-direction: column;
   justify-content: space-between;
   &__header {
+    position: relative;
     &_image {
       cursor: pointer;
+    }
+    &>span {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: $white-100;
+      background-color: $main-green;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 110%;
     }
     &_title {
       padding: 20px 20px 30px;
