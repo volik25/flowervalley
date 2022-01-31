@@ -41,7 +41,12 @@
   </div>
   <div class="cart__footer">
     <div>
-      <p-button [routerLink]="['cart']" (onClick)="hide()" label="ПЕРЕЙТИ В КОРЗИНУ"></p-button>
+      <p-button
+        styleClass="uppercase"
+        [routerLink]="['cart']"
+        (onClick)="hide()"
+        label="Перейти в корзину"
+      ></p-button>
       <div>
         <span>ИТОГО:</span>
         <span>{{ getSum | priceConverter }}</span>

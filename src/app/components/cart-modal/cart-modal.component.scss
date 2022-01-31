@@ -6,7 +6,9 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  text-transform: uppercase;
+  .uppercase {
+    text-transform: uppercase;
+  }
   &:enabled {
     &:hover, &:active {
       background-color: $dark-green;
