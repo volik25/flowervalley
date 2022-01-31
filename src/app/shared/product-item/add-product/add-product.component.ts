@@ -63,10 +63,10 @@ export class AddProductComponent {
       Price: ['', Validators.required],
       NDS: [0, Validators.required],
       NDSMode: [0, Validators.required],
-      Volume: [],
+      Volume: ['00~Pvjh0000F'],
       Note1: [''],
       Note2: [''],
-      Pack: [],
+      Pack: ['00~Pvjh0000F'],
       Coefficient: [''],
     });
     this.product = fb.group({
