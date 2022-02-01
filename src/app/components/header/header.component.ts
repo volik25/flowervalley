@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
   @HostListener('window:scroll')
   private scrollTop() {
     if (this.cartPanel) this.cartPanel.hide();
-    if (document.documentElement.scrollTop > 100) {
+    if (document.documentElement.scrollTop > 150) {
       this.header.nativeElement.classList.add('scrolled');
     } else {
       this.header.nativeElement.classList.remove('scrolled');

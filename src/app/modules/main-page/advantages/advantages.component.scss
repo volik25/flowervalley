@@ -44,11 +44,6 @@ $root: '.advantages';
         flex-direction: column;
         color: $white-100;
         &>div:first-child {
-          &.individual {
-            @include laptop-media {
-              align-items: flex-start;
-            }
-          }
           display: flex;
           align-items: center;
           &>div:first-child {
@@ -69,20 +64,17 @@ $root: '.advantages';
             }
           }
           &>div:last-child {
-            &.individual {
-              margin-right: -60px;
-              @include laptop-media {
-                padding-right: 60px;
-                padding-top: 0;
-              }
-            }
             font-weight: 500;
             font-size: 18px;
             line-height: 135%;
             padding-top: 15px;
             padding-bottom: 15px;
             margin-left: 15px;
+            display: flex;
+            align-items: center;
+            flex: 1 1;
             @include laptop-media {
+              height: 100px;
               font-size: 22px;
             }
           }

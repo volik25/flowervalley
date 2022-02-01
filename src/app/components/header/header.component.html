@@ -4,11 +4,13 @@
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
       <div class="flex-column justify-content-center pl-2">
         <div class="title">Агрофирма<br />Цветочная Долина</div>
-        <div>Тепличное хозяйство</div>
+        <div class="sub-title">Тепличное хозяйство</div>
       </div>
     </div>
-    <ng-container *ngTemplateOutlet="contacts"></ng-container>
-    <div>
+    <div class="header__contacts_data">
+      <ng-container *ngTemplateOutlet="contacts"></ng-container>
+    </div>
+    <div class="header__contacts_button">
       <a
         class="whats-app-button p-2"
         href="https://api.whatsapp.com/send/?phone=79151091000"
