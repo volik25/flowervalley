@@ -142,6 +142,11 @@ export class ProductComponent implements OnInit {
       const category = catalog.find((item) => slugify(item.name) === categoryRoute);
       if (category) {
         this.getProductsList(category, productName);
+      } else if (categoryRoute === 'tulips') {
+        const tulips = catalog.find((item) => item.id === 1);
+        if (tulips) {
+          this.getProductsList(tulips, productName);
+        }
       }
     } else {
       const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
@@ -150,6 +155,11 @@ export class ProductComponent implements OnInit {
         const category = catalog.find((item) => slugify(item.name) === categoryRoute);
         if (category) {
           this.getProductsList(category, productName);
+        } else if (categoryRoute === 'tulips') {
+          const tulips = catalog.find((item) => item.id === 1);
+          if (tulips) {
+            this.getProductsList(tulips, productName);
+          }
         }
         this.ls.removeSubscription(sub);
       });
