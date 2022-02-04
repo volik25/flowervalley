@@ -5,7 +5,7 @@
       [alt]="product.name"
       class="product__header_image"
       width="280"
-      height="180"
+      [height]="category.id === 1 ? '380' : '180'"
       [imageStyle]="{ 'border-radius': '10px', 'object-fit': 'cover' }"
       (click)="openProductCard.emit(product.id)"
     ></p-image>

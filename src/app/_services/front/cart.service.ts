@@ -31,6 +31,7 @@ export class CartService {
       } else {
         cartUpdated.push(item);
       }
+      cartUpdated = this.updateTulipPrices(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     } else {
@@ -45,6 +46,7 @@ export class CartService {
       let cartUpdated: ProductItem[] = JSON.parse(cart);
       const index = cartUpdated.findIndex((cartItem) => id === cartItem.id);
       cartUpdated.splice(index, 1);
+      cartUpdated = this.updateTulipPrices(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     }
@@ -59,20 +61,39 @@ export class CartService {
         product.count = item.count;
         product.price = this.checkPrice(product);
       }
+      cartUpdated = this.updateTulipPrices(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     }
   }
 
-  private checkPrice(product: ProductItem): number {
+  private checkPrice(product: ProductItem, sum?: number): number {
     if (product) product.price = product.initialPrice;
     product.prices.map((price) => {
-      if (product && product.count >= price.countFrom) product.price = price.price;
+      if (sum) {
+        if (product && sum >= price.countFrom) product.price = price.price;
+      } else {
+        if (product && product.count >= price.countFrom) product.price = price.price;
+      }
     });
     return product.price;
   }
 
   public get isTulipsInclude(): boolean {
     return !!CartService.getCart().find((item) => item.categoryId === 1 || item.category?.id === 1);
+  }
+
+  private updateTulipPrices(cart: ProductItem[]): ProductItem[] {
+    const tulips = cart.filter((item) => item.category?.id === 1);
+    let sum = 0;
+    tulips.map((item) => {
+      sum += item.count;
+    });
+    tulips.map((item) => {
+      item.price = this.checkPrice(item, sum);
+      const index = cart.findIndex((cartItem) => cartItem.id === item.id);
+      cart[index] = item;
+    });
+    return cart;
   }
 }
