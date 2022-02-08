@@ -1,3 +1,7 @@
+<div class="p-field-checkbox mb-2">
+  <p-checkbox [(ngModel)]="isWatermark" [binary]="true" inputId="isWatermark"></p-checkbox>
+  <label for="isWatermark">Добавить водяной знак</label>
+</div>
 <p-fileUpload
   #fileUpload
   styleClass="mb-2"
@@ -8,7 +12,7 @@
   [auto]="true"
   (uploadHandler)="uploadFiles($event.files)"
 ></p-fileUpload>
-<div class="grid mt-2" *ngIf="!showOnlyButton">
+<div class="grid" *ngIf="!showOnlyButton && photos.length">
   <div class="img col-3" *ngFor="let photo of photos; let i = index">
     <p-image [src]="photo.objectURL" width="100"></p-image>
     <p-button styleClass="p-button-danger" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>

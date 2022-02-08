@@ -192,7 +192,7 @@ export class ProductComponent implements OnInit {
       header: 'Редактировать товар',
       width: '600px',
       data: {
-        product: this.product,
+        product: { ...this.product, price: this.product?.initialPrice },
       },
     });
     modal.onClose.subscribe((res: { success: boolean }) => {
@@ -200,8 +200,14 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  public getRouterLink(string: string): void {
-    this.router.navigate(['catalog', slugify(string)], { relativeTo: this.route.parent?.parent });
+  public getRouterLink(category: Category): void {
+    let route;
+    if (category.id === 1) {
+      route = 'tulips';
+    } else {
+      route = slugify(category.name);
+    }
+    this.router.navigate(['catalog', route], { relativeTo: this.route.parent?.parent });
   }
 
   public getOtherProduct(id: string): void {

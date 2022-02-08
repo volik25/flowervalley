@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileUpload } from 'primeng/fileupload';
+// @ts-ignore
+import watermark from 'watermarkjs/dist/watermark';
 
 @Component({
   selector: 'flower-valley-files-upload',
@@ -19,6 +21,7 @@ export class FilesUploadComponent {
   public showOnlyButton: boolean = false;
   @Output()
   public uploaded: EventEmitter<File[]> = new EventEmitter<File[]>();
+  public isWatermark: boolean = false;
   constructor(private sanitizer: DomSanitizer) {}
 
   public set photos(files) {
@@ -37,10 +40,33 @@ export class FilesUploadComponent {
     return this._photos;
   }
 
-  public uploadFiles(files: File[]): void {
-    this.photos = this.photos.concat(files);
-    this.fileUpload?.clear();
-    this.uploaded.emit(this.photos);
+  public async uploadFiles(files: File[]): Promise<void> {
+    if (this.isWatermark) {
+      await Promise.all(
+        files.map(async (file) => {
+          const img = await this.setWatermark(file);
+          this.photos = [...this.photos, img];
+        }),
+      );
+      this.fileUpload?.clear();
+      this.uploaded.emit(this.photos);
+    } else {
+      this.photos = this.photos.concat(files);
+      this.fileUpload?.clear();
+      this.uploaded.emit(this.photos);
+    }
+  }
+
+  public setWatermark(file: File): Promise<Blob> {
+    return watermark([file, 'assets/images/logo.png']).blob((img: any, logo: any) => {
+      let context = img.getContext('2d');
+      context.save();
+      context.globalAlpha = 0.7;
+      context.drawImage(logo, 10, 10, 150, 123.55);
+
+      context.restore();
+      return img;
+    });
   }
 
   public removeImage(i: number): void {

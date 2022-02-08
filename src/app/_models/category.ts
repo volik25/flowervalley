@@ -12,4 +12,5 @@ export interface Category {
   steps?: Step[];
   isTulip: boolean;
   isSeedling: boolean;
+  isBlocked: boolean;
 }
