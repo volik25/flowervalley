@@ -17,9 +17,13 @@
     <input type="text" id="name" pInputText formControlName="name" />
     <label for="name">Название</label>
   </span>
-  <div class="p-field-checkbox mb-2">
+  <div class="p-field-checkbox mb-2" *ngIf="category.id !== 1">
     <p-checkbox formControlName="isSeedling" [binary]="true" inputId="isSeedling"></p-checkbox>
-    <label for="isSeedling">Добавить в раздел рассад?</label>
+    <label for="isSeedling">Добавить в раздел рассад</label>
+  </div>
+  <div class="p-field-checkbox mb-2">
+    <p-checkbox formControlName="isBlocked" [binary]="true" inputId="isBlocked"></p-checkbox>
+    <label for="isBlocked">Заблокировать продажи</label>
   </div>
   <ng-container formArrayName="steps">
     <ng-container *ngFor="let step of steps.controls; let i = index">

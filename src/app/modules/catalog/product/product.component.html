@@ -44,7 +44,7 @@
         <div class="cat-array">
           <span
             *ngFor="let category of product.categories; let last = last"
-            (click)="getRouterLink(category.name)"
+            (click)="getRouterLink(category)"
           >
             <span>{{ category.name }}</span>
             <span *ngIf="!last">,</span>
@@ -86,7 +86,7 @@
             </p-inputNumber>
           </div>
           <div class="button">
-            <p-button (onClick)="addToCart()">
+            <p-button (onClick)="addToCart()" [disabled]="category ? category.isBlocked : true">
               <ng-template pTemplate="content">
                 <p-image
                   styleClass="flex align-items-center"

@@ -27,6 +27,7 @@ export class EditCategoryComponent {
       img: [''],
       parentId: [null],
       isSeedling: [false],
+      isBlocked: [false],
       steps: fb.array([]),
     });
     catalogService.getItems().subscribe((items) => {
@@ -42,6 +43,9 @@ export class EditCategoryComponent {
       }
       this.categories = items;
       this.categoryGroup.patchValue(this.category);
+      if (this.category.isBlocked) {
+        this.categoryGroup.controls['isBlocked'].setValue(true);
+      }
       if (!this.category.parentId) {
         this.categoryGroup.get('parentId')?.setValue(null);
       }
@@ -57,6 +61,10 @@ export class EditCategoryComponent {
     formData.append('parentId', category.parentId.toString());
     formData.append('img', category.img);
     formData.append('isSeedling', category.isSeedling.toString());
+    formData.append('isBlocked', category.isBlocked.toString());
+    if (this.category.id === 1) {
+      formData.append('isTulip', 'true');
+    }
     this.catalogService.updateItem<any>(formData, this.category.id).subscribe(() => {
       if (this.category.isTulip) {
         this.catalogService.setSteps(this.category.id, { steps: category.steps || [] }).subscribe();

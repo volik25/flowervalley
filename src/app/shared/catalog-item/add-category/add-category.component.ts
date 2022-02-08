@@ -23,6 +23,8 @@ export class AddCategoryComponent {
       name: ['', Validators.required],
       img: [''],
       parentId: [null],
+      isSeedling: [false],
+      isBlocked: [false],
     });
     const categoryId = config.data?.categoryId;
     catalogService.getItems().subscribe((items) => {

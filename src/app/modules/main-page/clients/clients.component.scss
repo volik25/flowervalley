@@ -8,7 +8,8 @@ $root: '.carousel';
     justify-content: center;
     &_img {
       width: 200px;
-      height: auto;
+      height: 150px;
+      object-fit: scale-down;
       cursor: pointer;
     }
   }
