@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../_services/front/cart.service';
 import { ProductItem } from '../../_models/product-item';
 import { DialogService } from 'primeng/dynamicdialog';
-import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductService } from '../../_services/back/product.service';
-import { LoadingService } from '../../_services/front/loading.service';
 import { ConfirmationService } from 'primeng/api';
 import { Category } from '../../_models/category';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'flower-valley-product-item',
@@ -52,7 +51,7 @@ export class ProductItemComponent {
     private ds: DialogService,
     private productService: ProductService,
     private confirmationService: ConfirmationService,
-    private ls: LoadingService,
+    private router: Router,
   ) {}
 
   public addToCart(): void {
@@ -89,21 +88,8 @@ export class ProductItemComponent {
     });
   }
 
-  public showEditProductModal(id: string): void {
-    const sub = this.productService.getItemById(id).subscribe((product) => {
-      this.ls.removeSubscription(sub);
-      const modal = this.ds.open(EditProductComponent, {
-        header: 'Редактировать товар',
-        width: '600px',
-        data: {
-          product: product,
-        },
-      });
-      modal.onClose.subscribe((res: { success: boolean }) => {
-        if (res?.success) this.productUpdated.emit();
-      });
-    });
-    this.ls.addSubscription(sub);
+  public editProduct(id: string): void {
+    this.router.navigate(['admin/edit/product', id]);
   }
 
   public deleteProduct(): void {

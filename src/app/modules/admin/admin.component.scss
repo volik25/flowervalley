@@ -1,0 +1,7 @@
+@import "container";
+
+$root: '.container';
+
+#{$root} {
+  @include fv-container(20px, 20px);
+}

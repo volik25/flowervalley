@@ -10,9 +10,7 @@ import { StorageService } from '../../../_services/front/storage.service';
 import { categoriesKey } from '../../../_utils/constants';
 import { AdminService } from '../../../_services/back/admin.service';
 import { ProductItem } from '../../../_models/product-item';
-import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 import { LoadingService } from '../../../_services/front/loading.service';
-import { AddCategoryComponent } from '../../../shared/catalog-item/add-category/add-category.component';
 import { ProductService } from '../../../_services/back/product.service';
 import { ProductOrder } from '../../../_models/product-order';
 import { CategoryOrder } from '../../../_models/category-order';
@@ -86,51 +84,62 @@ export class CategoryComponent implements OnInit {
   }
 
   public showAddProductModal(isImport: boolean = false): void {
-    const modal = this.ds.open(AddProductComponent, {
-      header: 'Добавить товар',
-      width: '600px',
-      data: {
+    this.router.navigate(['admin/add/product'], {
+      queryParams: {
         isImport: isImport,
-        category: this.category,
+        category: this.category?.id,
       },
     });
-    modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
-      if (res) {
-        if (res.success) {
-          this.updateProducts();
-        }
-        if (res.reject) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Дублирование товара',
-            detail: 'Данный товар уже добавлен в систему',
-          });
-        }
-      }
-    });
+    // const modal = this.ds.open(AddProductComponent, {
+    //   header: 'Добавить товар',
+    //   width: '600px',
+    //   data: {
+    //     isImport: isImport,
+    //     category: this.category,
+    //   },
+    // });
+    // modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
+    //   if (res) {
+    //     if (res.success) {
+    //       this.updateProducts();
+    //     }
+    //     if (res.reject) {
+    //       this.messageService.add({
+    //         severity: 'error',
+    //         summary: 'Дублирование товара',
+    //         detail: 'Данный товар уже добавлен в систему',
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   public showAddCategoryModal(): void {
-    const modal = this.ds.open(AddCategoryComponent, {
-      header: 'Добавить группу товаров',
-      width: '600px',
-      data: {
+    this.router.navigate(['admin/add/category'], {
+      queryParams: {
         categoryId: this.category?.id,
       },
     });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res && res.success) {
-        const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
-          this.catalog = categoriesApi;
-          this.subCatalog = this.catalog
-            .filter((item) => item.parentId === this.category?.id)
-            .sort((a, b) => a.categoryOrder - b.categoryOrder);
-          this.storageService.setItem(categoriesKey, categoriesApi);
-          this.ls.removeSubscription(sub);
-        });
-        this.ls.addSubscription(sub);
-      }
-    });
+    // const modal = this.ds.open(AddCategoryComponent, {
+    //   header: 'Добавить группу товаров',
+    //   width: '600px',
+    //   data: {
+    //     categoryId: this.category?.id,
+    //   },
+    // });
+    // modal.onClose.subscribe((res: { success: boolean }) => {
+    //   if (res && res.success) {
+    //     const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
+    //       this.catalog = categoriesApi;
+    //       this.subCatalog = this.catalog
+    //         .filter((item) => item.parentId === this.category?.id)
+    //         .sort((a, b) => a.categoryOrder - b.categoryOrder);
+    //       this.storageService.setItem(categoriesKey, categoriesApi);
+    //       this.ls.removeSubscription(sub);
+    //     });
+    //     this.ls.addSubscription(sub);
+    //   }
+    // });
   }
 
   private setCategories(categoryRoute: string): void {

@@ -70,9 +70,5 @@
 </flower-valley-container>
 
 <ng-template #boxesTemplate>
-  <p-splitButton
-    label="Коробки транспортировочные"
-    (onClick)="showBoxesListModal()"
-    [model]="actions"
-  ></p-splitButton>
+  <p-button label="Коробки транспортировочные" (onClick)="navigateToBoxes()"></p-button>
 </ng-template>

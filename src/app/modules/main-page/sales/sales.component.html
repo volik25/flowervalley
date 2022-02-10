@@ -25,7 +25,7 @@
               <div class="mt-3">
                 <p-button
                   label="Редактировать"
-                  (onClick)="showEditSaleModal(sale)"
+                  (onClick)="editSale(sale.id)"
                   *ngIf="isAdmin"
                 ></p-button
                 ><p-button

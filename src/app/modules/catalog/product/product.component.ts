@@ -11,7 +11,6 @@ import { CatalogService } from '../../../_services/back/catalog.service';
 import { Category } from '../../../_models/category';
 import { categoriesKey } from '../../../_utils/constants';
 import { slugify } from 'transliteration';
-import { EditProductComponent } from '../../../shared/product-item/edit-product/edit-product.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AdminService } from '../../../_services/back/admin.service';
 import { take } from 'rxjs/operators';
@@ -188,16 +187,7 @@ export class ProductComponent implements OnInit {
   }
 
   public editProduct(): void {
-    const modal = this.dialogService.open(EditProductComponent, {
-      header: 'Редактировать товар',
-      width: '600px',
-      data: {
-        product: { ...this.product, price: this.product?.initialPrice },
-      },
-    });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res?.success && this.product?.id) this.getProductById(this.product.id);
-    });
+    this.router.navigate(['admin/edit/product', this.product?.id]);
   }
 
   public getRouterLink(category: Category): void {

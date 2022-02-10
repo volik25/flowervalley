@@ -62,7 +62,7 @@ export class BreadcrumbService {
       case '/cart/download-invoice':
         return false;
       default:
-        return !this.url.includes('/#');
+        return !(this.url.includes('/#') || this.url.includes('admin'));
     }
   }
 

@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { slugify } from 'transliteration';
 import { Category } from '../../_models/category';
 import { DialogService } from 'primeng/dynamicdialog';
-import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { CatalogService } from '../../_services/back/catalog.service';
 import { ConfirmationService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'flower-valley-catalog-item',
@@ -41,19 +41,11 @@ export class CatalogItemComponent {
     private ds: DialogService,
     private confirmationService: ConfirmationService,
     private catalogService: CatalogService,
+    private router: Router,
   ) {}
 
-  public showEditCategoryModal(): void {
-    const modal = this.ds.open(EditCategoryComponent, {
-      header: 'Редактировать категорию',
-      width: '600px',
-      data: {
-        category: this.item,
-      },
-    });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res?.success) this.categoryUpdated.emit();
-    });
+  public editCategory(): void {
+    this.router.navigate(['admin/edit/category', this.item.id]);
   }
 
   public deleteCategory(): void {

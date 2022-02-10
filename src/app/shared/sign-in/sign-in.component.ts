@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../_services/back/admin.service';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'flower-valley-sign-in',
@@ -16,10 +16,9 @@ export class SignInComponent {
     private fb: FormBuilder,
     private adminService: AdminService,
     private ref: DynamicDialogRef,
+    private config: DynamicDialogConfig,
   ) {
-    adminService.checkAdmin().subscribe((isAdmin) => {
-      this.isAdmin = isAdmin;
-    });
+    this.isAdmin = config.data.isAdmin;
     this.passwordForm = fb.group({
       password: ['', Validators.required],
     });
