@@ -1,9 +1,9 @@
-<flower-valley-container headerTitle="Добавить товар">
+<flower-valley-container headerTitle="{{ isImport ? 'Импортировать' : 'Добавить' }} товар">
   <span class="p-float-label" *ngIf="isImport">
     <p-autoComplete
       styleClass="w-12"
-      [(ngModel)]="selectedProduct"
-      (ngModelChange)="patchValue()"
+      [formControl]="productControl"
+      (onSelect)="patchValue($event)"
       [suggestions]="businessPackResults"
       [showEmptyMessage]="true"
       emptyMessage="Товар не найден"
@@ -113,10 +113,15 @@
         <label for="parent">Расположить в категории</label>
       </span>
       <p-editor
+        [ngClass]="{
+          'editor-danger':
+            product.controls['description'].dirty && product.controls['description'].invalid
+        }"
         styleClass="mb-2"
         formControlName="description"
         placeholder="Описание товара"
       ></p-editor>
+      <div class="photos-error" *ngIf="product.dirty && !photos.length">Добавьте фотографии</div>
       <flower-valley-files-upload (uploaded)="filesUploaded($event)"></flower-valley-files-upload>
     </form>
     <p-button type="submit" label="Добавить" [loading]="isLoading"></p-button>

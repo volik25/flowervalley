@@ -54,10 +54,6 @@ export class CatalogComponent implements OnInit {
     this.router.navigateByUrl('admin/add/category');
   }
 
-  public updateCategoriesList(): void {
-    this.getCategories();
-  }
-
   public deleteCategory(id: number): void {
     const index = this.catalog.findIndex((category) => category.id === id);
     this.catalog.splice(index, 1);

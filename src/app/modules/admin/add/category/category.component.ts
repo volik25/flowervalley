@@ -3,7 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../../_models/category';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { slugify } from 'transliteration';
+import { StorageService } from '../../../../_services/front/storage.service';
+import { categoriesKey } from '../../../../_utils/constants';
+import { LoadingService } from '../../../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-category',
@@ -12,11 +16,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CategoryComponent {
   public category: FormGroup;
+  public categoryId?: number;
   public categories: Category[] = [];
   constructor(
     private fb: FormBuilder,
     private catalogService: CatalogService,
     private route: ActivatedRoute,
+    private router: Router,
+    private storageService: StorageService,
+    private ls: LoadingService,
   ) {
     this.category = fb.group({
       name: ['', Validators.required],
@@ -26,11 +34,11 @@ export class CategoryComponent {
       isBlocked: [false],
     });
     route.queryParams.subscribe((params) => {
-      const categoryId = params['categoryId'];
+      this.categoryId = params['categoryId'];
       catalogService.getItems().subscribe((items) => {
         this.categories = items.filter((item) => !item.parentId);
-        if (categoryId) {
-          this.category.controls['parentId'].setValue(Number(categoryId));
+        if (this.categoryId) {
+          this.category.controls['parentId'].setValue(Number(this.categoryId));
         }
       });
     });
@@ -49,10 +57,16 @@ export class CategoryComponent {
       }
     });
     formData.append('img', category.img);
-    this.catalogService.addItem<any>(formData).subscribe((id) => {
-      category.id = id;
-      // this.ref.close({ success: true });
+    const addSub = this.catalogService.addItem<any>(formData).subscribe((id) => {
+      const getSub = this.catalogService.getItemById<Category>(id).subscribe((item) => {
+        this.storageService.addItem<Category>(categoriesKey, item);
+        this.ls.removeSubscription(getSub);
+        this.router.navigate(['catalog', slugify(category.name)]);
+      });
+      this.ls.addSubscription(getSub);
+      this.ls.removeSubscription(addSub);
     });
+    this.ls.addSubscription(addSub);
   }
 
   public photoUploaded(photos: File[]): void {

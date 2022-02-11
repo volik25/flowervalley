@@ -100,10 +100,21 @@
         <label for="parent">Расположить в категории</label>
       </span>
       <p-editor
+        [ngClass]="{
+          'editor-danger':
+            productGroup.controls['description'].dirty &&
+            productGroup.controls['description'].invalid
+        }"
         styleClass="mb-2"
         formControlName="description"
         placeholder="Описание товара"
       ></p-editor>
+      <div
+        class="photos-error"
+        *ngIf="productGroup.dirty && !photos.length && product && !product.photos.length"
+      >
+        Добавьте фотографии
+      </div>
       <flower-valley-files-upload
         (uploaded)="filesUploaded($event)"
         label="Обновить изображения"

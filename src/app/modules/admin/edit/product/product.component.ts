@@ -13,6 +13,7 @@ import { GoodsBusinessPack } from '../../../../_models/business-pack/goods-base'
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { LoadingService } from '../../../../_services/front/loading.service';
+import { slugify } from 'transliteration';
 
 @Component({
   selector: 'flower-valley-product',
@@ -47,7 +48,7 @@ export class ProductComponent implements OnInit {
     { name: 'шт', value: '00~Pvjh0000F' },
   ];
   public boxes: Box[] = [];
-  private photos: File[] = [];
+  public photos: File[] = [];
   constructor(
     private fb: FormBuilder,
     private catalogService: CatalogService,
@@ -64,11 +65,11 @@ export class ProductComponent implements OnInit {
       Price: ['', Validators.required],
       NDS: [0, Validators.required],
       NDSMode: [0, Validators.required],
-      Volume: ['00~Pvjh0000F'],
+      Volume: ['00~Pvjh0000F', Validators.required],
       Note1: [''],
       Note2: [''],
-      Pack: ['00~Pvjh0000F'],
-      Coefficient: [''],
+      Pack: ['00~Pvjh0000F', Validators.required],
+      Coefficient: ['', Validators.required],
     });
     this.productGroup = fb.group({
       isPopular: [false],
@@ -165,10 +166,23 @@ export class ProductComponent implements OnInit {
           } else if ((key.includes('note') && value !== null) || !key.includes('note'))
             formData.append(key, value);
         });
-        this.productService.updateItem<any>(formData, id).subscribe(() => {
-          this.isLoading = false;
-          // this.ref.close({ success: true });
-        });
+        this.productService.updateItem<any>(formData, id).subscribe(
+          () => {
+            this.isLoading = false;
+            const categoryName = this.categories.find(
+              (category) => category.id === productGroupValue.categoryIds[0],
+            )?.name;
+            this.router.navigate([
+              'catalog',
+              this.isTulips ? 'tulips' : slugify(categoryName || ''),
+              this.productId,
+            ]);
+          },
+          () => {
+            this.isLoading = false;
+            // console.log(error);
+          },
+        );
       });
   }
 

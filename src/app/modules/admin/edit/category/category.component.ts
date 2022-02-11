@@ -2,8 +2,12 @@ import { Component } from '@angular/core';
 import { Category } from '../../../../_models/category';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogService } from '../../../../_services/back/catalog.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { StorageService } from '../../../../_services/front/storage.service';
+import { categoriesKey } from '../../../../_utils/constants';
+import { slugify } from 'transliteration';
+import { LoadingService } from '../../../../_services/front/loading.service';
 
 @Component({
   selector: 'flower-valley-category',
@@ -18,6 +22,9 @@ export class CategoryComponent {
     private fb: FormBuilder,
     private catalogService: CatalogService,
     private route: ActivatedRoute,
+    private storageService: StorageService,
+    private router: Router,
+    private ls: LoadingService,
   ) {
     this.categoryGroup = fb.group({
       name: ['', Validators.required],
@@ -55,6 +62,8 @@ export class CategoryComponent {
       this.categoryGroup.patchValue(category);
       if (category.isBlocked) {
         this.categoryGroup.controls['isBlocked'].setValue(true);
+      } else {
+        this.categoryGroup.controls['isBlocked'].setValue(false);
       }
       if (!category.parentId) {
         this.categoryGroup.get('parentId')?.setValue(null);
@@ -75,15 +84,29 @@ export class CategoryComponent {
     if (this.category?.id === 1) {
       formData.append('isTulip', 'true');
     }
-    // @ts-ignore
-    this.catalogService.updateItem<any>(formData, this.category.id).subscribe(() => {
+    const updateSub = this.catalogService
       // @ts-ignore
-      if (this.category.isTulip) {
-        // @ts-ignore
-        this.catalogService.setSteps(this.category.id, { steps: category.steps || [] }).subscribe();
-      }
-      // this.ref.close({ success: true });
-    });
+      .updateItem<any>(formData, this.category.id)
+      .subscribe(() => {
+        const getSub = this.catalogService
+          // @ts-ignore
+          .getItemById<Category>(this.category?.id)
+          .subscribe((categoryItem) => {
+            this.storageService.editItem<Category>(categoriesKey, categoryItem);
+            this.ls.removeSubscription(getSub);
+            if (categoryItem.isTulip) {
+              this.catalogService
+                .setSteps(categoryItem.id, { steps: category.steps || [] })
+                .subscribe();
+              this.router.navigate(['catalog/tulips']);
+            } else {
+              this.router.navigate(['catalog', slugify(categoryItem.name)]);
+            }
+          });
+        this.ls.addSubscription(getSub);
+        this.ls.removeSubscription(updateSub);
+      });
+    this.ls.addSubscription(updateSub);
   }
 
   public photoUploaded(photos: File[]): void {

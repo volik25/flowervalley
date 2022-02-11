@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
 import { GoodsBusinessPack } from '../../../../_models/business-pack/goods-base';
 import { Category } from '../../../../_models/category';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Box } from '../../../../_models/box';
 import { BusinessPackService } from '../../../../_services/back/business-paсk.service';
 import { BusinessPackConverterService } from '../../../../_services/back/business-pack-converter.service';
@@ -12,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { slugify } from 'transliteration';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-product',
@@ -37,12 +45,13 @@ export class ProductComponent {
   private _isLoading: boolean = false;
   public businessPackResults: GoodsBusinessPack[] = [];
   public selectedProduct: GoodsBusinessPack | undefined;
+  public productControl: FormControl;
   public categories: Category[] = [];
   private categoryName: string = '';
   public isImport: boolean = false;
   public goods: FormGroup;
   public product: FormGroup;
-  private photos: File[] = [];
+  public photos: File[] = [];
   public options = [
     { name: '', value: null },
     { name: 'шт', value: '00~Pvjh0000F' },
@@ -57,17 +66,19 @@ export class ProductComponent {
     private boxService: BoxService,
     private route: ActivatedRoute,
     private router: Router,
+    private messageService: MessageService,
   ) {
+    this.productControl = fb.control('', Validators.required);
     this.goods = fb.group({
       Name: ['', Validators.required],
       Price: ['', Validators.required],
       NDS: [0, Validators.required],
       NDSMode: [0, Validators.required],
-      Volume: ['00~Pvjh0000F'],
+      Volume: ['00~Pvjh0000F', Validators.required],
       Note1: [''],
       Note2: [''],
-      Pack: ['00~Pvjh0000F'],
-      Coefficient: [''],
+      Pack: ['00~Pvjh0000F', Validators.required],
+      Coefficient: ['', Validators.required],
     });
     this.product = fb.group({
       isPopular: [false],
@@ -86,22 +97,28 @@ export class ProductComponent {
           .subscribe((category) => {
             this.getData(category);
           });
+      } else {
+        this.getData();
       }
     });
   }
 
-  private getData(category: Category): void {
-    this.isTulips = category.isTulip;
-    this.categoryName = category.name;
+  private getData(category?: Category): void {
+    if (category) {
+      this.isTulips = category.isTulip;
+      this.categoryName = category.name;
+    }
     this.catalogService.getItems().subscribe((items) => {
-      const parentId = category.parentId;
+      const parentId = category?.parentId;
       if (parentId) {
         this.categories = items.filter((item) => item.parentId === parentId);
       } else {
         this.categories = items.filter((item) => !item.parentId);
       }
-      this.product.controls['categoryIds'].setValue([category.id]);
-      if (this.isTulips) {
+      if (category) {
+        this.product.controls['categoryIds'].setValue([category.id]);
+      }
+      if (this.isTulips && category) {
         this.product.controls['categoryIds'].disable();
         this.catalogService.getItemById<Category>(category.id).subscribe(({ steps }) => {
           if (steps)
@@ -117,9 +134,15 @@ export class ProductComponent {
     this.boxService.getItems().subscribe((boxes) => {
       this.boxes = boxes;
     });
+    this.productControl.valueChanges.subscribe((value) => {
+      if (!value) this.selectedProduct = undefined;
+    });
   }
 
   public addProduct(): void {
+    if (this.isImport && this.productControl.invalid) {
+      this.productControl.markAsDirty();
+    }
     if (isFormInvalid(this.goods)) return;
     if (isFormInvalid(this.product)) return;
     this.isLoading = true;
@@ -176,11 +199,24 @@ export class ProductComponent {
         });
       } else formData.append(key, value);
     });
-    this.productService.addItem<any>(formData).subscribe(() => {
-      this.isLoading = false;
-      this.router.navigate(['catalog', this.isTulips ? 'tulips' : slugify(this.categoryName)]);
-      // this.ref.close({ success: true });
-    });
+    if (!this.categoryName) {
+      const category = this.product.controls['categoryIds'].value;
+      if (category) this.categoryName = category[0];
+    }
+    this.productService.addItem<any>(formData).subscribe(
+      () => {
+        this.isLoading = false;
+        this.router.navigate([
+          'catalog',
+          this.isTulips ? 'tulips' : slugify(this.categoryName),
+          product.id,
+        ]);
+      },
+      () => {
+        this.isLoading = false;
+        // console.log(error);
+      },
+    );
   }
 
   public searchItems(searchString: string): void {
@@ -189,11 +225,17 @@ export class ProductComponent {
     });
   }
 
-  public patchValue(): void {
+  public patchValue(selectedProduct: GoodsBusinessPack): void {
+    this.selectedProduct = selectedProduct;
     if (this.selectedProduct && this.selectedProduct.Object) {
       this.productService.getItemById(this.selectedProduct.Object).subscribe((product) => {
         if (product) {
-          // this.ref.close({ success: false, reject: true });
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Дублирование товара',
+            detail: 'Данный товар уже добавлен в систему',
+          });
+          this.selectedProduct = undefined;
         } else {
           // @ts-ignore
           this.goods.patchValue(this.selectedProduct);
@@ -201,9 +243,8 @@ export class ProductComponent {
         }
       });
     } else {
-      this.goods.reset();
+      this.goods.reset({ Volume: '00~Pvjh0000F', Pack: '00~Pvjh0000F' });
       this.goods.enable();
-      this.product.reset({ isPopular: false });
     }
   }
 

@@ -33,8 +33,6 @@ export class CatalogItemComponent {
   }
 
   @Output()
-  private categoryUpdated: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
   private categoryDeleted: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(

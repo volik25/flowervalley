@@ -43,8 +43,6 @@ export class ProductItemComponent {
   @Output()
   public openProductCard: EventEmitter<any> = new EventEmitter<any>();
   @Output()
-  private productUpdated: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
   private productDeleted: EventEmitter<any> = new EventEmitter<any>();
   constructor(
     private cartService: CartService,

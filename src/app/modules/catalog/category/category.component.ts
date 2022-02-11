@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { slugify } from 'transliteration';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { StorageService } from '../../../_services/front/storage.service';
@@ -30,12 +30,12 @@ export class CategoryComponent implements OnInit {
     {
       label: 'Импорт из БизнесПак',
       icon: 'pi pi-upload',
-      command: () => this.showAddProductModal(true),
+      command: () => this.addProduct(true),
     },
     {
       label: 'Добавить группу товаров',
       icon: 'pi pi-folder',
-      command: () => this.showAddCategoryModal(),
+      command: () => this.addCategory(),
     },
   ];
   public subCatalog: Category[] = [];
@@ -54,7 +54,6 @@ export class CategoryComponent implements OnInit {
     private catalogService: CatalogService,
     private productService: ProductService,
     private ls: LoadingService,
-    private messageService: MessageService,
   ) {
     adminService.checkAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
@@ -83,63 +82,21 @@ export class CategoryComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  public showAddProductModal(isImport: boolean = false): void {
+  public addProduct(isImport: boolean = false): void {
     this.router.navigate(['admin/add/product'], {
       queryParams: {
         isImport: isImport,
         category: this.category?.id,
       },
     });
-    // const modal = this.ds.open(AddProductComponent, {
-    //   header: 'Добавить товар',
-    //   width: '600px',
-    //   data: {
-    //     isImport: isImport,
-    //     category: this.category,
-    //   },
-    // });
-    // modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
-    //   if (res) {
-    //     if (res.success) {
-    //       this.updateProducts();
-    //     }
-    //     if (res.reject) {
-    //       this.messageService.add({
-    //         severity: 'error',
-    //         summary: 'Дублирование товара',
-    //         detail: 'Данный товар уже добавлен в систему',
-    //       });
-    //     }
-    //   }
-    // });
   }
 
-  public showAddCategoryModal(): void {
+  public addCategory(): void {
     this.router.navigate(['admin/add/category'], {
       queryParams: {
         categoryId: this.category?.id,
       },
     });
-    // const modal = this.ds.open(AddCategoryComponent, {
-    //   header: 'Добавить группу товаров',
-    //   width: '600px',
-    //   data: {
-    //     categoryId: this.category?.id,
-    //   },
-    // });
-    // modal.onClose.subscribe((res: { success: boolean }) => {
-    //   if (res && res.success) {
-    //     const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
-    //       this.catalog = categoriesApi;
-    //       this.subCatalog = this.catalog
-    //         .filter((item) => item.parentId === this.category?.id)
-    //         .sort((a, b) => a.categoryOrder - b.categoryOrder);
-    //       this.storageService.setItem(categoriesKey, categoriesApi);
-    //       this.ls.removeSubscription(sub);
-    //     });
-    //     this.ls.addSubscription(sub);
-    //   }
-    // });
   }
 
   private setCategories(categoryRoute: string): void {
@@ -189,10 +146,6 @@ export class CategoryComponent implements OnInit {
         });
       this.ls.addSubscription(sub);
     }
-  }
-
-  public updateProducts(): void {
-    this.updateProductsList();
   }
 
   public deleteProduct(id?: string) {
