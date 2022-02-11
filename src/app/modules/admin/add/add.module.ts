@@ -20,6 +20,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { BoxComponent } from './box/box.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { BoxComponent } from './box/box.component';
     FormsModule,
     InputTextareaModule,
     PipesModule,
+    CardModule,
   ],
 })
 export class AddModule {}

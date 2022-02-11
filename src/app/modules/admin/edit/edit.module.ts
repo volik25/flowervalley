@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { EditRoutingModule } from './edit-routing.module';
-import { EditComponent } from './edit.component';
 import { ProductComponent } from './product/product.component';
 import { FlowerValleySharedModule } from '../../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -26,7 +25,6 @@ import { ReviewsComponent } from './reviews/reviews.component';
 
 @NgModule({
   declarations: [
-    EditComponent,
     ProductComponent,
     CategoryComponent,
     BannerComponent,

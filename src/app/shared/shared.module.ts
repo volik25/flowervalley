@@ -10,7 +10,6 @@ import { LeafButtonComponent } from './leaf-button/leaf-button.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { PasswordModule } from 'primeng/password';
 import { MenuModule } from 'primeng/menu';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -32,7 +31,6 @@ import { PipesModule } from '../_pipes/pipes.module';
     ProductItemComponent,
     ContainerComponent,
     LeafButtonComponent,
-    SignInComponent,
     FilesUploadComponent,
     SearchComponent,
   ],

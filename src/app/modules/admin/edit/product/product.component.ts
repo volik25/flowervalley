@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from '../../../../_models/product';
 import { Category } from '../../../../_models/category';
@@ -19,7 +19,7 @@ import { LoadingService } from '../../../../_services/front/loading.service';
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
   public isTulips: boolean = false;
   private deleteIds: number[] = [];
   public get isLoading(): boolean {
@@ -39,6 +39,7 @@ export class ProductComponent {
   private _isLoading: boolean = false;
   public goods: FormGroup;
   public productGroup: FormGroup;
+  private productId: number = 0;
   public product?: Product;
   public categories: Category[] = [];
   public options = [
@@ -77,17 +78,20 @@ export class ProductComponent {
       prices: this.fb.array([]),
     });
     route.params.subscribe((params) => {
-      const productId = params['id'];
-      const sub = productService
-        .getItemById<Product>(productId)
-        .pipe(take(1))
-        .subscribe((product) => {
-          this.product = product;
-          this.getData(product);
-          this.ls.removeSubscription(sub);
-        });
-      ls.addSubscription(sub);
+      this.productId = params['id'];
     });
+  }
+
+  public ngOnInit(): void {
+    const sub = this.productService
+      .getItemById<Product>(this.productId)
+      .pipe(take(1))
+      .subscribe((product) => {
+        this.product = product;
+        this.getData(product);
+        this.ls.removeSubscription(sub);
+      });
+    this.ls.addSubscription(sub);
   }
 
   private getData(product: Product): void {
