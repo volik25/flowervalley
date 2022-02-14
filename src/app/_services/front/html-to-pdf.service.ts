@@ -30,7 +30,7 @@ export class HtmlToPdfService {
     this.boxes = boxes;
     this.productsSum = productsSum;
     this.sum = sum;
-    this.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
+    HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
       const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
         tableAutoSize: true,
       });
@@ -67,7 +67,7 @@ export class HtmlToPdfService {
     return div;
   }
 
-  private getBase64ImageFromURL(url: string) {
+  public static getBase64ImageFromURL(url: string) {
     return new Promise((resolve, reject) => {
       const img = new Image();
 
@@ -92,7 +92,7 @@ export class HtmlToPdfService {
     });
   }
 
-  private static genHeaderTable(imgSrc: unknown): HTMLTableElement {
+  public static genHeaderTable(imgSrc: unknown): HTMLTableElement {
     const img = document.createElement('img');
     if (typeof imgSrc === 'string') {
       img.setAttribute('src', imgSrc);

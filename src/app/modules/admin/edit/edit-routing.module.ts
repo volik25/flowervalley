@@ -8,6 +8,7 @@ import { SettingsComponent } from './sales/settings/settings.component';
 import { ClientsComponent } from './clients/clients.component';
 import { VideoComponent } from './video/video.component';
 import { ReviewsComponent } from './reviews/reviews.component';
+import { MediaComponent } from './media/media.component';
 
 const routes: Routes = [
   { path: 'product/:id', component: ProductComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'clients', component: ClientsComponent },
   { path: 'reviews', component: ReviewsComponent },
   { path: 'video/:id', component: VideoComponent },
+  { path: 'media/:id', component: MediaComponent },
   { path: 'banner', component: BannerComponent },
 ];
 

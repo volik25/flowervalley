@@ -33,12 +33,22 @@ export class AddComponent {
     {
       label: 'Акция',
       routerLink: 'sale',
-      icon: 'pi pi-percentage',
+      icon: 'pi pi-clock',
     },
     {
       label: 'Видео',
       routerLink: 'video',
       icon: 'pi pi-youtube',
+    },
+    {
+      label: 'Статья',
+      routerLink: 'media',
+      icon: 'pi pi-external-link',
+    },
+    {
+      label: 'Скидка на заказ',
+      routerLink: 'discount',
+      icon: 'pi pi-percentage',
     },
   ];
 }

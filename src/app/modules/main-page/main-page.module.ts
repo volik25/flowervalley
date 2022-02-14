@@ -29,6 +29,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 import { SkeletonModule } from 'primeng/skeleton';
+import { MediaComponent } from './media/media.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     VideoComponent,
     ReviewsComponent,
     ClientsComponent,
+    MediaComponent,
   ],
   imports: [
     CommonModule,

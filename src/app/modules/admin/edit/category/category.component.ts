@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Category } from '../../../../_models/category';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CatalogService } from '../../../../_services/back/catalog.service';
@@ -14,8 +14,9 @@ import { LoadingService } from '../../../../_services/front/loading.service';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
   public category?: Category;
+  public id: number = 0;
   public categoryGroup: FormGroup;
   public categories: Category[] = [];
   constructor(
@@ -32,33 +33,44 @@ export class CategoryComponent {
       parentId: [null],
       isSeedling: [false],
       isBlocked: [false],
+      hasNoDiscount: [false],
       steps: fb.array([]),
     });
     route.params.subscribe((params) => {
-      const categoryId = params['id'];
-      catalogService
-        .getItemById<Category>(categoryId)
-        .pipe(take(1))
-        .subscribe((category) => {
-          this.category = category;
-          this.getData(category);
-        });
+      this.id = params['id'];
     });
   }
 
+  public ngOnInit(): void {
+    const sub = this.catalogService
+      .getItemById<Category>(this.id)
+      .pipe(take(1))
+      .subscribe((category) => {
+        this.category = category;
+        this.getData(category);
+        this.ls.removeSubscription(sub);
+      });
+    this.ls.addSubscription(sub);
+  }
+
   private getData(category: Category): void {
-    this.catalogService.getItems().subscribe((items) => {
+    const itemsSub = this.catalogService.getItems().subscribe((items) => {
       if (category.isTulip) {
-        this.catalogService.getItemById<Category>(category.id).subscribe((categoryItem) => {
-          category.steps = categoryItem.steps;
-          category.steps
-            ?.sort((item) => item.countFrom)
-            .map((step) => {
-              this.addPriceRange(step);
-            });
-        });
+        const itemSub = this.catalogService
+          .getItemById<Category>(category.id)
+          .subscribe((categoryItem) => {
+            category.steps = categoryItem.steps;
+            category.steps
+              ?.sort((item) => item.countFrom)
+              .map((step) => {
+                this.addPriceRange(step);
+              });
+            this.ls.removeSubscription(itemSub);
+          });
+        this.ls.addSubscription(itemSub);
       }
       this.categories = items;
+      category.hasNoDiscount = !Boolean(category.hasNoDiscount);
       this.categoryGroup.patchValue(category);
       if (category.isBlocked) {
         this.categoryGroup.controls['isBlocked'].setValue(true);
@@ -68,19 +80,22 @@ export class CategoryComponent {
       if (!category.parentId) {
         this.categoryGroup.get('parentId')?.setValue(null);
       }
+      this.ls.removeSubscription(itemsSub);
     });
+    this.ls.addSubscription(itemsSub);
   }
 
   public editCategory(): void {
     if (this.categoryGroup.invalid) return;
-    const category: Category = this.categoryGroup.getRawValue();
+    const category = this.categoryGroup.getRawValue();
     if (!category.parentId) category.parentId = 0;
     const formData = new FormData();
     formData.append('name', category.name);
     formData.append('parentId', category.parentId.toString());
     formData.append('img', category.img);
-    formData.append('isSeedling', category.isSeedling.toString());
-    formData.append('isBlocked', category.isBlocked.toString());
+    formData.append('isSeedling', (!!category.isSeedling).toString());
+    formData.append('isBlocked', (!!category.isBlocked).toString());
+    formData.append('hasNoDiscount', (!category.hasNoDiscount).toString());
     if (this.category?.id === 1) {
       formData.append('isTulip', 'true');
     }

@@ -26,6 +26,14 @@
       <p-checkbox formControlName="isBlocked" [binary]="true" inputId="isBlocked"></p-checkbox>
       <label for="isBlocked">Заблокировать продажи</label>
     </div>
+    <div class="p-field-checkbox mb-2" *ngIf="!category?.isTulip">
+      <p-checkbox
+        formControlName="hasNoDiscount"
+        [binary]="true"
+        inputId="hasNoDiscount"
+      ></p-checkbox>
+      <label for="hasNoDiscount">Скидка от суммы</label>
+    </div>
     <ng-container formArrayName="steps">
       <ng-container *ngFor="let step of steps.controls; let i = index">
         <div [formGroup]="getFormGroup(step)" class="flex align-items-center">

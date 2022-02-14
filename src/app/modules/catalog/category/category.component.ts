@@ -28,6 +28,11 @@ export class CategoryComponent implements OnInit {
   public products: ProductItem[] = [];
   public actions: MenuItem[] = [
     {
+      label: 'Новый товар',
+      icon: 'pi pi-plus',
+      command: () => this.addProduct(),
+    },
+    {
       label: 'Импорт из БизнесПак',
       icon: 'pi pi-upload',
       command: () => this.addProduct(true),
@@ -99,13 +104,14 @@ export class CategoryComponent implements OnInit {
     });
   }
 
+  public editCategory(): void {
+    this.router.navigate(['admin/edit/category', this.category?.id]);
+  }
+
   private setCategories(categoryRoute: string): void {
     switch (categoryRoute) {
       case 'tulips':
         this.category = this.catalog.find((item) => item.id === 1);
-        break;
-      case 'flowers':
-        this.category = this.catalog.find((item) => item.id === 2);
         break;
       default:
         this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
@@ -114,21 +120,10 @@ export class CategoryComponent implements OnInit {
     this.subCatalog = this.catalog
       .filter((item) => item.parentId === this.category?.id)
       .sort((a, b) => a.categoryOrder - b.categoryOrder);
-    this.updateProductsList();
+    this.getProductsList();
   }
 
-  private getCategories(id: number): void {
-    const sub = this.catalogService.getItems().subscribe((categories) => {
-      this.catalog = categories
-        .filter((item) => (item.parentId = id))
-        .sort((a, b) => a.categoryOrder - b.categoryOrder);
-      this.storageService.setItem(categoriesKey, categories);
-      this.ls.removeSubscription(sub);
-    });
-    this.ls.addSubscription(sub);
-  }
-
-  private updateProductsList(): void {
+  private getProductsList(): void {
     if (this.category) {
       this.bs.addItem(this.category.name);
       const sub = this.catalogService
@@ -151,10 +146,6 @@ export class CategoryComponent implements OnInit {
   public deleteProduct(id?: string) {
     const index = this.products.findIndex((product) => product.id === id);
     this.products.splice(index, 1);
-  }
-
-  public updateCategoriesList(): void {
-    if (this.category) this.getCategories(this.category.id);
   }
 
   public deleteCategory(id: number): void {

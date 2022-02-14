@@ -14,10 +14,12 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { Sale } from '../../_models/sale';
+import { Media } from '../../_models/media';
 
 interface MainInfo {
   main: MainBanner<unknown>;
   videos: Video[];
+  media: Media[];
   comments: MainBanner<unknown>;
   clients: MainBanner<unknown>;
   popular: ProductItem[];
@@ -111,6 +113,10 @@ export class MainPageComponent implements OnInit {
       this.ls.removeSubscription(sub);
     });
     this.ls.addSubscription(sub);
+  }
+
+  public addMedia(): void {
+    this.router.navigate(['admin/add/media']);
   }
 
   public addVideo(): void {

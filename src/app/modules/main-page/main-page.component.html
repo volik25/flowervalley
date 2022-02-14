@@ -55,6 +55,14 @@
   </div>
   <flower-valley-advantages></flower-valley-advantages>
   <flower-valley-container
+    background="dark"
+    headerTitle="СМИ о нас"
+    [isAdmin]="isAdmin"
+    [buttonTemplate]="addMediaButton"
+  >
+    <flower-valley-media [media]="mainInfo.media || []" [isAdmin]="isAdmin"></flower-valley-media>
+  </flower-valley-container>
+  <flower-valley-container
     headerTitle="Видео о нас"
     headerIcon="pi-video"
     [isAdmin]="isAdmin"
@@ -86,6 +94,10 @@
     ></flower-valley-clients>
   </flower-valley-container>
 </ng-container>
+
+<ng-template #addMediaButton>
+  <p-button label="Добавить статью" (onClick)="addMedia()"></p-button>
+</ng-template>
 
 <ng-template #addVideoButton>
   <p-button label="Добавить видео" (onClick)="addVideo()"></p-button>

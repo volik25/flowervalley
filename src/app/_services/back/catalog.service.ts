@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Category } from '../../_models/category';
 import { CategoryOrder } from '../../_models/category-order';
 import { Step } from '../../_models/step';
@@ -11,8 +11,21 @@ import { Step } from '../../_models/step';
 export class CatalogService extends BaseApiService {
   protected override apiUrl = 'category';
 
-  public getItems(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.baseUrl}/${this.apiUrl}/list`);
+  public getItems(isDiscountRequest = false): Observable<Category[]> {
+    if (!isDiscountRequest) {
+      return this.http.get<Category[]>(`${this.baseUrl}/${this.apiUrl}/list`);
+    } else {
+      return this.http.get<Category[]>(`${this.baseUrl}/${this.apiUrl}/list`).pipe(
+        map((categories) => {
+          const discountCategories = categories.filter((item) => !item.parentId && !item.isTulip);
+          discountCategories.map((item: any) => {
+            delete item.isTulip;
+            item.isBlocked = Boolean(item.isBlocked);
+          });
+          return discountCategories;
+        }),
+      );
+    }
   }
 
   public setCategoryOrder(order: CategoryOrder[]): Observable<any> {

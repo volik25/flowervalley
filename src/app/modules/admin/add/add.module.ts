@@ -21,6 +21,9 @@ import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { BoxComponent } from './box/box.component';
 import { CardModule } from 'primeng/card';
+import { MediaComponent } from './media/media.component';
+import { CalendarModule } from 'primeng/calendar';
+import { DiscountComponent } from './discount/discount.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { CardModule } from 'primeng/card';
     SalesComponent,
     VideoComponent,
     BoxComponent,
+    MediaComponent,
+    DiscountComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +54,7 @@ import { CardModule } from 'primeng/card';
     InputTextareaModule,
     PipesModule,
     CardModule,
+    CalendarModule,
   ],
 })
 export class AddModule {}

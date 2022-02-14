@@ -3,7 +3,7 @@
   [isAdmin]="true"
   [buttonTemplate]="addBox"
 >
-  <p-table [value]="boxes" editMode="row" [loading]="isLoading">
+  <p-table [value]="boxes" dataKey="id" editMode="row" [loading]="isLoading">
     <ng-template pTemplate="header">
       <tr>
         <th>Название</th>

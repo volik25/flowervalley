@@ -32,6 +32,7 @@ export class CategoryComponent {
       parentId: [null],
       isSeedling: [false],
       isBlocked: [false],
+      hasNoDiscount: [false],
     });
     route.queryParams.subscribe((params) => {
       this.categoryId = params['categoryId'];

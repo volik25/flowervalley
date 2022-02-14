@@ -52,9 +52,9 @@
 <ng-template #actionsTemplate>
   <p-splitButton
     *ngIf="isAdmin"
-    (onClick)="addProduct()"
-    icon="pi pi-plus"
-    label="Новый товар"
+    (onClick)="editCategory()"
+    icon="pi pi-pencil"
+    label="Редактировать"
     [model]="actions"
   ></p-splitButton>
 </ng-template>

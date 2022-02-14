@@ -13,4 +13,6 @@ export interface Category {
   isTulip: boolean;
   isSeedling: boolean;
   isBlocked: boolean;
+  hasNoDiscount: boolean;
+  categoryType?: number;
 }

@@ -22,6 +22,8 @@ import { ClientsComponent } from './clients/clients.component';
 import { VideoComponent } from './video/video.component';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
+import { MediaComponent } from './media/media.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { ReviewsComponent } from './reviews/reviews.component';
     ClientsComponent,
     VideoComponent,
     ReviewsComponent,
+    MediaComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +52,7 @@ import { ReviewsComponent } from './reviews/reviews.component';
     ButtonModule,
     InputTextareaModule,
     PipesModule,
+    CalendarModule,
   ],
 })
 export class EditModule {}

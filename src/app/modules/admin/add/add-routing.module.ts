@@ -6,6 +6,8 @@ import { CategoryComponent } from './category/category.component';
 import { SalesComponent } from './sales/sales.component';
 import { VideoComponent } from './video/video.component';
 import { BoxComponent } from './box/box.component';
+import { MediaComponent } from './media/media.component';
+import { DiscountComponent } from './discount/discount.component';
 
 const routes: Routes = [
   { path: '', component: AddComponent },
@@ -14,6 +16,8 @@ const routes: Routes = [
   { path: 'sale', component: SalesComponent },
   { path: 'video', component: VideoComponent },
   { path: 'box', component: BoxComponent },
+  { path: 'media', component: MediaComponent },
+  { path: 'discount', component: DiscountComponent },
 ];
 
 @NgModule({

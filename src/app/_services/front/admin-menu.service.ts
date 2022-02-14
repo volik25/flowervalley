@@ -19,6 +19,12 @@ export class AdminMenuService {
       icon: 'pi pi-shopping-cart',
     },
     {
+      label: 'Прайс-лист',
+      routerLink: 'prices',
+      state: { description: 'Редактирование прайс-листа' },
+      icon: 'pi pi-file-pdf',
+    },
+    {
       label: 'Коробки',
       routerLink: 'boxes',
       state: {
@@ -29,20 +35,20 @@ export class AdminMenuService {
     {
       label: 'Статические данные',
       routerLink: 'static-data',
-      state: { description: 'Редактирование статических данных' },
+      state: { description: 'Редактирование данных в шапке, футере и контактах' },
       icon: 'pi pi-database',
-    },
-    {
-      label: 'Прайс-лист',
-      routerLink: 'prices',
-      state: { description: 'Редактирование прайс-листа' },
-      icon: 'pi pi-file-pdf',
     },
     {
       label: 'Добавление данных',
       routerLink: 'add',
       state: { description: 'Добавление новых данных на сайт' },
       icon: 'pi pi-plus',
+    },
+    {
+      label: 'Скидка от суммы',
+      routerLink: 'discount',
+      state: { description: 'Система скидок от суммы заказа в корзине' },
+      icon: 'pi pi-percentage',
     },
     {
       label: 'Выйти',
