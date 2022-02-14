@@ -16,7 +16,7 @@ import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CartModalComponent } from './components/cart-modal/cart-modal.component';
 import { PipesModule } from './_pipes/pipes.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BpRequestInterceptor } from './_interceptors/bp-request.interceptor';
 import { BusinessPackService } from './_services/back/business-paсk.service';
@@ -28,6 +28,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { DadataInterceptor } from './_interceptors/dadata.interceptor';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { PasswordModule } from 'primeng/password';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { DadataInterceptor } from './_interceptors/dadata.interceptor';
     FooterComponent,
     CartModalComponent,
     BreadcrumbComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +58,8 @@ import { DadataInterceptor } from './_interceptors/dadata.interceptor';
     ToastModule,
     InputTextModule,
     InputNumberModule,
+    ReactiveFormsModule,
+    PasswordModule,
   ],
   providers: [
     BreadcrumbService,

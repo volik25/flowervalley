@@ -1,0 +1,9 @@
+<flower-valley-container headerTitle="Авторизация">
+  <form [formGroup]="passwordForm" (ngSubmit)="signIn()">
+    <span class="p-float-label">
+      <p-password formControlName="password" inputId="password" [feedback]="false"></p-password>
+      <label for="password">Пароль</label>
+    </span>
+    <p-button type="submit" label="Войти"></p-button>
+  </form>
+</flower-valley-container>

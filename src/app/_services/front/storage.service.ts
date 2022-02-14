@@ -33,28 +33,23 @@ export class StorageService {
     }
     this._storage.next(this.getItem<T>(key));
   }
-  public editItem<T extends { id?: number; object?: string }>(key: string, item: T) {
+  public editItem<T extends { id?: number }>(key: string, item: T) {
     let storageItems = [];
     const storageString = sessionStorage.getItem(key);
     if (storageString) {
       storageItems = JSON.parse(storageString);
-      const index = storageItems.findIndex(
-        (val: T) => val.id === item.id || val.object === item.object,
-      );
+      const index = storageItems.findIndex((val: T) => val.id === item.id);
       if (index) storageItems[index] = item;
       sessionStorage.setItem(key, JSON.stringify(storageItems));
       this._storage.next(this.getItem<T>(key));
     }
   }
-  public removeItem<T extends { id?: number; object?: string }>(key: string, id: number | string) {
+  public removeItem<T extends { id?: number }>(key: string, id: number | string) {
     let storageItems = [];
     const storageString = sessionStorage.getItem(key);
     if (storageString) {
       storageItems = JSON.parse(storageString);
-      const index = storageItems.findIndex((val: T) => {
-        if (typeof id === 'string') return val.object === id;
-        return val.id === id;
-      });
+      const index = storageItems.findIndex((val: T) => val.id === id);
       if (index) storageItems.splice(index, 1);
       sessionStorage.setItem(key, JSON.stringify(storageItems));
       this._storage.next(this.getItem<T>(key));

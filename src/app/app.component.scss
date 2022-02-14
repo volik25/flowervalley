@@ -54,18 +54,6 @@
       }
     }
   }
-  &.p-button-danger {
-    background-color: $danger-background;
-    border-color: $danger-border;
-    color: $red-100;
-    &:enabled {
-      &:hover, &:active {
-        background-color: $red-100;
-        border-color: $red-100;
-        color: $white-100;
-      }
-    }
-  }
   &.p-button-cookie {
     background-color: $white-100;
     color: $main-green;
@@ -84,6 +72,20 @@
       &:hover, &:active {
         background-color: $whats-app-button;
         color: $main-green;
+      }
+    }
+  }
+  &.p-button-danger {
+    &:not(.p-button-text) {
+      background-color: $danger-background;
+    }
+    border-color: $danger-border;
+    color: $red-100;
+    &:enabled {
+      &:hover, &:active {
+        background-color: $red-100;
+        border-color: $red-100;
+        color: $white-100;
       }
     }
   }

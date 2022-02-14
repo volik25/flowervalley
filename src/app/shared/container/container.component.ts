@@ -13,6 +13,9 @@ import { DestroyService } from '../../_services/front/destroy.service';
 })
 export class ContainerComponent implements OnInit {
   @Input()
+  // @ts-ignore
+  public headerTemplate: TemplateRef<any>;
+  @Input()
   public headerTitle: string | undefined;
   @Input()
   public headerIcon: string | undefined;

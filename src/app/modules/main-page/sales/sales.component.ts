@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MainBanner } from '../../../_models/main-banner';
 import { Sale } from '../../../_models/sale';
 import { DialogService } from 'primeng/dynamicdialog';
-import { EditSaleComponent } from './edit-sale/edit-sale.component';
 import { Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { SaleService } from '../../../_services/back/sale.service';
@@ -31,17 +30,8 @@ export class SalesComponent {
     private cs: ConfirmationService,
   ) {}
 
-  public showEditSaleModal(sale: Sale): void {
-    const modal = this.ds.open(EditSaleComponent, {
-      width: '600px',
-      header: 'Редактировать акцию',
-      data: {
-        sale: sale,
-      },
-    });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res && res.success) this.saleEdited.emit();
-    });
+  public editSale(saleId: number): void {
+    this.router.navigate(['admin/edit/sale', saleId]);
   }
 
   public deleteSale(id: number): void {

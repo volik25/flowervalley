@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AddCategoryComponent } from '../../shared/catalog-item/add-category/add-category.component';
 import { CatalogService } from '../../_services/back/catalog.service';
 import { Category } from '../../_models/category';
 import { StorageService } from '../../_services/front/storage.service';
@@ -9,6 +8,7 @@ import { categoriesKey } from '../../_utils/constants';
 import { AdminService } from '../../_services/back/admin.service';
 import { LoadingService } from '../../_services/front/loading.service';
 import { CategoryOrder } from '../../_models/category-order';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'flower-valley-catalog',
@@ -25,10 +25,10 @@ export class CatalogComponent implements OnInit {
   public initialCatalog: Category[] = [];
   constructor(
     private bs: BreadcrumbService,
-    private _ds: DialogService,
     private catalogService: CatalogService,
     private storageService: StorageService,
     private adminService: AdminService,
+    private router: Router,
     private ls: LoadingService,
   ) {
     bs.setItem('Каталог');
@@ -51,17 +51,7 @@ export class CatalogComponent implements OnInit {
   }
 
   public addCategory(): void {
-    const modal = this._ds.open(AddCategoryComponent, {
-      header: 'Добавить раздел',
-      width: '600px',
-    });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res?.success) this.getCategories();
-    });
-  }
-
-  public updateCategoriesList(): void {
-    this.getCategories();
+    this.router.navigateByUrl('admin/add/category');
   }
 
   public deleteCategory(id: number): void {

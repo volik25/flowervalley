@@ -1,13 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MainBanner } from '../../../_models/main-banner';
-import { DialogService } from 'primeng/dynamicdialog';
-import { EditBannerComponent } from './edit-banner/edit-banner.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'flower-valley-banner',
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss'],
-  providers: [DialogService],
 })
 export class BannerComponent {
   @Input()
@@ -22,7 +20,7 @@ export class BannerComponent {
 
   public activeIndex: number = 0;
 
-  constructor(private ds: DialogService) {}
+  constructor(private router: Router) {}
 
   public openImage(id: number): void {
     this.activeIndex = this.banner?.photos.findIndex((photo) => photo.id === id) || 0;
@@ -30,17 +28,7 @@ export class BannerComponent {
   }
 
   public editBanner(): void {
-    const editBannerModal = this.ds.open(EditBannerComponent, {
-      header: 'Редактировать баннер',
-      width: '600px',
-      data: {
-        banner: this.banner,
-      },
-    });
-    editBannerModal.onClose.subscribe((res: { success: true }) => {
-      if (res && res.success) {
-        this.bannerChanged.emit();
-      }
-    });
+    sessionStorage.setItem('banner', JSON.stringify(this.banner));
+    this.router.navigate(['admin/edit/banner']);
   }
 }

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './_guards/admin.guard';
+import { SignInComponent } from './components/sign-in/sign-in.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,15 @@ const routes: Routes = [
   {
     path: 'cart',
     loadChildren: () => import('./modules/cart/cart.module').then((m) => m.CartModule),
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [AdminGuard],
+  },
+  {
+    path: 'sign-in',
+    component: SignInComponent,
   },
 ];
 

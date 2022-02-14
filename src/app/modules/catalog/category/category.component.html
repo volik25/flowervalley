@@ -24,7 +24,6 @@
           [item]="item"
           [isAdmin]="isAdmin"
           (categoryDeleted)="deleteCategory(item.id)"
-          (categoryUpdated)="updateCategoriesList()"
         ></flower-valley-catalog-item>
       </div>
       <div class="grid w-12">
@@ -43,7 +42,6 @@
           *ngFor="let product of products; let i = index"
           [product]="product"
           (openProductCard)="navigateTo($event)"
-          (productUpdated)="updateProducts()"
           (productDeleted)="deleteProduct(product.id)"
         ></flower-valley-product-item>
       </div>
@@ -54,9 +52,9 @@
 <ng-template #actionsTemplate>
   <p-splitButton
     *ngIf="isAdmin"
-    (onClick)="showAddProductModal()"
-    icon="pi pi-plus"
-    label="Новый товар"
+    (onClick)="editCategory()"
+    icon="pi pi-pencil"
+    label="Редактировать"
     [model]="actions"
   ></p-splitButton>
 </ng-template>

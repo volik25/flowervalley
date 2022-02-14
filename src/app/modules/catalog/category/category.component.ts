@@ -3,16 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../../_models/category';
 import { BreadcrumbService } from '../../../components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { slugify } from 'transliteration';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { StorageService } from '../../../_services/front/storage.service';
 import { categoriesKey } from '../../../_utils/constants';
 import { AdminService } from '../../../_services/back/admin.service';
 import { ProductItem } from '../../../_models/product-item';
-import { AddProductComponent } from '../../../shared/product-item/add-product/add-product.component';
 import { LoadingService } from '../../../_services/front/loading.service';
-import { AddCategoryComponent } from '../../../shared/catalog-item/add-category/add-category.component';
 import { ProductService } from '../../../_services/back/product.service';
 import { ProductOrder } from '../../../_models/product-order';
 import { CategoryOrder } from '../../../_models/category-order';
@@ -30,14 +28,19 @@ export class CategoryComponent implements OnInit {
   public products: ProductItem[] = [];
   public actions: MenuItem[] = [
     {
+      label: 'Новый товар',
+      icon: 'pi pi-plus',
+      command: () => this.addProduct(),
+    },
+    {
       label: 'Импорт из БизнесПак',
       icon: 'pi pi-upload',
-      command: () => this.showAddProductModal(true),
+      command: () => this.addProduct(true),
     },
     {
       label: 'Добавить группу товаров',
       icon: 'pi pi-folder',
-      command: () => this.showAddCategoryModal(),
+      command: () => this.addCategory(),
     },
   ];
   public subCatalog: Category[] = [];
@@ -56,7 +59,6 @@ export class CategoryComponent implements OnInit {
     private catalogService: CatalogService,
     private productService: ProductService,
     private ls: LoadingService,
-    private messageService: MessageService,
   ) {
     adminService.checkAdmin().subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
@@ -85,61 +87,31 @@ export class CategoryComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  public showAddProductModal(isImport: boolean = false): void {
-    const modal = this.ds.open(AddProductComponent, {
-      header: 'Добавить товар',
-      width: '600px',
-      data: {
+  public addProduct(isImport: boolean = false): void {
+    this.router.navigate(['admin/add/product'], {
+      queryParams: {
         isImport: isImport,
-        category: this.category,
+        category: this.category?.id,
       },
-    });
-    modal.onClose.subscribe((res: { success: boolean; reject: boolean }) => {
-      if (res) {
-        if (res.success) {
-          this.updateProducts();
-        }
-        if (res.reject) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Дублирование товара',
-            detail: 'Данный товар уже добавлен в систему',
-          });
-        }
-      }
     });
   }
 
-  public showAddCategoryModal(): void {
-    const modal = this.ds.open(AddCategoryComponent, {
-      header: 'Добавить группу товаров',
-      width: '600px',
-      data: {
+  public addCategory(): void {
+    this.router.navigate(['admin/add/category'], {
+      queryParams: {
         categoryId: this.category?.id,
       },
     });
-    modal.onClose.subscribe((res: { success: boolean }) => {
-      if (res && res.success) {
-        const sub = this.catalogService.getItems().subscribe((categoriesApi) => {
-          this.catalog = categoriesApi;
-          this.subCatalog = this.catalog
-            .filter((item) => item.parentId === this.category?.id)
-            .sort((a, b) => a.categoryOrder - b.categoryOrder);
-          this.storageService.setItem(categoriesKey, categoriesApi);
-          this.ls.removeSubscription(sub);
-        });
-        this.ls.addSubscription(sub);
-      }
-    });
+  }
+
+  public editCategory(): void {
+    this.router.navigate(['admin/edit/category', this.category?.id]);
   }
 
   private setCategories(categoryRoute: string): void {
     switch (categoryRoute) {
       case 'tulips':
         this.category = this.catalog.find((item) => item.id === 1);
-        break;
-      case 'flowers':
-        this.category = this.catalog.find((item) => item.id === 2);
         break;
       default:
         this.category = this.catalog.find((item) => slugify(item.name) === categoryRoute);
@@ -148,21 +120,10 @@ export class CategoryComponent implements OnInit {
     this.subCatalog = this.catalog
       .filter((item) => item.parentId === this.category?.id)
       .sort((a, b) => a.categoryOrder - b.categoryOrder);
-    this.updateProductsList();
+    this.getProductsList();
   }
 
-  private getCategories(id: number): void {
-    const sub = this.catalogService.getItems().subscribe((categories) => {
-      this.catalog = categories
-        .filter((item) => (item.parentId = id))
-        .sort((a, b) => a.categoryOrder - b.categoryOrder);
-      this.storageService.setItem(categoriesKey, categories);
-      this.ls.removeSubscription(sub);
-    });
-    this.ls.addSubscription(sub);
-  }
-
-  private updateProductsList(): void {
+  private getProductsList(): void {
     if (this.category) {
       this.bs.addItem(this.category.name);
       const sub = this.catalogService
@@ -182,17 +143,9 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  public updateProducts(): void {
-    this.updateProductsList();
-  }
-
   public deleteProduct(id?: string) {
     const index = this.products.findIndex((product) => product.id === id);
     this.products.splice(index, 1);
-  }
-
-  public updateCategoriesList(): void {
-    if (this.category) this.getCategories(this.category.id);
   }
 
   public deleteCategory(id: number): void {

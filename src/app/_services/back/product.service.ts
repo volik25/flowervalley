@@ -3,6 +3,8 @@ import { BaseApiService } from './base-api.service';
 import { Observable } from 'rxjs';
 import { ProductOrder } from '../../_models/product-order';
 import { Order } from '../../_models/order';
+import { Product } from '../../_models/product';
+import { PopularOrder } from '../../_models/popular-order';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +22,15 @@ export class ProductService extends BaseApiService {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/order`, order);
   }
 
+  public setPopularOrder(order: PopularOrder[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/order-popular`, order);
+  }
+
   public sendOrder(order: Order): Observable<any> {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/send-order`, order);
+  }
+
+  public getItems(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/${this.apiUrl}/list`);
   }
 }

@@ -12,6 +12,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ProductItem } from '../../_models/product-item';
 import { filter, map } from 'rxjs';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { StorageService } from '../../_services/front/storage.service';
+import { ProductService } from '../../_services/back/product.service';
+import { PriceListGenerateService } from '../../_services/front/price-list-generate.service';
 
 @Component({
   selector: 'flower-valley-header',
@@ -45,6 +48,9 @@ export class HeaderComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private cartService: CartService,
+    private storageService: StorageService,
+    private productService: ProductService,
+    private pricesPDFService: PriceListGenerateService,
     private router: Router,
   ) {
     router.events
@@ -98,9 +104,11 @@ export class HeaderComponent implements OnInit {
     this.menuShow = !this.menuShow;
   }
 
-  public goToPriceList(): void {
-    window.open(
-      'https://docs.google.com/spreadsheets/d/1TAcvsqVE7Q78MHaRoLw3XtiOn9P96A7Tk02GtrYwLho/edit#gid=669170734',
-    );
+  public getPriceList(): void {
+    const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
+    this.productService.getItems().subscribe((products) => {
+      const pricesProducts = products.map((item) => [item.name, item.coefficient, item.price]);
+      this.pricesPDFService.getPDF(headers, pricesProducts);
+    });
   }
 }

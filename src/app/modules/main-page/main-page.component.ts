@@ -10,20 +10,18 @@ import { MainInfoService } from '../../_services/back/main-info.service';
 import { Video } from '../../_models/video';
 import { MainBanner } from '../../_models/main-banner';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AddVideoComponent } from './video/add-video/add-video.component';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { Sale } from '../../_models/sale';
-import { Banner } from '../../_models/banner';
-import { EditReviewComponent } from './reviews/edit-review/edit-review.component';
-import { EditClientComponent } from './clients/edit-client/edit-client.component';
-import { SalesSettingsComponent } from './sales/settings/sales-settings.component';
-import { AddSaleComponent } from './sales/add-sale/add-sale.component';
+import { Media } from '../../_models/media';
+import { ProductService } from '../../_services/back/product.service';
+import { PopularOrder } from '../../_models/popular-order';
 
 interface MainInfo {
   main: MainBanner<unknown>;
   videos: Video[];
+  media: Media[];
   comments: MainBanner<unknown>;
   clients: MainBanner<unknown>;
   popular: ProductItem[];
@@ -40,9 +38,14 @@ export class MainPageComponent implements OnInit {
   @ViewChild('about')
   public about!: ElementRef;
   public isAdmin = false;
+  public draggedItem: ProductItem | null = null;
+  public draggedIndex: number | null = null;
+  public isDragDropFinished: boolean = false;
+  public initialArray: ProductItem[] = [];
   constructor(
     private adminService: AdminService,
     private catalogService: CatalogService,
+    private productService: ProductService,
     private mainInfoService: MainInfoService,
     private ls: LoadingService,
     private ds: DialogService,
@@ -82,6 +85,7 @@ export class MainPageComponent implements OnInit {
   public catalog: Category[] = [];
   public categories: Category[] = [];
   public products: ProductItem[] = [];
+  public popularProducts: ProductItem[] = [];
 
   public ngOnInit(): void {
     const reqests = [this.mainInfoService.getMainInfo<MainInfo>(), this.catalogService.getItems()];
@@ -96,6 +100,7 @@ export class MainPageComponent implements OnInit {
           };
         });
         this.mainInfo = main as MainInfo;
+        this.popularProducts = this.mainInfo.popular;
         this.categories = catalog as Category[];
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
@@ -119,53 +124,25 @@ export class MainPageComponent implements OnInit {
     this.ls.addSubscription(sub);
   }
 
+  public addMedia(): void {
+    this.router.navigate(['admin/add/media']);
+  }
+
   public addVideo(): void {
-    const videoModal = this.ds.open(AddVideoComponent, {
-      header: 'Добавить видео',
-      width: '600px',
-    });
-    videoModal.onClose
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((res: { success: true; video: Video }) => {
-        if (res && res.success) {
-          if (this.mainInfo) {
-            this.mainInfo.videos.push(res.video);
-            this.ms.add({
-              severity: 'success',
-              summary: 'Видео добавлено!',
-            });
-          } else this.loadMainInfo();
-        }
-      });
+    this.router.navigate(['admin/add/video']);
   }
 
   public editFeedBack(): void {
     if (this.mainInfo) {
-      const feedbackModal = this.ds.open(EditReviewComponent, {
-        header: 'Редактировать отзывы',
-        width: '600px',
-        data: {
-          review: this.mainInfo.comments,
-        },
-      });
-      feedbackModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
-        if (res && res.success) this.loadMainInfo();
-      });
+      sessionStorage.setItem('reviews', JSON.stringify(this.mainInfo.comments));
+      this.router.navigate(['admin/edit/reviews']);
     }
   }
 
   public editClients(): void {
     if (this.mainInfo) {
-      const clientModal = this.ds.open(EditClientComponent, {
-        header: 'Редактировать клиентов',
-        width: '600px',
-        data: {
-          client: this.mainInfo.clients,
-        },
-      });
-      clientModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
-        if (res && res.success) this.loadMainInfo();
-      });
+      sessionStorage.setItem('clients', JSON.stringify(this.mainInfo.clients));
+      this.router.navigate(['admin/edit/clients']);
     }
   }
 
@@ -191,37 +168,69 @@ export class MainPageComponent implements OnInit {
   }
 
   public addSale(): void {
-    if (this.mainInfo) {
-      const saleModal = this.ds.open(AddSaleComponent, {
-        header: 'Добавить акцию',
-        width: '600px',
-      });
-      saleModal.onClose.pipe(takeUntil(this.$destroy)).subscribe((res: { success: true }) => {
-        if (res && res.success) this.loadMainInfo();
-      });
-    }
+    this.router.navigate(['admin/add/sale']);
   }
 
   public editBannerOptions(): void {
     if (this.mainInfo) {
       const { autoPlay, isUserCanLeaf } = this.mainInfo.sales;
-      const modal = this.ds.open(SalesSettingsComponent, {
-        header: 'Настройки карусели',
-        width: '600px',
-        data: <{ settings: Banner }>{
-          settings: {
-            autoPlay: autoPlay,
-            isUserCanLeaf: isUserCanLeaf,
-          },
-        },
-      });
-      modal.onClose.subscribe((res: { success: boolean }) => {
-        if (res && res.success) this.loadMainInfo();
-      });
+      sessionStorage.setItem(
+        'saleSettings',
+        JSON.stringify({
+          autoPlay: autoPlay,
+          isUserCanLeaf: isUserCanLeaf,
+        }),
+      );
+      this.router.navigate(['admin/edit/sale/settings']);
     }
   }
 
   public getCategory(categoryId: number | undefined): Category | undefined {
     return this.categories.find((category) => category.id === categoryId);
+  }
+
+  public dragStart(draggedItem: ProductItem, i: number): void {
+    this.draggedIndex = i;
+    this.draggedItem = draggedItem;
+    this.isDragDropFinished = false;
+    this.initialArray = [...this.popularProducts];
+  }
+  public dragEnd(): void {
+    if (!this.isDragDropFinished) {
+      this.popularProducts = this.initialArray as ProductItem[];
+    }
+    this.draggedItem = null;
+  }
+  public drop(): void {
+    if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
+      const order: PopularOrder[] = [];
+      for (let i = 0; i < this.popularProducts.length; i++) {
+        order.push({
+          order: i,
+          id: this.popularProducts[i].id || '',
+        });
+      }
+      this.productService.setPopularOrder(order).subscribe();
+      this.draggedItem = null;
+      this.draggedIndex = null;
+      this.isDragDropFinished = true;
+    }
+  }
+  public setPosition(index: number): void {
+    if (
+      this.draggedItem &&
+      (this.draggedIndex || this.draggedIndex === 0) &&
+      this.draggedIndex !== index
+    ) {
+      if (index < this.draggedIndex) {
+        this.popularProducts.splice(this.draggedIndex, 1);
+        this.popularProducts.splice(index, 0, this.draggedItem as ProductItem);
+        this.draggedIndex = index;
+      } else {
+        this.popularProducts.splice(index + 1, 0, this.draggedItem as ProductItem);
+        this.popularProducts.splice(this.draggedIndex, 1);
+        this.draggedIndex = index;
+      }
+    }
   }
 }

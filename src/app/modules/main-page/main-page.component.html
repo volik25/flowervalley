@@ -43,7 +43,16 @@
     <div class="grid">
       <flower-valley-product-item
         class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
-        *ngFor="let product of mainInfo.popular"
+        pDraggable="products"
+        dragEffect="move"
+        pDroppable="products"
+        (onDrop)="drop()"
+        [pDraggableDisabled]="!isAdmin"
+        (onDragEnter)="setPosition(i)"
+        (onDragStart)="dragStart(product, i)"
+        (onDragEnd)="dragEnd()"
+        [isAdmin]="true"
+        *ngFor="let product of popularProducts; let i = index"
         [product]="product"
         [category]="getCategory(product.categoryId)"
         (openProductCard)="navigateToProduct($event)"
@@ -54,6 +63,14 @@
     <flower-valley-about></flower-valley-about>
   </div>
   <flower-valley-advantages></flower-valley-advantages>
+  <flower-valley-container
+    background="dark"
+    headerTitle="СМИ о нас"
+    [isAdmin]="isAdmin"
+    [buttonTemplate]="addMediaButton"
+  >
+    <flower-valley-media [media]="mainInfo.media || []" [isAdmin]="isAdmin"></flower-valley-media>
+  </flower-valley-container>
   <flower-valley-container
     headerTitle="Видео о нас"
     headerIcon="pi-video"
@@ -86,6 +103,10 @@
     ></flower-valley-clients>
   </flower-valley-container>
 </ng-container>
+
+<ng-template #addMediaButton>
+  <p-button label="Добавить статью" (onClick)="addMedia()"></p-button>
+</ng-template>
 
 <ng-template #addVideoButton>
   <p-button label="Добавить видео" (onClick)="addVideo()"></p-button>
