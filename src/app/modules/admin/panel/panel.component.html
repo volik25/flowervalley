@@ -1,10 +1,12 @@
 <flower-valley-container>
   <div class="grid">
     <div class="col-4" *ngFor="let item of items">
-      <p-card [routerLink]="item.routerLink">
+      <p-card styleClass="panel" [routerLink]="item.routerLink">
         <ng-template pTemplate="header">
           <span [class]="item.icon"></span>
-          <span class="title"> {{ item.label }}</span>
+          <span class="title">
+            {{ item.state && item.state['fullLabel'] ? item.state['fullLabel'] : item.label }}</span
+          >
         </ng-template>
         {{ item.state ? item.state['description'] : '' }}
       </p-card>

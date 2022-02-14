@@ -29,10 +29,12 @@ export class PricesComponent implements OnInit {
   }
 
   public onRowEditSave(product: Product) {
-    this.isLoading = true;
-    this.productService.updateItem(product).subscribe(() => {
+    const prod: any = { ...product };
+    delete prod.categoryId;
+    delete prod.categoryName;
+    delete prod.sale;
+    this.productService.updateItem(prod).subscribe(() => {
       if (product.id) delete this.clonedBoxes[product.id];
-      this.isLoading = false;
     });
   }
 

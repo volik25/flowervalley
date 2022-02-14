@@ -30,6 +30,7 @@ import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MediaComponent } from './media/media.component';
+import { DragDropModule } from 'primeng/dragdrop';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MediaComponent } from './media/media.component';
     EditorModule,
     SkeletonModule,
     FormsModule,
+    DragDropModule,
   ],
 })
 export class MainPageModule {}

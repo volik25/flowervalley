@@ -5,6 +5,7 @@ import { Discount } from '../../../_models/discount';
 import { CatalogService } from '../../../_services/back/catalog.service';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { Category } from '../../../_models/category';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-discount',
@@ -23,13 +24,14 @@ export class DiscountComponent implements OnInit {
     private discountService: DiscountService,
     private catalogService: CatalogService,
     private router: Router,
+    private ms: MessageService,
   ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
     const requests = [this.catalogService.getItems(true), this.discountService.getItems()];
     forkJoin(requests).subscribe(([catalog, discount]) => {
-      this.discount = discount as Discount[];
+      this.discount = (discount as Discount[]).sort((a, b) => a.sum - b.sum);
       this.catalog = catalog as Category[];
       this.selectedCategories = this.catalog.filter((category) => !category.hasNoDiscount);
       this.isLoading = false;
@@ -70,19 +72,23 @@ export class DiscountComponent implements OnInit {
     this.requestProcessed = true;
     const subscribe = new BehaviorSubject(this.catalog.length);
     this.catalog.map((category) => {
-      const item = this.selectedCategories.find((selectedItem) => selectedItem.id === category.id);
-      if (item) {
-        category.hasNoDiscount = !category.hasNoDiscount;
-      } else {
-        category.hasNoDiscount = Boolean(category.hasNoDiscount);
-      }
-      this.catalogService.updateItem<Category>(category).subscribe(() => {
+      const formData = new FormData();
+      category.hasNoDiscount = !this.selectedCategories.find(
+        (selectedItem) => selectedItem.id === category.id,
+      );
+      formData.append('hasNoDiscount', category.hasNoDiscount.toString());
+      this.catalogService.updateItem<any>(formData, category.id).subscribe(() => {
         subscribe.next(subscribe.value - 1);
       });
     });
     subscribe.subscribe((value) => {
       if (!value) {
         this.requestProcessed = false;
+        this.ms.add({
+          severity: 'success',
+          summary: 'Данные обновлены',
+          detail: 'Применение скидок распределено',
+        });
       }
     });
   }

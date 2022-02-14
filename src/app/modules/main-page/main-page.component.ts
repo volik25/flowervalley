@@ -15,6 +15,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { slugify } from 'transliteration';
 import { Sale } from '../../_models/sale';
 import { Media } from '../../_models/media';
+import { ProductService } from '../../_services/back/product.service';
+import { PopularOrder } from '../../_models/popular-order';
 
 interface MainInfo {
   main: MainBanner<unknown>;
@@ -36,9 +38,14 @@ export class MainPageComponent implements OnInit {
   @ViewChild('about')
   public about!: ElementRef;
   public isAdmin = false;
+  public draggedItem: ProductItem | null = null;
+  public draggedIndex: number | null = null;
+  public isDragDropFinished: boolean = false;
+  public initialArray: ProductItem[] = [];
   constructor(
     private adminService: AdminService,
     private catalogService: CatalogService,
+    private productService: ProductService,
     private mainInfoService: MainInfoService,
     private ls: LoadingService,
     private ds: DialogService,
@@ -78,6 +85,7 @@ export class MainPageComponent implements OnInit {
   public catalog: Category[] = [];
   public categories: Category[] = [];
   public products: ProductItem[] = [];
+  public popularProducts: ProductItem[] = [];
 
   public ngOnInit(): void {
     const reqests = [this.mainInfoService.getMainInfo<MainInfo>(), this.catalogService.getItems()];
@@ -92,6 +100,7 @@ export class MainPageComponent implements OnInit {
           };
         });
         this.mainInfo = main as MainInfo;
+        this.popularProducts = this.mainInfo.popular;
         this.categories = catalog as Category[];
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
@@ -178,5 +187,50 @@ export class MainPageComponent implements OnInit {
 
   public getCategory(categoryId: number | undefined): Category | undefined {
     return this.categories.find((category) => category.id === categoryId);
+  }
+
+  public dragStart(draggedItem: ProductItem, i: number): void {
+    this.draggedIndex = i;
+    this.draggedItem = draggedItem;
+    this.isDragDropFinished = false;
+    this.initialArray = [...this.popularProducts];
+  }
+  public dragEnd(): void {
+    if (!this.isDragDropFinished) {
+      this.popularProducts = this.initialArray as ProductItem[];
+    }
+    this.draggedItem = null;
+  }
+  public drop(): void {
+    if (this.draggedItem && (this.draggedIndex || this.draggedIndex === 0)) {
+      const order: PopularOrder[] = [];
+      for (let i = 0; i < this.popularProducts.length; i++) {
+        order.push({
+          order: i,
+          id: this.popularProducts[i].id || '',
+        });
+      }
+      this.productService.setPopularOrder(order).subscribe();
+      this.draggedItem = null;
+      this.draggedIndex = null;
+      this.isDragDropFinished = true;
+    }
+  }
+  public setPosition(index: number): void {
+    if (
+      this.draggedItem &&
+      (this.draggedIndex || this.draggedIndex === 0) &&
+      this.draggedIndex !== index
+    ) {
+      if (index < this.draggedIndex) {
+        this.popularProducts.splice(this.draggedIndex, 1);
+        this.popularProducts.splice(index, 0, this.draggedItem as ProductItem);
+        this.draggedIndex = index;
+      } else {
+        this.popularProducts.splice(index + 1, 0, this.draggedItem as ProductItem);
+        this.popularProducts.splice(this.draggedIndex, 1);
+        this.draggedIndex = index;
+      }
+    }
   }
 }

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class AdminMenuService {
   private items: MenuItem[] = [
     {
+      label: 'Панель',
       icon: 'pi pi-home',
       routerLink: '/admin',
     },
@@ -19,9 +20,9 @@ export class AdminMenuService {
       icon: 'pi pi-shopping-cart',
     },
     {
-      label: 'Прайс-лист',
+      label: 'Цены',
       routerLink: 'prices',
-      state: { description: 'Редактирование прайс-листа' },
+      state: { description: 'Редактирование прайс-листа', fullLabel: 'Прайс-лист' },
       icon: 'pi pi-file-pdf',
     },
     {
@@ -33,22 +34,28 @@ export class AdminMenuService {
       icon: 'pi pi-box',
     },
     {
-      label: 'Статические данные',
+      label: 'Скидки',
+      routerLink: 'discount',
+      state: {
+        description: 'Система скидок от суммы заказа в корзине',
+        fullLabel: 'Скидки от суммы',
+      },
+      icon: 'pi pi-percentage',
+    },
+    {
+      label: 'Статика',
       routerLink: 'static-data',
-      state: { description: 'Редактирование данных в шапке, футере и контактах' },
+      state: {
+        description: 'Редактирование данных в шапке, футере и контактах',
+        fullLabel: 'Статические данные',
+      },
       icon: 'pi pi-database',
     },
     {
-      label: 'Добавление данных',
+      label: 'Добавить',
       routerLink: 'add',
-      state: { description: 'Добавление новых данных на сайт' },
+      state: { description: 'Добавление новых данных на сайт', fullLabel: 'Добавление данных' },
       icon: 'pi pi-plus',
-    },
-    {
-      label: 'Скидка от суммы',
-      routerLink: 'discount',
-      state: { description: 'Система скидок от суммы заказа в корзине' },
-      icon: 'pi pi-percentage',
     },
     {
       label: 'Выйти',

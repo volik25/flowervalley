@@ -20,6 +20,8 @@ export class CatalogService extends BaseApiService {
           const discountCategories = categories.filter((item) => !item.parentId && !item.isTulip);
           discountCategories.map((item: any) => {
             delete item.isTulip;
+            delete item.sale;
+            delete item.parentId;
             item.isBlocked = Boolean(item.isBlocked);
           });
           return discountCategories;

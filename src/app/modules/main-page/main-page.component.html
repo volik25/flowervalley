@@ -43,7 +43,16 @@
     <div class="grid">
       <flower-valley-product-item
         class="col-12 lg:col-6 xl:col-3 flex justify-content-center"
-        *ngFor="let product of mainInfo.popular"
+        pDraggable="products"
+        dragEffect="move"
+        pDroppable="products"
+        (onDrop)="drop()"
+        [pDraggableDisabled]="!isAdmin"
+        (onDragEnter)="setPosition(i)"
+        (onDragStart)="dragStart(product, i)"
+        (onDragEnd)="dragEnd()"
+        [isAdmin]="true"
+        *ngFor="let product of popularProducts; let i = index"
         [product]="product"
         [category]="getCategory(product.categoryId)"
         (openProductCard)="navigateToProduct($event)"
