@@ -12,6 +12,7 @@ export class AdminMenuService {
       label: 'Панель',
       icon: 'pi pi-home',
       routerLink: '/admin',
+      routerLinkActiveOptions: { exact: true },
     },
     {
       label: 'Заказы',

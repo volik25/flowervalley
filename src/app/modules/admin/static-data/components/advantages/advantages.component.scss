@@ -1,0 +1,11 @@
+:host {
+  width: 100%;
+}
+
+.content-block {
+  display: flex;
+  &>div:nth-child(2) {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
