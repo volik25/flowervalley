@@ -1,0 +1,30 @@
+<form [formGroup]="variablesForm" (ngSubmit)="saveOthers()">
+  <span class="p-float-label">
+    <p-inputNumber
+      inputId="minPrice"
+      formControlName="minPrice"
+      [min]="1"
+      suffix="&#8381;"
+    ></p-inputNumber>
+    <label for="minPrice">Минимальная сумма заказа для доставки</label>
+  </span>
+  <span class="p-float-label">
+    <p-inputNumber
+      inputId="cityDelivery"
+      formControlName="cityDelivery"
+      [min]="1"
+      suffix="&#8381;"
+    ></p-inputNumber>
+    <label for="cityDelivery">Стоимость доставки по городу</label>
+  </span>
+  <span class="p-float-label">
+    <p-inputNumber
+      inputId="deliveryPerKm"
+      formControlName="deliveryPerKm"
+      [min]="1"
+      suffix="&#8381;"
+    ></p-inputNumber>
+    <label for="deliveryPerKm">Стоимость доставки за км</label>
+  </span>
+  <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
+</form>
