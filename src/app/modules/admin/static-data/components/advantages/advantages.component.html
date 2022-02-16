@@ -102,3 +102,7 @@
   <!--  </div>-->
   <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>
+<h2>Предпросмотр</h2>
+<flower-valley-advantages
+  [advantagesData]="advantagesForm.getRawValue()"
+></flower-valley-advantages>

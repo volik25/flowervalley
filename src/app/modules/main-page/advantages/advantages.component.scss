@@ -4,7 +4,6 @@
 $root: '.advantages';
 
 #{$root} {
-  @include fv-container(80px, 80px);
   &__card {
     @include laptop-media {
       background: $green-gradient;

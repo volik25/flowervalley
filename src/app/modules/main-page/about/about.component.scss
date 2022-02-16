@@ -47,7 +47,6 @@ $root: '.about';
 }
 
 #{$root} {
-  @include fv-container(80px, 40px);
   display: flex;
   &__photo {
     display: none;

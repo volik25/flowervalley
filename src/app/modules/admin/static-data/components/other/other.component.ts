@@ -17,6 +17,8 @@ export class OtherComponent implements OnInit {
       minPrice: [null, Validators.required],
       cityDelivery: [null, Validators.required],
       deliveryPerKm: [null, Validators.required],
+      mobileWhatsApp: ['', Validators.required],
+      mobilePhone: ['', Validators.required],
     });
   }
 
