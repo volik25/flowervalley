@@ -1,1 +1,19 @@
-<p>orders works!</p>
+<p-table
+  [value]="orders"
+  [lazy]="true"
+  (onLazyLoad)="getOrders($event)"
+  [virtualScroll]="true"
+  [virtualRowHeight]="20"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Номер заказа</th>
+      <th>Дата заказа</th>
+      <th>Клиент</th>
+      <th>Данные клиента</th>
+      <th>Адрес доставки</th>
+      <th>Товары заказа</th>
+      <th>Коробки</th>
+    </tr>
+  </ng-template>
+</p-table>

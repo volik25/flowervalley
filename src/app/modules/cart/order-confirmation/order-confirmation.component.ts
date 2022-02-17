@@ -12,8 +12,9 @@ import { Invoice } from '../../../_models/business-pack/invoice';
 import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
 import { CartService } from '../../../_services/front/cart.service';
 import { ProductService } from '../../../_services/back/product.service';
-import { Order, ProductOrder } from '../../../_models/order';
+import { Order, OrderItem } from '../../../_models/order';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
+import { OrderService } from '../../../_services/back/order.service';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -47,6 +48,7 @@ export class OrderConfirmationComponent {
     private bpService: BusinessPackService,
     private cartService: CartService,
     private productService: ProductService,
+    private orderService: OrderService,
     private boxService: BoxGenerateService,
     private messageService: MessageService,
     private router: Router,
@@ -145,14 +147,24 @@ export class OrderConfirmationComponent {
       this.productService.sendOrder(order);
     } else {
       this.isInvoiceLoading = true;
-      this.productService.sendOrder(order).subscribe(() => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Заказ оформлен',
-          detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
-        });
-        this.isInvoiceLoading = false;
-      });
+      this.orderService.addItem(order).subscribe(
+        () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Заказ оформлен',
+            detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
+          });
+          this.isInvoiceLoading = false;
+        },
+        ({ error }) => {
+          this.isInvoiceLoading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Что-то пошло не так',
+            detail: error.message,
+          });
+        },
+      );
     }
   }
 
@@ -238,24 +250,34 @@ export class OrderConfirmationComponent {
 
   private getOrderData(): Order {
     const contacts = this.contacts.getRawValue();
-    const products: ProductOrder[] = [];
+    const products: OrderItem[] = [];
     this.goods.map((product) => {
-      products.push({
+      products.push(<OrderItem>{
         id: product.id,
         price: product.price,
         count: product.count,
       });
     });
-    const order: Order = {
-      email: contacts.email,
-      fullName: contacts.name,
-      phone: contacts.phone,
-      address: contacts.address ? contacts.address : 'Самовывоз',
+    let orderBoxes: OrderItem[] = [];
+    this.boxService.getBoxes().subscribe((boxes) => {
+      boxes.map((box) => {
+        orderBoxes.push(<OrderItem>{
+          id: box.id,
+          price: box.price,
+          count: box.count,
+        });
+      });
+    });
+    const order = {
+      clientEmail: contacts.email,
+      clientName: contacts.name,
+      clientPhone: contacts.phone,
+      clientAddress: contacts.address ? contacts.address : 'Самовывоз',
       products: products,
+      boxes: orderBoxes,
+      deliveryPrice: 0,
     };
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
-    const boxesSum = this.boxService.getBoxesSum();
-    if (boxesSum) order.boxesPrice = boxesSum;
-    return order;
+    return <Order>order;
   }
 }

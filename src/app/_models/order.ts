@@ -1,15 +1,19 @@
 export interface Order {
-  email: string;
-  fullName: string;
-  phone: string;
-  address: string;
-  products: ProductOrder[];
-  boxesPrice?: number;
-  deliveryPrice?: number;
+  id: number;
+  clientId?: string;
+  clientInn?: string;
+  clientName: string;
+  clientPhone: string;
+  clientEmail: string;
+  clientAddress: string;
+  deliveryPrice: number;
+  orderDate: Date;
+  products: OrderItem[];
+  boxes: OrderItem[];
 }
 
-export interface ProductOrder {
-  id?: string;
+export interface OrderItem {
+  id: string | number;
   price: number;
   count: number;
 }

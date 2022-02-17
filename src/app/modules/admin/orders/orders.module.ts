@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [OrdersComponent],
-  imports: [CommonModule, OrdersRoutingModule],
+  imports: [CommonModule, OrdersRoutingModule, TableModule],
 })
 export class OrdersModule {}
