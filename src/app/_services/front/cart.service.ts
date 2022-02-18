@@ -52,6 +52,14 @@ export class CartService {
     }
   }
 
+  public clearCart(): void {
+    const cart = sessionStorage.getItem('cart');
+    if (cart) {
+      sessionStorage.removeItem('cart');
+      this._cartUpdate.next([]);
+    }
+  }
+
   public updateCount(item: ProductItem): void {
     const cart = sessionStorage.getItem('cart');
     if (cart) {

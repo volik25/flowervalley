@@ -4,9 +4,44 @@ import { CommonModule } from '@angular/common';
 import { OrdersRoutingModule } from './orders-routing.module';
 import { OrdersComponent } from './orders.component';
 import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { OrderComponent } from './order/order.component';
+import { NewOrderComponent } from './order/new-order/new-order.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { PipesModule } from '../../../_pipes/pipes.module';
+import { TagModule } from 'primeng/tag';
+import { InplaceModule } from 'primeng/inplace';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FlowerValleySharedModule } from '../../../shared/shared.module';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ProductsOrderComponent } from './order/products-order/products-order.component';
+import { BoxesOrderComponent } from './order/boxes-order/boxes-order.component';
 
 @NgModule({
-  declarations: [OrdersComponent],
-  imports: [CommonModule, OrdersRoutingModule, TableModule],
+  declarations: [
+    OrdersComponent,
+    OrderComponent,
+    NewOrderComponent,
+    ProductsOrderComponent,
+    BoxesOrderComponent,
+  ],
+  imports: [
+    CommonModule,
+    OrdersRoutingModule,
+    TableModule,
+    ButtonModule,
+    DropdownModule,
+    PipesModule,
+    TagModule,
+    InplaceModule,
+    FormsModule,
+    InfiniteScrollModule,
+    FlowerValleySharedModule,
+    InputTextModule,
+    InputNumberModule,
+    ReactiveFormsModule,
+  ],
 })
 export class OrdersModule {}

@@ -1,0 +1,70 @@
+<flower-valley-container headerTitle="Новый заказ">
+  <form [formGroup]="orderGroup" (ngSubmit)="createOrder()">
+    <span class="p-float-label">
+      <input type="text" id="requestNumber" pInputText formControlName="requestNumber" />
+      <label for="requestNumber">Номер запроса (если есть)</label>
+    </span>
+    <span class="p-float-label">
+      <input type="text" id="FIO" pInputText formControlName="clientName" />
+      <label for="FIO">Контактное лицо</label>
+    </span>
+
+    <span class="p-float-label">
+      <input type="text" id="phone" pInputText formControlName="clientPhone" />
+      <label for="phone">Телефон</label>
+    </span>
+
+    <span class="p-float-label">
+      <input type="text" id="email" pInputText formControlName="clientEmail" />
+      <label for="email">Email</label>
+    </span>
+
+    <span class="p-float-label">
+      <input
+        [ngClass]="{ 'calculation-padding': shippingCost }"
+        type="text"
+        id="address"
+        pInputText
+        formControlName="clientAddress"
+      />
+      <label for="address">Адрес доставки</label>
+      <div class="calculation-result" *ngIf="shippingCost || delivery_error">
+        <p-button
+          *ngIf="!showDelivery && !delivery_error"
+          (onClick)="deliveryButtonClick()"
+          label="Рассчитать доставку"
+        ></p-button>
+        <div
+          *ngIf="showDelivery || delivery_error"
+          class="delivery"
+          [ngClass]="{ success: shippingCost, error: delivery_error }"
+        >
+          {{
+            shippingCost
+              ? 'Доставка ' + (shippingCost | priceConverter: 'none':'RUB')
+              : delivery_error
+          }}
+        </div>
+      </div>
+    </span>
+    <div class="flex justify-content-end">
+      <p-button
+        *ngIf="showDelivery"
+        styleClass="p-button-text"
+        label="Показать на карте"
+        (onClick)="yandexMapComponent.showMapToggle()"
+      ></p-button>
+    </div>
+    <div class="products">
+      <flower-valley-products-order [(orderProducts)]="products"></flower-valley-products-order>
+    </div>
+    <div class="boxes">
+      <flower-valley-boxes-order
+        [(orderBoxes)]="boxes"
+        [products]="products"
+      ></flower-valley-boxes-order>
+    </div>
+    <p-button type="submit" label="Создать"></p-button>
+  </form>
+</flower-valley-container>
+<flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>

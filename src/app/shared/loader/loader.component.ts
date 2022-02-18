@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { LoadingService } from '../../_services/front/loading.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { LoadingService } from '../../_services/front/loading.service';
   styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent implements OnInit {
+  @Input()
+  public appearance: 'full' | 'small' = 'full';
   @ViewChild('loader')
   public loader!: ElementRef;
   @HostListener('window:scroll')

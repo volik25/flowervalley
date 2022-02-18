@@ -24,6 +24,9 @@ import { TableModule } from 'primeng/table';
 import { SearchComponent } from './search/search.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PipesModule } from '../_pipes/pipes.module';
+import { LoaderComponent } from './loader/loader.component';
+import { YandexMapComponent } from './yandex-map/yandex-map.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { PipesModule } from '../_pipes/pipes.module';
     LeafButtonComponent,
     FilesUploadComponent,
     SearchComponent,
+    LoaderComponent,
+    YandexMapComponent,
   ],
   imports: [
     CommonModule,
@@ -55,6 +60,7 @@ import { PipesModule } from '../_pipes/pipes.module';
     TableModule,
     CheckboxModule,
     PipesModule,
+    DialogModule,
   ],
   exports: [
     CatalogItemComponent,
@@ -63,6 +69,8 @@ import { PipesModule } from '../_pipes/pipes.module';
     LeafButtonComponent,
     SearchComponent,
     FilesUploadComponent,
+    LoaderComponent,
+    YandexMapComponent,
   ],
 })
 export class FlowerValleySharedModule {}
