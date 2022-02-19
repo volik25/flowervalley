@@ -7,7 +7,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
 
-@Injectable({ providedIn: null })
+@Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
   private header!: string[];
   private content!: any[];
@@ -15,14 +15,19 @@ export class HtmlToPdfService {
   private boxes!: string;
   private productsSum!: string;
   private sum!: string;
+  private order: number | undefined;
+  private date: string | undefined;
 
   public getPDF(
+    isClient: boolean,
     header: string[],
     content: any[],
     delivery: string,
     boxes: string,
     productsSum: string,
     sum: string,
+    orderNumber?: number,
+    date?: string,
   ): void {
     this.header = header;
     this.content = content;
@@ -30,21 +35,42 @@ export class HtmlToPdfService {
     this.boxes = boxes;
     this.productsSum = productsSum;
     this.sum = sum;
-    HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
-      const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
+    this.order = orderNumber;
+    this.date = date;
+    if (isClient) {
+      HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
+        const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
+          tableAutoSize: true,
+        });
+        const documentDefinition = { content: html };
+        pdfMake.createPdf(documentDefinition).download('Смета_FlowerValley.pdf');
+      });
+    } else {
+      const html = htmlToPdfmake(this.generateHTML().innerHTML, {
         tableAutoSize: true,
       });
       const documentDefinition = { content: html };
-      pdfMake.createPdf(documentDefinition).download('Смета_FlowerValley.pdf');
-    });
+      pdfMake.createPdf(documentDefinition).download(`Смета_по_заказу_№${orderNumber}`);
+    }
   }
 
-  private generateHTML(imgSrc: unknown): HTMLElement {
+  private generateHTML(imgSrc?: unknown): HTMLElement {
     const div = document.createElement('div');
-    const headerTable = HtmlToPdfService.genHeaderTable(imgSrc);
-    div.append(headerTable);
+    if (imgSrc) {
+      const headerTable = HtmlToPdfService.genHeaderTable(imgSrc);
+      div.append(headerTable);
+    }
+    if (this.date) {
+      const h1 = document.createElement('h1');
+      h1.innerText = `ДАТА ЗАКАЗА: ${this.date}`;
+      h1.style.color = 'red';
+      div.append(h1);
+    }
     const h2 = document.createElement('h2');
     h2.innerText = 'Смета по заказу';
+    if (this.order) {
+      h2.innerText += ` №${this.order}`;
+    }
     h2.style.textAlign = 'center';
     h2.style.margin = '0 0 20px 0';
     div.append(h2);

@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { OrderStatus } from '../../../_utils/order-status.enum';
 import { getOrderStatus, statusOptions } from '../../../_utils/constants';
 import { Inplace } from 'primeng/inplace';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'flower-valley-orders',
@@ -17,12 +19,23 @@ export class OrdersComponent implements OnInit {
   public statusDropdown = statusOptions;
   private skip: number = 0;
   public isLoading: boolean = false;
+  public searchControl: FormControl;
+  private searchString: string = '';
   constructor(
     private orderService: OrderService,
+    private fb: FormBuilder,
     private cs: ConfirmationService,
     private ms: MessageService,
     private router: Router,
-  ) {}
+  ) {
+    this.searchControl = fb.control('');
+    this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
+      this.searchString = value;
+      this.skip = 0;
+      this.orders = [];
+      this.getOrders();
+    });
+  }
 
   ngOnInit(): void {
     window.scrollTo(0, 1);
@@ -31,7 +44,7 @@ export class OrdersComponent implements OnInit {
 
   public getOrders(): void {
     this.isLoading = true;
-    this.orderService.getItems(this.skip, 10).subscribe((data) => {
+    this.orderService.getItems(this.skip, 10, this.searchString).subscribe((data) => {
       this.orders = this.orders.concat(data);
       this.skip += 10;
       this.isLoading = false;

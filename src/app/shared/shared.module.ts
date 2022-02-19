@@ -27,6 +27,8 @@ import { PipesModule } from '../_pipes/pipes.module';
 import { LoaderComponent } from './loader/loader.component';
 import { YandexMapComponent } from './yandex-map/yandex-map.component';
 import { DialogModule } from 'primeng/dialog';
+import { EntityFormComponent } from './entity-form/entity-form.component';
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { DialogModule } from 'primeng/dialog';
     SearchComponent,
     LoaderComponent,
     YandexMapComponent,
+    EntityFormComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +64,7 @@ import { DialogModule } from 'primeng/dialog';
     CheckboxModule,
     PipesModule,
     DialogModule,
+    AccordionModule,
   ],
   exports: [
     CatalogItemComponent,
@@ -71,6 +75,7 @@ import { DialogModule } from 'primeng/dialog';
     FilesUploadComponent,
     LoaderComponent,
     YandexMapComponent,
+    EntityFormComponent,
   ],
 })
 export class FlowerValleySharedModule {}

@@ -9,7 +9,11 @@ import { Order } from '../../_models/order';
 export class OrderService extends BaseApiService {
   protected override apiUrl = 'order';
 
-  public getItems(skip: number, take: number): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}/${this.apiUrl}/list?skip=${skip}&take=${take}`);
+  public getItems(skip: number, take: number, searchString?: string): Observable<Order[]> {
+    return this.http.get<Order[]>(
+      `${this.baseUrl}/${this.apiUrl}/list?skip=${skip}&take=${take}${
+        searchString ? '&searchString=' + searchString : ''
+      }`,
+    );
   }
 }

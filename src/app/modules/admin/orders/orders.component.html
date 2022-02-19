@@ -1,3 +1,7 @@
+<span class="p-float-label mt-2">
+  <input type="text" id="search" pInputText [formControl]="searchControl" />
+  <label for="search">Номер заказа, ИНН, имя, почта или номер телефона</label>
+</span>
 <div infinite-scroll (scrolled)="getOrders()">
   <p-table styleClass="mt-2" [value]="orders">
     <ng-template pTemplate="caption">

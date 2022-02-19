@@ -4,15 +4,15 @@ import { BoxGenerateService } from '../../../_services/front/box-generate.servic
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { takeUntil } from 'rxjs';
 import { ProductItem } from '../../../_models/product-item';
-import { HtmlToPdfService } from '../../../_services/front/html-to-pdf.service';
 import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
 import { BoxItem } from '../../../_models/box-item';
+import { EstimateGenerateService } from '../../../_services/front/estimate-generate.service';
 
 @Component({
   selector: 'flower-valley-confirmation-goods',
   templateUrl: './confirmation-goods.component.html',
   styleUrls: ['./confirmation-goods.component.scss'],
-  providers: [DestroyService, HtmlToPdfService, PriceConverterPipe],
+  providers: [DestroyService, EstimateGenerateService, PriceConverterPipe],
 })
 export class ConfirmationGoodsComponent {
   @Input()
@@ -25,7 +25,7 @@ export class ConfirmationGoodsComponent {
   constructor(
     private cartService: CartService,
     private boxService: BoxGenerateService,
-    private htmlToPDF: HtmlToPdfService,
+    private estimateGenerate: EstimateGenerateService,
     private priceConvert: PriceConverterPipe,
     $destroy: DestroyService,
   ) {
@@ -78,7 +78,7 @@ export class ConfirmationGoodsComponent {
   }
 
   public getInvoice(): void {
-    this.htmlToPDF.getPDF(
+    this.estimateGenerate.getClientPDF(
       ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'],
       this.goods.map((goods) => [goods.name, goods.price, goods.count, goods.price * goods.count]),
       this.priceConvert.transform(this.shippingCost, 'two', 'rub'),

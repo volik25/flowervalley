@@ -9,11 +9,15 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from '../../../../_models/product';
 import { OrderStatus } from '../../../../_utils/order-status.enum';
 import { getOrderStatus } from '../../../../_utils/constants';
+import { EstimateGenerateService } from '../../../../_services/front/estimate-generate.service';
+import { PriceConverterPipe } from '../../../../_pipes/price-converter.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'flower-valley-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss'],
+  providers: [EstimateGenerateService, PriceConverterPipe, DatePipe],
 })
 export class OrderComponent implements OnInit {
   public orderId: number = 0;
@@ -23,6 +27,9 @@ export class OrderComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
+    private estimatePDF: EstimateGenerateService,
+    private priceConvert: PriceConverterPipe,
+    private dateConvert: DatePipe,
     private route: ActivatedRoute,
     private router: Router,
     private ms: MessageService,
@@ -92,7 +99,56 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  public getOrderSum(): number {
+    let sum = 0;
+    if (this.order) {
+      sum += this.order.deliveryPrice;
+      sum += this.getProductsSum();
+      sum += this.getBoxesSum();
+    }
+    return sum;
+  }
+
+  public getProductsSum(): number {
+    let sum = 0;
+    if (this.order)
+      this.order.products.map((product) => {
+        sum += product.price * product.count;
+      });
+    return sum;
+  }
+
+  public getBoxesSum(): number {
+    let sum = 0;
+    if (this.order) {
+      this.order.boxes.map((box) => {
+        sum += box.price * box.count;
+      });
+    }
+    return sum;
+  }
+
   public openTelepack(): void {
     window.open('https://375.ru/' + this.order?.accountNumber);
+  }
+
+  public getEstimate(): void {
+    if (this.order) {
+      this.estimatePDF.getCompanyPDF(
+        ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'],
+        this.order.products.map((goods) => [
+          goods.product.name,
+          goods.price,
+          goods.count,
+          goods.price * goods.count,
+        ]),
+        this.priceConvert.transform(this.order.deliveryPrice, 'two', 'rub'),
+        this.priceConvert.transform(this.getBoxesSum(), 'two', 'rub'),
+        this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
+        this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
+        this.orderId,
+        this.dateConvert.transform(this.order.orderDate, 'dd.MM.yyyy HH:mm'),
+      );
+    }
   }
 }

@@ -51,7 +51,7 @@
         (onDragEnter)="setPosition(i)"
         (onDragStart)="dragStart(product, i)"
         (onDragEnd)="dragEnd()"
-        [isAdmin]="true"
+        [isAdmin]="isAdmin"
         *ngFor="let product of popularProducts; let i = index"
         [product]="product"
         [category]="getCategory(product.categoryId)"

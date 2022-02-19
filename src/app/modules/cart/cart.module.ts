@@ -19,7 +19,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationGoodsComponent } from './confirmation-goods/confirmation-goods.component';
 import { DownloadInvoiceComponent } from './download-invoice/download-invoice.component';
-import { EntityFormComponent } from './order-confirmation/entity-form/entity-form.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
 import { TabViewModule } from 'primeng/tabview';
@@ -34,7 +33,6 @@ import { TooltipModule } from 'primeng/tooltip';
     OrderConfirmationComponent,
     ConfirmationGoodsComponent,
     DownloadInvoiceComponent,
-    EntityFormComponent,
   ],
   imports: [
     CommonModule,

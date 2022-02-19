@@ -1,5 +1,7 @@
-@import "container";
-
+@import "src/assets/styles/container";
+:host {
+  width: 100%;
+}
 ::ng-deep .p-accordion {
   width: 100%;
   @include laptop-media {
@@ -10,4 +12,8 @@
     border: none;
     background: none;
   }
+}
+
+.margin-top {
+  margin-top: -34px;
 }

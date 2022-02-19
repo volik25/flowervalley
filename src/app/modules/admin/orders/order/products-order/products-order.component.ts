@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Product } from '../../../../../_models/product';
 import { OrderProduct } from '../../../../../_models/order';
 import { ProductService } from '../../../../../_services/back/product.service';
@@ -9,8 +17,10 @@ import { ConfirmationService } from 'primeng/api';
   templateUrl: './products-order.component.html',
   styleUrls: ['./products-order.component.scss'],
 })
-export class ProductsOrderComponent {
+export class ProductsOrderComponent implements OnChanges {
   public _orderProducts: OrderProduct[] = [];
+  @Input()
+  public isNewOrder: boolean = false;
   @Input()
   public get orderProducts(): OrderProduct[] {
     return this._orderProducts;
@@ -23,27 +33,46 @@ export class ProductsOrderComponent {
   public orderProductsChange: EventEmitter<OrderProduct[]> = new EventEmitter<OrderProduct[]>();
   private clonedProducts: { [s: string]: OrderProduct } = {};
   public products: Product[] = [];
-  private hidedProducts: Product[] = [];
+  private hiddedProducts: Product[] = [];
   public isProductsLoading: boolean = false;
   public showProductSelect: boolean = false;
-  constructor(private productService: ProductService, private cs: ConfirmationService) {}
+  constructor(
+    private productService: ProductService,
+    private cs: ConfirmationService,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    const orderProducts: OrderProduct[] = changes['orderProducts'].currentValue;
+    if (orderProducts) {
+      this.getProducts(orderProducts, false);
+    }
+  }
 
   public showProductsDropdown(): void {
     if (this.products.length) {
       this.showProductSelect = true;
     } else {
-      this.isProductsLoading = true;
-      this.productService.getItems().subscribe((products) => {
-        this.orderProducts.map((product) => {
-          const index = products.findIndex((item) => item.id === product.product.id);
-          this.hidedProducts.push(products[index]);
-          products.splice(index, 1);
-        });
-        this.products = products;
-        this.isProductsLoading = false;
-        this.showProductSelect = true;
-      });
+      this.getProducts(this.orderProducts, true);
     }
+  }
+
+  private getProducts(orderProducts: OrderProduct[], showSelect: boolean): void {
+    this.isProductsLoading = true;
+    this.productService.getItems().subscribe((products) => {
+      orderProducts.map((orderProduct) => {
+        const index = products.findIndex((item) => item.id === orderProduct.product.id);
+        const product: Product = products[index];
+        this.hiddedProducts.push(product);
+        products.splice(index, 1);
+        if (this.isNewOrder) orderProduct.price = product.price;
+      });
+      this.products = products;
+      this.isProductsLoading = false;
+      if (showSelect) {
+        this.showProductSelect = true;
+      }
+    });
   }
 
   public addProduct(product: Product): void {
@@ -57,7 +86,7 @@ export class ProductsOrderComponent {
     this.showProductSelect = false;
     const index = this.products.findIndex((item) => item.id === product.id);
     this.products.splice(index, 1);
-    this.hidedProducts.push(product);
+    this.hiddedProducts.push(product);
   }
 
   public onRowEditInit(product: OrderProduct): void {
@@ -80,9 +109,10 @@ export class ProductsOrderComponent {
       message: 'Вы действительно хотите удалить товар из заказа?',
       accept: () => {
         this.orderProducts.splice(index, 1);
-        const rollBackProduct = this.hidedProducts.find((item) => item.id === product.product.id);
+        const rollBackProduct = this.hiddedProducts.find((item) => item.id === product.product.id);
         if (rollBackProduct) {
           this.products.push(rollBackProduct);
+          this.cdr.detectChanges();
         }
       },
     });

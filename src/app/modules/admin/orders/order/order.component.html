@@ -1,7 +1,7 @@
 <div class="order" *ngIf="order">
   <div class="order__actions">
     <span class="p-buttonset">
-      <p-button icon="pi pi-download" label="Смета"></p-button>
+      <p-button icon="pi pi-download" label="Смета" (onClick)="getEstimate()"></p-button>
       <p-button
         icon="pi pi-sync"
         styleClass="p-button-info"
@@ -33,9 +33,21 @@
         <div>Адрес доставки:</div>
         <div>{{ order.clientAddress }}</div>
       </div>
+      <div class="order__header_products-sum">
+        <div>Стоимость товаров:</div>
+        <div>{{ getProductsSum() | priceConverter }}</div>
+      </div>
+      <div class="order__header_boxes-sum">
+        <div>Стоимость коробок:</div>
+        <div>{{ getBoxesSum() | priceConverter }}</div>
+      </div>
       <div class="order__header_delivery" *ngIf="order.deliveryPrice">
         <div>Стоимость доставки:</div>
         <div>{{ order.deliveryPrice | priceConverter }}</div>
+      </div>
+      <div class="order__header_sum">
+        <div>Сумма заказа:</div>
+        <div>{{ getOrderSum() | priceConverter }}</div>
       </div>
     </div>
     <div class="order__client">

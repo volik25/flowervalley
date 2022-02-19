@@ -3,7 +3,6 @@
     <div class="flex justify-content-between align-items-center">
       <div>Список товаров</div>
       <div class="flex">
-        <p-button styleClass="p-button-info" label="Сформировать смету"></p-button>
         <div class="ml-2">
           <p-button
             *ngIf="!showProductSelect"
@@ -13,6 +12,9 @@
           ></p-button>
           <p-dropdown
             *ngIf="showProductSelect"
+            [filter]="true"
+            filterBy="name"
+            (onHide)="showProductSelect = false"
             [options]="products"
             [autoDisplayFirst]="false"
             placeholder="Выберите товар"
