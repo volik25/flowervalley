@@ -74,7 +74,18 @@ export class OrderComponent implements OnInit {
         price: box.price,
       };
     });
-    delete order.requestNumber;
+    if (!order.requestNumber) {
+      delete order.requestNumber;
+    }
+    if (!order.accountNumber) {
+      delete order.accountNumber;
+    }
+    if (!order.clientId) {
+      delete order.clientId;
+    }
+    if (!order.clientInn) {
+      delete order.clientInn;
+    }
     // @ts-ignore
     const sub = this.orderService.updateItem<Order>(order).subscribe(() => {
       this.ls.removeSubscription(sub);
