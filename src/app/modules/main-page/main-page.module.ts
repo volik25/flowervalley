@@ -69,5 +69,6 @@ import { DragDropModule } from 'primeng/dragdrop';
     FormsModule,
     DragDropModule,
   ],
+  exports: [AboutComponent, AdvantagesComponent],
 })
 export class MainPageModule {}

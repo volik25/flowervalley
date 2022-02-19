@@ -47,7 +47,8 @@ export class AdminMenuService {
       label: 'Статика',
       routerLink: 'static-data',
       state: {
-        description: 'Редактирование данных в шапке, футере и контактах',
+        description:
+          'Редактирование статических данных (шапка, футер, контакты, переменные и т.д.)',
         fullLabel: 'Статические данные',
       },
       icon: 'pi pi-database',

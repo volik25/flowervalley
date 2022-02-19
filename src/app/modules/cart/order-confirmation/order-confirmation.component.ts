@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { debounceTime, map, Observable, of, takeUntil } from 'rxjs';
@@ -12,8 +12,9 @@ import { Invoice } from '../../../_models/business-pack/invoice';
 import { GoodsInvoice } from '../../../_models/business-pack/goods-invoice';
 import { CartService } from '../../../_services/front/cart.service';
 import { ProductService } from '../../../_services/back/product.service';
-import { Order, ProductOrder } from '../../../_models/order';
+import { Order, OrderItem } from '../../../_models/order';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
+import { OrderService } from '../../../_services/back/order.service';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -22,8 +23,6 @@ import { BoxGenerateService } from '../../../_services/front/box-generate.servic
   providers: [DestroyService, YaMapService],
 })
 export class OrderConfirmationComponent {
-  @ViewChild('mapContent') public mapContent: ElementRef<HTMLElement> | undefined;
-  @ViewChild('yamap') public map: ElementRef<HTMLElement> | undefined;
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
@@ -33,11 +32,9 @@ export class OrderConfirmationComponent {
   public shippingCost: number | undefined;
   public delivery_error: string = '';
   public showDelivery = false;
-  public showMap = false;
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
-  private isMapAlreadyGenerated: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +44,7 @@ export class OrderConfirmationComponent {
     private bpService: BusinessPackService,
     private cartService: CartService,
     private productService: ProductService,
+    private orderService: OrderService,
     private boxService: BoxGenerateService,
     private messageService: MessageService,
     private router: Router,
@@ -99,7 +97,6 @@ export class OrderConfirmationComponent {
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
     });
-    this.isMapAlreadyGenerated = false;
   }
 
   public deliveryButtonClick(): void {
@@ -107,32 +104,7 @@ export class OrderConfirmationComponent {
     this.cdr.detectChanges();
   }
 
-  public showMapToggle(): void {
-    this.showMap = true;
-    if (!this.isMapAlreadyGenerated) {
-      const yaMap = this.map;
-      if (yaMap) {
-        yaMap.nativeElement.style.width = '600px';
-        yaMap.nativeElement.style.height = '600px';
-        yaMap.nativeElement.style.position = 'static';
-        if (this.mapContent) {
-          this.mapContent.nativeElement.append(yaMap.nativeElement);
-          this.mapRedraw();
-          this.isMapAlreadyGenerated = true;
-        }
-      }
-    }
-    this.cdr.detectChanges();
-  }
-
-  public mapRedraw(): void {
-    this.yaMap.yaMapRedraw();
-    this.cdr.detectChanges();
-  }
-
-  public visibleChange(): void {
-    this.cdr.detectChanges();
-  }
+  public showMapToggle(): void {}
 
   public confirmOrder(): void {
     if (isFormInvalid(this.contacts)) return;
@@ -141,24 +113,36 @@ export class OrderConfirmationComponent {
       if (isFormInvalid(this.entityData)) return;
       this.isInvoiceLoading = true;
       this.entityData.disable();
-      this.createInvoice();
-      this.productService.sendOrder(order);
+      this.createInvoice(order);
     } else {
       this.isInvoiceLoading = true;
-      this.productService.sendOrder(order).subscribe(() => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Заказ оформлен',
-          detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
-        });
-        this.isInvoiceLoading = false;
-      });
+      this.orderService.addItem(order).subscribe(
+        () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Заказ оформлен',
+            detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
+          });
+          this.isInvoiceLoading = false;
+          this.cartService.clearCart();
+        },
+        ({ error }) => {
+          this.isInvoiceLoading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Что-то пошло не так',
+            detail: error.message,
+          });
+        },
+      );
     }
   }
 
-  private createInvoice(): void {
-    this.getPartnerId().subscribe((partnerId) => {
+  private createInvoice(order: Order): void {
+    this.getPartner().subscribe(({ partnerId, inn }) => {
       if (partnerId) {
+        order.clientId = partnerId;
+        order.clientInn = inn;
         const firmId = this.bpService.selfId;
         const goods: GoodsInvoice[] = [];
         this.goods.map((product) => {
@@ -190,8 +174,11 @@ export class OrderConfirmationComponent {
             .subscribe(({ id }) => {
               if (id) {
                 this.bpService.telepakId = id;
-                this.isInvoiceLoading = false;
-                this.router.navigate(['download-invoice'], { relativeTo: this.route });
+                order.accountNumber = id;
+                this.orderService.addItem(order).subscribe(() => {
+                  this.isInvoiceLoading = false;
+                  this.router.navigate(['download-invoice'], { relativeTo: this.route });
+                });
               }
             });
         });
@@ -199,17 +186,29 @@ export class OrderConfirmationComponent {
     });
   }
 
-  private getPartnerId(): Observable<string | undefined> {
+  private getPartner(): Observable<{ partnerId: string; inn: string }> {
     if (this.entityId) {
       if (this.isEntityDataChanged) {
         return this.bpService
           .updateFirm({ ...this.entityData.getRawValue(), Object: this.entityId })
-          .pipe(map((firm) => firm.Object));
-      } else return of(this.entityId);
+          .pipe(
+            map((firm) => {
+              return {
+                partnerId: firm.Object,
+                inn: this.entityData.getRawValue().INN,
+              };
+            }),
+          );
+      } else return of({ partnerId: this.entityId, inn: this.entityData.getRawValue().INN });
     } else {
-      return this.bpService
-        .createFirm(this.entityData.getRawValue())
-        .pipe(map((firm) => firm.Object));
+      return this.bpService.createFirm(this.entityData.getRawValue()).pipe(
+        map((firm) => {
+          return {
+            partnerId: firm.Object,
+            inn: this.entityData.getRawValue().INN,
+          };
+        }),
+      );
     }
   }
 
@@ -238,24 +237,34 @@ export class OrderConfirmationComponent {
 
   private getOrderData(): Order {
     const contacts = this.contacts.getRawValue();
-    const products: ProductOrder[] = [];
+    const products: OrderItem[] = [];
     this.goods.map((product) => {
-      products.push({
+      products.push(<OrderItem>{
         id: product.id,
         price: product.price,
         count: product.count,
       });
     });
-    const order: Order = {
-      email: contacts.email,
-      fullName: contacts.name,
-      phone: contacts.phone,
-      address: contacts.address ? contacts.address : 'Самовывоз',
+    let orderBoxes: OrderItem[] = [];
+    this.boxService.getBoxes().subscribe((boxes) => {
+      boxes.map((box) => {
+        orderBoxes.push(<OrderItem>{
+          id: box.id,
+          price: box.price,
+          count: box.count,
+        });
+      });
+    });
+    const order = {
+      clientEmail: contacts.email,
+      clientName: contacts.name,
+      clientPhone: contacts.phone,
+      clientAddress: contacts.address ? contacts.address : 'Самовывоз',
       products: products,
+      boxes: orderBoxes,
+      deliveryPrice: 0,
     };
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
-    const boxesSum = this.boxService.getBoxesSum();
-    if (boxesSum) order.boxesPrice = boxesSum;
-    return order;
+    return <Order>order;
   }
 }

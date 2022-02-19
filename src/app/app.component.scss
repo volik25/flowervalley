@@ -105,6 +105,32 @@
       }
     }
   }
+  &.p-button-info {
+    background-color: transparent;
+    color: #3B82F6;
+    border-color: transparent;
+    &:focus {
+      box-shadow: none;
+    }
+    &:not(.p-button-text) {
+      background-color: #3B82F6;
+      color: white;
+    }
+    &:enabled {
+      &:hover, &:active {
+        outline: none;
+        &.p-button-text {
+          background: rgba(59, 130, 246, 0.04);
+          border-color: transparent;
+          color: #3B82F6;
+        }
+        &:not(.p-button-text) {
+          border-color: #2563EB;
+          background: #2563EB;
+        }
+      }
+    }
+  }
 }
 
 :host ::ng-deep .p-carousel-indicators {

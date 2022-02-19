@@ -1,0 +1,10 @@
+<div id="yaMap" #yamap style="position: absolute; top: -500px"></div>
+<p-dialog
+  [(visible)]="showMap"
+  [modal]="true"
+  [closeOnEscape]="false"
+  (visibleChange)="visibleChange()"
+  (onShow)="mapRedraw()"
+>
+  <div #mapContent></div>
+</p-dialog>

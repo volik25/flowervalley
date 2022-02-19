@@ -4,7 +4,7 @@ import { isFormInvalid } from '../../../../../_utils/formValidCheck';
 import { StaticDataService } from '../../../../../_services/back/static-data.service';
 
 @Component({
-  selector: 'flower-valley-about',
+  selector: 'flower-valley-static-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
 })

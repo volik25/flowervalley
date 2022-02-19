@@ -120,6 +120,16 @@
         color: $main-green;
       }
     }
+    &:not(.p-disabled):hover {
+      &.p-menuitem-link-active {
+        span {
+          color: $main-green;
+        }
+      }
+    }
+    &:focus {
+      box-shadow: none;
+    }
   }
 }
 
@@ -131,6 +141,16 @@
           span {
             color: $main-green;
           }
+        }
+        &:not(.p-disabled):hover {
+          &.p-menuitem-link-active {
+            span {
+              color: $main-green;
+            }
+          }
+        }
+        &:focus {
+          box-shadow: none;
         }
       }
     }

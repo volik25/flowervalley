@@ -1,18 +1,36 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BusinessPackService } from '../../../../_services/back/business-paсk.service';
-import { Firm } from '../../../../_models/business-pack/firm';
+import { BusinessPackService } from '../../_services/back/business-paсk.service';
+import { Firm } from '../../_models/business-pack/firm';
 import { take } from 'rxjs/operators';
-import { DadataService } from '../../../../_services/back/dadata.service';
-import { DaDataEntity } from '../../../../_models/daDataEntity';
-import { DadataToBpConverterService } from '../../../../_services/front/dadata-to-bp-converter.service';
+import { DadataService } from '../../_services/back/dadata.service';
+import { DaDataEntity } from '../../_models/daDataEntity';
+import { DadataToBpConverterService } from '../../_services/front/dadata-to-bp-converter.service';
+import { AutoComplete } from 'primeng/autocomplete';
 
 @Component({
   selector: 'flower-valley-entity-form',
   templateUrl: './entity-form.component.html',
   styleUrls: ['./entity-form.component.scss'],
 })
-export class EntityFormComponent implements OnInit {
+export class EntityFormComponent implements OnInit, OnChanges {
+  @ViewChild('autoCompleteInn')
+  public autocompleteInn: AutoComplete | undefined;
+  @Input()
+  public newClientLabel: string = 'Я делаю заказ впервые';
+  @Input()
+  public isNewOrder: boolean = false;
+  @Input()
+  public client: Firm | undefined;
   public entityId: string | undefined;
   public entityData: FormGroup;
   public isNewClient: FormControl;
@@ -69,6 +87,13 @@ export class EntityFormComponent implements OnInit {
 
   public ngOnInit(): void {
     this.dataChanges.emit(this.entityData);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    const client: Firm = changes['client'].currentValue;
+    if (client) {
+      this.autocompleteInn?.selectItem(client);
+    }
   }
 
   public patchBpValue(selectedFirm: Firm): void {

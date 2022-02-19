@@ -22,6 +22,7 @@ import { ImageModule } from 'primeng/image';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
+import { MainPageModule } from '../../main-page/main-page.module';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputTextareaModule,
     InputNumberModule,
     InputMaskModule,
+    MainPageModule,
   ],
 })
 export class StaticDataModule {}

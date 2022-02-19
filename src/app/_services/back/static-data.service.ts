@@ -42,7 +42,7 @@ export class StaticDataService {
   public getAboutContent(): Observable<About> {
     // return this.http.get<About>(`${this.baseUrl}/${this.apiUrl}`);
     return of(<About>{
-      img: '',
+      img: 'assets/images/about.png',
       title: 'Тепличное хозяйство',
       subTitle: 'Агрофирма Цветочная Долина',
       description: `Тепличное хозяйство Агрофирма «Цветочная Долина» является признанным производителем цветочной
@@ -143,6 +143,8 @@ export class StaticDataService {
       minPrice: 17500,
       cityDelivery: 2500,
       deliveryPerKm: 50,
+      mobileWhatsApp: '79151091000',
+      mobilePhone: '79151091000',
     });
   }
 }

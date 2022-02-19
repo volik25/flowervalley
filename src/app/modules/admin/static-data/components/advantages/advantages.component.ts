@@ -10,7 +10,7 @@ interface Photos {
 }
 
 @Component({
-  selector: 'flower-valley-advantages',
+  selector: 'flower-valley-static-advantages',
   templateUrl: './advantages.component.html',
   styleUrls: ['./advantages.component.scss'],
 })

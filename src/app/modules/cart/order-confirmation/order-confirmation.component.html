@@ -70,7 +70,7 @@
             *ngIf="showDelivery"
             styleClass="p-button-text"
             label="Показать на карте"
-            (onClick)="showMapToggle()"
+            (onClick)="yandexMapComponent.showMapToggle()"
           ></p-button>
         </div>
       </form>
@@ -98,14 +98,4 @@
     </div>
   </div>
 </div>
-<div id="yaMap" #yamap style="position: absolute; top: -500px"></div>
-
-<p-dialog
-  [(visible)]="showMap"
-  [modal]="true"
-  [closeOnEscape]="false"
-  (visibleChange)="visibleChange()"
-  (onShow)="mapRedraw()"
->
-  <div #mapContent></div>
-</p-dialog>
+<flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>

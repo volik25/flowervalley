@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { BoxItem } from '../../_models/box-item';
 import { ProductItem } from '../../_models/product-item';
 import { BoxService } from '../back/box.service';
 
 @Injectable()
 export class BoxGenerateService {
-  private _boxesUpdate: Subject<BoxItem[]> = new Subject<BoxItem[]>();
+  private _boxesUpdate: BehaviorSubject<BoxItem[]> = new BehaviorSubject<BoxItem[]>([]);
 
   public get boxes(): BoxItem[] {
     return this._boxes;
