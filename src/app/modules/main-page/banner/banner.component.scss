@@ -121,24 +121,34 @@
     div {
       display: flex;
       flex-direction: column;
+      width: 100%;
+      @include laptop-media {
+        width: 25%;
+      }
       &:not(:first-child) {
         margin-top: 30px;
         @include laptop-media {
           margin-top: 0;
         }
       }
-      span:first-child {
+      &>span:first-child {
         font-weight: 500;
         font-size: 40px;
         margin-bottom: 10px;
         @include laptop-media {
-          font-size: 48px;
+          font-size: 34px;
           margin-bottom: 15px;
+        }
+        @include xl-media {
+          font-size: 45px;
         }
         line-height: 110%;
         color: $main-green;
+        &>span:last-child {
+          padding-left: 5px;
+        }
       }
-      span:last-child {
+      &>span:last-child {
         font-weight: 500;
         font-size: 16px;
         line-height: 110%;

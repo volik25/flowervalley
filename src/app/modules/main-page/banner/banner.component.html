@@ -36,21 +36,37 @@
       <ng-container *ngTemplateOutlet="carousel"></ng-container>
     </div>
   </div>
-  <div class="info-banner">
+  <div
+    class="info-banner"
+    infinite-scroll
+    (scrolled)="startAnimation([clients, years, cities, flowers])"
+  >
     <div>
-      <span>5800+</span>
+      <span>
+        <span #clients id="clients">0</span>
+        <span>+</span>
+      </span>
       <span>ДОВОЛЬНЫХ КЛИЕНТОВ</span>
     </div>
     <div>
-      <span>20 лет</span>
+      <span>
+        <span #years id="years">0</span>
+        <span>лет</span>
+      </span>
       <span>НА РЫНКЕ ЦВЕТОВ</span>
     </div>
     <div>
-      <span>50+</span>
+      <span>
+        <span #cities id="cities">0</span>
+        <span>+</span>
+      </span>
       <span>ГОРОДОВ В РОССИИ</span>
     </div>
     <div>
-      <span>1 500.000 шт</span>
+      <span>
+        <span #flowers id="flowers">0</span>
+        <span>шт</span>
+      </span>
       <span>ЦВЕТОВ В ГОД</span>
     </div>
   </div>

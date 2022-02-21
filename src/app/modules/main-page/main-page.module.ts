@@ -31,6 +31,7 @@ import { EditorModule } from 'primeng/editor';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MediaComponent } from './media/media.component';
 import { DragDropModule } from 'primeng/dragdrop';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { DragDropModule } from 'primeng/dragdrop';
     SkeletonModule,
     FormsModule,
     DragDropModule,
+    InfiniteScrollModule,
   ],
   exports: [AboutComponent, AdvantagesComponent],
 })
