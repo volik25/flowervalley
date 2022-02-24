@@ -12,9 +12,16 @@
   [auto]="true"
   (uploadHandler)="uploadFiles($event.files)"
 ></p-fileUpload>
-<div class="grid" *ngIf="!showOnlyButton && photos.length">
-  <div class="img col-3" *ngFor="let photo of photos; let i = index">
-    <p-image [src]="photo.objectURL" width="100"></p-image>
+<!--<div class="grid" *ngIf="!showOnlyButton && localUrl.length">-->
+<!--  <div class="img col-3" *ngFor="let photo of localUrl; let i = index">-->
+<!--    <p-image [src]="photo"></p-image>-->
+<!--    <p-button styleClass="p-button-danger" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="grid" *ngIf="!showOnlyButton && localCompressedUrl.length">
+  <div class="img col-3" *ngFor="let photo of localCompressedUrl; let i = index">
+    <p-image [src]="photo" styleClass="w-12" imageClass="w-12"></p-image>
     <p-button styleClass="p-button-danger" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>
   </div>
 </div>
