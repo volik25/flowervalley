@@ -6,13 +6,16 @@ import { PricesComponent } from './prices.component';
 import { TableModule } from 'primeng/table';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FlowerValleySharedModule } from '../../../shared/shared.module';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { IndividualComponent } from './individual/individual.component';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
-  declarations: [PricesComponent],
+  declarations: [PricesComponent, IndividualComponent],
   imports: [
     CommonModule,
     PricesRoutingModule,
@@ -23,6 +26,9 @@ import { FlowerValleySharedModule } from '../../../shared/shared.module';
     InputTextModule,
     ButtonModule,
     FlowerValleySharedModule,
+    SplitButtonModule,
+    MultiSelectModule,
+    ReactiveFormsModule,
   ],
 })
 export class PricesModule {}

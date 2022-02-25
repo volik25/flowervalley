@@ -20,8 +20,11 @@ export class PriceListGenerateService {
       const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
         tableAutoSize: true,
       });
-      const documentDefinition = { content: html };
-      pdfMake.createPdf(documentDefinition).download('Прайс-лист_Арофирма_Цветочная_Долина.pdf');
+      const documentDefinition = {
+        content: html,
+        info: { title: 'Прайс-лист Агрофирма Цветочная Долина' },
+      };
+      pdfMake.createPdf(documentDefinition).open();
     });
   }
 
@@ -48,9 +51,9 @@ export class PriceListGenerateService {
       const cell = headerRow.insertCell(i);
       cell.innerHTML = this.header[i];
       if (i === 0) {
-        cell.style.width = '50%';
+        cell.style.width = '60%';
       } else {
-        cell.style.width = '16.6%';
+        cell.style.width = '20%';
         cell.style.textAlign = 'center';
       }
     }
