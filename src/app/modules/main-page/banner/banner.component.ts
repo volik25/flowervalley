@@ -19,7 +19,7 @@ export class BannerComponent {
   public photos = [];
   public displayCustom: boolean = false;
   public showContent: boolean = false;
-
+  private isAnimated: boolean = false;
   public activeIndex: number = 0;
 
   constructor(private router: Router, private separator: ThousandSeparatorPipe) {}
@@ -48,21 +48,24 @@ export class BannerComponent {
   }
 
   public startAnimation(elements: HTMLElement[]): void {
-    elements.map((element) => {
-      switch (element.id) {
-        case 'clients':
-          this.animateValue(element, 5800);
-          break;
-        case 'years':
-          this.animateValue(element, 20);
-          break;
-        case 'cities':
-          this.animateValue(element, 50);
-          break;
-        case 'flowers':
-          this.animateValue(element, 1500000);
-          break;
-      }
-    });
+    if (!this.isAnimated) {
+      elements.map((element) => {
+        switch (element.id) {
+          case 'clients':
+            this.animateValue(element, 5800);
+            break;
+          case 'years':
+            this.animateValue(element, 20);
+            break;
+          case 'cities':
+            this.animateValue(element, 50);
+            break;
+          case 'flowers':
+            this.animateValue(element, 1500000);
+            break;
+        }
+      });
+      this.isAnimated = true;
+    }
   }
 }
