@@ -4,7 +4,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { LoadingService } from './_services/front/loading.service';
 import { NavigationStart, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { MessageService } from 'primeng/api';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-root',
@@ -26,6 +26,7 @@ export class AppComponent {
     public loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private config: PrimeNGConfig,
   ) {
     loadingService.changeDetectorRef = cdr;
     _bs.backgroundChanges.subscribe((background) => {
@@ -40,9 +41,46 @@ export class AppComponent {
       .subscribe(() => {
         loadingService.cancelLoading();
       });
+    this.setConfig();
   }
 
   public get isShowBreadcrumb(): boolean {
     return this._bs.isShow;
+  }
+
+  private setConfig(): void {
+    this.config.setTranslation({
+      dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+      dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      monthNames: [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Апрель',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Август',
+        'Сентябрь',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь',
+      ],
+      monthNamesShort: [
+        'Янв',
+        'Фев',
+        'Март',
+        'Апр',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Авг',
+        'Сен',
+        'Окт',
+        'Ноя',
+        'Дек',
+      ],
+    });
   }
 }

@@ -17,6 +17,7 @@
         <th>Клиент</th>
         <th>Данные клиента</th>
         <th>Адрес доставки</th>
+        <th>Сумма заказа</th>
         <th>Статус</th>
         <th>Действия</th>
       </tr>
@@ -31,6 +32,7 @@
           <div>Почта: {{ order.clientEmail }}</div>
         </td>
         <td>{{ order.clientAddress }}</td>
+        <td>{{ order.orderSum | priceConverter }}</td>
         <td>
           <p-inplace #inplace>
             <ng-template pTemplate="display">

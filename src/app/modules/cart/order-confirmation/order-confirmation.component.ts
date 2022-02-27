@@ -26,6 +26,8 @@ export class OrderConfirmationComponent {
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
+  public deliveryDate: FormControl;
+  public currentDate = new Date();
   public contacts: FormGroup;
   public entityData!: FormGroup;
   private entityId: string | undefined;
@@ -51,11 +53,15 @@ export class OrderConfirmationComponent {
     private route: ActivatedRoute,
   ) {
     this.pickUp = fb.control(false);
+    this.deliveryDate = fb.control(null);
     this.contacts = fb.group({
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       address: [''],
+      deliveryWishDateFrom: [''],
+      deliveryWishDateTo: [''],
+      orderSum: [null, Validators.required],
     });
     this.contacts.controls['address'].valueChanges
       .pipe(takeUntil($destroy), debounceTime(1000))
@@ -93,6 +99,10 @@ export class OrderConfirmationComponent {
       } else {
         this.contacts.controls['address'].enable();
       }
+    });
+    this.deliveryDate.valueChanges.subscribe((dates: Date[]) => {
+      this.contacts.controls['deliveryWishDateFrom'].setValue(dates[0]);
+      this.contacts.controls['deliveryWishDateTo'].setValue(dates[1]);
     });
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
@@ -260,11 +270,22 @@ export class OrderConfirmationComponent {
       clientName: contacts.name,
       clientPhone: contacts.phone,
       clientAddress: contacts.address ? contacts.address : 'Самовывоз',
+      deliveryWishDateFrom: contacts.deliveryWishDateFrom
+        ? contacts.deliveryWishDateFrom.toISOString()
+        : null,
+      deliveryWishDateTo: contacts.deliveryWishDateTo
+        ? contacts.deliveryWishDateTo.toISOString()
+        : null,
+      orderSum: contacts.orderSum,
       products: products,
       boxes: orderBoxes,
       deliveryPrice: 0,
     };
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
+  }
+
+  public setOrderSum(sum: number): void {
+    this.contacts.controls['orderSum'].setValue(sum);
   }
 }

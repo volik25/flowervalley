@@ -12,6 +12,8 @@ import { getOrderStatus } from '../../../../_utils/constants';
 import { EstimateGenerateService } from '../../../../_services/front/estimate-generate.service';
 import { PriceConverterPipe } from '../../../../_pipes/price-converter.pipe';
 import { DatePipe } from '@angular/common';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { Inplace } from 'primeng/inplace';
 
 @Component({
   selector: 'flower-valley-order',
@@ -21,6 +23,8 @@ import { DatePipe } from '@angular/common';
 })
 export class OrderComponent implements OnInit {
   public orderId: number = 0;
+  public confirmedDate: FormControl;
+  public currentDate = new Date();
   public clientEntity: Firm | undefined;
   public order: Order | undefined;
   public products: Product[] = [];
@@ -32,6 +36,7 @@ export class OrderComponent implements OnInit {
     private dateConvert: DatePipe,
     private route: ActivatedRoute,
     private router: Router,
+    private fb: FormBuilder,
     private ms: MessageService,
     private cs: ConfirmationService,
     private ls: LoadingService,
@@ -39,11 +44,27 @@ export class OrderComponent implements OnInit {
     route.params.subscribe((params) => {
       this.orderId = params['id'];
     });
+    this.confirmedDate = fb.control(null);
   }
 
   ngOnInit(): void {
     const orderSub = this.orderService.getItemById<Order>(this.orderId).subscribe((order) => {
-      this.order = order;
+      this.order = {
+        ...order,
+        orderDate: new Date(order.orderDate),
+        confirmedDeliveryDate: order.confirmedDeliveryDate
+          ? new Date(order.confirmedDeliveryDate)
+          : undefined,
+        deliveryWishDateFrom: order.deliveryWishDateFrom
+          ? new Date(order.deliveryWishDateFrom)
+          : undefined,
+        deliveryWishDateTo: order.deliveryWishDateTo
+          ? new Date(order.deliveryWishDateTo)
+          : undefined,
+      };
+      if (this.order.deliveryWishDateFrom) {
+        this.confirmedDate.setValue(new Date(this.order.deliveryWishDateFrom));
+      }
       if (this.order.clientId) {
         const bpSub = this.bpService.getFirmById(this.order.clientId).subscribe((firm) => {
           this.clientEntity = firm;
@@ -161,5 +182,11 @@ export class OrderComponent implements OnInit {
         this.dateConvert.transform(this.order.orderDate, 'dd.MM.yyyy HH:mm'),
       );
     }
+  }
+
+  public confirmDate(inplace: Inplace): void {
+    inplace.deactivate();
+    // @ts-ignore
+    this.order.confirmedDeliveryDate = this.confirmedDate.value;
   }
 }
