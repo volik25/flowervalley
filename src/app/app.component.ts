@@ -1,10 +1,13 @@
-import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoadingService } from './_services/front/loading.service';
 import { NavigationStart, Router } from '@angular/router';
-import { filter, map } from 'rxjs';
+import { filter, forkJoin, map } from 'rxjs';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { StaticDataService } from './_services/back/static-data.service';
+import { Footer, Header } from './_models/static-data/header';
+import { MobileButtons } from './_models/static-data/variables';
 
 @Component({
   selector: 'flower-valley-root',
@@ -12,8 +15,11 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
   styleUrls: ['./app.component.scss'],
   providers: [DialogService],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public cookieVisible = false;
+  public header: Header | undefined;
+  public footer: Footer | undefined;
+  public mobileButtons: MobileButtons | undefined;
   public background: 'light' | 'dark' = 'light';
   @HostListener('document:keydown.control.m')
   private openAdminPanel() {
@@ -23,6 +29,7 @@ export class AppComponent {
     private _bs: BreadcrumbService,
     private _ds: DialogService,
     private ms: MessageService,
+    private staticData: StaticDataService,
     public loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
     private router: Router,
@@ -42,6 +49,22 @@ export class AppComponent {
         loadingService.cancelLoading();
       });
     this.setConfig();
+  }
+
+  public ngOnInit() {
+    this.router.events.subscribe((event) => {
+      this.loadingService.setLoading(event);
+    });
+    if (this.isMobile) {
+      this.staticData.getMobileVariables().subscribe((data) => {
+        this.mobileButtons = data;
+      });
+    }
+    const requests = [this.staticData.getHeaderContent(), this.staticData.getFooterContent()];
+    forkJoin(requests).subscribe(([header, footer]) => {
+      this.header = header as Header;
+      this.footer = footer as Footer;
+    });
   }
 
   public get isShowBreadcrumb(): boolean {
@@ -82,5 +105,11 @@ export class AppComponent {
         'Дек',
       ],
     });
+  }
+
+  public get isMobile(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
+      navigator.userAgent,
+    );
   }
 }

@@ -11,3 +11,11 @@ interface Block {
   title: string;
   description: string;
 }
+
+export enum AdvantagesEnum {
+  title = 13,
+  subTitle,
+  leftBlock,
+  centerBlock,
+  rightBlock,
+}

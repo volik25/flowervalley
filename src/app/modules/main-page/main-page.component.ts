@@ -17,6 +17,9 @@ import { Sale } from '../../_models/sale';
 import { Media } from '../../_models/media';
 import { ProductService } from '../../_services/back/product.service';
 import { PopularOrder } from '../../_models/popular-order';
+import { StaticDataService } from '../../_services/back/static-data.service';
+import { About } from '../../_models/static-data/about';
+import { Advantages } from '../../_models/static-data/advantages';
 
 interface MainInfo {
   main: MainBanner<unknown>;
@@ -42,11 +45,14 @@ export class MainPageComponent implements OnInit {
   public draggedIndex: number | null = null;
   public isDragDropFinished: boolean = false;
   public initialArray: ProductItem[] = [];
+  public aboutData: About | undefined;
+  public advantagesData: Advantages | undefined;
   constructor(
     private adminService: AdminService,
     private catalogService: CatalogService,
     private productService: ProductService,
     private mainInfoService: MainInfoService,
+    private staticData: StaticDataService,
     private ls: LoadingService,
     private ds: DialogService,
     private ms: MessageService,
@@ -88,10 +94,15 @@ export class MainPageComponent implements OnInit {
   public popularProducts: ProductItem[] = [];
 
   public ngOnInit(): void {
-    const reqests = [this.mainInfoService.getMainInfo<MainInfo>(), this.catalogService.getItems()];
+    const reqests = [
+      this.mainInfoService.getMainInfo<MainInfo>(),
+      this.catalogService.getItems(),
+      this.staticData.getAboutContent(),
+      this.staticData.getAdvantagesContent(),
+    ];
     const sub = forkJoin(reqests)
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([main, catalog]) => {
+      .subscribe(([main, catalog, about, advantages]) => {
         // @ts-ignore
         (main as MainInfo).popular = (main as MainInfo).popular.map((product) => {
           return {
@@ -102,6 +113,8 @@ export class MainPageComponent implements OnInit {
         this.mainInfo = main as MainInfo;
         this.popularProducts = this.mainInfo.popular;
         this.categories = catalog as Category[];
+        this.aboutData = about as About;
+        this.advantagesData = advantages as Advantages;
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
           .sort((a, b) => a.categoryOrder - b.categoryOrder);

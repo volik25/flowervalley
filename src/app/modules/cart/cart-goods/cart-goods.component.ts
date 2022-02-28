@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { Box } from '../../../_models/box';
 import { ProductItem } from '../../../_models/product-item';
+import { CartVariables } from '../../../_models/static-data/variables';
 
 @Component({
   selector: 'flower-valley-cart-goods',
@@ -10,6 +11,10 @@ import { ProductItem } from '../../../_models/product-item';
   styleUrls: ['./cart-goods.component.scss'],
 })
 export class CartGoodsComponent {
+  @Input()
+  public cartVariables: CartVariables | undefined;
+  @Output()
+  public isMinSumReached: EventEmitter<boolean> = new EventEmitter<boolean>();
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   public minSummary = 17500;
@@ -35,8 +40,10 @@ export class CartGoodsComponent {
   public get getDifference(): number {
     const diff = this.minSummary - this.getSum;
     if (diff > 0) {
+      this.isMinSumReached.emit(false);
       return diff;
     }
+    this.isMinSumReached.emit(true);
     return 0;
   }
 

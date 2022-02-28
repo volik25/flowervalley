@@ -144,8 +144,11 @@
       <span>Стоимость цветов:</span>
       <span>{{ getSum | priceConverter: 'two':'rub' }}</span>
     </div>
-    <div class="summary-block__additional" *ngIf="getDifference">
-      <span>Минимальная сумма заказа {{ minSummary | priceConverter: 'none':'RUB' }}</span>
+    <div class="summary-block__additional" *ngIf="getDifference && cartVariables">
+      <span
+        >Минимальная сумма заказа
+        {{ cartVariables.minOrderSum | priceConverter: 'none':'RUB' }}</span
+      >
       <span>Не хватает товара на сумму {{ getDifference | priceConverter: 'none':'RUB' }}</span>
     </div>
   </div>

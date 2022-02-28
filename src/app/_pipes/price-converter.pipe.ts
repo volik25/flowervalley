@@ -10,7 +10,7 @@ export class PriceConverterPipe implements PipeTransform {
   public transform(
     value: number | string,
     dotOptions?: 'none' | 'one' | 'two',
-    curr?: 'RUB' | 'rub',
+    curr?: 'RUB' | 'rub' | 'full',
   ): string {
     return this.decimalTransform(value, dotOptions, curr);
   }
@@ -30,12 +30,15 @@ export class PriceConverterPipe implements PipeTransform {
           break;
       }
     }
-    if (curr === 'RUB') {
-      return `${number}\u20bd`;
+    switch (curr) {
+      case 'RUB':
+        return `${number}\u20bd`;
+      case 'rub':
+        return `${number} руб`;
+      case 'full':
+        return `${number} рублей`;
+      default:
+        return `${number}\u20bd`;
     }
-    if (curr === 'rub') {
-      return `${number} руб`;
-    }
-    return `${number}\u20bd`;
   }
 }

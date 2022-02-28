@@ -1,10 +1,10 @@
 <header #header class="header">
-  <div class="header__contacts">
+  <div class="header__contacts" *ngIf="headerData">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
       <div class="flex-column justify-content-center pl-2">
-        <div class="title">Агрофирма<br />Цветочная Долина</div>
-        <div class="sub-title">Тепличное хозяйство</div>
+        <div class="title">{{ headerData.title }}</div>
+        <div class="sub-title">{{ headerData.subTitle }}</div>
       </div>
     </div>
     <div class="header__contacts_data">
@@ -13,7 +13,7 @@
     <div class="header__contacts_button">
       <a
         class="whats-app-button p-2"
-        href="https://api.whatsapp.com/send/?phone=79151091000"
+        href="https://api.whatsapp.com/send/?phone={{ headerData.whatsAppNumber }}"
         target="_blank"
       >
         <span class="pi pi-whatsapp"></span>
@@ -23,11 +23,11 @@
     <div class="contacts">
       <div class="flex">
         <span class="pi pi-phone"></span>
-        <a href="tel:+7(915)109-10-00">+7 915 109 1000</a>
+        <a href="tel:{{ headerData.phone }}">{{ headerData.phone }}</a>
       </div>
       <div class="flex">
         <span class="pi pi-envelope"></span>
-        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@mail.com</a>
+        <a type="mail" href="mailto:{{ headerData.mail }}">{{ headerData.mail }}</a>
       </div>
     </div>
     <div class="search">
@@ -129,14 +129,16 @@
 </ng-template>
 
 <ng-template #contacts>
-  <div class="work-time">
-    <span class="pi pi-clock"></span>
-    <div class="pl-2">Пн-Вс: с 9:00 до 20:00 без выходных и обеда.</div>
-  </div>
-  <div class="address">
-    <span class="pi pi-map-marker"></span>
-    <div class="pl-2">
-      140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
+  <ng-container *ngIf="headerData">
+    <div class="work-time" *ngFor="let workTime of headerData.workTime">
+      <span class="pi pi-clock"></span>
+      <div class="pl-2">{{ workTime }}</div>
     </div>
-  </div>
+    <div class="address" *ngFor="let address of headerData.address">
+      <span class="pi pi-map-marker"></span>
+      <div class="pl-2">
+        {{ address }}
+      </div>
+    </div>
+  </ng-container>
 </ng-template>

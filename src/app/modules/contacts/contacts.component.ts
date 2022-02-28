@@ -6,6 +6,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IdImg } from '../../_models/_idImg';
 import { LoadingService } from '../../_services/front/loading.service';
+import { StaticDataService } from '../../_services/back/static-data.service';
+import { Contacts } from '../../_models/static-data/contacts';
 
 @Component({
   selector: 'flower-valley-contacts',
@@ -32,11 +34,13 @@ export class ContactsComponent implements OnInit {
   public displayCustom: boolean = false;
   public activeIndex: number = 0;
   public photos: IdImg[] = [];
+  public contacts: Contacts | undefined;
 
   constructor(
     private _bs: BreadcrumbService,
     private adminService: AdminService,
     private contactService: ContactsService,
+    private staticData: StaticDataService,
     private cs: ConfirmationService,
     private sanitizer: DomSanitizer,
     private ls: LoadingService,
@@ -48,6 +52,11 @@ export class ContactsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.updateWidth();
+    const dataSub = this.staticData.getContactsContent().subscribe((contacts) => {
+      this.contacts = contacts;
+      this.ls.removeSubscription(dataSub);
+    });
+    this.ls.addSubscription(dataSub);
     const sub = this.contactService.getPhotos().subscribe((photos) => {
       this.photos = photos;
       this.ls.removeSubscription(sub);

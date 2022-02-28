@@ -29,6 +29,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { DadataInterceptor } from './_interceptors/dadata.interceptor';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { PasswordModule } from 'primeng/password';
+import { LoadingService } from './_services/front/loading.service';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { PasswordModule } from 'primeng/password';
   ],
   providers: [
     BreadcrumbService,
+    LoadingService,
     BusinessPackService,
     ConfirmationService,
     MessageService,

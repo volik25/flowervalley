@@ -4,3 +4,10 @@ export interface About {
   subTitle: string;
   description: string;
 }
+
+export enum AboutEnum {
+  img = 9,
+  title,
+  subTitle,
+  description,
+}

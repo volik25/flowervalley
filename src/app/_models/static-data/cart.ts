@@ -17,3 +17,18 @@ export interface BannerBlock {
   title: string;
   description: string;
 }
+
+export enum CartEnum {
+  minSumTitle = 18,
+  minSumInfo,
+  infoText,
+  address,
+  phones,
+  mail,
+  callText,
+  writeText,
+  bannerTitle,
+  leftBannerBlock,
+  centerBannerBlock,
+  rightBannerBlock,
+}
