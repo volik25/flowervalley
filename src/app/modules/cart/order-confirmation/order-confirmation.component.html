@@ -91,7 +91,7 @@
           inputId="range"
           styleClass="w-12"
         ></p-calendar>
-        <label for="range">Интервал доставки</label>
+        <label for="range">Интервал доставки (самовывоза)</label>
       </span>
       <flower-valley-entity-form
         *ngIf="clientType === 'entity'"
@@ -108,6 +108,7 @@
       <flower-valley-confirmation-goods
         [pickUp]="pickUp.value"
         [goods]="goods"
+        [orderId]="orderId"
         [shippingCost]="showDelivery ? shippingCost || 0 : 0"
         (orderSum)="setOrderSum($event)"
       ></flower-valley-confirmation-goods>

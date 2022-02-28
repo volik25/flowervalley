@@ -19,6 +19,16 @@
           <span [style]="{ 'margin-left': '15px' }">Cкачать счет в PDF</span>
         </ng-template>
       </p-button>
+      <p-button
+        [style]="{ 'margin-top': '20px', padding: '25px' }"
+        styleClass="p-button-estimate w-12 flex justify-content-center"
+        (onClick)="getOffer()"
+      >
+        <ng-template pTemplate="content">
+          <p-image styleClass="flex align-items-center" src="assets/icons/estimate.svg"></p-image>
+          <span>Скачать Коммерческое Предложение</span>
+        </ng-template>
+      </p-button>
     </div>
   </div>
 </div>

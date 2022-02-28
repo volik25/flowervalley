@@ -19,6 +19,8 @@ export class ConfirmationGoodsComponent {
   public goods: ProductItem[] = [];
   public boxes: BoxItem[] = [];
   @Input()
+  public orderId: number | undefined;
+  @Input()
   public shippingCost = 0;
   @Input()
   public pickUp: boolean = false;
