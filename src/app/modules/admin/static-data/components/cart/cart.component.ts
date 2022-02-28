@@ -9,6 +9,9 @@ import {
 } from '@angular/forms';
 import { StaticDataService } from '../../../../../_services/back/static-data.service';
 import { isFormInvalid } from '../../../../../_utils/formValidCheck';
+import { LoadingService } from '../../../../../_services/front/loading.service';
+import { MessageService } from 'primeng/api';
+import { Cart } from '../../../../../_models/static-data/cart';
 
 type ArrayTypes = 'address' | 'phones' | 'mail';
 
@@ -21,7 +24,12 @@ export class CartComponent implements OnInit {
   public cartForm: FormGroup;
   public isLoading: boolean = false;
 
-  constructor(private fb: FormBuilder, private staticData: StaticDataService) {
+  constructor(
+    private fb: FormBuilder,
+    private ls: LoadingService,
+    private ms: MessageService,
+    private staticData: StaticDataService,
+  ) {
     this.cartForm = fb.group({
       minSumTitle: ['', Validators.required],
       minSumInfo: ['', Validators.required],
@@ -48,13 +56,42 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.staticData.getCartContent().subscribe((data) => {
-      this.cartForm.patchValue(data);
+    const sub = this.staticData.getCartContent().subscribe((data) => {
+      this.patchValue(data);
+      this.ls.removeSubscription(sub);
     });
+    this.ls.addSubscription(sub);
   }
 
   public saveCart(): void {
     if (isFormInvalid(this.cartForm)) return;
+    this.isLoading = true;
+    this.cartForm.disable();
+    const cart = this.cartForm.getRawValue();
+    this.staticData.setCartContent(cart).subscribe(() => {
+      this.cartForm.enable();
+      this.isLoading = false;
+      this.ms.add({
+        severity: 'success',
+        summary: 'Запрос выполнен',
+        detail: 'Данные успешно обновлены',
+      });
+    });
+  }
+
+  private patchValue(cart: Cart): void {
+    for (const key in cart) {
+      // @ts-ignore
+      const value = cart[key];
+      if (value instanceof Array) {
+        if (value.length > 1) {
+          for (let i = 1; i < value.length; i++) {
+            this.addControlToArray(key as ArrayTypes);
+          }
+        }
+      }
+    }
+    this.cartForm.patchValue(cart);
   }
 
   public getControlArray(control: ArrayTypes): FormArray {

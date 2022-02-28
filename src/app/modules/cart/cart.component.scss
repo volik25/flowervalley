@@ -80,8 +80,16 @@
       align-items: center;
       margin-top: unset;
     }
-    a {
-      color: $main-green;
+    &>div {
+      display: flex;
+      align-items: center;
+      &>div {
+        display: flex;
+        flex-direction: column;
+        a {
+          color: $main-green;
+        }
+      }
     }
   }
 }

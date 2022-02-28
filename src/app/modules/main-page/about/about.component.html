@@ -1,11 +1,11 @@
 <div class="about" *ngIf="aboutData">
-  <div class="about__photo">
+  <div class="about__photo" *ngIf="aboutData.img">
     <ng-container *ngTemplateOutlet="aboutPhoto"></ng-container>
   </div>
   <div class="about__desc">
     <div class="about__desc_title">{{ aboutData.title }}</div>
     <div class="about__desc_name">{{ aboutData.subTitle }}</div>
-    <div class="about__desc_photo">
+    <div class="about__desc_photo" *ngIf="aboutData.img">
       <ng-container *ngTemplateOutlet="aboutPhoto"></ng-container>
     </div>
     <div class="about__desc_text" [innerHTML]="aboutData.description"></div>

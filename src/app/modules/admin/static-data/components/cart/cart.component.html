@@ -12,7 +12,9 @@
     <label for="infoText">Текст под карточкой предупреждения</label>
   </span>
   <ng-container formArrayName="address">
-    <ng-container *ngFor="let control of getControlArray('address').controls; let i = index">
+    <ng-container
+      *ngFor="let control of getControlArray('address').controls; let i = index; let first = first"
+    >
       <div class="flex align-items-center">
         <span class="p-float-label mr-2">
           <input
@@ -24,6 +26,7 @@
           <label for="address-{{ i }}">Адрес</label>
         </span>
         <p-button
+          *ngIf="!first"
           styleClass="mb-2 p-button-danger"
           icon="pi pi-trash"
           (onClick)="deleteArrayControl('address', i)"
@@ -49,7 +52,13 @@
   <div class="formArrayBlock">
     <div>
       <ng-container formArrayName="phones">
-        <ng-container *ngFor="let control of getControlArray('phones').controls; let i = index">
+        <ng-container
+          *ngFor="
+            let control of getControlArray('phones').controls;
+            let i = index;
+            let first = first
+          "
+        >
           <div class="flex align-items-center">
             <span class="p-float-label mr-2">
               <input
@@ -61,6 +70,7 @@
               <label for="phones-{{ i }}">Телефон</label>
             </span>
             <p-button
+              *ngIf="!first"
               styleClass="mb-2 p-button-danger"
               icon="pi pi-trash"
               (onClick)="deleteArrayControl('phones', i)"
@@ -77,7 +87,9 @@
     </div>
     <div>
       <ng-container formArrayName="mail">
-        <ng-container *ngFor="let control of getControlArray('mail').controls; let i = index">
+        <ng-container
+          *ngFor="let control of getControlArray('mail').controls; let i = index; let first = first"
+        >
           <div class="flex align-items-center">
             <span class="p-float-label mr-2">
               <input
@@ -89,6 +101,7 @@
               <label for="mail-{{ i }}">Почта</label>
             </span>
             <p-button
+              *ngIf="!first"
               styleClass="mb-2 p-button-danger"
               icon="pi pi-trash"
               (onClick)="deleteArrayControl('mail', i)"

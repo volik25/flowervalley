@@ -1,5 +1,4 @@
-<flower-valley-header></flower-valley-header>
-<flower-valley-loader *ngIf="loadingService.momentLoading"></flower-valley-loader>
+<flower-valley-header [headerData]="header"></flower-valley-header>
 <div
   [ngClass]="{
     'background-dark': background === 'dark',
@@ -12,7 +11,7 @@
   </div>
 </div>
 <router-outlet></router-outlet>
-<flower-valley-footer></flower-valley-footer>
+<flower-valley-footer [footer]="footer"></flower-valley-footer>
 <p-dialog
   [closable]="false"
   [(visible)]="cookieVisible"
@@ -39,3 +38,4 @@
 <a href="https://api.whatsapp.com/send/?phone=79151091000" target="_blank" class="whatsapp">
   <p-image src="assets/images/whatsapp.svg" width="50px"></p-image>
 </a>
+<flower-valley-loader *ngIf="loadingService.isLoading"></flower-valley-loader>

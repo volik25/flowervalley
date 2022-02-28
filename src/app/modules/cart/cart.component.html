@@ -4,7 +4,7 @@
   [isAdmin]="isAdmin"
   [buttonTemplate]="boxesTemplate"
 >
-  <div class="banner">
+  <div class="banner" *ngIf="cartContent && cartVariables">
     <div class="banner__img">
       <p-image
         styleClass="flex align-items-center justify-content-center"
@@ -12,60 +12,68 @@
       ></p-image>
     </div>
     <div class="banner__content">
-      <div class="banner__content_title">Минимальная сумма заказа через сайт - 17.500 рублей</div>
-      <div class="banner__content_info">Без учета транспортировочных коробок и доставки</div>
+      <div class="banner__content_title">
+        {{ cartContent.minSumTitle }}
+        {{ cartVariables.minOrderSum | priceConverter: 'none':'full' }}
+      </div>
+      <div class="banner__content_info">{{ cartContent.minSumInfo }}</div>
     </div>
   </div>
   <div class="info-text">
-    На меньшую сумму Вы можете приобрести наши товары только приехав к нам по адресу:
+    {{ cartContent?.infoText }}
   </div>
-  <div class="contacts">
+  <div class="contacts" *ngIf="cartContent">
     <div class="contacts__address">
-      140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 А теплица 109
+      <span *ngFor="let address of cartContent.address">
+        {{ cartContent.address }}
+      </span>
     </div>
     <div class="contacts__phoneMail">
       <div>
-        <span>Звоните&nbsp;</span>
-        <a href="tel:+7(915)109-10-00">+7(915)109-10-00&nbsp;</a>
+        <span>{{ cartContent.callText }}&nbsp;</span>
+        <div>
+          <a href="tel:{{ phone }}" *ngFor="let phone of cartContent.phones">{{ phone }}&nbsp;</a>
+        </div>
       </div>
       <div>
-        <span>или пишите&nbsp;</span>
-        <a href="mailto:flowervalley@mail.ru">flowervalley@mail.ru</a>
+        <span>{{ cartContent.writeText }}&nbsp;</span>
+        <div>
+          <a href="mailto:{{ mail }}" *ngFor="let mail of cartContent.mail">{{ mail }}</a>
+        </div>
       </div>
     </div>
   </div>
-  <flower-valley-cart-goods *ngIf="goods.length"></flower-valley-cart-goods>
+  <flower-valley-cart-goods
+    *ngIf="goods.length"
+    [cartVariables]="cartVariables"
+    (isMinSumReached)="isMinSumReached = $event"
+  ></flower-valley-cart-goods>
   <div *ngIf="!goods.length" class="empty-message">
     <div>Ваша корзина пуста</div>
   </div>
-  <div class="important">
-    <div class="important__header">Важно!</div>
+  <div class="important" *ngIf="cartContent">
+    <div class="important__header">{{ cartContent.bannerTitle }}</div>
     <div class="important__content">
       <div class="important__content_flowers">
-        <span>Рассада цветов</span>
-        <span
-          >Доставка по Москве: <span>2500 рублей</span>, доставка по мо и в другие города:
-          <span>расчитывается индивидуально</span></span
-        >
+        <span>{{ cartContent.leftBannerBlock.title }}</span>
+        <span>{{ cartContent.leftBannerBlock.description }}</span>
       </div>
       <div class="important__content_tulips">
-        <span>Тюльпаны срезка</span>
-        <span
-          ><span>ВНИМАНИЕ!</span> Доставка тюльпанов осуществляется сторонними транспортными
-          компаниями по заказу покупателя. Агрофирма не осуществляет доставку тюльпанов
-        </span>
+        <span>{{ cartContent.centerBannerBlock.title }}</span>
+        <span>{{ cartContent.centerBannerBlock.description }} </span>
       </div>
       <div class="important__content_pickup">
-        <span>Самовывоз</span>
-        <span
-          >Московская область, Раменский район, деревня Островцы, ул. Подмосковная 22А, теплица
-          109</span
-        >
+        <span>{{ cartContent.rightBannerBlock.title }}</span>
+        <span>{{ cartContent.rightBannerBlock.description }}</span>
       </div>
     </div>
   </div>
 </flower-valley-container>
-<flower-valley-container *ngIf="goods.length" background="dark" headerTitle="Оформление заказа">
+<flower-valley-container
+  *ngIf="goods.length && isMinSumReached"
+  background="dark"
+  headerTitle="Оформление заказа"
+>
   <flower-valley-order-confirmation></flower-valley-order-confirmation>
 </flower-valley-container>
 

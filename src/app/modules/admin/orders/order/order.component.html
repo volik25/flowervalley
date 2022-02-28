@@ -29,6 +29,71 @@
         <div>Дата заказа:</div>
         <div>{{ order.orderDate | date: 'dd.MM.yyyy HH:mm' }}</div>
       </div>
+      <div
+        class="order__header_date"
+        *ngIf="!order.confirmedDeliveryDate && order.deliveryWishDateFrom"
+      >
+        <div>Интервал доставки:</div>
+        <div>
+          {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm':'+0600' }} -
+          {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm':'+0600' }}
+        </div>
+      </div>
+      <div class="order__header_date">
+        <div>Дата доставки:</div>
+        <div *ngIf="order.confirmedDeliveryDate">
+          <p-inplace #inplace>
+            <ng-template pTemplate="display">
+              {{ order.confirmedDeliveryDate | date: 'dd.MM.yyyy HH:mm' }}
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex align-items-center">
+                <span class="p-float-label">
+                  <p-calendar
+                    [(ngModel)]="order.confirmedDeliveryDate"
+                    [firstDayOfWeek]="1"
+                    [showTime]="true"
+                    [showSeconds]="false"
+                    dateFormat="dd.mm.yy"
+                    [readonlyInput]="true"
+                    inputId="confirmedDate"
+                  ></p-calendar>
+                  <label for="confirmedDate">Дата доставки</label>
+                </span>
+                <p-button
+                  styleClass="ml-2"
+                  label="Изменить"
+                  (onClick)="inplace.deactivate()"
+                ></p-button>
+              </div>
+            </ng-template>
+          </p-inplace>
+        </div>
+        <p-inplace *ngIf="!order.confirmedDeliveryDate" #inplace>
+          <ng-template pTemplate="display"> Согласовать </ng-template>
+          <ng-template pTemplate="content">
+            <div class="flex align-items-center">
+              <span class="p-float-label">
+                <p-calendar
+                  [formControl]="confirmedDate"
+                  [firstDayOfWeek]="1"
+                  [showTime]="true"
+                  [showSeconds]="false"
+                  dateFormat="dd.mm.yy"
+                  [readonlyInput]="true"
+                  inputId="confirmedDate"
+                ></p-calendar>
+                <label for="confirmedDate">Дата доставки</label>
+              </span>
+              <p-button
+                styleClass="ml-2"
+                label="Согласовать"
+                (onClick)="confirmDate(inplace)"
+              ></p-button>
+            </div>
+          </ng-template>
+        </p-inplace>
+      </div>
       <div class="order__header_address">
         <div>Адрес доставки:</div>
         <div>{{ order.clientAddress }}</div>

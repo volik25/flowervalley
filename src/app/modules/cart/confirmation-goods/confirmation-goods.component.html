@@ -64,11 +64,11 @@
     </div>
     <div class="summary-block__boxes">
       <span>Коробки:</span>
-      <span>{{ getBoxesCount }}x ({{ getBoxesSum | priceConverter: 'none':'RUB' }})</span>
+      <span>{{ boxesCount }}x ({{ boxesSum | priceConverter: 'none':'RUB' }})</span>
     </div>
     <div class="summary-block__summary">
       <span>Итог:</span>
-      <span>{{ getSum + getBoxesSum + shippingCost | priceConverter: 'two':'rub' }}</span>
+      <span>{{ getOrderSum() | priceConverter: 'two':'rub' }}</span>
     </div>
   </div>
 </p-card>
