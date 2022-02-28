@@ -6,6 +6,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IdImg } from '../../_models/_idImg';
 import { LoadingService } from '../../_services/front/loading.service';
+import { StaticDataService } from '../../_services/back/static-data.service';
+import { Contacts } from '../../_models/static-data/contacts';
+import { SortOrderService } from '../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-contacts',
@@ -32,11 +35,14 @@ export class ContactsComponent implements OnInit {
   public displayCustom: boolean = false;
   public activeIndex: number = 0;
   public photos: IdImg[] = [];
+  public contacts: Contacts | undefined;
 
   constructor(
     private _bs: BreadcrumbService,
     private adminService: AdminService,
     private contactService: ContactsService,
+    private sortOrder: SortOrderService<IdImg>,
+    private staticData: StaticDataService,
     private cs: ConfirmationService,
     private sanitizer: DomSanitizer,
     private ls: LoadingService,
@@ -48,8 +54,17 @@ export class ContactsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.updateWidth();
+    const dataSub = this.staticData.getContactsContent().subscribe((contacts) => {
+      this.contacts = contacts;
+      this.ls.removeSubscription(dataSub);
+    });
+    this.ls.addSubscription(dataSub);
+    this.getPhotos();
+  }
+
+  private getPhotos(): void {
     const sub = this.contactService.getPhotos().subscribe((photos) => {
-      this.photos = photos;
+      this.photos = photos.sort((a, b) => a.sortOrder - b.sortOrder);
       this.ls.removeSubscription(sub);
     });
     this.ls.addSubscription(sub);
@@ -64,14 +79,8 @@ export class ContactsComponent implements OnInit {
     const formData = new FormData();
     photos.map((photo) => {
       formData.append('img', photo);
-      this.contactService.addItem(formData).subscribe((id: number) => {
-        const url = ((<any>photo).objectURL = this.sanitizer.bypassSecurityTrustUrl(
-          window.URL.createObjectURL(photo),
-        ));
-        this.photos.push({
-          id: id,
-          img: url as string,
-        });
+      this.contactService.addItem(formData).subscribe(() => {
+        this.getPhotos();
       });
     });
   }
@@ -107,5 +116,18 @@ export class ContactsComponent implements OnInit {
         });
       },
     });
+  }
+
+  public dragStart(draggedItem: IdImg, i: number): void {
+    this.sortOrder.dragStart(this.photos, draggedItem, i);
+  }
+  public dragEnd(): void {
+    this.photos = this.sortOrder.dragEnd(this.photos);
+  }
+  public drop(): void {
+    this.contactService.setOrder(this.sortOrder.drop(this.photos)).subscribe();
+  }
+  public setPosition(index: number): void {
+    this.photos = this.sortOrder.setPosition(this.photos, index);
   }
 }

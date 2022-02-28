@@ -14,6 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { LoadingService } from '../../../../_services/front/loading.service';
 import { slugify } from 'transliteration';
+import { BannerPhotos } from '../../../../_models/main-banner';
+import { SortOrderService } from '../../../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-product',
@@ -53,6 +55,7 @@ export class ProductComponent implements OnInit {
     private fb: FormBuilder,
     private catalogService: CatalogService,
     private productService: ProductService,
+    private sortOrder: SortOrderService<BannerPhotos>,
     private boxService: BoxService,
     private converter: BusinessPackConverterService,
     private bpService: BusinessPackService,
@@ -217,5 +220,22 @@ export class ProductComponent implements OnInit {
     const i = this.product.photos.findIndex((photo) => photo.id === id);
     // @ts-ignore
     this.product.photos.splice(i, 1);
+  }
+
+  public dragStart(draggedItem: BannerPhotos, i: number): void {
+    // @ts-ignore
+    this.sortOrder.dragStart(this.product.photos, draggedItem, i);
+  }
+  public dragEnd(): void {
+    // @ts-ignore
+    this.product.photos = this.sortOrder.dragEnd(this.product.photos);
+  }
+  public drop(): void {
+    // @ts-ignore
+    this.productService.setOrder(this.sortOrder.drop(this.product.photos)).subscribe();
+  }
+  public setPosition(index: number): void {
+    // @ts-ignore
+    this.product.photos = this.sortOrder.setPosition(this.product.photos, index);
   }
 }

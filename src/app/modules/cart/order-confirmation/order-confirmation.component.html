@@ -78,6 +78,21 @@
         <p-checkbox [formControl]="pickUp" [binary]="true" inputId="pickUp"></p-checkbox>
         <label for="pickUp">Самовывоз</label>
       </div>
+      <span class="p-float-label">
+        <p-calendar
+          [formControl]="deliveryDate"
+          [firstDayOfWeek]="1"
+          [showTime]="true"
+          [showSeconds]="false"
+          dateFormat="dd.mm.yy"
+          [minDate]="currentDate"
+          selectionMode="range"
+          [readonlyInput]="true"
+          inputId="range"
+          styleClass="w-12"
+        ></p-calendar>
+        <label for="range">Интервал доставки (самовывоза)</label>
+      </span>
       <flower-valley-entity-form
         *ngIf="clientType === 'entity'"
         (dataChanges)="entityDataChanges($event)"
@@ -93,7 +108,9 @@
       <flower-valley-confirmation-goods
         [pickUp]="pickUp.value"
         [goods]="goods"
+        [orderId]="orderId"
         [shippingCost]="showDelivery ? shippingCost || 0 : 0"
+        (orderSum)="setOrderSum($event)"
       ></flower-valley-confirmation-goods>
     </div>
   </div>

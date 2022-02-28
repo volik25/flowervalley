@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  Input,
   OnInit,
   Renderer2,
   TemplateRef,
@@ -15,6 +16,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { StorageService } from '../../_services/front/storage.service';
 import { ProductService } from '../../_services/back/product.service';
 import { PriceListGenerateService } from '../../_services/front/price-list-generate.service';
+import { Header } from '../../_models/static-data/header';
 
 @Component({
   selector: 'flower-valley-header',
@@ -22,6 +24,8 @@ import { PriceListGenerateService } from '../../_services/front/price-list-gener
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @Input()
+  public headerData: Header | undefined;
   @ViewChild('menuBar')
   private menuBar: TemplateRef<ElementRef> | undefined;
   @ViewChild('menuBtn')

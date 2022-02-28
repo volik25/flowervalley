@@ -1,18 +1,31 @@
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
-export function markInvalidFields(form: FormGroup) {
+export function markInvalidFields(form: FormGroup | FormControl) {
   if (!form) {
     return;
   }
-  Object.keys(form.controls).map((control) => {
-    const element = form.get(control);
-    if (element?.invalid) {
-      if (element instanceof FormArray) {
-        element.controls.map((arrayControl) => markInvalidFields(arrayControl as FormGroup));
+  if (form instanceof FormControl) {
+    form.markAsDirty();
+  } else {
+    Object.keys(form.controls).map((control) => {
+      const element = form.get(control);
+      if (element?.invalid) {
+        if (element instanceof FormArray) {
+          element.controls.map((arrayControl) => {
+            if (arrayControl instanceof FormControl) {
+              markInvalidFields(arrayControl as FormControl);
+            } else {
+              markInvalidFields(arrayControl as FormGroup);
+            }
+          });
+        }
+        if (element instanceof FormGroup) {
+          markInvalidFields(element);
+        }
+        element?.markAsDirty();
       }
-      element?.markAsDirty();
-    }
-  });
+    });
+  }
 }
 
 export function isFormInvalid(form: FormGroup): boolean {

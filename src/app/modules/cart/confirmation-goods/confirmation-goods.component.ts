@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { DestroyService } from '../../../_services/front/destroy.service';
@@ -19,9 +19,13 @@ export class ConfirmationGoodsComponent {
   public goods: ProductItem[] = [];
   public boxes: BoxItem[] = [];
   @Input()
+  public orderId: number | undefined;
+  @Input()
   public shippingCost = 0;
   @Input()
   public pickUp: boolean = false;
+  @Output()
+  public orderSum: EventEmitter<number> = new EventEmitter<number>();
   constructor(
     private cartService: CartService,
     private boxService: BoxGenerateService,
@@ -59,21 +63,27 @@ export class ConfirmationGoodsComponent {
     this.cartService.updateCount(item);
   }
 
-  public get getSum(): number {
+  public get productsSum(): number {
     let sum = 0;
     this.goods.map((item) => (sum += item.price * item.count));
     return sum;
   }
 
-  public get getBoxesSum(): number {
+  public get boxesSum(): number {
     let sum = 0;
     this.boxes.map((box) => (sum += box.count * box.price));
     return sum;
   }
 
-  public get getBoxesCount(): number {
+  public get boxesCount(): number {
     let sum = 0;
     this.boxes.map((box) => (sum += box.count));
+    return sum;
+  }
+
+  public getOrderSum(): number {
+    const sum = this.productsSum + this.boxesSum + this.shippingCost;
+    this.orderSum.emit(sum);
     return sum;
   }
 
@@ -82,9 +92,9 @@ export class ConfirmationGoodsComponent {
       ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'],
       this.goods.map((goods) => [goods.name, goods.price, goods.count, goods.price * goods.count]),
       this.priceConvert.transform(this.shippingCost, 'two', 'rub'),
-      this.priceConvert.transform(this.getBoxesSum, 'two', 'rub'),
-      this.priceConvert.transform(this.getSum, 'two', 'rub'),
-      this.priceConvert.transform(this.getSum + this.getBoxesSum + this.shippingCost, 'two', 'rub'),
+      this.priceConvert.transform(this.boxesSum, 'two', 'rub'),
+      this.priceConvert.transform(this.productsSum, 'two', 'rub'),
+      this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
     );
   }
 }

@@ -219,7 +219,6 @@ export class NewOrderComponent implements OnInit {
             })
             .subscribe(({ id }) => {
               if (id) {
-                this.bpService.telepakId = id;
                 order.accountNumber = id;
                 const products: OrderItem[] = [];
                 order.products.map((product: any) => {

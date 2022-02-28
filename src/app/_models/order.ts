@@ -14,6 +14,10 @@ export interface Order {
   clientAddress: string;
   deliveryPrice: number;
   orderDate: Date;
+  orderSum: number;
+  deliveryWishDateFrom?: Date;
+  deliveryWishDateTo?: Date;
+  confirmedDeliveryDate?: Date;
   status: OrderStatus;
   products: OrderProduct[];
   boxes: OrderBox[];

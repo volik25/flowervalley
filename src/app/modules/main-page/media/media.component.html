@@ -2,8 +2,18 @@
   <div *ngIf="!media.length" class="media__error col-12">
     К сожалению, статьи пока отсутвуют.<br />Но мы обязательно исправим ситуацию!
   </div>
-  <div class="media__container col-12 lg:col-6 xl:col-3" *ngFor="let item of media">
-    <div class="card">
+  <div class="media__container col-12 lg:col-6 xl:col-3" *ngFor="let item of media; let i = index">
+    <div
+      class="card"
+      pDraggable="media"
+      dragEffect="move"
+      pDroppable="media"
+      (onDrop)="drop()"
+      [pDraggableDisabled]="!isAdmin"
+      (onDragEnter)="setPosition(i)"
+      (onDragStart)="dragStart(item, i)"
+      (onDragEnd)="dragEnd()"
+    >
       <p-image
         [src]="item.img"
         [alt]="item.title"

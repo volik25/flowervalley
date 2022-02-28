@@ -14,8 +14,9 @@ export class EstimateGenerateService {
     boxes: string,
     productsSum: string,
     sum: string,
+    orderId?: number,
   ): void {
-    this.htmlToPdf.getPDF(true, header, content, delivery, boxes, productsSum, sum);
+    this.htmlToPdf.getPDF(true, header, content, delivery, boxes, productsSum, sum, orderId);
   }
 
   public getCompanyPDF(

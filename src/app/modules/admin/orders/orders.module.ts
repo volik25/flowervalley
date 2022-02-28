@@ -18,6 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProductsOrderComponent } from './order/products-order/products-order.component';
 import { BoxesOrderComponent } from './order/boxes-order/boxes-order.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { BoxesOrderComponent } from './order/boxes-order/boxes-order.component';
     InputTextModule,
     InputNumberModule,
     ReactiveFormsModule,
+    CalendarModule,
   ],
 })
 export class OrdersModule {}

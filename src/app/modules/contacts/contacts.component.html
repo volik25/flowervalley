@@ -1,4 +1,4 @@
-<flower-valley-container background="dark" headerTitle="Контакты">
+<flower-valley-container background="dark" headerTitle="Контакты" *ngIf="contacts">
   <div class="contacts">
     <div class="contacts__info">
       <div class="contacts__info_address">
@@ -10,8 +10,12 @@
           ></p-image>
           <span>Адрес</span>
         </div>
-        <div class="contacts__info_address-content">
-          140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109
+        <div
+          [ngClass]="{ 'pb-6': last }"
+          class="contacts__info_address-content"
+          *ngFor="let address of contacts.address; let last = last"
+        >
+          {{ address }}
         </div>
       </div>
       <div class="contacts__info_phones">
@@ -23,26 +27,22 @@
           ></p-image>
           <span>Номер</span>
         </div>
-        <div class="contacts__info_phones-content">
-          <div>
-            <a href="tel:+7(915)109-10-00">+7(915)109-10-00</a>
-            <a href="tel:+7(926)165-11-51">+7(926)165-11-51</a>
-          </div>
-          <div>
-            <a href="tel:+7(903)101-34-01">+7(903)101-34-01</a>
-            <a
-              class="whats-app-button p-2"
-              href="https://api.whatsapp.com/send/?phone=79151091000"
-              target="_blank"
-            >
-              <span class="pi pi-whatsapp"></span>
-              <div class="pl-1">What'sApp</div>
-            </a>
-          </div>
+        <div class="contacts__info_phones-content grid">
+          <a class="col-6" *ngFor="let phone of contacts.phones" href="tel:{{ phone }}">{{
+            phone
+          }}</a>
+          <a
+            class="whats-app-button col-6"
+            href="https://api.whatsapp.com/send/?phone={{ contacts.whatsAppNumber }}"
+            target="_blank"
+          >
+            <span class="pi pi-whatsapp"></span>
+            <div class="pl-1">What'sApp</div>
+          </a>
         </div>
       </div>
       <div class="contacts__info_mail">
-        <a type="mail" href="mailto:flowervalley@gmail.com">flowervalley@mail.com</a>
+        <a type="mail" href="mailto:{{ contacts.mail }}">{{ contacts.mail }}</a>
       </div>
       <div class="contacts__info_timing">
         <div class="contacts__info_timing-title">
@@ -54,7 +54,7 @@
           <span>Время работы</span>
         </div>
         <div class="contacts__info_timing-content">
-          <span>Пн-Вс:</span> с <span>9:00</span> до <span>20:00</span> без выходных и обеда
+          <span *ngFor="let workTime of contacts.workTime">{{ workTime }}</span>
         </div>
       </div>
     </div>
@@ -73,10 +73,18 @@
   headerTitle="Фотографии"
   [isAdmin]="isAdmin"
   [buttonTemplate]="addPhotos"
+  *ngIf="photos.length"
 >
   <div class="grid">
     <div
-      *ngFor="let photo of photos"
+      *ngFor="let photo of photos; let i = index"
+      pDraggable="contactsPhoto"
+      dragEffect="move"
+      pDroppable="contactsPhoto"
+      (onDrop)="drop()"
+      (onDragEnter)="setPosition(i)"
+      (onDragStart)="dragStart(photo, i)"
+      (onDragEnd)="dragEnd()"
       class="photo col-12 lg:col-6 xl:col-4 flex justify-content-center"
     >
       <p-image

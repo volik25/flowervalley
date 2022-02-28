@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../../_services/front/loading.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
-import { Media } from '../../../../_models/media';
 import { MediaService } from '../../../../_services/back/media.service';
 
 @Component({
@@ -13,6 +12,7 @@ import { MediaService } from '../../../../_services/back/media.service';
 })
 export class MediaComponent {
   public mediaForm: FormGroup;
+  public currentDate = new Date();
   constructor(
     private fb: FormBuilder,
     private mediaService: MediaService,
@@ -29,7 +29,8 @@ export class MediaComponent {
 
   public addMedia(): void {
     if (isFormInvalid(this.mediaForm)) return;
-    const media: Media = this.mediaForm.getRawValue();
+    const media = this.mediaForm.getRawValue();
+    media.publishDate = media.publishDate.toISOString();
     const formData = new FormData();
     Object.getOwnPropertyNames(media).map((key) => {
       if (key !== 'img') {

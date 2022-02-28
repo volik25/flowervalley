@@ -15,6 +15,7 @@ export class MediaComponent implements OnInit {
   public mediaForm: FormGroup;
   public media: Media | undefined;
   public id: number = 0;
+  public currentDate = new Date();
   constructor(
     private fb: FormBuilder,
     private mediaService: MediaService,

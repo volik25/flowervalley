@@ -13,12 +13,13 @@
         inputId="publishDate"
         formControlName="publishDate"
         dateFormat="dd.mm.yy"
+        [maxDate]="currentDate"
       ></p-calendar>
       <label for="publishDate">Дата публикации</label>
     </span>
     <flower-valley-files-upload
       [multi]="false"
-      label="Добавить обложку"
+      label="Обновить обложку"
       (uploaded)="photoUploaded($event)"
     ></flower-valley-files-upload>
     <div class="grid mt-2" *ngIf="media">
@@ -26,6 +27,6 @@
         <p-image [src]="media.img" width="100"></p-image>
       </div>
     </div>
-    <p-button type="submit" label="Добавить"></p-button>
+    <p-button type="submit" label="Сохранить"></p-button>
   </form>
 </flower-valley-container>

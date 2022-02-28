@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FeedBackService } from '../../../../_services/back/feed-back.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
-import { MainBanner } from '../../../../_models/main-banner';
+import { BannerPhotos, MainBanner } from '../../../../_models/main-banner';
 import { Router } from '@angular/router';
+import { SortOrderService } from '../../../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-reviews',
@@ -15,10 +16,11 @@ export class ReviewsComponent {
   public isLoading: boolean = false;
   private addedPhotos: File[] = [];
   private deleteIds: number[] = [];
-  public currentPhotos: { id: number; src: string }[] = [];
+  public currentPhotos: BannerPhotos[] = [];
   constructor(
     private fb: FormBuilder,
     private reviewService: FeedBackService,
+    private sortOrder: SortOrderService<BannerPhotos>,
     private router: Router,
   ) {
     this.reviewGroup = fb.group({
@@ -29,7 +31,7 @@ export class ReviewsComponent {
     if (data) {
       const review: MainBanner<unknown> = JSON.parse(data);
       this.reviewGroup.patchValue(review);
-      this.currentPhotos = review.photos;
+      this.currentPhotos = review.photos.sort((a, b) => a.sortOrder - b.sortOrder);
     }
   }
 
@@ -61,5 +63,18 @@ export class ReviewsComponent {
     this.deleteIds.push(id);
     const i = this.currentPhotos.findIndex((photo) => photo.id === id);
     this.currentPhotos.splice(i, 1);
+  }
+
+  public dragStart(draggedItem: BannerPhotos, i: number): void {
+    this.sortOrder.dragStart(this.currentPhotos, draggedItem, i);
+  }
+  public dragEnd(): void {
+    this.currentPhotos = this.sortOrder.dragEnd(this.currentPhotos);
+  }
+  public drop(): void {
+    this.reviewService.setOrder(this.sortOrder.drop(this.currentPhotos)).subscribe();
+  }
+  public setPosition(index: number): void {
+    this.currentPhotos = this.sortOrder.setPosition(this.currentPhotos, index);
   }
 }

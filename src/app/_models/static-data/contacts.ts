@@ -3,7 +3,15 @@ export interface Contacts {
   phones: string[];
   whatsAppNumber: string;
   mail: string;
-  workTime: string;
+  workTime: string[];
   mapImages: string[];
   mapFrames: string[];
+}
+
+export enum ContactsEnum {
+  workTime = 4,
+  address,
+  whatsAppNumber,
+  mail = 8,
+  phones = 35,
 }

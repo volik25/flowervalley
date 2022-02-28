@@ -16,10 +16,24 @@
     <input type="text" id="whatsAppNumber" pInputText formControlName="whatsAppNumber" />
     <label for="whatsAppNumber">Номер чата на кнопке WhatsApp</label>
   </span>
+  <span class="p-float-label">
+    <input type="text" id="phone" pInputText formControlName="phone" />
+    <label for="phone">Телефон</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="mail" pInputText formControlName="mail" />
+    <label for="mail">Почта</label>
+  </span>
   <div class="formArrayBlock">
     <div>
       <ng-container formArrayName="workTime">
-        <ng-container *ngFor="let control of getControlArray('workTime').controls; let i = index">
+        <ng-container
+          *ngFor="
+            let control of getControlArray(headerForm, 'workTime').controls;
+            let i = index;
+            let first = first
+          "
+        >
           <div class="flex align-items-center">
             <span class="p-float-label mr-2">
               <input
@@ -31,23 +45,30 @@
               <label for="workTime-{{ i }}">Время работы</label>
             </span>
             <p-button
+              *ngIf="!first"
               styleClass="mb-2 p-button-danger"
               icon="pi pi-trash"
-              (onClick)="deleteArrayControl('workTime', i)"
+              (onClick)="deleteArrayControl(headerForm, 'workTime', i)"
             ></p-button>
           </div>
         </ng-container>
       </ng-container>
       <p-button
         label="Добавить значение"
-        *ngIf="isFormArrayValid('workTime')"
-        (onClick)="addControlToArray('workTime')"
+        *ngIf="isFormArrayValid(headerForm, 'workTime')"
+        (onClick)="addControlToArray(headerForm, 'workTime')"
         styleClass="mb-2 w-12"
       ></p-button>
     </div>
     <div>
       <ng-container formArrayName="address">
-        <ng-container *ngFor="let control of getControlArray('address').controls; let i = index">
+        <ng-container
+          *ngFor="
+            let control of getControlArray(headerForm, 'address').controls;
+            let i = index;
+            let first = first
+          "
+        >
           <div class="flex align-items-center">
             <span class="p-float-label mr-2">
               <input
@@ -59,75 +80,18 @@
               <label for="address-{{ i }}">Адрес</label>
             </span>
             <p-button
+              *ngIf="!first"
               styleClass="mb-2 p-button-danger"
               icon="pi pi-trash"
-              (onClick)="deleteArrayControl('address', i)"
+              (onClick)="deleteArrayControl(headerForm, 'address', i)"
             ></p-button>
           </div>
         </ng-container>
       </ng-container>
       <p-button
         label="Добавить значение"
-        *ngIf="isFormArrayValid('address')"
-        (onClick)="addControlToArray('address')"
-        styleClass="mb-2 w-12"
-      ></p-button>
-    </div>
-  </div>
-  <div class="formArrayBlock">
-    <div>
-      <ng-container formArrayName="phones">
-        <ng-container *ngFor="let control of getControlArray('phones').controls; let i = index">
-          <div class="flex align-items-center">
-            <span class="p-float-label mr-2">
-              <input
-                type="text"
-                id="phones-{{ i }}"
-                pInputText
-                [formControl]="getFormControl(control)"
-              />
-              <label for="phones-{{ i }}">Телефон</label>
-            </span>
-            <p-button
-              styleClass="mb-2 p-button-danger"
-              icon="pi pi-trash"
-              (onClick)="deleteArrayControl('phones', i)"
-            ></p-button>
-          </div>
-        </ng-container>
-      </ng-container>
-      <p-button
-        label="Добавить значение"
-        *ngIf="isFormArrayValid('phones')"
-        (onClick)="addControlToArray('phones')"
-        styleClass="mb-2 w-12"
-      ></p-button>
-    </div>
-    <div>
-      <ng-container formArrayName="mail">
-        <ng-container *ngFor="let control of getControlArray('mail').controls; let i = index">
-          <div class="flex align-items-center">
-            <span class="p-float-label mr-2">
-              <input
-                type="text"
-                id="mail-{{ i }}"
-                pInputText
-                [formControl]="getFormControl(control)"
-              />
-              <label for="mail-{{ i }}">Почта</label>
-            </span>
-            <p-button
-              styleClass="mb-2 p-button-danger"
-              icon="pi pi-trash"
-              (onClick)="deleteArrayControl('mail', i)"
-            ></p-button>
-          </div>
-        </ng-container>
-      </ng-container>
-      <p-button
-        label="Добавить значение"
-        *ngIf="isFormArrayValid('mail')"
-        (onClick)="addControlToArray('mail')"
+        *ngIf="isFormArrayValid(headerForm, 'address')"
+        (onClick)="addControlToArray(headerForm, 'address')"
         styleClass="mb-2 w-12"
       ></p-button>
     </div>
@@ -143,5 +107,50 @@
   <!--      <p-image [src]="photo.src" width="100"></p-image>-->
   <!--    </div>-->
   <!--  </div>-->
-  <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
+  <p-button type="submit" label="Сохранить" [loading]="isHeaderLoading"></p-button>
+</form>
+
+<h2>Дополнительная информация в Footer</h2>
+
+<form [formGroup]="footerForm" (ngSubmit)="saveFooter()">
+  <span class="p-float-label">
+    <input type="text" id="roots" pInputText formControlName="roots" />
+    <label for="roots">Правообладатель</label>
+  </span>
+  <div>
+    <ng-container formArrayName="phones">
+      <ng-container
+        *ngFor="
+          let control of getControlArray(footerForm, 'phones').controls;
+          let i = index;
+          let first = first
+        "
+      >
+        <div class="flex align-items-center">
+          <span class="p-float-label mr-2">
+            <input
+              type="text"
+              id="phones-{{ i }}"
+              pInputText
+              [formControl]="getFormControl(control)"
+            />
+            <label for="phones-{{ i }}">Телефон</label>
+          </span>
+          <p-button
+            *ngIf="!first"
+            styleClass="mb-2 p-button-danger"
+            icon="pi pi-trash"
+            (onClick)="deleteArrayControl(footerForm, 'phones', i)"
+          ></p-button>
+        </div>
+      </ng-container>
+    </ng-container>
+    <p-button
+      label="Добавить значение"
+      *ngIf="isFormArrayValid(footerForm, 'phones')"
+      (onClick)="addControlToArray(footerForm, 'phones')"
+      styleClass="mb-2 w-12"
+    ></p-button>
+  </div>
+  <p-button type="submit" label="Сохранить" [loading]="isFooterLoading"></p-button>
 </form>

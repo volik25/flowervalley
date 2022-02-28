@@ -38,7 +38,14 @@
             <span class="mobile-price">{{ product.price | priceConverter: 'two':'rub' }}</span>
           </div>
         </td>
-        <td class="mobile-price-cell">{{ product.price | priceConverter: 'two':'rub' }}</td>
+        <td class="mobile-price-cell">
+          <div>
+            <span>{{ product.price | priceConverter: 'two':'rub' }}</span>
+            <span *ngIf="product.initialPrice !== product.price">{{
+              product.initialPrice | priceConverter: 'two':'rub'
+            }}</span>
+          </div>
+        </td>
         <td class="product__count">
           <p-inputNumber
             #countNumber
@@ -143,9 +150,15 @@
     <div class="summary-block__summary">
       <span>Стоимость цветов:</span>
       <span>{{ getSum | priceConverter: 'two':'rub' }}</span>
+      <span *ngIf="getInitialSum !== getSum">{{
+        getInitialSum | priceConverter: 'two':'rub'
+      }}</span>
     </div>
-    <div class="summary-block__additional" *ngIf="getDifference">
-      <span>Минимальная сумма заказа {{ minSummary | priceConverter: 'none':'RUB' }}</span>
+    <div class="summary-block__additional" *ngIf="getDifference && cartVariables">
+      <span
+        >Минимальная сумма заказа
+        {{ cartVariables.minOrderSum | priceConverter: 'none':'RUB' }}</span
+      >
       <span>Не хватает товара на сумму {{ getDifference | priceConverter: 'none':'RUB' }}</span>
     </div>
   </div>

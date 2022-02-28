@@ -26,12 +26,15 @@ export class OrderConfirmationComponent {
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
+  public deliveryDate: FormControl;
+  public currentDate = new Date();
   public contacts: FormGroup;
   public entityData!: FormGroup;
   private entityId: string | undefined;
   public shippingCost: number | undefined;
   public delivery_error: string = '';
   public showDelivery = false;
+  public orderId: number | undefined;
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
@@ -51,11 +54,15 @@ export class OrderConfirmationComponent {
     private route: ActivatedRoute,
   ) {
     this.pickUp = fb.control(false);
+    this.deliveryDate = fb.control(null);
     this.contacts = fb.group({
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       address: [''],
+      deliveryWishDateFrom: [''],
+      deliveryWishDateTo: [''],
+      orderSum: [null, Validators.required],
     });
     this.contacts.controls['address'].valueChanges
       .pipe(takeUntil($destroy), debounceTime(1000))
@@ -94,6 +101,10 @@ export class OrderConfirmationComponent {
         this.contacts.controls['address'].enable();
       }
     });
+    this.deliveryDate.valueChanges.subscribe((dates: Date[]) => {
+      this.contacts.controls['deliveryWishDateFrom'].setValue(dates[0]);
+      this.contacts.controls['deliveryWishDateTo'].setValue(dates[1]);
+    });
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
     });
@@ -117,14 +128,14 @@ export class OrderConfirmationComponent {
     } else {
       this.isInvoiceLoading = true;
       this.orderService.addItem(order).subscribe(
-        () => {
+        (id: number) => {
+          this.orderId = id;
           this.messageService.add({
             severity: 'success',
             summary: 'Заказ оформлен',
             detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
           });
           this.isInvoiceLoading = false;
-          this.cartService.clearCart();
         },
         ({ error }) => {
           this.isInvoiceLoading = false;
@@ -173,11 +184,16 @@ export class OrderConfirmationComponent {
             })
             .subscribe(({ id }) => {
               if (id) {
-                this.bpService.telepakId = id;
                 order.accountNumber = id;
-                this.orderService.addItem(order).subscribe(() => {
+                this.orderService.addItem(order).subscribe((orderId) => {
                   this.isInvoiceLoading = false;
-                  this.router.navigate(['download-invoice'], { relativeTo: this.route });
+                  this.router.navigate(['download-invoice'], {
+                    relativeTo: this.route,
+                    queryParams: {
+                      invoice: id,
+                      order: orderId,
+                    },
+                  });
                 });
               }
             });
@@ -260,11 +276,22 @@ export class OrderConfirmationComponent {
       clientName: contacts.name,
       clientPhone: contacts.phone,
       clientAddress: contacts.address ? contacts.address : 'Самовывоз',
+      deliveryWishDateFrom: contacts.deliveryWishDateFrom
+        ? contacts.deliveryWishDateFrom.toISOString()
+        : null,
+      deliveryWishDateTo: contacts.deliveryWishDateTo
+        ? contacts.deliveryWishDateTo.toISOString()
+        : null,
+      orderSum: contacts.orderSum,
       products: products,
       boxes: orderBoxes,
       deliveryPrice: 0,
     };
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
+  }
+
+  public setOrderSum(sum: number): void {
+    this.contacts.controls['orderSum'].setValue(sum);
   }
 }

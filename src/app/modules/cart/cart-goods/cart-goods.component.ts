@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CartService } from '../../../_services/front/cart.service';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { Box } from '../../../_models/box';
 import { ProductItem } from '../../../_models/product-item';
+import { CartVariables } from '../../../_models/static-data/variables';
 
 @Component({
   selector: 'flower-valley-cart-goods',
@@ -10,6 +11,8 @@ import { ProductItem } from '../../../_models/product-item';
   styleUrls: ['./cart-goods.component.scss'],
 })
 export class CartGoodsComponent {
+  @Input()
+  public cartVariables: CartVariables | undefined;
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   public minSummary = 17500;
@@ -29,6 +32,12 @@ export class CartGoodsComponent {
   public get getSum(): number {
     let sum = 0;
     this.goods.map((item) => (sum += item.price * item.count));
+    return sum;
+  }
+
+  public get getInitialSum(): number {
+    let sum = 0;
+    this.goods.map((item) => (sum += item.initialPrice * item.count));
     return sum;
   }
 

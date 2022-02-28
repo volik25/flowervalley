@@ -25,6 +25,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { TooltipModule } from 'primeng/tooltip';
     InputNumberModule,
     SplitButtonModule,
     TooltipModule,
+    CalendarModule,
   ],
   providers: [BoxGenerateService],
 })
