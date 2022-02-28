@@ -32,5 +32,10 @@ $root: '.download-invoice';
       color: $text-grey;
       text-align: center;
     }
+    &_button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }

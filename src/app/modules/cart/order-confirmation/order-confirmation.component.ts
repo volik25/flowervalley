@@ -34,6 +34,7 @@ export class OrderConfirmationComponent {
   public shippingCost: number | undefined;
   public delivery_error: string = '';
   public showDelivery = false;
+  public orderId: number | undefined;
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
@@ -127,14 +128,14 @@ export class OrderConfirmationComponent {
     } else {
       this.isInvoiceLoading = true;
       this.orderService.addItem(order).subscribe(
-        () => {
+        (id: number) => {
+          this.orderId = id;
           this.messageService.add({
             severity: 'success',
             summary: 'Заказ оформлен',
             detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
           });
           this.isInvoiceLoading = false;
-          this.cartService.clearCart();
         },
         ({ error }) => {
           this.isInvoiceLoading = false;
@@ -183,11 +184,16 @@ export class OrderConfirmationComponent {
             })
             .subscribe(({ id }) => {
               if (id) {
-                this.bpService.telepakId = id;
                 order.accountNumber = id;
-                this.orderService.addItem(order).subscribe(() => {
+                this.orderService.addItem(order).subscribe((orderId) => {
                   this.isInvoiceLoading = false;
-                  this.router.navigate(['download-invoice'], { relativeTo: this.route });
+                  this.router.navigate(['download-invoice'], {
+                    relativeTo: this.route,
+                    queryParams: {
+                      invoice: id,
+                      order: orderId,
+                    },
+                  });
                 });
               }
             });

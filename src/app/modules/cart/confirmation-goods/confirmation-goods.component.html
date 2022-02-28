@@ -74,7 +74,7 @@
 </p-card>
 
 <p-button
-  *ngIf="pickUp || !!shippingCost"
+  *ngIf="(pickUp || !!shippingCost) && orderId"
   [style]="{ 'margin-top': '20px', padding: '25px' }"
   styleClass="p-button-estimate w-12 flex justify-content-center"
   (onClick)="getInvoice()"
