@@ -4,6 +4,7 @@ import { isFormInvalid } from '../../../../../_utils/formValidCheck';
 import { StaticDataService } from '../../../../../_services/back/static-data.service';
 import { MessageService } from 'primeng/api';
 import { LoadingService } from '../../../../../_services/front/loading.service';
+import { AboutEnum } from '../../../../../_models/static-data/about';
 
 @Component({
   selector: 'flower-valley-static-about',
@@ -20,7 +21,7 @@ export class AboutComponent implements OnInit {
     private staticData: StaticDataService,
   ) {
     this.aboutForm = fb.group({
-      img: [''],
+      img: ['', Validators.required],
       title: ['', Validators.required],
       subTitle: ['', Validators.required],
       description: ['', Validators.required],
@@ -52,6 +53,10 @@ export class AboutComponent implements OnInit {
   }
 
   public photoUploaded(photos: File[]): void {
-    this.aboutForm.get('img')?.setValue(photos[0]);
+    const formData = new FormData();
+    formData.append('value', photos[0]);
+    this.staticData.uploadFile(AboutEnum, formData).subscribe((res) => {
+      this.aboutForm.get('img')?.setValue(res);
+    });
   }
 }

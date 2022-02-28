@@ -120,7 +120,17 @@
         label="Обновить изображения"
       ></flower-valley-files-upload>
       <div class="grid mt-2">
-        <div class="img col-3" *ngFor="let photo of product?.photos">
+        <div
+          class="img col-3"
+          *ngFor="let photo of product?.photos; let i = index"
+          pDraggable="reviewPhoto"
+          dragEffect="move"
+          pDroppable="reviewPhoto"
+          (onDrop)="drop()"
+          (onDragEnter)="setPosition(i)"
+          (onDragStart)="dragStart(photo, i)"
+          (onDragEnd)="dragEnd()"
+        >
           <p-image [src]="photo.src" width="100"></p-image>
           <p-button
             styleClass="p-button-danger"

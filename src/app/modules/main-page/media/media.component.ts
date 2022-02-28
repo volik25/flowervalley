@@ -3,6 +3,7 @@ import { Media } from '../../../_models/media';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MediaService } from '../../../_services/back/media.service';
+import { SortOrderService } from '../../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-media',
@@ -20,6 +21,7 @@ export class MediaComponent {
     private cs: ConfirmationService,
     private ms: MessageService,
     private mediaService: MediaService,
+    private sortOrder: SortOrderService<Media>,
   ) {}
 
   public openLink(link: string): void {
@@ -46,5 +48,18 @@ export class MediaComponent {
         });
       },
     });
+  }
+
+  public dragStart(draggedItem: Media, i: number): void {
+    this.sortOrder.dragStart(this.media, draggedItem, i);
+  }
+  public dragEnd(): void {
+    this.media = this.sortOrder.dragEnd(this.media);
+  }
+  public drop(): void {
+    this.mediaService.setOrder(this.sortOrder.drop(this.media)).subscribe();
+  }
+  public setPosition(index: number): void {
+    this.media = this.sortOrder.setPosition(this.media, index);
   }
 }

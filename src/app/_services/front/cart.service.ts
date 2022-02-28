@@ -1,14 +1,35 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ProductItem } from '../../_models/product-item';
+import { DiscountService } from '../back/discount.service';
+import { Discount } from '../../_models/discount';
+import { StaticDataService } from '../back/static-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
+  private discount: Discount[] = [];
+  private minSum: number | undefined;
+  constructor(private discountService: DiscountService, private staticData: StaticDataService) {
+    discountService.getItems().subscribe((discount) => {
+      this.discount = discount.sort((a, b) => a.sum - b.sum);
+    });
+    staticData.getCartVariables().subscribe((vars) => {
+      this.minSum = vars.minOrderSum;
+      this.checkMinSum(CartService.getCart());
+    });
+  }
+
   private readonly _cartUpdate: BehaviorSubject<ProductItem[]> = new BehaviorSubject<ProductItem[]>(
     CartService.getCart(),
   );
+
+  private _isMinSumReached: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public isMinSumReached(): Observable<boolean> {
+    return this._isMinSumReached.asObservable();
+  }
 
   public cartUpdate(): Observable<ProductItem[]> {
     return this._cartUpdate.asObservable();
@@ -32,6 +53,8 @@ export class CartService {
         cartUpdated.push(item);
       }
       cartUpdated = this.updateTulipPrices(cartUpdated);
+      cartUpdated = this.checkDiscount(cartUpdated);
+      this.checkMinSum(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     } else {
@@ -47,6 +70,8 @@ export class CartService {
       const index = cartUpdated.findIndex((cartItem) => id === cartItem.id);
       cartUpdated.splice(index, 1);
       cartUpdated = this.updateTulipPrices(cartUpdated);
+      cartUpdated = this.checkDiscount(cartUpdated);
+      this.checkMinSum(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     }
@@ -67,9 +92,13 @@ export class CartService {
       const product = cartUpdated.find((cartItem) => item.id === cartItem.id);
       if (product) {
         product.count = item.count;
-        product.price = this.checkPrice(product);
+        if (product.categoryId === 1 || product.category?.id === 1) {
+          product.price = this.checkPrice(product);
+        }
       }
       cartUpdated = this.updateTulipPrices(cartUpdated);
+      cartUpdated = this.checkDiscount(cartUpdated);
+      this.checkMinSum(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     }
@@ -103,5 +132,45 @@ export class CartService {
       cart[index] = item;
     });
     return cart;
+  }
+
+  private checkDiscount(products: ProductItem[]): ProductItem[] {
+    const discountProducts = products.filter((product) => !product.category?.hasNoDiscount);
+    let currentDiscount: Discount | null = null;
+    for (let i = 0; i < this.discount.length; i++) {
+      const discount = this.discount[i];
+      let productsSum = 0;
+      discountProducts.map((item) => {
+        productsSum += item.initialPrice * item.count;
+      });
+      if (productsSum >= discount.sum) {
+        currentDiscount = discount;
+      }
+    }
+    if (currentDiscount) {
+      discountProducts.map((item) => {
+        item.price = Math.ceil(
+          // @ts-ignore
+          item.initialPrice - item.initialPrice * (currentDiscount.discount / 100),
+        );
+      });
+    } else {
+      discountProducts.map((product) => {
+        product.price = product.initialPrice;
+      });
+    }
+    return products;
+  }
+
+  private checkMinSum(products: ProductItem[]): void {
+    let sum = 0;
+    products.map((product) => {
+      sum += product.price * product.count;
+    });
+    if (this.minSum && this.minSum <= sum) {
+      this._isMinSumReached.next(true);
+    } else {
+      this._isMinSumReached.next(false);
+    }
   }
 }

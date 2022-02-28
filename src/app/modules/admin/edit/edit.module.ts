@@ -24,6 +24,7 @@ import { PipesModule } from '../../../_pipes/pipes.module';
 import { ReviewsComponent } from './reviews/reviews.component';
 import { MediaComponent } from './media/media.component';
 import { CalendarModule } from 'primeng/calendar';
+import { DragDropModule } from 'primeng/dragdrop';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { CalendarModule } from 'primeng/calendar';
     InputTextareaModule,
     PipesModule,
     CalendarModule,
+    DragDropModule,
   ],
 })
 export class EditModule {}

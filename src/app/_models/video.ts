@@ -3,4 +3,5 @@ export interface Video {
   src: string;
   title: string;
   description: string;
+  sortOrder: number;
 }

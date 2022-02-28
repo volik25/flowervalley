@@ -77,7 +77,14 @@
 >
   <div class="grid">
     <div
-      *ngFor="let photo of photos"
+      *ngFor="let photo of photos; let i = index"
+      pDraggable="contactsPhoto"
+      dragEffect="move"
+      pDroppable="contactsPhoto"
+      (onDrop)="drop()"
+      (onDragEnter)="setPosition(i)"
+      (onDragStart)="dragStart(photo, i)"
+      (onDragEnd)="dragEnd()"
       class="photo col-12 lg:col-6 xl:col-4 flex justify-content-center"
     >
       <p-image

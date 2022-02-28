@@ -110,6 +110,10 @@ export class MainPageComponent implements OnInit {
             count: product.coefficient || 1,
           };
         });
+        (main as MainInfo).media.sort((a, b) => a.sortOrder - b.sortOrder);
+        (main as MainInfo).videos.sort((a, b) => a.sortOrder - b.sortOrder);
+        (main as MainInfo).clients.photos.sort((a, b) => a.sortOrder - b.sortOrder);
+        (main as MainInfo).comments.photos.sort((a, b) => a.sortOrder - b.sortOrder);
         this.mainInfo = main as MainInfo;
         this.popularProducts = this.mainInfo.popular;
         this.categories = catalog as Category[];

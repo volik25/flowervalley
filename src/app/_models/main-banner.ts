@@ -6,6 +6,12 @@ export interface MainBanner<T> {
   label?: string;
   autoPlay: number;
   isUserCanLeaf: boolean;
-  photos: { id: number; src: string }[];
+  photos: BannerPhotos[];
   items?: T;
+}
+
+export interface BannerPhotos {
+  id: number;
+  src: string;
+  sortOrder: number;
 }
