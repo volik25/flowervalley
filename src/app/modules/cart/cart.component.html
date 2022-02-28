@@ -46,7 +46,6 @@
   <flower-valley-cart-goods
     *ngIf="goods.length"
     [cartVariables]="cartVariables"
-    (isMinSumReached)="isMinSumReached = $event"
   ></flower-valley-cart-goods>
   <div *ngIf="!goods.length" class="empty-message">
     <div>Ваша корзина пуста</div>

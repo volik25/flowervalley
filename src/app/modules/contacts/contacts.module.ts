@@ -8,6 +8,7 @@ import { ImageModule } from 'primeng/image';
 import { GalleriaModule } from 'primeng/galleria';
 import { ButtonModule } from 'primeng/button';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { DragDropModule } from 'primeng/dragdrop';
 
 @NgModule({
   declarations: [ContactsComponent],
@@ -19,6 +20,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
     GalleriaModule,
     ButtonModule,
     ContextMenuModule,
+    DragDropModule,
   ],
 })
 export class ContactsModule {}

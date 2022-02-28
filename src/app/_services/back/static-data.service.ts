@@ -178,4 +178,18 @@ export class StaticDataService {
     }
     return forkJoin(requests);
   }
+
+  public uploadFile(enumObject: any, formData: FormData): Observable<string> {
+    const keysArray: unknown[] = Object.values(enumObject).filter(
+      (value) => typeof value === 'string',
+    );
+    const valuesArray: unknown[] = Object.values(enumObject).filter(
+      (value) => typeof value === 'number',
+    );
+    const index = keysArray.findIndex((el) => el === 'img');
+    return this.http.post<string>(
+      `${this.baseUrl}/${this.postUrl}/${valuesArray[index]}`,
+      formData,
+    );
+  }
 }

@@ -4,6 +4,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { VideoService } from '../../../_services/back/video.service';
 import { Router } from '@angular/router';
+import { SortOrderService } from '../../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-video',
@@ -22,6 +23,7 @@ export class VideoComponent implements OnInit {
     private ms: MessageService,
     private cs: ConfirmationService,
     private videoService: VideoService,
+    private sortOrder: SortOrderService<Video>,
     private router: Router,
   ) {}
 
@@ -63,5 +65,18 @@ export class VideoComponent implements OnInit {
         });
       },
     });
+  }
+
+  public dragStart(draggedItem: Video, i: number): void {
+    this.sortOrder.dragStart(this.videos, draggedItem, i);
+  }
+  public dragEnd(): void {
+    this.videos = this.sortOrder.dragEnd(this.videos);
+  }
+  public drop(): void {
+    this.videoService.setOrder(this.sortOrder.drop(this.videos)).subscribe();
+  }
+  public setPosition(index: number): void {
+    this.videos = this.sortOrder.setPosition(this.videos, index);
   }
 }

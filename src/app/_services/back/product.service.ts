@@ -5,6 +5,7 @@ import { ProductOrder } from '../../_models/product-order';
 import { Order } from '../../_models/order';
 import { Product } from '../../_models/product';
 import { PopularOrder } from '../../_models/popular-order';
+import { SortOrder } from '../front/sort-order.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,5 +33,9 @@ export class ProductService extends BaseApiService {
 
   public getItems(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}/${this.apiUrl}/list`);
+  }
+
+  public override setOrder(order: SortOrder[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/sort-photos`, order);
   }
 }

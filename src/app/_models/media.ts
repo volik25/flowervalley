@@ -4,4 +4,5 @@ export interface Media {
   title: string;
   link: string;
   publishDate: Date;
+  sortOrder: number;
 }
