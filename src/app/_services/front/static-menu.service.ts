@@ -18,6 +18,11 @@ export class StaticMenuService {
       routerLink: 'header-and-footer',
     },
     {
+      label: 'Блок анимации',
+      icon: 'pi pi-eye',
+      routerLink: 'animation',
+    },
+    {
       label: 'О компании',
       icon: 'pi pi-info-circle',
       routerLink: 'about',

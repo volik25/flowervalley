@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MainBanner } from '../../../_models/main-banner';
 import { Router } from '@angular/router';
 import { ThousandSeparatorPipe } from '../../../_pipes/thousand-separator.pipe';
+import { Animation } from '../../../_models/static-data/animation';
 
 @Component({
   selector: 'flower-valley-banner',
@@ -14,6 +15,8 @@ export class BannerComponent {
   public isAdmin: boolean = false;
   @Input()
   public banner: MainBanner<unknown> | undefined;
+  @Input()
+  public animations: Animation | undefined;
   @Output()
   private bannerChanged: EventEmitter<any> = new EventEmitter<any>();
   public photos = [];
@@ -48,20 +51,24 @@ export class BannerComponent {
   }
 
   public startAnimation(elements: HTMLElement[]): void {
-    if (!this.isAnimated) {
+    if (!this.isAnimated && this.animations) {
       elements.map((element) => {
         switch (element.id) {
           case 'clients':
-            this.animateValue(element, 5800);
+            // @ts-ignore
+            this.animateValue(element, this.animations.firstNumber);
             break;
           case 'years':
-            this.animateValue(element, 20);
+            // @ts-ignore
+            this.animateValue(element, this.animations.secondNumber);
             break;
           case 'cities':
-            this.animateValue(element, 50);
+            // @ts-ignore
+            this.animateValue(element, this.animations.thirdNumber);
             break;
           case 'flowers':
-            this.animateValue(element, 1500000);
+            // @ts-ignore
+            this.animateValue(element, this.animations.fourthNumber);
             break;
         }
       });

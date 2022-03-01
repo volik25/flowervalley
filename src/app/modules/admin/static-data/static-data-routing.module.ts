@@ -8,6 +8,7 @@ import { HeaderAndFooterComponent } from './components/header-and-footer/header-
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { CartComponent } from './components/cart/cart.component';
 import { OtherComponent } from './components/other/other.component';
+import { AnimationComponent } from './components/animation/animation.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: 'header-and-footer',
         component: HeaderAndFooterComponent,
+      },
+      {
+        path: 'animation',
+        component: AnimationComponent,
       },
       {
         path: 'about',

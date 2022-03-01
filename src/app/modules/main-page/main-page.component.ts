@@ -20,6 +20,7 @@ import { PopularOrder } from '../../_models/popular-order';
 import { StaticDataService } from '../../_services/back/static-data.service';
 import { About } from '../../_models/static-data/about';
 import { Advantages } from '../../_models/static-data/advantages';
+import { Animation } from '../../_models/static-data/animation';
 
 interface MainInfo {
   main: MainBanner<unknown>;
@@ -92,6 +93,7 @@ export class MainPageComponent implements OnInit {
   public categories: Category[] = [];
   public products: ProductItem[] = [];
   public popularProducts: ProductItem[] = [];
+  public animations: Animation | undefined;
 
   public ngOnInit(): void {
     const reqests = [
@@ -99,10 +101,11 @@ export class MainPageComponent implements OnInit {
       this.catalogService.getItems(),
       this.staticData.getAboutContent(),
       this.staticData.getAdvantagesContent(),
+      this.staticData.getAnimations(),
     ];
     const sub = forkJoin(reqests)
       .pipe(takeUntil(this.$destroy))
-      .subscribe(([main, catalog, about, advantages]) => {
+      .subscribe(([main, catalog, about, advantages, animations]) => {
         // @ts-ignore
         (main as MainInfo).popular = (main as MainInfo).popular.map((product) => {
           return {
@@ -119,6 +122,7 @@ export class MainPageComponent implements OnInit {
         this.categories = catalog as Category[];
         this.aboutData = about as About;
         this.advantagesData = advantages as Advantages;
+        this.animations = animations as Animation;
         this.catalog = (catalog as Category[])
           .filter((item) => !item.parentId)
           .sort((a, b) => a.categoryOrder - b.categoryOrder);

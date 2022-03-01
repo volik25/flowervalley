@@ -37,6 +37,7 @@
     </div>
   </div>
   <div
+    *ngIf="animations"
     class="info-banner"
     infinite-scroll
     (scrolled)="startAnimation([clients, years, cities, flowers])"
@@ -44,30 +45,30 @@
     <div>
       <span>
         <span #clients id="clients">0</span>
-        <span>+</span>
+        <span>{{ animations.firstSuffix }}</span>
       </span>
-      <span>ДОВОЛЬНЫХ КЛИЕНТОВ</span>
+      <span>{{ animations.firstText }}</span>
     </div>
     <div>
       <span>
         <span #years id="years">0</span>
-        <span>лет</span>
+        <span>{{ animations.secondSuffix }}</span>
       </span>
-      <span>НА РЫНКЕ ЦВЕТОВ</span>
+      <span>{{ animations.secondText }}</span>
     </div>
     <div>
       <span>
         <span #cities id="cities">0</span>
-        <span>+</span>
+        <span>{{ animations.thirdSuffix }}</span>
       </span>
-      <span>ГОРОДОВ В РОССИИ</span>
+      <span>{{ animations.thirdText }}</span>
     </div>
     <div>
       <span>
         <span #flowers id="flowers">0</span>
-        <span>шт</span>
+        <span>{{ animations.fourthSuffix }}</span>
       </span>
-      <span>ЦВЕТОВ В ГОД</span>
+      <span>{{ animations.fourthText }}</span>
     </div>
   </div>
 </div>
