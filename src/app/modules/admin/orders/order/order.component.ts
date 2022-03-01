@@ -14,12 +14,13 @@ import { PriceConverterPipe } from '../../../../_pipes/price-converter.pipe';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Inplace } from 'primeng/inplace';
+import { DateConverterService } from '../../../../_services/front/date-converter.service';
 
 @Component({
   selector: 'flower-valley-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss'],
-  providers: [EstimateGenerateService, PriceConverterPipe, DatePipe],
+  providers: [EstimateGenerateService, PriceConverterPipe, DatePipe, DateConverterService],
 })
 export class OrderComponent implements OnInit {
   public orderId: number = 0;
@@ -34,6 +35,7 @@ export class OrderComponent implements OnInit {
     private estimatePDF: EstimateGenerateService,
     private priceConvert: PriceConverterPipe,
     private dateConvert: DatePipe,
+    private dateConverter: DateConverterService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
@@ -51,19 +53,21 @@ export class OrderComponent implements OnInit {
     const orderSub = this.orderService.getItemById<Order>(this.orderId).subscribe((order) => {
       this.order = {
         ...order,
-        orderDate: new Date(order.orderDate),
         confirmedDeliveryDate: order.confirmedDeliveryDate
-          ? new Date(order.confirmedDeliveryDate)
+          ? this.dateConverter.convert(order.confirmedDeliveryDate)
           : undefined,
         deliveryWishDateFrom: order.deliveryWishDateFrom
-          ? new Date(order.deliveryWishDateFrom)
+          ? this.dateConverter.convert(order.deliveryWishDateFrom)
           : undefined,
         deliveryWishDateTo: order.deliveryWishDateTo
-          ? new Date(order.deliveryWishDateTo)
+          ? this.dateConverter.convert(order.deliveryWishDateTo)
           : undefined,
       };
       if (this.order.deliveryWishDateFrom) {
-        this.confirmedDate.setValue(new Date(this.order.deliveryWishDateFrom));
+        this.confirmedDate.setValue(
+          // @ts-ignore
+          new Date(this.dateConverter.convert(order.deliveryWishDateFrom)),
+        );
       }
       if (this.order.clientId) {
         const bpSub = this.bpService.getFirmById(this.order.clientId).subscribe((firm) => {
@@ -78,7 +82,7 @@ export class OrderComponent implements OnInit {
   }
 
   public saveOrder(): void {
-    const order = { ...this.order };
+    const order: any = { ...this.order };
     // @ts-ignore
     order.products = this.order.products.map((product: OrderProduct) => {
       return <OrderItem>{
@@ -87,6 +91,9 @@ export class OrderComponent implements OnInit {
         price: product.price,
       };
     });
+    if (order && order.confirmedDeliveryDate) {
+      order.confirmedDeliveryDate = (order.confirmedDeliveryDate as Date).toISOString();
+    }
     // @ts-ignore
     order.boxes = this.order.boxes.map((box: OrderBox) => {
       return <OrderItem>{
@@ -179,7 +186,7 @@ export class OrderComponent implements OnInit {
         this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
         this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
         this.orderId,
-        this.dateConvert.transform(this.order.orderDate, 'dd.MM.yyyy HH:mm'),
+        this.dateConvert.transform(this.order.confirmedDeliveryDate, 'dd.MM.yyyy HH:mm'),
       );
     }
   }

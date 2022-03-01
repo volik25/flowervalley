@@ -7,8 +7,8 @@
     <input type="text" id="subTitle" pInputText formControlName="subTitle" />
     <label for="subTitle">Подзаголовок</label>
   </span>
-  <div class="content-block">
-    <div formGroupName="leftBlock">
+  <div class="grid">
+    <div formGroupName="leftBlock" class="col-4">
       <h2>Левый блок</h2>
       <span class="p-float-label">
         <input type="text" id="title-leftBlock" pInputText formControlName="title" />
@@ -31,9 +31,9 @@
         label="Обновить изображение"
         (uploaded)="photoUploaded($event, 'leftBlock')"
       ></flower-valley-files-upload>
-      <p-image *ngIf="photos" [src]="photos.left" width="100"></p-image>-->
+      <p-image *ngIf="photos" [src]="photos.left" width="100"></p-image>
     </div>
-    <div formGroupName="centerBlock">
+    <div formGroupName="centerBlock" class="col-4">
       <h2>Центральный блок</h2>
       <span class="p-float-label">
         <input type="text" id="title-centerBlock" pInputText formControlName="title" />
@@ -56,9 +56,9 @@
         label="Обновить изображение"
         (uploaded)="photoUploaded($event, 'centerBlock')"
       ></flower-valley-files-upload>
-      <p-image *ngIf="photos" [src]="photos.center" width="100"></p-image>-->
+      <p-image *ngIf="photos" [src]="photos.center" width="100"></p-image>
     </div>
-    <div formGroupName="rightBlock">
+    <div formGroupName="rightBlock" class="col-4">
       <h2>Правый блок</h2>
       <span class="p-float-label">
         <input type="text" id="title-rightBlock" pInputText formControlName="title" />
@@ -81,25 +81,9 @@
         label="Обновить изображение"
         (uploaded)="photoUploaded($event, 'rightBlock')"
       ></flower-valley-files-upload>
-      <p-image *ngIf="photos" [src]="photos.right" width="100"></p-image>-->
+      <p-image *ngIf="photos" [src]="photos.right" width="100"></p-image>
     </div>
   </div>
-  <!--  <div-->
-  <!--    class="photos-error"-->
-  <!--    *ngIf="productGroup.dirty && !photos.length && product && !product.photos.length"-->
-  <!--  >-->
-  <!--    Добавьте фотографии-->
-  <!--  </div>-->
-  <!--  <flower-valley-files-upload-->
-  <!--    [multi]="false"-->
-  <!--    label="Обновить изображение"-->
-  <!--    (uploaded)="photoUploaded($event)"-->
-  <!--  ></flower-valley-files-upload>-->
-  <!--  <div class="grid mt-2">-->
-  <!--    <div class="img col-3" *ngFor="let photo of product?.photos">-->
-  <!--      <p-image [src]="photo.src" width="100"></p-image>-->
-  <!--    </div>-->
-  <!--  </div>-->
   <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>
 <h2>Предпросмотр</h2>

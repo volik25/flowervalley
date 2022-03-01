@@ -42,15 +42,21 @@ export class HtmlToPdfService {
         const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
           tableAutoSize: true,
         });
-        const documentDefinition = { content: html };
-        pdfMake.createPdf(documentDefinition).download('Смета_FlowerValley.pdf');
+        const documentDefinition = {
+          content: html,
+          info: { title: 'Смета Агрофирма Цветочная Долина' },
+        };
+        pdfMake.createPdf(documentDefinition).open();
       });
     } else {
       const html = htmlToPdfmake(this.generateHTML().innerHTML, {
         tableAutoSize: true,
       });
-      const documentDefinition = { content: html };
-      pdfMake.createPdf(documentDefinition).download(`Смета_по_заказу_№${orderNumber}`);
+      const documentDefinition = {
+        content: html,
+        info: { title: `Смета по заказу №${orderNumber}` },
+      };
+      pdfMake.createPdf(documentDefinition).open();
     }
   }
 
@@ -62,7 +68,7 @@ export class HtmlToPdfService {
     }
     if (this.date) {
       const h1 = document.createElement('h1');
-      h1.innerText = `ДАТА ЗАКАЗА: ${this.date}`;
+      h1.innerText = `ВЫДАЧА ЗАКАЗА: ${this.date}`;
       h1.style.color = 'red';
       div.append(h1);
     }

@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../../_models/category';
 import { MainBannerService } from '../../../../_services/back/main-banner.service';
 import { CatalogService } from '../../../../_services/back/catalog.service';
-import { MainBanner } from '../../../../_models/main-banner';
+import { BannerPhotos, MainBanner } from '../../../../_models/main-banner';
 import { slugify } from 'transliteration';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../../_services/front/loading.service';
+import { SortOrderService } from '../../../../_services/front/sort-order.service';
 
 @Component({
   selector: 'flower-valley-banner',
@@ -20,10 +21,11 @@ export class BannerComponent implements OnInit {
   public isLoading: boolean = false;
   public photos: File[] = [];
   private deleteIds: number[] = [];
-  public photosLinks: { id: number; src: string }[] = [];
+  public photosLinks: BannerPhotos[] = [];
   constructor(
     private fb: FormBuilder,
     private mainBannerService: MainBannerService,
+    private sortOrder: SortOrderService<BannerPhotos>,
     private catalogService: CatalogService,
     private ls: LoadingService,
     private router: Router,
@@ -96,5 +98,18 @@ export class BannerComponent implements OnInit {
     this.deleteIds.push(id);
     const i = this.photosLinks.findIndex((photo) => photo.id === id);
     this.photosLinks.splice(i, 1);
+  }
+
+  public dragStart(draggedItem: BannerPhotos, i: number): void {
+    this.sortOrder.dragStart(this.photosLinks, draggedItem, i);
+  }
+  public dragEnd(): void {
+    this.photosLinks = this.sortOrder.dragEnd(this.photosLinks);
+  }
+  public drop(): void {
+    this.mainBannerService.setOrder(this.sortOrder.drop(this.photosLinks)).subscribe();
+  }
+  public setPosition(index: number): void {
+    this.photosLinks = this.sortOrder.setPosition(this.photosLinks, index);
   }
 }

@@ -7,17 +7,16 @@
   styleClass="mb-2"
   [customUpload]="true"
   mode="basic"
+  [disabled]="isUploadingProcess"
   [chooseLabel]="label"
   [multiple]="multi"
   [auto]="true"
   (uploadHandler)="uploadFiles($event.files)"
 ></p-fileUpload>
-<!--<div class="grid" *ngIf="!showOnlyButton && localUrl.length">-->
-<!--  <div class="img col-3" *ngFor="let photo of localUrl; let i = index">-->
-<!--    <p-image [src]="photo"></p-image>-->
-<!--    <p-button styleClass="p-button-danger" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>-->
-<!--  </div>-->
-<!--</div>-->
+
+<div class="loader" *ngIf="isUploadingProcess">
+  <flower-valley-loader appearance="small"></flower-valley-loader>
+</div>
 
 <div class="grid" *ngIf="!showOnlyButton && localCompressedUrl.length">
   <div class="img col-3" *ngFor="let photo of localCompressedUrl; let i = index">

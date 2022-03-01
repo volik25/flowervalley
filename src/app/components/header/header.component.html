@@ -1,7 +1,7 @@
 <header #header class="header">
   <div class="header__contacts" *ngIf="headerData">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
-      <p-image (click)="menuShow = false" src="../../../assets/images/logo.png"></p-image>
+      <p-image (click)="menuShow = false" [src]="headerData.img"></p-image>
       <div class="flex-column justify-content-center pl-2">
         <div class="title">{{ headerData.title }}</div>
         <div class="sub-title">{{ headerData.subTitle }}</div>

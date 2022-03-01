@@ -1,11 +1,27 @@
 <flower-valley-container
-  headerTitle="Прайс-лист"
+  headerTitle="Формирование прайс-листа"
   [isAdmin]="true"
   [buttonTemplate]="actionsButtons"
 >
+  <span class="p-float-label w-12">
+    <p-multiSelect
+      styleClass="w-12"
+      inputId="categories"
+      [options]="catalog"
+      [formControl]="categoryControl"
+      dataKey="id"
+      optionLabel="name"
+      emptyMessage="Категорий нет"
+      [maxSelectedLabels]="4"
+      selectedItemsLabel="Выбрано категорий: {0}"
+      [filter]="false"
+    ></p-multiSelect>
+    <label for="categories">Включить категории</label>
+  </span>
+
   <p-table
     #pricesTable
-    [value]="goods"
+    [value]="selectedGoods"
     [loading]="isLoading"
     [globalFilterFields]="['name']"
     sortField="categoryName"
@@ -16,26 +32,6 @@
     styleClass="p-table-override"
     dataKey="id"
   >
-    <ng-template pTemplate="caption">
-      <div class="flex">
-        <button
-          pButton
-          label="Очистить"
-          class="p-button-outlined"
-          icon="pi pi-filter-slash"
-          (click)="pricesTable.clear()"
-        ></button>
-        <span class="p-input-icon-left ml-auto">
-          <i class="pi pi-search"></i>
-          <input
-            pInputText
-            type="text"
-            (input)="filterTableData($event)"
-            placeholder="Поиск по названию"
-          />
-        </span>
-      </div>
-    </ng-template>
     <ng-template pTemplate="header">
       <tr>
         <th>Товар</th>
@@ -121,16 +117,11 @@
 <ng-template #actionsButtons>
   <span class="p-buttonset">
     <p-button
-      icon="pi pi-pencil"
+      icon="pi pi-eye"
       styleClass="p-button-info"
-      label="Прайс-лист по заказу"
-      (onClick)="createPriceList()"
+      label="Посмотреть"
+      (onClick)="showPriceList()"
     ></p-button>
-    <p-button
-      icon="pi pi-upload"
-      label="Опубликовать"
-      (onClick)="publishPriceList()"
-      [loading]="isButtonLoading"
-    ></p-button>
+    <p-button icon="pi pi-upload" label="Отправить клиенту"></p-button>
   </span>
 </ng-template>

@@ -1,7 +1,7 @@
 <footer *ngIf="footer">
   <div class="footer">
     <div class="footer__company">
-      <p-image src="assets/images/logo.png" [routerLink]="['']"></p-image>
+      <p-image [src]="footer.img" [routerLink]="['']"></p-image>
       <div class="flex flex-column justify-content-between h-100 pt-2">
         <span class="w-8">{{ footer.title }}</span>
         <span>{{ footer.subTitle }}</span>
@@ -75,7 +75,7 @@
 </ng-template>
 
 <ng-template #priceButton>
-  <p-button (onClick)="goToPriceList()">
+  <p-button (onClick)="getPriceList()">
     <ng-template pTemplate="content">
       <p-image
         styleClass="flex align-items-center"

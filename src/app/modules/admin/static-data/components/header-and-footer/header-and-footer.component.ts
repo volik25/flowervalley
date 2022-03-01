@@ -26,6 +26,7 @@ export class HeaderAndFooterComponent implements OnInit {
   public footerForm: FormGroup;
   public isHeaderLoading: boolean = false;
   public isFooterLoading: boolean = false;
+  private photo: File | undefined;
   constructor(
     private fb: FormBuilder,
     private ls: LoadingService,
@@ -76,6 +77,21 @@ export class HeaderAndFooterComponent implements OnInit {
   public saveHeader(): void {
     if (isFormInvalid(this.headerForm)) return;
     this.isHeaderLoading = true;
+    if (this.photo) {
+      const formData = new FormData();
+      const oldImg = this.headerForm.controls['img'].value;
+      formData.append('file', this.photo);
+      formData.append('removeUrl', oldImg);
+      this.staticData.uploadFile(formData).subscribe((res) => {
+        this.headerForm.controls['img'].setValue(res);
+        this.saveHeaderRequest();
+      });
+    } else {
+      this.saveHeaderRequest();
+    }
+  }
+
+  private saveHeaderRequest(): void {
     const header = this.headerForm.getRawValue();
     this.headerForm.disable();
     this.staticData.setHeaderContent(header).subscribe(() => {
@@ -106,7 +122,7 @@ export class HeaderAndFooterComponent implements OnInit {
   }
 
   public photoUploaded(photos: File[]): void {
-    this.headerForm.get('img')?.setValue(photos[0]);
+    this.photo = photos[0];
   }
 
   public getControlArray(formGroup: FormGroup, control: ArrayTypes): FormArray {
