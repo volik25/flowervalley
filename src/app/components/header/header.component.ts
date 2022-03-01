@@ -109,14 +109,6 @@ export class HeaderComponent implements OnInit {
   }
 
   public getPriceList(): void {
-    const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
-    this.productService.getItems().subscribe((products) => {
-      const pricesProducts = products
-        // @ts-ignore
-        .sort((a, b) => a.categoryId - b.categoryId)
-        .filter((product) => product.categoryId !== 1)
-        .map((item) => [item.name, item.coefficient, item.price]);
-      this.pricesPDFService.getPDF(headers, pricesProducts);
-    });
+    this.pricesPDFService.generatePriceList();
   }
 }

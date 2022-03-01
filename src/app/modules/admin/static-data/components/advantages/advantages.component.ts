@@ -4,11 +4,18 @@ import { StaticDataService } from '../../../../../_services/back/static-data.ser
 import { isFormInvalid } from '../../../../../_utils/formValidCheck';
 import { MessageService } from 'primeng/api';
 import { LoadingService } from '../../../../../_services/front/loading.service';
+import { forkJoin, Observable } from 'rxjs';
 
 interface Photos {
   left: string;
   center: string;
   right: string;
+}
+
+interface UploadedPhotos {
+  leftBlock?: File;
+  centerBlock?: File;
+  rightBlock?: File;
 }
 
 @Component({
@@ -19,6 +26,7 @@ interface Photos {
 export class AdvantagesComponent implements OnInit {
   public advantagesForm: FormGroup;
   public photos: Photos | undefined;
+  private uploadedPhotos: UploadedPhotos = {};
   public isLoading: boolean = false;
   constructor(
     private fb: FormBuilder,
@@ -63,6 +71,34 @@ export class AdvantagesComponent implements OnInit {
   public saveAdvantages(): void {
     if (isFormInvalid(this.advantagesForm)) return;
     this.isLoading = true;
+    if (this.uploadedPhotos) {
+      const requests: Observable<string>[] = [];
+      const pathNames: string[] = [];
+      Object.keys(this.uploadedPhotos).map((key) => {
+        // @ts-ignore
+        const value = this.uploadedPhotos[key];
+        if (value) {
+          const formData = new FormData();
+          const oldImg = this.advantagesForm.get(key)?.get('img')?.value;
+          formData.append('file', value);
+          formData.append('removeUrl', oldImg);
+          requests.push(this.staticData.uploadFile(formData));
+          pathNames.push(key);
+        }
+      });
+      forkJoin<string[]>(requests).subscribe((routes) => {
+        for (let i = 0; i < routes.length; i++) {
+          const route = routes[i];
+          this.advantagesForm.get(pathNames[i])?.get('img')?.setValue(route);
+        }
+        this.saveAdvantagesRequest();
+      });
+    } else {
+      this.saveAdvantagesRequest();
+    }
+  }
+
+  private saveAdvantagesRequest(): void {
     this.advantagesForm.disable();
     const advantages = this.advantagesForm.getRawValue();
     this.staticData.setAdvantagesContent(advantages).subscribe(() => {
@@ -77,6 +113,6 @@ export class AdvantagesComponent implements OnInit {
   }
 
   public photoUploaded(photos: File[], path: 'leftBlock' | 'centerBlock' | 'rightBlock'): void {
-    this.advantagesForm.get(path)?.get('img')?.setValue(photos[0]);
+    this.uploadedPhotos[path] = photos[0];
   }
 }

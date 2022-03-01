@@ -68,7 +68,7 @@ export class HtmlToPdfService {
     }
     if (this.date) {
       const h1 = document.createElement('h1');
-      h1.innerText = `ДАТА ЗАКАЗА: ${this.date}`;
+      h1.innerText = `ВЫДАЧА ЗАКАЗА: ${this.date}`;
       h1.style.color = 'red';
       div.append(h1);
     }

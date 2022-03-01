@@ -95,6 +95,7 @@ export class ConfirmationGoodsComponent {
       this.priceConvert.transform(this.boxesSum, 'two', 'rub'),
       this.priceConvert.transform(this.productsSum, 'two', 'rub'),
       this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
+      this.orderId,
     );
   }
 }

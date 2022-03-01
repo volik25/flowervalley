@@ -7,13 +7,55 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
 import { HtmlToPdfService } from './html-to-pdf.service';
+import { Category } from '../../_models/category';
+import { Product } from '../../_models/product';
+import { ProductService } from '../back/product.service';
+import { CatalogService } from '../back/catalog.service';
+import { forkJoin } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PriceListGenerateService {
   private header!: string[];
   private content!: any[];
 
-  public getPDF(header: string[], content: any[]): void {
+  constructor(private productService: ProductService, private catalogService: CatalogService) {}
+
+  public generatePriceList(categories?: Category[], products?: Product[]): void {
+    const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
+    const pricesContent: any[] = [];
+    if (categories && products) {
+      categories
+        .sort((a, b) => a.id - b.id)
+        .map((category) => {
+          pricesContent.push(
+            [category.name],
+            ...products
+              .filter((item) => item.categoryId === category.id)
+              .map((item) => [item.name, item.coefficient, item.price]),
+          );
+        });
+      this.getPDF(headers, pricesContent);
+    } else {
+      const requests = [this.productService.getItems(), this.catalogService.getItems()];
+      forkJoin(requests).subscribe(([loadedProducts, loadedCategories]) => {
+        (loadedCategories as Category[])
+          .sort((a, b) => a.id - b.id)
+          .filter((category) => category.id !== 1)
+          .filter((category) => !category.parentId)
+          .map((category) => {
+            pricesContent.push(
+              [category.name],
+              ...(loadedProducts as Product[])
+                .filter((item) => item.categoryId === category.id)
+                .map((item) => [item.name, item.coefficient, item.price]),
+            );
+          });
+        this.getPDF(headers, pricesContent);
+      });
+    }
+  }
+
+  private getPDF(header: string[], content: any[]): void {
     this.header = header;
     this.content = content;
     HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
@@ -63,6 +105,11 @@ export class PriceListGenerateService {
       for (let j = 0; j < abstractRow.length; j++) {
         const cell = bodyRow.insertCell(j);
         cell.innerHTML = abstractRow[j];
+        if (abstractRow.length === 1) {
+          cell.colSpan = 3;
+          cell.style.textTransform = 'uppercase';
+          cell.style.fontSize = '22px';
+        }
         if (j > 0) {
           cell.style.textAlign = 'right';
         }

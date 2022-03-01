@@ -16,23 +16,15 @@
     formControlName="description"
     placeholder="Текст"
   ></p-editor>
-  <!--  <div-->
-  <!--    class="photos-error"-->
-  <!--    *ngIf="productGroup.dirty && !photos.length && product && !product.photos.length"-->
-  <!--  >-->
-  <!--    Добавьте фотографии-->
-  <!--  </div>-->
   <flower-valley-files-upload
     [multi]="false"
     label="Обновить изображение"
     (uploaded)="photoUploaded($event)"
   ></flower-valley-files-upload>
-  <!--  <div class="grid mt-2">-->
-  <!--    <div class="img col-3" *ngFor="let photo of product?.photos">-->
-  <!--      <p-image [src]="photo.src" width="100"></p-image>-->
-  <!--    </div>-->
-  <!--  </div>-->
+  <div class="grid mt-2">
+    <div class="img col-3">
+      <p-image [src]="aboutForm.controls['img'].value" width="100"></p-image>
+    </div>
+  </div>
   <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
 </form>
-<h2>Предпросмотр</h2>
-<flower-valley-about [aboutData]="aboutForm.getRawValue()"></flower-valley-about>

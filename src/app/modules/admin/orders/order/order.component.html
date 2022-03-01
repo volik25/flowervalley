@@ -35,8 +35,8 @@
       >
         <div>Интервал доставки:</div>
         <div>
-          {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm':'+0600' }} -
-          {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm':'+0600' }}
+          {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm' }} -
+          {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm' }}
         </div>
       </div>
       <div class="order__header_date">
@@ -50,8 +50,11 @@
               <div class="flex align-items-center">
                 <span class="p-float-label">
                   <p-calendar
+                    #calendar
                     [(ngModel)]="order.confirmedDeliveryDate"
                     [firstDayOfWeek]="1"
+                    [minDate]="order.deliveryWishDateFrom || calendar.minDate"
+                    [maxDate]="order.deliveryWishDateTo || calendar.maxDate"
                     [showTime]="true"
                     [showSeconds]="false"
                     dateFormat="dd.mm.yy"
@@ -75,8 +78,11 @@
             <div class="flex align-items-center">
               <span class="p-float-label">
                 <p-calendar
+                  #calendar
                   [formControl]="confirmedDate"
                   [firstDayOfWeek]="1"
+                  [minDate]="order.deliveryWishDateFrom || calendar.minDate"
+                  [maxDate]="order.deliveryWishDateTo || calendar.maxDate"
                   [showTime]="true"
                   [showSeconds]="false"
                   dateFormat="dd.mm.yy"

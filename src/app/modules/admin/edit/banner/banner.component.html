@@ -38,7 +38,17 @@
       (uploaded)="uploadFiles($event)"
     ></flower-valley-files-upload>
     <div class="grid">
-      <div class="img col-3" *ngFor="let photo of photosLinks">
+      <div
+        class="img col-3"
+        *ngFor="let photo of photosLinks; let i = index"
+        pDraggable="clientPhoto"
+        dragEffect="move"
+        pDroppable="clientPhoto"
+        (onDrop)="drop()"
+        (onDragEnter)="setPosition(i)"
+        (onDragStart)="dragStart(photo, i)"
+        (onDragEnd)="dragEnd()"
+      >
         <p-image [src]="photo.src" width="100"></p-image>
         <p-button
           styleClass="p-button-danger"

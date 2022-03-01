@@ -4,6 +4,7 @@ import { RouteConfigLoadEnd, RouteConfigLoadStart } from '@angular/router';
 
 @Injectable()
 export class LoadingService {
+  private isInitializeLoading: boolean = true;
   /** отображать возможность отмены */
   public hasCancelBtn: boolean = true;
   /** срабатывает при отмене загрузки */
@@ -62,10 +63,11 @@ export class LoadingService {
   }
 
   public setLoading(event: any): void {
-    if (event instanceof RouteConfigLoadStart) {
+    if (event instanceof RouteConfigLoadStart && this.isInitializeLoading) {
       this.isLoading = true;
-    } else if (event instanceof RouteConfigLoadEnd) {
+    } else if (event instanceof RouteConfigLoadEnd && this.isInitializeLoading) {
       this.isLoading = false;
+      this.isInitializeLoading = false;
     }
   }
 }

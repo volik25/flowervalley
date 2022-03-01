@@ -17,6 +17,7 @@ export class IndividualComponent implements OnInit {
   public goods: Product[] = [];
   private clonedProducts: { [s: string]: Product } = {};
   public selectedGoods: Product[] = [];
+  private selectedCategories: Category[] = [];
   public isLoading: boolean = false;
   public categoryControl: FormControl;
   constructor(
@@ -29,6 +30,7 @@ export class IndividualComponent implements OnInit {
     this.categoryControl.valueChanges.subscribe((value) => {
       this.isLoading = true;
       this.selectedGoods = [];
+      this.selectedCategories = value;
       value.map((category: any) => {
         const products = this.goods.filter((product) => product.categoryId === category.id);
         this.selectedGoods = this.selectedGoods.concat(products);
@@ -65,12 +67,6 @@ export class IndividualComponent implements OnInit {
   }
 
   public showPriceList(): void {
-    const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
-    // console.log(this.selectedGoods);
-    const pricesProducts = this.selectedGoods
-      // @ts-ignore
-      .sort((a, b) => a.categoryId - b.categoryId)
-      .map((item) => [item.name, item.coefficient, item.price]);
-    this.pricesPDFService.getPDF(headers, pricesProducts);
+    this.pricesPDFService.generatePriceList(this.selectedCategories, this.selectedGoods);
   }
 }

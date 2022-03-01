@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Footer } from '../../_models/static-data/header';
+import { PriceListGenerateService } from '../../_services/front/price-list-generate.service';
 
 @Component({
   selector: 'flower-valley-footer',
@@ -9,9 +10,10 @@ import { Footer } from '../../_models/static-data/header';
 export class FooterComponent {
   @Input()
   public footer: Footer | undefined;
-  public goToPriceList(): void {
-    window.open(
-      'https://docs.google.com/spreadsheets/d/1TAcvsqVE7Q78MHaRoLw3XtiOn9P96A7Tk02GtrYwLho/edit#gid=669170734',
-    );
+
+  constructor(private pricesPDFService: PriceListGenerateService) {}
+
+  public getPriceList(): void {
+    this.pricesPDFService.generatePriceList();
   }
 }

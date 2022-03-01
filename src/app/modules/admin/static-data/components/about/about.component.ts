@@ -4,7 +4,6 @@ import { isFormInvalid } from '../../../../../_utils/formValidCheck';
 import { StaticDataService } from '../../../../../_services/back/static-data.service';
 import { MessageService } from 'primeng/api';
 import { LoadingService } from '../../../../../_services/front/loading.service';
-import { AboutEnum } from '../../../../../_models/static-data/about';
 
 @Component({
   selector: 'flower-valley-static-about',
@@ -14,6 +13,7 @@ import { AboutEnum } from '../../../../../_models/static-data/about';
 export class AboutComponent implements OnInit {
   public isLoading = false;
   public aboutForm: FormGroup;
+  private photo: File | undefined;
   constructor(
     private fb: FormBuilder,
     private ls: LoadingService,
@@ -39,8 +39,23 @@ export class AboutComponent implements OnInit {
   public saveAbout(): void {
     if (isFormInvalid(this.aboutForm)) return;
     this.isLoading = true;
-    this.aboutForm.disable();
+    if (this.photo) {
+      const formData = new FormData();
+      const oldImg = this.aboutForm.controls['img'].value;
+      formData.append('file', this.photo);
+      formData.append('removeUrl', oldImg);
+      this.staticData.uploadFile(formData).subscribe((res) => {
+        this.aboutForm.get('img')?.setValue(res);
+        this.saveAboutRequest();
+      });
+    } else {
+      this.saveAboutRequest();
+    }
+  }
+
+  private saveAboutRequest(): void {
     const about = this.aboutForm.getRawValue();
+    this.aboutForm.disable();
     this.staticData.setAboutContent(about).subscribe(() => {
       this.aboutForm.enable();
       this.isLoading = false;
@@ -53,10 +68,6 @@ export class AboutComponent implements OnInit {
   }
 
   public photoUploaded(photos: File[]): void {
-    const formData = new FormData();
-    formData.append('value', photos[0]);
-    this.staticData.uploadFile(AboutEnum, formData).subscribe((res) => {
-      this.aboutForm.get('img')?.setValue(res);
-    });
+    this.photo = photos[0];
   }
 }

@@ -8,6 +8,7 @@ export interface Product extends BusinessPackModel {
   photos: BannerPhotos[];
   description: string;
   categories: Category[];
+  categoryName?: string;
   categoryId?: number;
   boxId: number;
   prices: Price[];

@@ -4,6 +4,11 @@
     label="Обновить изображение"
     (uploaded)="photoUploaded($event)"
   ></flower-valley-files-upload>
+  <div class="grid mt-2">
+    <div class="img col-3">
+      <p-image [src]="headerForm.controls['img'].value" width="100"></p-image>
+    </div>
+  </div>
   <span class="p-float-label">
     <input type="text" id="title" pInputText formControlName="title" />
     <label for="title">Заголовок</label>
