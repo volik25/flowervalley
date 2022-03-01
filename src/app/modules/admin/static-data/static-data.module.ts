@@ -23,6 +23,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MainPageModule } from '../../main-page/main-page.module';
+import { AnimationComponent } from './components/animation/animation.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { MainPageModule } from '../../main-page/main-page.module';
     ContactsComponent,
     CartComponent,
     OtherComponent,
+    AnimationComponent,
   ],
   imports: [
     CommonModule,

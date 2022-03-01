@@ -21,6 +21,7 @@ import {
   MobileButtonsEnum,
   Variables,
 } from '../../_models/static-data/variables';
+import { Animation, AnimationEnum } from '../../_models/static-data/animation';
 
 interface StaticResponse {
   id: number;
@@ -123,6 +124,22 @@ export class StaticDataService {
 
   public setVariables(vars: Variables): Observable<any> {
     return this.generatePostRequest({ ...CartVariablesEnum, ...MobileButtonsEnum }, vars);
+  }
+
+  public getAnimations(): Observable<Animation> {
+    return this.generateGetRequest<Animation>(AnimationEnum).pipe(
+      map((animation) => {
+        animation.firstNumber = Number(animation.firstNumber);
+        animation.secondNumber = Number(animation.secondNumber);
+        animation.thirdNumber = Number(animation.thirdNumber);
+        animation.fourthNumber = Number(animation.fourthNumber);
+        return animation;
+      }),
+    );
+  }
+
+  public setAnimations(animations: Animation): Observable<any> {
+    return this.generatePostRequest(AnimationEnum, animations);
   }
 
   private getQueryParams(enumObject: any): string {
