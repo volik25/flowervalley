@@ -13,6 +13,21 @@
     display: none;
   }
 }
+.phone {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  @include laptop-media {
+    display: none;
+  }
+}
+
+.phone, .whatsapp {
+  animation-name: button-animation;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
 
 ::ng-deep .p-button-label {
   font-weight: normal;
@@ -190,4 +205,28 @@
 
 .background-light {
   background: $white-100;
+}
+
+@keyframes button-animation {
+  from, 4%, 8%, 10%, 12%, 14%, 16%,  to {
+    transform: rotate(0deg);
+  }
+  2% {
+    transform: rotate(15deg);
+  }
+  6% {
+    transform: rotate(-15deg);
+  }
+  9% {
+    transform: rotate(10deg);
+  }
+  11% {
+    transform: rotate(-10deg);
+  }
+  13% {
+    transform: rotate(5deg);
+  }
+  15% {
+    transform: rotate(-5deg);
+  }
 }

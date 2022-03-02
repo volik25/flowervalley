@@ -35,7 +35,15 @@
 </p-dialog>
 <p-confirmDialog acceptLabel="Да" rejectLabel="Нет"></p-confirmDialog>
 <p-toast></p-toast>
-<a href="https://api.whatsapp.com/send/?phone=79151091000" target="_blank" class="whatsapp">
+<a
+  *ngIf="mobileButtons"
+  href="https://api.whatsapp.com/send/?phone={{ mobileButtons.mobileWhatsApp }}"
+  target="_blank"
+  class="whatsapp"
+>
   <p-image src="assets/images/whatsapp.svg" width="50px"></p-image>
+</a>
+<a *ngIf="mobileButtons" href="tel:{{ mobileButtons.mobilePhone }}" target="_blank" class="phone">
+  <p-image src="assets/images/phone-call-icon.svg" width="50px"></p-image>
 </a>
 <flower-valley-loader *ngIf="loadingService.isLoading"></flower-valley-loader>

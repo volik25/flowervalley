@@ -20,6 +20,7 @@
         </ng-template>
       </p-button>
       <p-button
+        [loading]="!order"
         [style]="{ 'margin-top': '20px', padding: '25px' }"
         styleClass="p-button-estimate w-12 flex justify-content-center"
         (onClick)="getOffer()"
