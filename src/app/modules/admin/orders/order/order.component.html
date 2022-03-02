@@ -1,7 +1,12 @@
 <div class="order" *ngIf="order">
   <div class="order__actions">
     <span class="p-buttonset">
-      <p-button icon="pi pi-download" label="Смета" (onClick)="getEstimate()"></p-button>
+      <p-button
+        [disabled]="!order.confirmedDeliveryDate"
+        icon="pi pi-download"
+        label="Смета"
+        (onClick)="getEstimate()"
+      ></p-button>
       <p-button
         icon="pi pi-sync"
         styleClass="p-button-info"

@@ -60,10 +60,15 @@ export class AppComponent implements OnInit {
         this.mobileButtons = data;
       });
     }
-    const requests = [this.staticData.getHeaderContent(), this.staticData.getFooterContent()];
-    forkJoin(requests).subscribe(([header, footer]) => {
+    const requests = [
+      this.staticData.getHeaderContent(),
+      this.staticData.getFooterContent(),
+      this.staticData.getMobileVariables(),
+    ];
+    forkJoin(requests).subscribe(([header, footer, buttons]) => {
       this.header = header as Header;
       this.footer = footer as Footer;
+      this.mobileButtons = buttons as MobileButtons;
     });
   }
 
