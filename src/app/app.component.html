@@ -35,15 +35,20 @@
 </p-dialog>
 <p-confirmDialog acceptLabel="Да" rejectLabel="Нет"></p-confirmDialog>
 <p-toast></p-toast>
-<a
-  *ngIf="mobileButtons"
-  href="https://api.whatsapp.com/send/?phone={{ mobileButtons.mobileWhatsApp }}"
-  target="_blank"
-  class="whatsapp"
->
-  <p-image src="assets/images/whatsapp.svg" width="50px"></p-image>
-</a>
-<a *ngIf="mobileButtons" href="tel:{{ mobileButtons.mobilePhone }}" target="_blank" class="phone">
-  <p-image src="assets/images/phone-call-icon.svg" width="50px"></p-image>
-</a>
+<div class="whatsapp" *ngIf="mobileButtons">
+  <a href="https://api.whatsapp.com/send/?phone={{ mobileButtons.mobileWhatsApp }}" target="_blank">
+    <p-image src="assets/images/whatsapp.svg" width="50px"></p-image>
+    <div class="animation delay-0"></div>
+    <div class="animation delay-1"></div>
+    <div class="animation delay-2"></div>
+  </a>
+</div>
+<div class="phone" *ngIf="mobileButtons">
+  <a href="tel:{{ mobileButtons.mobilePhone }}" target="_blank">
+    <p-image src="assets/images/phone-call-icon.svg" width="50px"></p-image>
+    <div class="animation delay-0"></div>
+    <div class="animation delay-1"></div>
+    <div class="animation delay-2"></div>
+  </a>
+</div>
 <flower-valley-loader *ngIf="loadingService.isLoading"></flower-valley-loader>
