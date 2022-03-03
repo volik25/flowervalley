@@ -8,7 +8,7 @@
 .whatsapp {
   position: fixed;
   bottom: 10px;
-  right: 10px;
+  left: 10px;
   @include laptop-media {
     display: none;
   }
@@ -16,17 +16,39 @@
 .phone {
   position: fixed;
   bottom: 10px;
-  left: 10px;
+  right: 10px;
   @include laptop-media {
     display: none;
   }
 }
 
 .phone, .whatsapp {
-  animation-name: button-animation;
-  animation-duration: 5000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  a {
+    .animation {
+      z-index: -10;
+      position: absolute;
+      top: 0;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      opacity: 0;
+      border: 2px solid $main-green;
+      animation: scaleIn 4s infinite cubic-bezier(.36, .11, .89, .32);
+      &.delay {
+        &-0 {
+          animation-delay: 0s;
+        }
+        &-1 {
+          animation-delay: 500ms;
+        }
+        &-2 {
+          animation-delay: 1s;
+        }
+      }
+    }
+  }
 }
 
 ::ng-deep .p-button-label {
@@ -207,26 +229,13 @@
   background: $white-100;
 }
 
-@keyframes button-animation {
-  from, 4%, 8%, 10%, 12%, 14%, 16%,  to {
-    transform: rotate(0deg);
+@keyframes scaleIn {
+  from {
+    transform: scale(.5, .5);
+    opacity: .5;
   }
-  2% {
-    transform: rotate(15deg);
-  }
-  6% {
-    transform: rotate(-15deg);
-  }
-  9% {
-    transform: rotate(10deg);
-  }
-  11% {
-    transform: rotate(-10deg);
-  }
-  13% {
-    transform: rotate(5deg);
-  }
-  15% {
-    transform: rotate(-5deg);
+  to {
+    transform: scale(2.5, 2.5);
+    opacity: 0;
   }
 }
