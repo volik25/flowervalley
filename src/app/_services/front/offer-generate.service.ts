@@ -7,30 +7,30 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: null,
+  providedIn: 'root',
 })
 export class OfferGenerateService {
   private orderNumber!: number;
   private date!: string;
   private client!: string;
-  private categories!: string[];
   private content!: any[];
   private sum!: number;
+  private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
   public getPDF(
     orderNumber: number,
     date: string,
     client: string,
-    categories: string[],
     content: any[],
     sum: number,
+    isOpened: boolean = true,
   ): void {
     this.orderNumber = orderNumber;
     this.date = date;
     this.client = client;
-    this.categories = categories;
     this.content = content;
     this.sum = sum;
     HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((logo) => {
@@ -42,7 +42,11 @@ export class OfferGenerateService {
           content: html,
           info: { title: 'Коммерческое предложение' },
         };
-        pdfMake.createPdf(documentDefinition).open();
+        const document = pdfMake.createPdf(documentDefinition);
+        if (isOpened) document.open();
+        document.getBlob((blob: Blob) => {
+          this._generatedDocument.next(blob);
+        });
       });
     });
   }
@@ -274,5 +278,9 @@ export class OfferGenerateService {
       space += `<br/>`;
     }
     spaceCell.innerHTML = space;
+  }
+
+  public getGeneratedDocument(): Observable<Blob> {
+    return this._generatedDocument.asObservable();
   }
 }

@@ -6,6 +6,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
@@ -17,6 +18,7 @@ export class HtmlToPdfService {
   private sum!: string;
   private order: number | undefined;
   private date: string | undefined;
+  private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
   public getPDF(
     isClient: boolean,
@@ -28,6 +30,7 @@ export class HtmlToPdfService {
     sum: string,
     orderNumber?: number,
     date?: string,
+    isOpened: boolean = true,
   ): void {
     this.header = header;
     this.content = content;
@@ -46,7 +49,11 @@ export class HtmlToPdfService {
           content: html,
           info: { title: 'Смета Агрофирма Цветочная Долина' },
         };
-        pdfMake.createPdf(documentDefinition).open();
+        const document = pdfMake.createPdf(documentDefinition);
+        if (isOpened) document.open();
+        document.getBlob((blob: Blob) => {
+          this._generatedDocument.next(blob);
+        });
       });
     } else {
       const html = htmlToPdfmake(this.generateHTML().innerHTML, {
@@ -56,7 +63,11 @@ export class HtmlToPdfService {
         content: html,
         info: { title: `Смета по заказу №${orderNumber}` },
       };
-      pdfMake.createPdf(documentDefinition).open();
+      const document = pdfMake.createPdf(documentDefinition);
+      if (isOpened) document.open();
+      document.getBlob((blob: Blob) => {
+        this._generatedDocument.next(blob);
+      });
     }
   }
 
@@ -196,5 +207,9 @@ export class HtmlToPdfService {
       }
     }
     return table;
+  }
+
+  public getGeneratedDocument(): Observable<Blob> {
+    return this._generatedDocument.asObservable();
   }
 }

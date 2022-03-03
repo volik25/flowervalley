@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { Category } from '../../../../_models/category';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ProductService } from '../../../../_services/back/product.service';
 import { forkJoin } from 'rxjs';
 import { Product } from '../../../../_models/product';
 import { PriceListGenerateService } from '../../../../_services/front/price-list-generate.service';
+import { MailService } from '../../../../_services/back/mail.service';
+import { isFormInvalid } from '../../../../_utils/formValidCheck';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-individual',
@@ -20,13 +23,29 @@ export class IndividualComponent implements OnInit {
   private selectedCategories: Category[] = [];
   public isLoading: boolean = false;
   public categoryControl: FormControl;
+  public email: FormControl;
+  public _doc: Blob | undefined;
+  public sendButtonDisabled: boolean = true;
+  public sendingMail: boolean = false;
+
+  private set document(value: Blob | undefined) {
+    if (value) this.sendButtonDisabled = false;
+    this._doc = value;
+  }
+
+  public get document(): Blob | undefined {
+    return this._doc;
+  }
   constructor(
     private catalogService: CatalogService,
     private productService: ProductService,
     private pricesPDFService: PriceListGenerateService,
+    private mailService: MailService,
+    private messageService: MessageService,
     private fb: FormBuilder,
   ) {
     this.categoryControl = fb.control('');
+    this.email = fb.control('', Validators.required);
     this.categoryControl.valueChanges.subscribe((value) => {
       this.isLoading = true;
       this.selectedGoods = [];
@@ -44,6 +63,9 @@ export class IndividualComponent implements OnInit {
     forkJoin(requests).subscribe(([catalog, products]) => {
       this.catalog = catalog as Category[];
       this.goods = (products as Product[]).filter((product) => product.categoryId !== 1);
+    });
+    this.pricesPDFService.getGeneratedDocument().subscribe((doc) => {
+      this.document = doc;
     });
   }
 
@@ -68,5 +90,26 @@ export class IndividualComponent implements OnInit {
 
   public showPriceList(): void {
     this.pricesPDFService.generatePriceList(this.selectedCategories, this.selectedGoods);
+  }
+
+  public sendMail(): void {
+    if (this.document) {
+      if (isFormInvalid(this.email)) return;
+      this.sendingMail = true;
+      const data: FormData = new FormData();
+      data.append('email', this.email.value);
+      data.append(
+        'priceList',
+        new File([this.document], 'Прайс-лист Агрофирма Цветочная Долина.pdf'),
+      );
+      this.mailService.sendPricesMail(data).subscribe(() => {
+        this.sendingMail = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Прайс-лист отправлен',
+          detail: `Прайс-лист с выбранными позициями направлен на почту ${this.email.value}`,
+        });
+      });
+    }
   }
 }

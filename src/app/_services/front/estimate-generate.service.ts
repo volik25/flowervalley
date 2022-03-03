@@ -1,26 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HtmlToPdfService } from './html-to-pdf.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: null,
+  providedIn: 'root',
 })
 export class EstimateGenerateService {
+  private header: string[] = ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'];
   constructor(private htmlToPdf: HtmlToPdfService) {}
 
   public getClientPDF(
-    header: string[],
     content: any[],
     delivery: string,
     boxes: string,
     productsSum: string,
     sum: string,
     orderId?: number,
-  ): void {
-    this.htmlToPdf.getPDF(true, header, content, delivery, boxes, productsSum, sum, orderId);
+    isOpened: boolean = true,
+  ): Observable<Blob> {
+    this.htmlToPdf.getPDF(
+      true,
+      this.header,
+      content,
+      delivery,
+      boxes,
+      productsSum,
+      sum,
+      orderId,
+      undefined,
+      isOpened,
+    );
+    return this.htmlToPdf.getGeneratedDocument();
   }
 
   public getCompanyPDF(
-    header: string[],
     content: any[],
     delivery: string,
     boxes: string,
@@ -28,10 +41,11 @@ export class EstimateGenerateService {
     sum: string,
     order: number,
     date: string | null,
-  ): void {
+    isOpened: boolean = true,
+  ): Observable<Blob> {
     this.htmlToPdf.getPDF(
       false,
-      header,
+      this.header,
       content,
       delivery,
       boxes,
@@ -39,6 +53,8 @@ export class EstimateGenerateService {
       sum,
       order,
       date || undefined,
+      isOpened,
     );
+    return this.htmlToPdf.getGeneratedDocument();
   }
 }

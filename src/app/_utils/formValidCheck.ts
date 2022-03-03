@@ -28,7 +28,7 @@ export function markInvalidFields(form: FormGroup | FormControl) {
   }
 }
 
-export function isFormInvalid(form: FormGroup): boolean {
+export function isFormInvalid(form: FormGroup | FormControl): boolean {
   if (form?.invalid) {
     markInvalidFields(form);
     return true;

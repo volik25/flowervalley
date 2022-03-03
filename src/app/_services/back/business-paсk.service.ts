@@ -9,11 +9,29 @@ import { Invoice } from '../../_models/business-pack/invoice';
 @Injectable()
 export class BusinessPackService {
   private _selfId = '00~Pvjh00003';
+  private _boxVolume = '00~Pvjh0000F';
+  private _deliveryVolume = '00~Pvjh00Iyr';
   private baseId = environment.bpId;
   private baseUrl = `${environment.bpUrl}/${this.baseId}`;
 
   public get selfId(): string {
     return this._selfId;
+  }
+
+  public get boxVolume(): string {
+    return this._boxVolume;
+  }
+
+  public get deliveryVolume(): string {
+    return this._deliveryVolume;
+  }
+
+  public get boxId(): string {
+    return '00~Pvjh01MMv';
+  }
+
+  public get deliveryId(): string {
+    return '00~Pvjh01MMw';
   }
 
   constructor(private http: HttpClient) {}

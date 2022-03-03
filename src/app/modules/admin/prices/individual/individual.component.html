@@ -3,6 +3,10 @@
   [isAdmin]="true"
   [buttonTemplate]="actionsButtons"
 >
+  <span class="p-float-label">
+    <input type="text" id="email" pInputText [formControl]="email" />
+    <label for="email">Email клиента</label>
+  </span>
   <span class="p-float-label w-12">
     <p-multiSelect
       styleClass="w-12"
@@ -20,7 +24,6 @@
   </span>
 
   <p-table
-    #pricesTable
     [value]="selectedGoods"
     [loading]="isLoading"
     [globalFilterFields]="['name']"
@@ -117,11 +120,18 @@
 <ng-template #actionsButtons>
   <span class="p-buttonset">
     <p-button
+      [disabled]="!selectedGoods.length"
       icon="pi pi-eye"
       styleClass="p-button-info"
       label="Посмотреть"
       (onClick)="showPriceList()"
     ></p-button>
-    <p-button icon="pi pi-upload" label="Отправить клиенту"></p-button>
+    <p-button
+      [disabled]="sendButtonDisabled"
+      [loading]="sendingMail"
+      icon="pi pi-upload"
+      (onClick)="sendMail()"
+      label="Отправить клиенту"
+    ></p-button>
   </span>
 </ng-template>

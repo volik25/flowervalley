@@ -12,6 +12,8 @@ $root: '.media';
     text-align: center;
   }
   &__container {
+    display: flex;
+    justify-content: center;
     .card {
       background-color: $white-100;
       border-radius: 10px;
