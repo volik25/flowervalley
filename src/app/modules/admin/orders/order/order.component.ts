@@ -15,12 +15,23 @@ import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Inplace } from 'primeng/inplace';
 import { DateConverterService } from '../../../../_services/front/date-converter.service';
+import { MailService } from '../../../../_services/back/mail.service';
+import { DocumentGenerateService } from '../../../../_services/front/document-generate.service';
+import { GoodsInvoice } from '../../../../_models/business-pack/goods-invoice';
+import { Invoice } from '../../../../_models/business-pack/invoice';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'flower-valley-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss'],
-  providers: [EstimateGenerateService, PriceConverterPipe, DatePipe, DateConverterService],
+  providers: [
+    EstimateGenerateService,
+    PriceConverterPipe,
+    DatePipe,
+    DateConverterService,
+    DocumentGenerateService,
+  ],
 })
 export class OrderComponent implements OnInit {
   public orderId: number = 0;
@@ -29,6 +40,7 @@ export class OrderComponent implements OnInit {
   public clientEntity: Firm | undefined;
   public order: Order | undefined;
   public products: Product[] = [];
+  public sendingMail: boolean = false;
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
@@ -36,6 +48,8 @@ export class OrderComponent implements OnInit {
     private priceConvert: PriceConverterPipe,
     private dateConvert: DatePipe,
     private dateConverter: DateConverterService,
+    private mailService: MailService,
+    private documentService: DocumentGenerateService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
@@ -82,6 +96,7 @@ export class OrderComponent implements OnInit {
   }
 
   public saveOrder(): void {
+    this.sendingMail = true;
     const order: any = { ...this.order };
     // @ts-ignore
     order.products = this.order.products.map((product: OrderProduct) => {
@@ -115,15 +130,13 @@ export class OrderComponent implements OnInit {
       delete order.clientInn;
     }
     // @ts-ignore
-    const sub = this.orderService.updateItem<Order>(order).subscribe(() => {
-      this.ls.removeSubscription(sub);
-      this.ms.add({
-        severity: 'success',
-        summary: 'Заказ обновлен',
-        detail: 'Обновленный заказ выслан на почту ' + this.order?.clientEmail,
-      });
+    this.orderService.updateItem<Order>(order).subscribe(() => {
+      if (order.clientId) {
+        this.sendBusinessMail();
+      } else {
+        this.sendIndividualMail();
+      }
     });
-    this.ls.addSubscription(sub);
   }
 
   public getStatus(status: OrderStatus): { label: string; severity: string } {
@@ -174,7 +187,6 @@ export class OrderComponent implements OnInit {
   public getEstimate(): void {
     if (this.order) {
       this.estimatePDF.getCompanyPDF(
-        ['Товар', 'Цена ₽', 'Количество', 'Стоимость ₽'],
         this.order.products.map((goods) => [
           goods.product.name,
           goods.price,
@@ -195,5 +207,123 @@ export class OrderComponent implements OnInit {
     inplace.deactivate();
     // @ts-ignore
     this.order.confirmedDeliveryDate = this.confirmedDate.value;
+  }
+
+  public createInvoice(): void {
+    this.sendingMail = true;
+    const firmId = this.bpService.selfId;
+    const goods: GoodsInvoice[] = [];
+    // @ts-ignore
+    this.order.products.map((product) => {
+      if (product.product.id && product.product.volume) {
+        goods.push({
+          model_id: product.product.id,
+          volume_id: product.product.volume,
+          nds: 0,
+          nds_mode: 0,
+          count: product.count,
+          price: product.price,
+          qname: product.product.name,
+        });
+      }
+    });
+    // @ts-ignore
+    this.order.boxes.map((box) => {
+      goods.push({
+        model_id: this.bpService.boxId,
+        volume_id: this.bpService.boxVolume,
+        nds: 0,
+        nds_mode: 0,
+        count: box.count,
+        price: box.price,
+        qname: 'Транспортировочная коробка (в ассортименте)',
+      });
+    });
+    // @ts-ignore
+    if (this.order.deliveryPrice) {
+      goods.push({
+        model_id: this.bpService.deliveryId,
+        volume_id: this.bpService.deliveryVolume,
+        nds: 0,
+        nds_mode: 0,
+        count: 1,
+        // @ts-ignore
+        price: this.order.deliveryPrice,
+        qname: 'Доставка',
+      });
+    }
+    const invoice: Invoice = {
+      firm_id: firmId,
+      // @ts-ignore
+      partner_id: this.order?.clientId,
+      goods: goods,
+      partner_flag: 'A',
+    };
+    this.bpService.createInvoice(invoice).subscribe((response) => {
+      const invoiceId = response.Object;
+      this.bpService
+        .sendInvoiceToTelepak(invoiceId, {
+          report_name: 'Счет с образцом п. п. + печать подпись',
+          send_with_stamp: true,
+        })
+        .subscribe(({ id }) => {
+          if (id) {
+            // @ts-ignore
+            this.order.accountNumber = id;
+            this.saveOrder();
+          }
+        });
+    });
+  }
+
+  private sendBusinessMail(): void {
+    const requests = [
+      // @ts-ignore
+      this.bpService.getFirmById(this.order.clientId),
+      // @ts-ignore
+      this.orderService.getItemById<Order>(this.order.id),
+    ];
+    forkJoin(requests).subscribe(([firm, orderItem]) => {
+      firm = firm as Firm;
+      const order = orderItem as Order;
+      this.documentService.getOffer(order, firm).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        // @ts-ignore
+        formData.append('accountNumber', order.accountNumber);
+        // @ts-ignore
+        formData.append('orderId', this.order.id.toString());
+        formData.append('email', order.clientEmail);
+        this.mailService.sendEditOrderMail(formData).subscribe(() => {
+          this.sendingMail = false;
+          this.ms.add({
+            severity: 'success',
+            summary: 'Заказ изменен',
+            detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
+          });
+        });
+      });
+    });
+  }
+
+  private sendIndividualMail(): void {
+    // @ts-ignore
+    const orderId = this.order.id;
+    this.orderService.getItemById<Order>(orderId).subscribe((order) => {
+      this.documentService.getEstimate(order, orderId).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('orderId', orderId.toString());
+        formData.append('email', order.clientEmail);
+        this.mailService.sendEditOrderMail(formData).subscribe(() => {
+          this.sendingMail = false;
+          this.ms.add({
+            severity: 'success',
+            summary: 'Заказ изменен',
+            detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
+          });
+        });
+      });
+    });
   }
 }

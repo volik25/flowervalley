@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
-import { debounceTime, map, Observable, of, takeUntil } from 'rxjs';
+import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
 import { YaMapService } from '../../../_services/front/ya-map.service';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { ProductItem } from '../../../_models/product-item';
@@ -15,12 +15,15 @@ import { ProductService } from '../../../_services/back/product.service';
 import { Order, OrderItem } from '../../../_models/order';
 import { BoxGenerateService } from '../../../_services/front/box-generate.service';
 import { OrderService } from '../../../_services/back/order.service';
+import { MailService } from '../../../_services/back/mail.service';
+import { DocumentGenerateService } from '../../../_services/front/document-generate.service';
+import { Firm } from '../../../_models/business-pack/firm';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
   templateUrl: './order-confirmation.component.html',
   styleUrls: ['./order-confirmation.component.scss'],
-  providers: [DestroyService, YaMapService],
+  providers: [DestroyService, YaMapService, DocumentGenerateService],
 })
 export class OrderConfirmationComponent {
   public goods: ProductItem[] = [];
@@ -49,6 +52,8 @@ export class OrderConfirmationComponent {
     private productService: ProductService,
     private orderService: OrderService,
     private boxService: BoxGenerateService,
+    private mailService: MailService,
+    private documentService: DocumentGenerateService,
     private messageService: MessageService,
     private router: Router,
     private route: ActivatedRoute,
@@ -130,12 +135,7 @@ export class OrderConfirmationComponent {
       this.orderService.addItem(order).subscribe(
         (id: number) => {
           this.orderId = id;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Заказ оформлен',
-            detail: `Данные заказа отправлены на почту ${this.contacts.value.email}, ожидайте звонка оператора`,
-          });
-          this.isInvoiceLoading = false;
+          this.sendIndividualMail(id);
         },
         ({ error }) => {
           this.isInvoiceLoading = false;
@@ -169,6 +169,28 @@ export class OrderConfirmationComponent {
             });
           }
         });
+        order.boxes.map((box) => {
+          goods.push({
+            model_id: this.bpService.boxId,
+            volume_id: this.bpService.boxVolume,
+            nds: 0,
+            nds_mode: 0,
+            count: box.count,
+            price: box.price,
+            qname: 'Транспортировочная коробка (в ассортименте)',
+          });
+        });
+        if (order.deliveryPrice) {
+          goods.push({
+            model_id: this.bpService.deliveryId,
+            volume_id: this.bpService.deliveryVolume,
+            nds: 0,
+            nds_mode: 0,
+            count: 1,
+            price: order.deliveryPrice,
+            qname: 'Доставка',
+          });
+        }
         const invoice: Invoice = {
           firm_id: firmId,
           partner_id: partnerId,
@@ -186,14 +208,7 @@ export class OrderConfirmationComponent {
               if (id) {
                 order.accountNumber = id;
                 this.orderService.addItem(order).subscribe((orderId) => {
-                  this.isInvoiceLoading = false;
-                  this.router.navigate(['download-invoice'], {
-                    relativeTo: this.route,
-                    queryParams: {
-                      invoice: id,
-                      order: orderId,
-                    },
-                  });
+                  this.sendBusinessMail(invoiceId, partnerId, orderId);
                 });
               }
             });
@@ -293,5 +308,61 @@ export class OrderConfirmationComponent {
 
   public setOrderSum(sum: number): void {
     this.contacts.controls['orderSum'].setValue(sum);
+  }
+
+  private sendIndividualMail(orderId: number): void {
+    this.orderService.getItemById<Order>(orderId).subscribe((order) => {
+      this.documentService.getEstimate(order, orderId).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('orderId', orderId.toString());
+        formData.append('email', order.clientEmail);
+        this.mailService.sendIndividualMail(formData, order).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Заказ оформлен',
+            detail: `Данные заказа отправлены на почту ${order.clientEmail}, ожидайте звонка оператора`,
+          });
+          this.isInvoiceLoading = false;
+        });
+      });
+    });
+  }
+
+  private sendBusinessMail(invoiceId: string, firmId: string, orderId: number): void {
+    const requests = [
+      this.bpService.getInvoiceById(invoiceId),
+      this.bpService.getFirmById(firmId),
+      this.orderService.getItemById<Order>(orderId),
+    ];
+    forkJoin(requests).subscribe(([invoice, firm, orderItem]) => {
+      invoice = invoice as any;
+      firm = firm as Firm;
+      const order = orderItem as Order;
+      this.documentService.getOffer(order, firm).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('billNumber', invoice.Name);
+        formData.append('billDate', invoice.Date);
+        // @ts-ignore
+        formData.append('accountNumber', order.accountNumber);
+        formData.append('email', order.clientEmail);
+        this.mailService.sendBusinessMail(formData, order, firm.FullName).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Заявка принята',
+            detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}, ожидайте звонка оператора`,
+          });
+          this.isInvoiceLoading = false;
+          this.router.navigate(['download-invoice'], {
+            relativeTo: this.route,
+            queryParams: {
+              invoice: order.accountNumber,
+              order: orderId,
+            },
+          });
+        });
+      });
+    });
   }
 }

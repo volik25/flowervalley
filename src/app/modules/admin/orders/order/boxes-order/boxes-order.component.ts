@@ -23,6 +23,7 @@ export class BoxesOrderComponent {
   public orderBoxesChange: EventEmitter<OrderBox[]> = new EventEmitter<OrderBox[]>();
   @Input()
   public products: OrderProduct[] = [];
+  private clonedBoxes: { [s: string]: OrderBox } = {};
 
   constructor(private boxService: BoxGenerateService) {}
 
@@ -48,5 +49,19 @@ export class BoxesOrderComponent {
         });
       });
     }
+  }
+
+  public onRowEditInit(box: OrderBox): void {
+    this.clonedBoxes[box.id] = { ...box };
+  }
+
+  public onRowEditSave(box: OrderBox, index: number) {
+    this.orderBoxes[index] = box;
+    delete this.clonedBoxes[box.id];
+  }
+
+  public onRowEditCancel(box: OrderBox, index: number) {
+    this.orderBoxes[index] = this.clonedBoxes[box.id];
+    delete this.clonedBoxes[box.id];
   }
 }

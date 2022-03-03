@@ -43,7 +43,6 @@ export class DownloadInvoiceComponent {
       const orderNumber = this.order.id;
       // @ts-ignore
       const date = new Date(this.order.orderDate).toLocaleDateString() + 'г.';
-      const categories: string[] = [];
       let sum: number = 0;
       // @ts-ignore
       const content: any[] = this.order.products.map((product) => {
@@ -56,7 +55,7 @@ export class DownloadInvoiceComponent {
           product.count * product.price,
         ];
       });
-      this.offerService.getPDF(orderNumber, date, client, categories, content, sum);
+      this.offerService.getPDF(orderNumber, date, client, content, sum);
     });
   }
 }

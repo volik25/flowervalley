@@ -11,12 +11,13 @@ import { Category } from '../../_models/category';
 import { Product } from '../../_models/product';
 import { ProductService } from '../back/product.service';
 import { CatalogService } from '../back/catalog.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PriceListGenerateService {
   private header!: string[];
   private content!: any[];
+  private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
   constructor(private productService: ProductService, private catalogService: CatalogService) {}
 
@@ -66,7 +67,11 @@ export class PriceListGenerateService {
         content: html,
         info: { title: 'Прайс-лист Агрофирма Цветочная Долина' },
       };
-      pdfMake.createPdf(documentDefinition).open();
+      const document = pdfMake.createPdf(documentDefinition);
+      document.open();
+      document.getBlob((blob: Blob) => {
+        this._generatedDocument.next(blob);
+      });
     });
   }
 
@@ -116,5 +121,9 @@ export class PriceListGenerateService {
       }
     }
     return table;
+  }
+
+  public getGeneratedDocument(): Observable<Blob> {
+    return this._generatedDocument.asObservable();
   }
 }

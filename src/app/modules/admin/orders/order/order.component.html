@@ -13,7 +13,12 @@
         label="Повторить"
         (onClick)="repeatOrder()"
       ></p-button>
-      <p-button icon="pi pi-save" label="Сохранить" (onClick)="saveOrder()"></p-button>
+      <p-button
+        icon="pi pi-save"
+        label="Сохранить"
+        [loading]="sendingMail"
+        (onClick)="order.clientId ? createInvoice() : saveOrder()"
+      ></p-button>
     </span>
   </div>
   <div class="order__header">
@@ -107,7 +112,24 @@
       </div>
       <div class="order__header_address">
         <div>Адрес доставки:</div>
-        <div>{{ order.clientAddress }}</div>
+        <div>
+          <p-inplace #inplace>
+            <ng-template pTemplate="display"> {{ order.clientAddress }} </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex align-items-center">
+                <span class="p-float-label">
+                  <input type="text" id="address" pInputText [(ngModel)]="order.clientAddress" />
+                  <label for="address">Адрес</label>
+                </span>
+                <p-button
+                  styleClass="ml-2"
+                  label="Закрыть"
+                  (onClick)="inplace.deactivate()"
+                ></p-button>
+              </div>
+            </ng-template>
+          </p-inplace>
+        </div>
       </div>
       <div class="order__header_products-sum">
         <div>Стоимость товаров:</div>
@@ -119,7 +141,27 @@
       </div>
       <div class="order__header_delivery" *ngIf="order.deliveryPrice">
         <div>Стоимость доставки:</div>
-        <div>{{ order.deliveryPrice | priceConverter }}</div>
+        <div>
+          <p-inplace #inplace>
+            <ng-template pTemplate="display">
+              {{ order.deliveryPrice | priceConverter }}
+            </ng-template>
+            <ng-template pTemplate="content">
+              <div class="flex align-items-center">
+                <span class="p-float-label">
+                  <p-inputNumber [(ngModel)]="order.deliveryPrice" inputId="delivery" [min]="1">
+                  </p-inputNumber>
+                  <label for="delivery">Стоимость доставки</label>
+                </span>
+                <p-button
+                  styleClass="ml-2"
+                  label="Закрыть"
+                  (onClick)="inplace.deactivate()"
+                ></p-button>
+              </div>
+            </ng-template>
+          </p-inplace>
+        </div>
       </div>
       <div class="order__header_sum">
         <div>Сумма заказа:</div>

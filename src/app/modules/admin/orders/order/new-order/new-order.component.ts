@@ -4,7 +4,7 @@ import { OrderService } from '../../../../../_services/back/order.service';
 import { Order, OrderBox, OrderItem, OrderProduct } from '../../../../../_models/order';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { isFormInvalid } from '../../../../../_utils/formValidCheck';
-import { debounceTime, map, Observable, of, takeUntil } from 'rxjs';
+import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
 import { YaMapService } from '../../../../../_services/front/ya-map.service';
 import { DestroyService } from '../../../../../_services/front/destroy.service';
 import { LoadingService } from '../../../../../_services/front/loading.service';
@@ -14,12 +14,14 @@ import { MessageService } from 'primeng/api';
 import { GoodsInvoice } from '../../../../../_models/business-pack/goods-invoice';
 import { Invoice } from '../../../../../_models/business-pack/invoice';
 import { ProductService } from '../../../../../_services/back/product.service';
+import { MailService } from '../../../../../_services/back/mail.service';
+import { DocumentGenerateService } from '../../../../../_services/front/document-generate.service';
 
 @Component({
   selector: 'flower-valley-new-order',
   templateUrl: './new-order.component.html',
   styleUrls: ['./new-order.component.scss'],
-  providers: [DestroyService, YaMapService],
+  providers: [DestroyService, YaMapService, DocumentGenerateService],
 })
 export class NewOrderComponent implements OnInit {
   private orderId: number | undefined;
@@ -38,6 +40,8 @@ export class NewOrderComponent implements OnInit {
     private orderService: OrderService,
     private productService: ProductService,
     private bpService: BusinessPackService,
+    private mailService: MailService,
+    private documentService: DocumentGenerateService,
     private fb: FormBuilder,
     private ls: LoadingService,
     private route: ActivatedRoute,
@@ -53,6 +57,7 @@ export class NewOrderComponent implements OnInit {
       clientPhone: ['', Validators.required],
       clientEmail: ['', Validators.required],
       clientAddress: ['', Validators.required],
+      orderSum: [null, Validators.required],
     });
     route.queryParams.subscribe((params) => {
       this.orderId = params['orderId'];
@@ -135,14 +140,9 @@ export class NewOrderComponent implements OnInit {
         });
       });
       const sub = this.orderService.addItem({ ...order, products: products }).subscribe(
-        () => {
-          this.ms.add({
-            severity: 'success',
-            summary: 'Заказ оформлен',
-            detail: `Данные заказа отправлены на почту ${this.contactsGroup.value.clientEmail}`,
-          });
+        (orderId) => {
+          this.sendIndividualMail(orderId);
           this.ls.removeSubscription(sub);
-          this.router.navigate(['admin/orders']);
         },
         ({ error }) => {
           this.ms.add({
@@ -174,6 +174,7 @@ export class NewOrderComponent implements OnInit {
       products: this.products,
       boxes: orderBoxes,
       deliveryPrice: 0,
+      orderSum: contacts.orderSum,
     };
     if (contacts.requestNumber) order.requestNumber = contacts.requestNumber;
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
@@ -186,24 +187,42 @@ export class NewOrderComponent implements OnInit {
         order.clientInn = inn;
         const firmId = this.bpService.selfId;
         const goods: GoodsInvoice[] = [];
-        const productSub = this.productService.getItems().subscribe((products) => {
-          products.map((product) => {
-            const orderProduct = order.products.find((item) => item.id === product.id);
-            if (product.id && product.volume && orderProduct) {
-              goods.push({
-                model_id: product.id,
-                volume_id: product.volume,
-                nds: 0,
-                nds_mode: 0,
-                count: orderProduct.count,
-                price: orderProduct.price,
-                qname: orderProduct.product.name,
-              });
-            }
-          });
-          this.ls.removeSubscription(productSub);
+        // @ts-ignore
+        this.order.products.map((product) => {
+          if (product.product.id && product.product.volume) {
+            goods.push({
+              model_id: product.product.id,
+              volume_id: product.product.volume,
+              nds: 0,
+              nds_mode: 0,
+              count: product.count,
+              price: product.price,
+              qname: product.product.name,
+            });
+          }
         });
-        this.ls.addSubscription(productSub);
+        order.boxes.map((box) => {
+          goods.push({
+            model_id: this.bpService.boxId,
+            volume_id: this.bpService.boxVolume,
+            nds: 0,
+            nds_mode: 0,
+            count: box.count,
+            price: box.price,
+            qname: 'Транспортировочная коробка (в ассортименте)',
+          });
+        });
+        if (order.deliveryPrice) {
+          goods.push({
+            model_id: this.bpService.deliveryId,
+            volume_id: this.bpService.deliveryVolume,
+            nds: 0,
+            nds_mode: 0,
+            count: 1,
+            price: order.deliveryPrice,
+            qname: 'Доставка',
+          });
+        }
         const invoice: Invoice = {
           firm_id: firmId,
           partner_id: partnerId,
@@ -230,14 +249,9 @@ export class NewOrderComponent implements OnInit {
                 });
                 const orderSub = this.orderService
                   .addItem({ ...order, products: products })
-                  .subscribe(() => {
+                  .subscribe((orderId) => {
                     this.ls.removeSubscription(orderSub);
-                    this.ms.add({
-                      severity: 'success',
-                      summary: 'Заказ оформлен',
-                      detail: `Данные заказа отправлены на почту ${this.contactsGroup.value.clientEmail}`,
-                    });
-                    this.router.navigate(['admin/orders']);
+                    this.sendBusinessMail(invoiceId, partnerId, orderId);
                   });
                 this.ls.addSubscription(orderSub);
               }
@@ -280,5 +294,70 @@ export class NewOrderComponent implements OnInit {
   public deliveryButtonClick(): void {
     this.showDelivery = true;
     this.cdr.detectChanges();
+  }
+  private sendIndividualMail(orderId: number): void {
+    const orderSub = this.orderService.getItemById<Order>(orderId).subscribe((order) => {
+      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('orderId', orderId.toString());
+        formData.append('email', order.clientEmail);
+        const mailSub = this.mailService.sendIndividualMail(formData, order).subscribe(() => {
+          this.ls.removeSubscription(mailSub);
+          this.ms.add({
+            severity: 'success',
+            summary: 'Заказ оформлен',
+            detail: `Данные заказа отправлены на почту ${order.clientEmail}`,
+          });
+          this.router.navigate(['admin/orders']);
+        });
+        this.ls.addSubscription(mailSub);
+        this.ls.removeSubscription(docSub);
+      });
+      this.ls.addSubscription(docSub);
+      this.ls.removeSubscription(orderSub);
+    });
+    this.ls.addSubscription(orderSub);
+  }
+
+  private sendBusinessMail(invoiceId: string, firmId: string, orderId: number): void {
+    const requests = [
+      this.bpService.getInvoiceById(invoiceId),
+      this.bpService.getFirmById(firmId),
+      this.orderService.getItemById<Order>(orderId),
+    ];
+    const subs = forkJoin(requests).subscribe(([invoice, firm, orderItem]) => {
+      invoice = invoice as any;
+      firm = firm as Firm;
+      const order = orderItem as Order;
+      const sub = this.documentService.getOffer(order, firm).subscribe((file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('billNumber', invoice.Name);
+        formData.append('billDate', invoice.Date);
+        // @ts-ignore
+        formData.append('accountNumber', order.accountNumber);
+        if (order.requestNumber) {
+          formData.append('requestNumber', order.requestNumber);
+        }
+        formData.append('email', order.clientEmail);
+        const mailSub = this.mailService
+          .sendBusinessMail(formData, order, firm.FullName)
+          .subscribe(() => {
+            this.ls.removeSubscription(mailSub);
+            this.ms.add({
+              severity: 'success',
+              summary: 'Заявка принята',
+              detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}`,
+            });
+            this.router.navigate(['admin/orders']);
+          });
+        this.ls.addSubscription(mailSub);
+        this.ls.removeSubscription(sub);
+      });
+      this.ls.addSubscription(sub);
+      this.ls.removeSubscription(subs);
+    });
+    this.ls.addSubscription(subs);
   }
 }
