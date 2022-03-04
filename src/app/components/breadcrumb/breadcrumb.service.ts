@@ -61,6 +61,8 @@ export class BreadcrumbService {
         return false;
       case '/sign-in':
         return false;
+      case '/private-policy':
+        return false;
       default:
         return !(
           this.url.includes('/#') ||

@@ -9,6 +9,7 @@ import { AdminService } from '../../_services/back/admin.service';
 import { LoadingService } from '../../_services/front/loading.service';
 import { CategoryOrder } from '../../_models/category-order';
 import { Router } from '@angular/router';
+import { SEOService } from '../../_services/front/seo.service';
 
 @Component({
   selector: 'flower-valley-catalog',
@@ -29,6 +30,7 @@ export class CatalogComponent implements OnInit {
     private storageService: StorageService,
     private adminService: AdminService,
     private router: Router,
+    private seoService: SEOService,
     private ls: LoadingService,
   ) {
     bs.setItem('Каталог');
@@ -41,9 +43,15 @@ export class CatalogComponent implements OnInit {
 
   private getCategories(): void {
     const sub = this.catalogService.getItems().subscribe((categories) => {
+      let keywords: string[] = [];
       this.catalog = categories
         .filter((item) => !item.parentId)
-        .sort((a, b) => a.categoryOrder - b.categoryOrder);
+        .sort((a, b) => a.categoryOrder - b.categoryOrder)
+        .map((category) => {
+          keywords = keywords.concat(category.name.toLowerCase().split(' ').join(','));
+          return category;
+        });
+      this.seoService.updateKeywords(keywords.join(','));
       this.storageService.setItem(categoriesKey, categories);
       this.ls.removeSubscription(sub);
     });

@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/cor
 import { BreadcrumbService } from './components/breadcrumb/breadcrumb.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoadingService } from './_services/front/loading.service';
-import { NavigationStart, Router } from '@angular/router';
-import { filter, forkJoin, map } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { filter, forkJoin, map, mergeMap } from 'rxjs';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { StaticDataService } from './_services/back/static-data.service';
 import { Footer, Header } from './_models/static-data/header';
 import { MobileButtons } from './_models/static-data/variables';
+import { SEOService } from './_services/front/seo.service';
 
 @Component({
   selector: 'flower-valley-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   public header: Header | undefined;
   public footer: Footer | undefined;
   public mobileButtons: MobileButtons | undefined;
+  private activatedRoute: ActivatedRoute;
   public background: 'light' | 'dark' = 'light';
   @HostListener('document:keydown.control.m')
   private openAdminPanel() {
@@ -33,8 +35,11 @@ export class AppComponent implements OnInit {
     public loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private route: ActivatedRoute,
     private config: PrimeNGConfig,
+    private _seoService: SEOService,
   ) {
+    this.activatedRoute = route;
     loadingService.changeDetectorRef = cdr;
     _bs.backgroundChanges.subscribe((background) => {
       this.background = background;
@@ -52,6 +57,28 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => this.activatedRoute),
+        map((route) => {
+          while (route.firstChild) route = route.firstChild;
+          return route;
+        }),
+        filter((route) => route.outlet === 'primary'),
+        mergeMap((route) => route.data),
+      )
+      .subscribe((event) => {
+        if (event['title']) {
+          if (event['main']) {
+            this._seoService.updateTitle(event['title'], true);
+          } else {
+            this._seoService.updateTitle(event['title']);
+          }
+        }
+        if (event['keywords']) this._seoService.updateKeywords(event['keywords']);
+        if (event['description']) this._seoService.updateDescription(event['description']);
+      });
     this.router.events.subscribe((event) => {
       this.loadingService.setLoading(event);
     });

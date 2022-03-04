@@ -14,6 +14,7 @@ import { slugify } from 'transliteration';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AdminService } from '../../../_services/back/admin.service';
 import { take } from 'rxjs/operators';
+import { SEOService } from '../../../_services/front/seo.service';
 
 @Component({
   selector: 'flower-valley-product',
@@ -41,6 +42,7 @@ export class ProductComponent implements OnInit {
     private catalogService: CatalogService,
     private dialogService: DialogService,
     private route: ActivatedRoute,
+    private seoService: SEOService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private bs: BreadcrumbService,
@@ -68,6 +70,11 @@ export class ProductComponent implements OnInit {
           count: Number(product.coefficient) || 1,
           initialPrice: product.price,
         };
+        this.seoService.updateTitle(this.product.name);
+        let keywords: string[] = this.product.name.toLowerCase().split(' ');
+        keywords = keywords.concat(this.product.description.toLowerCase().split(' '));
+        this.seoService.updateKeywords(keywords.join(','));
+        this.seoService.updateDescription(this.product.description);
         const minPrice = this.product.prices.sort((price) => -price.price)[0];
         if (minPrice) {
           this.product.prices = this.product.prices.sort((price) => -price.countFrom);
