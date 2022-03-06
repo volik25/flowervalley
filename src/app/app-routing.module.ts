@@ -6,6 +6,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     loadChildren: () =>
       import('./modules/main-page/main-page.module').then((m) => m.MainPageModule),
   },

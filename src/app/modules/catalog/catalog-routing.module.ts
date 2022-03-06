@@ -9,8 +9,21 @@ const routes: Routes = [
   {
     path: '',
     component: CatalogComponent,
+    data: {
+      title: 'Каталог',
+      description:
+        'Агрофирма Цветочная Долина представляет широкий ассортимент разнообраных растений и товаров цветочной тематики - от рассад однолетних и многолетних цветов, до питательных грунтов для растений',
+    },
   },
-  { path: 'seedlings', component: SeedlingsComponent },
+  {
+    path: 'seedlings',
+    component: SeedlingsComponent,
+    data: {
+      title: 'Рассады',
+      description:
+        'Агрофирма Цветочная Долина представляет широкий ассортимент разнообраных рассад - ампельные, ягоды, однолетние и многолетние растения',
+    },
+  },
   { path: ':category', component: CategoryComponent },
   { path: ':category/:id', component: ProductComponent },
 ];

@@ -7,6 +7,9 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    data: {
+      title: 'Панель администратора',
+    },
     children: [
       { path: '', component: PanelComponent },
       { path: 'add', loadChildren: () => import('./add/add.module').then((m) => m.AddModule) },

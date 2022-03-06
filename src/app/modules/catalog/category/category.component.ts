@@ -14,6 +14,7 @@ import { LoadingService } from '../../../_services/front/loading.service';
 import { ProductService } from '../../../_services/back/product.service';
 import { ProductOrder } from '../../../_models/product-order';
 import { CategoryOrder } from '../../../_models/category-order';
+import { SEOService } from '../../../_services/front/seo.service';
 
 @Component({
   selector: 'flower-valley-category',
@@ -58,6 +59,7 @@ export class CategoryComponent implements OnInit {
     private storageService: StorageService,
     private catalogService: CatalogService,
     private productService: ProductService,
+    private seoService: SEOService,
     private ls: LoadingService,
   ) {
     adminService.checkAdmin().subscribe((isAdmin) => {
@@ -126,6 +128,9 @@ export class CategoryComponent implements OnInit {
   private getProductsList(): void {
     if (this.category) {
       this.bs.addItem(this.category.name);
+      this.seoService.updateTitle(this.category.name);
+      this.seoService.updateKeywords(this.category.name.split(' ').join(','));
+      this.seoService.updateDescription('Товары категории - ' + this.category.name);
       const sub = this.catalogService
         .getItemById<Category>(this.category.id)
         .subscribe((category) => {
