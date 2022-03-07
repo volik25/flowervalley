@@ -1,4 +1,4 @@
-import { Product } from './product';
+import { ProductCategory } from './product';
 import { Box } from './box';
 import { OrderStatus } from '../_utils/order-status.enum';
 
@@ -30,7 +30,7 @@ export interface OrderItem {
 }
 
 export interface OrderProduct extends OrderItem {
-  product: Product;
+  product: ProductCategory;
 }
 
 export interface OrderBox extends OrderItem {
