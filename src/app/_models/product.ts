@@ -15,3 +15,10 @@ export interface Product extends BusinessPackModel {
   sale?: Sale;
   productCategoryId: number;
 }
+
+export interface ProductCategory extends Product {
+  category?: {
+    id: number;
+    name: string;
+  };
+}
