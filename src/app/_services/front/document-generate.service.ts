@@ -26,16 +26,19 @@ export class DocumentGenerateService {
     const date = new Date(order.orderDate).toLocaleDateString() + 'г.';
     let sum: number = 0;
     // @ts-ignore
-    const content: any[] = order.products.map((product) => {
-      sum += product.count * product.price;
-      return [
-        product.product.name,
-        'шт.',
-        product.price,
-        product.count,
-        product.count * product.price,
-      ];
-    });
+    const content: any[] = order.products
+      // @ts-ignore
+      .sort((a, b) => a.product.categoryId - b.product.categoryId)
+      .map((product) => {
+        sum += product.count * product.price;
+        return [
+          product.product.name,
+          'шт.',
+          product.price,
+          product.count,
+          product.count * product.price,
+        ];
+      });
     this.offerPDF.getPDF(orderNumber, date, client, content, sum, false);
     return this.offerPDF.getGeneratedDocument().pipe(
       map((blob) => {
@@ -52,10 +55,13 @@ export class DocumentGenerateService {
     });
     return this.estimatePDF
       .getClientPDF(
-        order.products.map((goods) => {
-          productsSum += goods.price * goods.count;
-          return [goods.product.name, goods.price, goods.count, goods.price * goods.count];
-        }),
+        order.products
+          // @ts-ignore
+          .sort((a, b) => a.product.categoryId - b.product.categoryId)
+          .map((goods) => {
+            productsSum += goods.price * goods.count;
+            return [goods.product.name, goods.price, goods.count, goods.price * goods.count];
+          }),
         order.deliveryPrice.toString(),
         boxesSum.toString(),
         productsSum.toString(),

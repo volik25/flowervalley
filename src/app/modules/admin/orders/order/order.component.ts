@@ -187,12 +187,24 @@ export class OrderComponent implements OnInit {
   public getEstimate(): void {
     if (this.order) {
       this.estimatePDF.getCompanyPDF(
-        this.order.products.map((goods) => [
-          goods.product.name,
-          goods.price,
-          goods.count,
-          goods.price * goods.count,
-        ]),
+        this.order.products
+          .sort(
+            (a, b) =>
+              // @ts-ignore
+              (a.product.category?.id ||
+                // @ts-ignore
+                a.product.categoryId) -
+              // @ts-ignore
+              (b.product.category?.id ||
+                // @ts-ignore
+                b.product.categoryId),
+          )
+          .map((goods) => [
+            goods.product.name,
+            goods.price,
+            goods.count,
+            goods.price * goods.count,
+          ]),
         this.priceConvert.transform(this.order.deliveryPrice, 'two', 'rub'),
         this.priceConvert.transform(this.getBoxesSum(), 'two', 'rub'),
         this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
@@ -214,19 +226,31 @@ export class OrderComponent implements OnInit {
     const firmId = this.bpService.selfId;
     const goods: GoodsInvoice[] = [];
     // @ts-ignore
-    this.order.products.map((product) => {
-      if (product.product.id && product.product.volume) {
-        goods.push({
-          model_id: product.product.id,
-          volume_id: product.product.volume,
-          nds: 0,
-          nds_mode: 0,
-          count: product.count,
-          price: product.price,
-          qname: product.product.name,
-        });
-      }
-    });
+    this.order.products
+      .sort(
+        (a, b) =>
+          // @ts-ignore
+          (a.product.category?.id ||
+            // @ts-ignore
+            a.product.categoryId) -
+          // @ts-ignore
+          (b.product.category?.id ||
+            // @ts-ignore
+            b.product.categoryId),
+      )
+      .map((product) => {
+        if (product.product.id && product.product.volume) {
+          goods.push({
+            model_id: product.product.id,
+            volume_id: product.product.volume,
+            nds: 0,
+            nds_mode: 0,
+            count: product.count,
+            price: product.price,
+            qname: product.product.name,
+          });
+        }
+      });
     // @ts-ignore
     this.order.boxes.map((box) => {
       goods.push({
