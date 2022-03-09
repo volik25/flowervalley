@@ -51,7 +51,7 @@ export class ClientsComponent {
     this.clientService.addItem(formData).subscribe(() => {
       this.isLoading = false;
       sessionStorage.removeItem('clients');
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'clients' });
     });
   }
 

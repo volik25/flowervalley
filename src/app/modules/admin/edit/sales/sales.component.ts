@@ -109,7 +109,7 @@ export class SalesComponent implements OnInit {
     // @ts-ignore
     this.saleService.updateItem<any>(formData, this.sale.id).subscribe(() => {
       this.isLoading = false;
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'sales' });
     });
   }
 

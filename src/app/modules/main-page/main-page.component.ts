@@ -128,8 +128,10 @@ export class MainPageComponent implements OnInit {
           .sort((a, b) => a.categoryOrder - b.categoryOrder);
         this.route.fragment.subscribe((fragment) => {
           setTimeout(() => {
-            if (fragment === 'about')
-              this.about?.nativeElement.scrollIntoView({ block: 'center', inline: 'center' });
+            if (fragment) {
+              const block = document.getElementById(`${fragment}Block`);
+              block?.scrollIntoView({ block: 'center', inline: 'center' });
+            }
           });
         });
         this.ls.removeSubscription(sub);

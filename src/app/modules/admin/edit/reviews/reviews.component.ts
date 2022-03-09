@@ -51,7 +51,7 @@ export class ReviewsComponent {
     this.reviewService.addItem(formData).subscribe(() => {
       this.isLoading = false;
       sessionStorage.removeItem('reviews');
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'reviews' });
     });
   }
 

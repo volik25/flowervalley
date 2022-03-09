@@ -48,7 +48,7 @@ export class VideoComponent implements OnInit {
     const video = this.videoGroup.getRawValue();
     this.videoService.updateItem<Video>(video).subscribe(() => {
       this.isLoading = false;
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'video' });
     });
   }
 

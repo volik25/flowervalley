@@ -30,6 +30,7 @@ export class MediaComponent {
   public addMedia(): void {
     if (isFormInvalid(this.mediaForm)) return;
     const media = this.mediaForm.getRawValue();
+    media.publishDate.setHours(12);
     media.publishDate = media.publishDate.toISOString();
     const formData = new FormData();
     Object.getOwnPropertyNames(media).map((key) => {
@@ -42,7 +43,7 @@ export class MediaComponent {
     formData.append('img', media.img);
     const addSub = this.mediaService.addItem<any>(formData).subscribe(() => {
       this.ls.removeSubscription(addSub);
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'media' });
     });
     this.ls.addSubscription(addSub);
   }
