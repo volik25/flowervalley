@@ -42,7 +42,8 @@ export class FilesUploadComponent {
       let context = img.getContext('2d');
       context.save();
       context.globalAlpha = 0.7;
-      context.drawImage(logo, 10, 10, 150, 123.55);
+      const logoHeight = img.height * 0.25;
+      context.drawImage(logo, 10, 10, logoHeight, logoHeight * 0.8237);
 
       context.restore();
       return img;
@@ -98,6 +99,9 @@ export class FilesUploadComponent {
     if (this.compressedFiles.length === this.initialFiles.length) {
       this.isUploadingProcess = false;
       this.uploaded.emit(this.compressedFiles);
+      this.localUrl = [];
+      this.localCompressedUrl = [];
+      this.compressedFiles = [];
     }
   }
 
