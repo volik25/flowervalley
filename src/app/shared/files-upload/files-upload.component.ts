@@ -19,6 +19,8 @@ export class FilesUploadComponent {
   public label: string = 'Загрузить изображения';
   @Input()
   public showOnlyButton: boolean = false;
+  @Input()
+  public autoUpload: boolean = false;
   @Output()
   public uploaded: EventEmitter<File[]> = new EventEmitter<File[]>();
   public localUrl: string[] = [];
@@ -80,8 +82,13 @@ export class FilesUploadComponent {
     this.imageCompress.compressFile(image, orientation, 50, 100).then(async (result) => {
       let file = new File([this.dataURItoBlob(result.split(',')[1])], fileName);
       if (this.isWatermark) {
-        file = new File([await this.setWatermark(file)], fileName);
-        this.uploadEmit(file, result);
+        const watermarked = await this.setWatermark(file);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          file = new File([watermarked], fileName);
+          this.uploadEmit(file, event.target.result);
+        };
+        reader.readAsDataURL(watermarked);
       } else {
         this.uploadEmit(file, result);
       }
@@ -96,12 +103,17 @@ export class FilesUploadComponent {
       this.localCompressedUrl = this.localCompressedUrl.concat(result);
       this.compressedFiles = this.compressedFiles.concat(file);
     }
-    if (this.compressedFiles.length === this.initialFiles.length) {
+    if (this.autoUpload) {
+      if (this.compressedFiles.length === this.initialFiles.length) {
+        this.isUploadingProcess = false;
+        this.uploaded.emit(this.compressedFiles);
+        this.localUrl = [];
+        this.localCompressedUrl = [];
+        this.compressedFiles = [];
+      }
+    } else {
       this.isUploadingProcess = false;
       this.uploaded.emit(this.compressedFiles);
-      this.localUrl = [];
-      this.localCompressedUrl = [];
-      this.compressedFiles = [];
     }
   }
 
