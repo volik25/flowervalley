@@ -35,7 +35,7 @@ $root: '.header';
     font-weight: 500;
     font-size: 14px;
     line-height: 17px;
-    &>div {
+    &>a, &>div {
       &:hover {
         text-decoration: none !important;
       }
@@ -312,8 +312,10 @@ $root: '.header';
       div {
         &:hover {
           cursor: pointer;
-          text-decoration: underline;
         }
+      }
+      a {
+        color: $white-100;
       }
       .scrolled-search {
         display: none;
@@ -341,6 +343,9 @@ $root: '.header';
         line-height: 30px;
         &:hover {
           text-decoration: none;
+          div {
+            text-decoration: underline;
+          }
         }
       }
       @include cart-button;
@@ -358,7 +363,7 @@ $root: '.header';
     }
     .header__menu-bar_content {
       @include fv-container(10px, 10px);
-      .catalog ~ div:not(.cart) {
+      .catalog ~ a {
         display: none;
       }
       .scrolled-search {
@@ -382,6 +387,9 @@ $root: '.header';
             line-height: 30px;
             span:first-child {
               margin-right: 10px;
+              &:hover {
+                text-decoration: underline;
+              }
             }
           }
           .panel {
@@ -390,7 +398,7 @@ $root: '.header';
             }
             .catalog {
               display: none !important;
-              &~ div {
+              &~ a {
                 display: block;
                 &:hover {
                   background-color: $main-green;

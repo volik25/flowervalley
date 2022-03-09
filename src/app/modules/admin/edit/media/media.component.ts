@@ -46,6 +46,7 @@ export class MediaComponent implements OnInit {
   public editMedia(): void {
     if (isFormInvalid(this.mediaForm)) return;
     const media = this.mediaForm.getRawValue();
+    media.publishDate.setHours(12);
     media.publishDate = media.publishDate.toISOString();
     const formData = new FormData();
     Object.getOwnPropertyNames(media).map((key) => {
@@ -58,7 +59,7 @@ export class MediaComponent implements OnInit {
     formData.append('img', media.img);
     const addSub = this.mediaService.updateItem<any>(formData, this.id).subscribe(() => {
       this.ls.removeSubscription(addSub);
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'media' });
     });
     this.ls.addSubscription(addSub);
   }

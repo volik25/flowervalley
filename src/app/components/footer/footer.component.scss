@@ -95,7 +95,10 @@ footer {
     font-weight: 500;
     font-size: 20px;
     line-height: 110%;
-    &>div {
+    a {
+      color: $white-100;
+    }
+    &>div, &>a {
       padding-bottom: 25px;
       @include laptop-media {
         padding-bottom: 0;

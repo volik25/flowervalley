@@ -10,11 +10,11 @@
     </div>
     <div>
       <div class="footer__menu">
-        <div [routerLink]="['/catalog']">Каталог</div>
-        <div [routerLink]="['']" fragment="about">О компании</div>
-        <div [routerLink]="['catalog', 'tulips']">Тюльпаны оптом</div>
-        <div [routerLink]="['catalog', 'seedlings']">Рассада цветов</div>
-        <div [routerLink]="['contacts']">Контакты</div>
+        <a [routerLink]="['/catalog']">Каталог</a>
+        <a [routerLink]="['']" fragment="about">О компании</a>
+        <a [routerLink]="['catalog', 'tulips']">Тюльпаны оптом</a>
+        <a [routerLink]="['catalog', 'seedlings']">Рассада цветов</a>
+        <a [routerLink]="['contacts']">Контакты</a>
         <div class="price">
           <ng-container *ngTemplateOutlet="priceButton"></ng-container>
         </div>

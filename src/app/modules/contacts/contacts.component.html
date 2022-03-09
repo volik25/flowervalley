@@ -73,9 +73,8 @@
   headerTitle="Фотографии"
   [isAdmin]="isAdmin"
   [buttonTemplate]="addPhotos"
-  *ngIf="photos.length"
 >
-  <div class="grid">
+  <div class="grid" *ngIf="photos.length">
     <div
       *ngFor="let photo of photos; let i = index"
       pDraggable="contactsPhoto"

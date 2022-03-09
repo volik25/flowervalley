@@ -67,7 +67,7 @@ export class SalesComponent implements OnInit {
     if (!this.photo) return;
     formData.append('img', this.photo);
     this.saleService.addItem<any>(formData).subscribe(() => {
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'sales' });
     });
   }
 

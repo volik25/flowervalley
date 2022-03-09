@@ -28,6 +28,7 @@
     [buttonTemplate]="salesActionsButton"
   >
     <flower-valley-sales
+      id="salesBlock"
       [isAdmin]="isAdmin"
       [sales]="mainInfo.sales"
       (saleEdited)="loadMainInfo()"
@@ -61,9 +62,7 @@
     </div>
   </flower-valley-container>
   <flower-valley-container>
-    <div #about>
-      <flower-valley-about [aboutData]="aboutData"></flower-valley-about>
-    </div>
+    <flower-valley-about id="aboutBlock" [aboutData]="aboutData"></flower-valley-about>
   </flower-valley-container>
   <flower-valley-container>
     <flower-valley-advantages [advantagesData]="advantagesData"></flower-valley-advantages>
@@ -74,7 +73,11 @@
     [isAdmin]="isAdmin"
     [buttonTemplate]="addMediaButton"
   >
-    <flower-valley-media [media]="mainInfo.media || []" [isAdmin]="isAdmin"></flower-valley-media>
+    <flower-valley-media
+      id="mediaBlock"
+      [media]="mainInfo.media || []"
+      [isAdmin]="isAdmin"
+    ></flower-valley-media>
   </flower-valley-container>
   <flower-valley-container
     headerTitle="Видео о нас"
@@ -82,7 +85,11 @@
     [isAdmin]="isAdmin"
     [buttonTemplate]="addVideoButton"
   >
-    <flower-valley-video [videos]="mainInfo.videos || []" [isAdmin]="isAdmin"></flower-valley-video>
+    <flower-valley-video
+      id="videoBlock"
+      [videos]="mainInfo.videos || []"
+      [isAdmin]="isAdmin"
+    ></flower-valley-video>
   </flower-valley-container>
   <flower-valley-container
     background="dark"
@@ -92,6 +99,7 @@
     [buttonTemplate]="addFeedbackButton"
   >
     <flower-valley-reviews
+      id="reviewsBlock"
       [reviewCarousel]="mainInfo.comments"
       [isAdmin]="isAdmin"
     ></flower-valley-reviews>
@@ -103,6 +111,7 @@
     [buttonTemplate]="addClientButton"
   >
     <flower-valley-clients
+      id="clientsBlock"
       [isAdmin]="isAdmin"
       [clientsCarousel]="mainInfo.clients"
     ></flower-valley-clients>

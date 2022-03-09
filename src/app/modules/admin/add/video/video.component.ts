@@ -28,7 +28,7 @@ export class VideoComponent {
     const video = this.videoGroup.getRawValue();
     this.videoService.addItem<Video>(video).subscribe(() => {
       this.isLoading = false;
-      this.router.navigate(['']);
+      this.router.navigate([''], { fragment: 'video' });
     });
   }
 
