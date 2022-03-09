@@ -37,17 +37,19 @@ export class BannerComponent {
     this.router.navigate(['admin/edit/banner']);
   }
 
-  private animateValue(obj: HTMLElement, end: number): void {
-    let startTimestamp: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / 1000, 1);
-      obj.innerHTML = this.separator.transform(Math.floor(progress * end)) || '0';
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
+  private animateValue(obj: HTMLElement, end: number, delay: number = 0): void {
+    setTimeout(() => {
+      let startTimestamp: number | null = null;
+      const step = (timestamp: number) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
+        obj.innerHTML = this.separator.transform(Math.floor(progress * end)) || '0';
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }, delay);
   }
 
   public startAnimation(elements: HTMLElement[]): void {
@@ -60,15 +62,15 @@ export class BannerComponent {
             break;
           case 'years':
             // @ts-ignore
-            this.animateValue(element, this.animations.secondNumber);
+            this.animateValue(element, this.animations.secondNumber, 1000);
             break;
           case 'cities':
             // @ts-ignore
-            this.animateValue(element, this.animations.thirdNumber);
+            this.animateValue(element, this.animations.thirdNumber, 2000);
             break;
           case 'flowers':
             // @ts-ignore
-            this.animateValue(element, this.animations.fourthNumber);
+            this.animateValue(element, this.animations.fourthNumber, 3000);
             break;
         }
       });

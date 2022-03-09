@@ -34,7 +34,12 @@
         decrementButtonIcon="pi pi-minus"
       >
       </p-inputNumber>
-      <p-button (onClick)="addToCart()" [disabled]="category.isBlocked">
+      <p-button
+        (onClick)="addToCart()"
+        [disabled]="category.isBlocked"
+        pTooltip="Временно нет в наличии"
+        [tooltipDisabled]="!category.isBlocked"
+      >
         <ng-template pTemplate="content">
           <img src="../../../assets/icons/cart.svg" width="25px" />
         </ng-template>
