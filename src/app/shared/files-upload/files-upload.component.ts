@@ -26,9 +26,11 @@ export class FilesUploadComponent {
   private compressedFiles: File[] = [];
   public isWatermark: boolean = false;
   public isUploadingProcess: boolean = false;
+  private initialFiles: File[] = [];
   constructor(private imageCompress: NgxImageCompressService) {}
 
   public async uploadFiles(files: File[]): Promise<void> {
+    this.initialFiles = files;
     files.map((file) => {
       this.genLocalUrl(file);
     });
@@ -54,7 +56,7 @@ export class FilesUploadComponent {
     this.uploaded.emit(this.compressedFiles);
   }
 
-  private async genLocalUrl(file: File) {
+  private genLocalUrl(file: File) {
     this.isUploadingProcess = true;
     const fileName = file.name;
     const reader = new FileReader();
@@ -70,17 +72,18 @@ export class FilesUploadComponent {
         this.uploadEmit(file, event.target.result);
       }
     };
-    if (this.isWatermark) {
-      reader.readAsDataURL(await this.setWatermark(file));
-    } else {
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   }
-  private compressFile(image: string, fileName: string) {
+  private async compressFile(image: string, fileName: string) {
     let orientation = -1;
-    this.imageCompress.compressFile(image, orientation, 50, 100).then((result) => {
+    this.imageCompress.compressFile(image, orientation, 50, 100).then(async (result) => {
       let file = new File([this.dataURItoBlob(result.split(',')[1])], fileName);
-      this.uploadEmit(file, result);
+      if (this.isWatermark) {
+        file = new File([await this.setWatermark(file)], fileName);
+        this.uploadEmit(file, result);
+      } else {
+        this.uploadEmit(file, result);
+      }
     });
   }
 
@@ -92,8 +95,10 @@ export class FilesUploadComponent {
       this.localCompressedUrl = this.localCompressedUrl.concat(result);
       this.compressedFiles = this.compressedFiles.concat(file);
     }
-    this.isUploadingProcess = false;
-    this.uploaded.emit(this.compressedFiles);
+    if (this.compressedFiles.length === this.initialFiles.length) {
+      this.isUploadingProcess = false;
+      this.uploaded.emit(this.compressedFiles);
+    }
   }
 
   private dataURItoBlob(dataURI: DataUrl): Blob {
