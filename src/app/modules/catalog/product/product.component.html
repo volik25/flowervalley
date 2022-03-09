@@ -86,7 +86,13 @@
             </p-inputNumber>
           </div>
           <div class="button">
-            <p-button (onClick)="addToCart()" [disabled]="category ? category.isBlocked : true">
+            <p-button
+              (onClick)="addToCart()"
+              [disabled]="category ? category.isBlocked : true"
+              pTooltip="Временно нет в наличии"
+              [tooltipDisabled]="!category?.isBlocked"
+              tooltipPosition="top"
+            >
               <ng-template pTemplate="content">
                 <p-image
                   styleClass="flex align-items-center"
