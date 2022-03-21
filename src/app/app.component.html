@@ -33,7 +33,25 @@
     ></p-button>
   </ng-template>
 </p-dialog>
-<p-confirmDialog acceptLabel="Да" rejectLabel="Нет"></p-confirmDialog>
+<p-confirmDialog #confirmDialog>
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Да"
+      (click)="confirmDialog.accept()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      class="p-button-danger"
+      icon="pi pi-times"
+      label="Нет"
+      (click)="confirmDialog.reject()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
 <p-toast></p-toast>
 <div class="whatsapp" *ngIf="mobileButtons">
   <a href="https://api.whatsapp.com/send/?phone={{ mobileButtons.mobileWhatsApp }}" target="_blank">

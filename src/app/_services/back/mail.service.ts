@@ -15,12 +15,12 @@ export class MailService {
   constructor(private http: HttpClient) {}
 
   public sendIndividualMail(data: FormData, order: Order): Observable<any> {
-    this.sendCopyToAdmin(false, order);
+    this.sendCopyToAdmin(false, data, order);
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/individual`, data);
   }
 
   public sendBusinessMail(data: FormData, order: Order, firmName: string): Observable<any> {
-    this.sendCopyToAdmin(true, order, firmName);
+    this.sendCopyToAdmin(true, data, order, firmName);
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/business`, data);
   }
 
@@ -40,12 +40,25 @@ export class MailService {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/price-list`, data);
   }
 
-  private sendCopyToAdmin(isBusiness: boolean, order: Order, firmName?: string): void {
+  private sendCopyToAdmin(
+    isBusiness: boolean,
+    formData: FormData,
+    order: Order,
+    firmName?: string,
+  ): void {
     const data = new FormData();
     data.append('isBusiness', `${isBusiness}`);
     data.append('sum', order.orderSum.toString());
     data.append('orderId', order.id.toString());
     data.append('clientName', firmName || order.clientName);
+    data.append('contactName', order.clientName);
+    data.append('contactPhone', order.clientPhone);
+    data.append('contactEmail', order.clientEmail);
+    data.append('contactAddress', order.clientAddress);
+    const file = formData.get('file');
+    if (file) {
+      data.append('file', file);
+    }
     this.sendAdminMail(data).subscribe();
   }
 }

@@ -1,4 +1,5 @@
 import { OrderStatus } from './order-status.enum';
+import { Message } from 'primeng/api';
 
 export const tokenKey = 'flowerValley.token';
 export const refreshTokenKey = 'flowerValley.refreshToken';
@@ -97,3 +98,11 @@ export function getOrderStatus(status: OrderStatus): { label: string; severity: 
       };
   }
 }
+
+export const orderWarnMessage: Message = {
+  severity: 'warn',
+  summary: 'Заказ оформляется',
+  detail:
+    'Время оформления заказа может занимать до 30 секунд. Пожалуйста, оставайтесь на странице до уведомления об успешном оформлении заказа',
+  life: 10000,
+};

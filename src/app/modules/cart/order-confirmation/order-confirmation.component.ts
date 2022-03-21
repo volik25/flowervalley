@@ -18,6 +18,7 @@ import { OrderService } from '../../../_services/back/order.service';
 import { MailService } from '../../../_services/back/mail.service';
 import { DocumentGenerateService } from '../../../_services/front/document-generate.service';
 import { Firm } from '../../../_models/business-pack/firm';
+import { orderWarnMessage } from '../../../_utils/constants';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
@@ -128,10 +129,12 @@ export class OrderConfirmationComponent {
     if (this.clientType === 'entity') {
       if (isFormInvalid(this.entityData)) return;
       this.isInvoiceLoading = true;
+      this.messageService.add(orderWarnMessage);
       this.entityData.disable();
       this.createInvoice(order);
     } else {
       this.isInvoiceLoading = true;
+      this.messageService.add(orderWarnMessage);
       this.orderService.addItem(order).subscribe(
         (id: number) => {
           this.orderId = id;
