@@ -46,7 +46,6 @@ export class MailService {
     data.append('sum', order.orderSum.toString());
     data.append('orderId', order.id.toString());
     data.append('clientName', firmName || order.clientName);
-    data.append('email', 'i.a.volik@gmail.com');
     this.sendAdminMail(data).subscribe();
   }
 }
