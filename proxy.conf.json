@@ -1,6 +1,6 @@
 {
   "/back": {
-    "target": "http://stand3.progoff.ru/back",
+    "target": "https://stand3.progoff.ru/back",
     "secure": false,
     "changeOrigin": true
   }

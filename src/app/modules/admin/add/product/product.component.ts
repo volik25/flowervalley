@@ -214,7 +214,6 @@ export class ProductComponent {
       },
       () => {
         this.isLoading = false;
-        // console.log(error);
       },
     );
   }
