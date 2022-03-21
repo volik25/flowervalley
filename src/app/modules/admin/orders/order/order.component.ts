@@ -310,7 +310,8 @@ export class OrderComponent implements OnInit {
     forkJoin(requests).subscribe(([firm, orderItem]) => {
       firm = firm as Firm;
       const order = orderItem as Order;
-      this.documentService.getOffer(order, firm).subscribe((file) => {
+      const docSub = this.documentService.getOffer(order, firm).subscribe((file) => {
+        docSub.unsubscribe();
         const formData = new FormData();
         formData.append('file', file);
         // @ts-ignore
@@ -334,7 +335,8 @@ export class OrderComponent implements OnInit {
     // @ts-ignore
     const orderId = this.order.id;
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      this.documentService.getEstimate(order, orderId).subscribe((file) => {
+      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
+        docSub.unsubscribe();
         const formData = new FormData();
         formData.append('file', file);
         formData.append('orderId', orderId.toString());
