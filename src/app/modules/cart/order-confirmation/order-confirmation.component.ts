@@ -315,12 +315,14 @@ export class OrderConfirmationComponent {
 
   private sendIndividualMail(orderId: number): void {
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      this.documentService.getEstimate(order, orderId).subscribe((file) => {
+      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
+        docSub.unsubscribe();
         const formData = new FormData();
         formData.append('file', file);
         formData.append('orderId', orderId.toString());
         formData.append('email', order.clientEmail);
         this.mailService.sendIndividualMail(formData, order).subscribe(() => {
+          this.messageService.clear();
           this.messageService.add({
             severity: 'success',
             summary: 'Заказ оформлен',
@@ -342,7 +344,8 @@ export class OrderConfirmationComponent {
       invoice = invoice as any;
       firm = firm as Firm;
       const order = orderItem as Order;
-      this.documentService.getOffer(order, firm).subscribe((file) => {
+      const docSub = this.documentService.getOffer(order, firm).subscribe((file) => {
+        docSub.unsubscribe();
         const formData = new FormData();
         formData.append('file', file);
         formData.append('billNumber', invoice.Name);
@@ -351,6 +354,7 @@ export class OrderConfirmationComponent {
         formData.append('accountNumber', order.accountNumber);
         formData.append('email', order.clientEmail);
         this.mailService.sendBusinessMail(formData, order, firm.FullName).subscribe(() => {
+          this.messageService.clear();
           this.messageService.add({
             severity: 'success',
             summary: 'Заявка принята',

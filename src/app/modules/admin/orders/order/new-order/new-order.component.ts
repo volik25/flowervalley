@@ -313,6 +313,7 @@ export class NewOrderComponent implements OnInit {
         });
         this.ls.addSubscription(mailSub);
         this.ls.removeSubscription(docSub);
+        docSub.unsubscribe();
       });
       this.ls.addSubscription(docSub);
       this.ls.removeSubscription(orderSub);
@@ -354,6 +355,7 @@ export class NewOrderComponent implements OnInit {
           });
         this.ls.addSubscription(mailSub);
         this.ls.removeSubscription(sub);
+        sub.unsubscribe();
       });
       this.ls.addSubscription(sub);
       this.ls.removeSubscription(subs);
