@@ -26,6 +26,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
+import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,6 @@ import { CalendarModule } from 'primeng/calendar';
     TooltipModule,
     CalendarModule,
   ],
-  providers: [BoxGenerateService],
+  providers: [BoxGenerateService, PriceConverterPipe],
 })
 export class CartModule {}
