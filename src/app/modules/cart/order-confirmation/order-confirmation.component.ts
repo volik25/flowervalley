@@ -121,10 +121,14 @@ export class OrderConfirmationComponent {
     this.cdr.detectChanges();
   }
 
-  public showMapToggle(): void {}
+  public get isConfirmOrderDisabled(): boolean {
+    if (!this.contacts.getRawValue().address && !this.pickUp.value) return false;
+    return !(this.contacts.getRawValue().address && !this.showDelivery);
+  }
 
   public confirmOrder(): void {
     if (isFormInvalid(this.contacts)) return;
+    if (!this.isConfirmOrderDisabled) return;
     const order = this.getOrderData();
     if (this.clientType === 'entity') {
       if (isFormInvalid(this.entityData)) return;

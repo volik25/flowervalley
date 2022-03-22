@@ -11,6 +11,16 @@ import { StaticDataService } from '../back/static-data.service';
 export class CartService {
   private discount: Discount[] = [];
   private minSum: number | undefined;
+  private _discountSum: number = 0;
+
+  public get discountSum(): number {
+    return this._discountSum;
+  }
+
+  private set discountSum(value) {
+    this._discountSum = value;
+  }
+
   constructor(private discountService: DiscountService, private staticData: StaticDataService) {
     discountService.getItems().subscribe((discount) => {
       this.discount = discount.sort((a, b) => a.sum - b.sum);
@@ -164,9 +174,16 @@ export class CartService {
 
   private checkMinSum(products: ProductItem[]): void {
     let sum = 0;
+    let discount = 0;
     products.map((product) => {
+      if (product.price < product.initialPrice) {
+        discount += (product.initialPrice - product.price) * product.count;
+      }
       sum += product.price * product.count;
     });
+    if (discount) {
+      this.discountSum = discount;
+    }
     if (this.minSum && this.minSum <= sum) {
       this._isMinSumReached.next(true);
     } else {

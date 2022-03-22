@@ -43,7 +43,7 @@
         class="order__header_date"
         *ngIf="!order.confirmedDeliveryDate && order.deliveryWishDateFrom"
       >
-        <div>Интервал доставки:</div>
+        <div>Желаемые даты доставки:</div>
         <div>
           {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm' }} -
           {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm' }}
@@ -134,6 +134,10 @@
       <div class="order__header_products-sum">
         <div>Стоимость товаров:</div>
         <div>{{ getProductsSum() | priceConverter }}</div>
+      </div>
+      <div class="order__header_products-sum" *ngIf="orderDiscount">
+        <div>Скидка:</div>
+        <div>{{ orderDiscount | priceConverter }}</div>
       </div>
       <div class="order__header_boxes-sum">
         <div>Стоимость коробок:</div>
