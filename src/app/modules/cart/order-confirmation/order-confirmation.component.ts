@@ -330,7 +330,7 @@ export class OrderConfirmationComponent {
           this.messageService.add({
             severity: 'success',
             summary: 'Заказ оформлен',
-            detail: `Данные заказа отправлены на почту ${order.clientEmail}, ожидайте звонка оператора`,
+            detail: `Данные заказа отправлены на почту ${order.clientEmail}`,
             life: 10000,
           });
           this.isInvoiceLoading = false;
@@ -363,7 +363,7 @@ export class OrderConfirmationComponent {
           this.messageService.add({
             severity: 'success',
             summary: 'Заявка принята',
-            detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}, ожидайте звонка оператора`,
+            detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}`,
           });
           this.isInvoiceLoading = false;
           this.router.navigate(['download-invoice'], {
