@@ -101,6 +101,8 @@
         [loading]="isInvoiceLoading"
         styleClass="confirm-order"
         label="Оформить заказ"
+        pTooltip="Рассчитайте доставку или выберите самовывоз"
+        [tooltipDisabled]="isConfirmOrderDisabled || contacts.invalid"
         (onClick)="confirmOrder()"
       ></p-button>
     </div>

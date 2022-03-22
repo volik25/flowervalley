@@ -41,6 +41,7 @@ export class OrderComponent implements OnInit {
   public order: Order | undefined;
   public products: Product[] = [];
   public sendingMail: boolean = false;
+  public orderDiscount: number | undefined;
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
@@ -77,6 +78,14 @@ export class OrderComponent implements OnInit {
           ? this.dateConverter.convert(order.deliveryWishDateTo)
           : undefined,
       };
+      let orderDiscount = 0;
+      this.order.products.map((product) => {
+        const discount = product.product.price - product.price;
+        if (discount > 0) {
+          orderDiscount += discount * product.count;
+        }
+      });
+      if (orderDiscount) this.orderDiscount = orderDiscount;
       if (this.order.deliveryWishDateFrom) {
         this.confirmedDate.setValue(
           // @ts-ignore

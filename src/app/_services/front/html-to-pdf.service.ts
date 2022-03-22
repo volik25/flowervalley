@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 // @ts-ignore
 import pdfMake from 'pdfmake/build/pdfmake';
 // @ts-ignore
@@ -7,6 +7,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
 import { Observable, Subject } from 'rxjs';
+import { CartService } from './cart.service';
+import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
@@ -15,10 +17,16 @@ export class HtmlToPdfService {
   private delivery!: string;
   private boxes!: string;
   private productsSum!: string;
+  private discount: number | undefined;
   private sum!: string;
   private order: number | undefined;
   private date: string | undefined;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
+
+  constructor(
+    @Inject('PRICE_CONVERT') private priceConvert: PriceConverterPipe,
+    private cartService: CartService,
+  ) {}
 
   public getPDF(
     isClient: boolean,
@@ -40,6 +48,7 @@ export class HtmlToPdfService {
     this.sum = sum;
     this.order = orderNumber;
     this.date = date;
+    this.discount = this.cartService.discountSum;
     if (isClient) {
       HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
         const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
@@ -104,6 +113,13 @@ export class HtmlToPdfService {
     boxes.innerHTML = 'Стоимость коробок: ' + this.boxes;
     boxes.style.margin = '10px 0';
     div.append(boxes);
+    if (this.discount) {
+      const discount = document.createElement('div');
+      discount.innerHTML =
+        'Учтена скидка: ' + this.priceConvert.transform(this.discount, 'two', 'rub');
+      discount.style.marginBottom = '10px';
+      div.append(discount);
+    }
     const sum = document.createElement('div');
     sum.innerHTML = 'Итоговая сумма: ' + this.sum;
     div.append(sum);

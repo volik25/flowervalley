@@ -30,6 +30,7 @@ import { DadataInterceptor } from './_interceptors/dadata.interceptor';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { PasswordModule } from 'primeng/password';
 import { LoadingService } from './_services/front/loading.service';
+import { PriceConverterPipe } from './_pipes/price-converter.pipe';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,10 @@ import { LoadingService } from './_services/front/loading.service';
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true,
+    },
+    {
+      provide: 'PRICE_CONVERT',
+      useClass: PriceConverterPipe,
     },
   ],
   bootstrap: [AppComponent],
