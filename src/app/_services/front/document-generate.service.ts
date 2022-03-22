@@ -4,6 +4,7 @@ import { OfferGenerateService } from './offer-generate.service';
 import { Order } from '../../_models/order';
 import { map, Observable } from 'rxjs';
 import { Firm } from '../../_models/business-pack/firm';
+import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 
 @Injectable({
   providedIn: null,
@@ -12,6 +13,7 @@ export class DocumentGenerateService {
   constructor(
     private estimatePDF: EstimateGenerateService,
     private offerPDF: OfferGenerateService,
+    private priceConvert: PriceConverterPipe,
   ) {}
 
   public getOffer(order: Order, firm: Firm): Observable<File> {
@@ -62,10 +64,10 @@ export class DocumentGenerateService {
             productsSum += goods.price * goods.count;
             return [goods.product.name, goods.price, goods.count, goods.price * goods.count];
           }),
-        order.deliveryPrice.toString(),
-        boxesSum.toString(),
-        productsSum.toString(),
-        order.orderSum.toString(),
+        this.priceConvert.transform(order.deliveryPrice, 'two', 'rub'),
+        this.priceConvert.transform(boxesSum, 'two', 'rub'),
+        this.priceConvert.transform(productsSum, 'two', 'rub'),
+        this.priceConvert.transform(order.orderSum, 'two', 'rub'),
         orderId,
         false,
       )

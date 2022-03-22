@@ -327,6 +327,7 @@ export class OrderConfirmationComponent {
             severity: 'success',
             summary: 'Заказ оформлен',
             detail: `Данные заказа отправлены на почту ${order.clientEmail}, ожидайте звонка оператора`,
+            life: 10000,
           });
           this.isInvoiceLoading = false;
         });
