@@ -4,6 +4,8 @@ import { ProductItem } from '../../_models/product-item';
 import { DiscountService } from '../back/discount.service';
 import { Discount } from '../../_models/discount';
 import { StaticDataService } from '../back/static-data.service';
+import { categoriesKey } from '../../_utils/constants';
+import { Category } from '../../_models/category';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,12 @@ export class CartService {
 
   private set discountSum(value) {
     this._discountSum = value;
+  }
+
+  private get categories(): Category[] {
+    const storage = sessionStorage.getItem(categoriesKey);
+    if (storage) return JSON.parse(storage);
+    return [];
   }
 
   constructor(private discountService: DiscountService, private staticData: StaticDataService) {
@@ -62,15 +70,22 @@ export class CartService {
       } else {
         cartUpdated.push(item);
       }
-      cartUpdated = this.updateTulipPrices(cartUpdated);
-      cartUpdated = this.checkDiscount(cartUpdated);
-      this.checkMinSum(cartUpdated);
+      cartUpdated = this.checkCart(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
     } else {
-      sessionStorage.setItem('cart', JSON.stringify([item]));
+      const newCart = this.checkCart([item]);
+      sessionStorage.setItem('cart', JSON.stringify(newCart));
       this._cartUpdate.next([item]);
     }
+  }
+
+  private checkCart(cart: ProductItem[]): ProductItem[] {
+    cart = this.updateTulipPrices(cart);
+    cart = this.checkDiscount(cart);
+    this.checkMinSum(cart);
+    cart = this.sortCatalog(cart);
+    return cart;
   }
 
   public removeFromCart(id: string): void {
@@ -189,5 +204,24 @@ export class CartService {
     } else {
       this._isMinSumReached.next(false);
     }
+  }
+
+  private sortCatalog(cart: ProductItem[]): ProductItem[] {
+    cart.map((product) => this.setCategory(product));
+    // @ts-ignore
+    return cart.sort((a, b) => a.category.id - b.category.id);
+  }
+
+  private setCategory(product: ProductItem): ProductItem {
+    if (product.category) {
+      const parentId = product.category.parentId;
+      if (parentId) {
+        product.category = this.categories.find((category) => category.id === parentId);
+      }
+    } else if (product.categoryId) {
+      product.category = this.categories.find((category) => category.id === product.categoryId);
+      return this.setCategory(product);
+    }
+    return product;
   }
 }

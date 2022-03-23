@@ -1,10 +1,8 @@
 <p-card styleClass="confirmation">
   <p-table
     [value]="goods"
-    sortField="category.name"
-    sortMode="single"
     rowGroupMode="subheader"
-    groupRowsBy="category.name"
+    groupRowsBy="category.id"
     styleClass="confirmation"
   >
     <ng-template pTemplate="header">

@@ -1,10 +1,8 @@
 <p-card>
   <p-table
     [value]="goods"
-    sortField="category.name"
-    sortMode="single"
     rowGroupMode="subheader"
-    groupRowsBy="category.name"
+    groupRowsBy="category.id"
     styleClass="p-table-override"
   >
     <ng-template pTemplate="header">
