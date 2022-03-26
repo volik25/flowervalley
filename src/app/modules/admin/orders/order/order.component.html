@@ -137,7 +137,7 @@
       </div>
       <div class="order__header_products-sum" *ngIf="orderDiscount">
         <div>Скидка:</div>
-        <div>{{ orderDiscount | priceConverter }}</div>
+        <div>{{ orderDiscount.value | priceConverter }} ({{ orderDiscount.percent }}%)</div>
       </div>
       <div class="order__header_boxes-sum">
         <div>Стоимость коробок:</div>

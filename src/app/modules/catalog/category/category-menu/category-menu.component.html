@@ -10,7 +10,7 @@
       active: isActive(item.name, item.items)
     }"
   >
-    <span [routerLink]="['../', getRoute(item)]">{{ item.name }}</span>
+    <span [routerLink]="item.routerLink" [relativeTo]="item.relativeTo">{{ item.name }}</span>
     <span *ngIf="item.items?.length" class="pi pi-angle-right" (click)="menuToggle(i)"></span>
     <div
       #subMenuContainer
@@ -35,7 +35,7 @@
       active: isActive(item.name)
     }"
   >
-    <span [routerLink]="['../', getRoute(item.name)]">{{ item.name }}</span>
+    <span [routerLink]="item.routerLink" [relativeTo]="item.relativeTo">{{ item.name }}</span>
     <span *ngIf="item.items?.length" class="pi pi-angle-right"></span>
     <div class="sub-menu">
       <ng-container *ngTemplateOutlet="subMenuRef"></ng-container>
