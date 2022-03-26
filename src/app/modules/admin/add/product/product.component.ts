@@ -126,7 +126,7 @@ export class ProductComponent {
               this.addPriceRange(step.countFrom);
             });
         });
-      } else {
+      } else if (this.isTulips) {
         const index = this.categories.findIndex((item) => item.isTulip);
         this.categories.splice(index, 1);
       }

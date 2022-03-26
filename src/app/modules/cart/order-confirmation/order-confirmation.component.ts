@@ -358,6 +358,7 @@ export class OrderConfirmationComponent {
         // @ts-ignore
         formData.append('accountNumber', order.accountNumber);
         formData.append('email', order.clientEmail);
+        formData.append('orderNumber', orderId.toString());
         this.mailService.sendBusinessMail(formData, order, firm.FullName).subscribe(() => {
           this.messageService.clear();
           this.messageService.add({

@@ -36,3 +36,8 @@ export interface OrderProduct extends OrderItem {
 export interface OrderBox extends OrderItem {
   box: Box;
 }
+
+export interface OrderDiscount {
+  value: number;
+  percent: number;
+}

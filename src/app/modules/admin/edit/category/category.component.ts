@@ -71,6 +71,9 @@ export class CategoryComponent implements OnInit {
       }
       this.categories = items;
       category.hasNoDiscount = !Boolean(category.hasNoDiscount);
+      if (category.parentId) {
+        this.categoryGroup.controls['hasNoDiscount'].disable();
+      }
       this.categoryGroup.patchValue(category);
       if (category.isBlocked) {
         this.categoryGroup.controls['isBlocked'].setValue(true);

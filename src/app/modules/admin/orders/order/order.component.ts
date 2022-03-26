@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../../_services/back/order.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Order, OrderBox, OrderItem, OrderProduct } from '../../../../_models/order';
+import { Order, OrderBox, OrderDiscount, OrderItem, OrderProduct } from '../../../../_models/order';
 import { BusinessPackService } from '../../../../_services/back/business-paсk.service';
 import { Firm } from '../../../../_models/business-pack/firm';
 import { LoadingService } from '../../../../_services/front/loading.service';
@@ -41,7 +41,7 @@ export class OrderComponent implements OnInit {
   public order: Order | undefined;
   public products: Product[] = [];
   public sendingMail: boolean = false;
-  public orderDiscount: number | undefined;
+  public orderDiscount: OrderDiscount | undefined;
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
@@ -78,14 +78,22 @@ export class OrderComponent implements OnInit {
           ? this.dateConverter.convert(order.deliveryWishDateTo)
           : undefined,
       };
-      let orderDiscount = 0;
+      let orderDiscount: OrderDiscount = {
+        value: 0,
+        percent: 0,
+      };
       this.order.products.map((product) => {
         const discount = product.product.price - product.price;
         if (discount > 0) {
-          orderDiscount += discount * product.count;
+          orderDiscount.value += discount * product.count;
         }
       });
-      if (orderDiscount) this.orderDiscount = orderDiscount;
+      if (orderDiscount) {
+        this.orderDiscount = orderDiscount;
+        this.orderDiscount.percent = Math.round(
+          (this.orderDiscount.value / this.order.orderSum) * 100,
+        );
+      }
       if (this.order.deliveryWishDateFrom) {
         this.confirmedDate.setValue(
           // @ts-ignore

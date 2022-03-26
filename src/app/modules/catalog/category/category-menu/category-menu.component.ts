@@ -71,7 +71,8 @@ export class CategoryMenuComponent implements OnInit {
         id: item.id,
         name: item.name,
         isTulip: item.isTulip,
-        routerLink: slugify(item.name),
+        routerLink: [CategoryMenuComponent.getRoute(item)],
+        relativeTo: this.route.parent,
       });
     });
     this.menu.map((menuItem) => {
@@ -84,14 +85,15 @@ export class CategoryMenuComponent implements OnInit {
           id: item.id,
           name: item.name,
           isTulip: item.isTulip,
-          routerLink: ['../', this.getRoute(item)],
+          routerLink: [CategoryMenuComponent.getRoute(item)],
+          relativeTo: this.route.parent,
         });
       });
     });
     return this.menu;
   }
 
-  public getRoute(item: CategoryMenu | Category): string {
+  private static getRoute(item: CategoryMenu | Category): string {
     if (item.isTulip) {
       return 'tulips';
     }
