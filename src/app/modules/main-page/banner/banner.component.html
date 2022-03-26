@@ -3,7 +3,7 @@
   <div class="banner" *ngIf="banner">
     <div class="padding-adaptive">
       <div class="header">{{ banner.title }}</div>
-      <div class="ng-container__mobile">
+      <div class="ng-container__mobile" *ngIf="isMobile">
         <ng-container *ngTemplateOutlet="carousel"></ng-container>
       </div>
       <div
@@ -32,7 +32,7 @@
         <ng-template pTemplate="footer"></ng-template>
       </p-dialog>
     </div>
-    <div class="ng-container__laptop">
+    <div class="ng-container__laptop" *ngIf="!isMobile">
       <ng-container *ngTemplateOutlet="carousel"></ng-container>
     </div>
   </div>
@@ -85,6 +85,7 @@
         <p-skeleton *ngIf="!imageElement.complete"></p-skeleton>
         <img
           #imageElement
+          (load)="imageLoaded()"
           class="carousel__img"
           [ngClass]="{ 'visibility-hidden': !imageElement.complete }"
           [src]="photo.src"
@@ -93,7 +94,7 @@
         />
       </ng-template>
     </p-carousel>
-    <div class="carousel__banner">
+    <div class="carousel__banner" *ngIf="loaded >= photos.length">
       <img src="assets/icons/shield.png" alt="Премиальное качество" />
       <div class="ml-2">ПРЕМИАЛЬНОЕ КАЧЕСТВО ГАРАНТИРУЕМ!</div>
     </div>

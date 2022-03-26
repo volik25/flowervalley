@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChildren,
+} from '@angular/core';
 import { MainBanner } from '../../../_models/main-banner';
 import { Router } from '@angular/router';
 import { ThousandSeparatorPipe } from '../../../_pipes/thousand-separator.pipe';
@@ -10,7 +18,9 @@ import { Animation } from '../../../_models/static-data/animation';
   styleUrls: ['./banner.component.scss'],
   providers: [ThousandSeparatorPipe],
 })
-export class BannerComponent {
+export class BannerComponent implements OnChanges {
+  @ViewChildren('imageElement')
+  private elements: any;
   @Input()
   public isAdmin: boolean = false;
   @Input()
@@ -24,8 +34,21 @@ export class BannerComponent {
   public showContent: boolean = false;
   private isAnimated: boolean = false;
   public activeIndex: number = 0;
+  public loaded = 0;
+
+  public get isMobile(): boolean {
+    return window.innerWidth <= 1024;
+  }
 
   constructor(private router: Router, private separator: ThousandSeparatorPipe) {}
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    this.photos = changes['banner'].currentValue.photos;
+  }
+
+  public imageLoaded(): void {
+    this.loaded++;
+  }
 
   public openImage(id: number): void {
     this.activeIndex = this.banner?.photos.findIndex((photo) => photo.id === id) || 0;
