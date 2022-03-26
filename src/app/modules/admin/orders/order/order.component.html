@@ -43,14 +43,14 @@
         class="order__header_date"
         *ngIf="!order.confirmedDeliveryDate && order.deliveryWishDateFrom"
       >
-        <div>Желаемые даты доставки:</div>
+        <div>Желаемые даты поставки:</div>
         <div>
           {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm' }} -
           {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm' }}
         </div>
       </div>
       <div class="order__header_date">
-        <div>Дата доставки:</div>
+        <div>Дата поставки:</div>
         <div *ngIf="order.confirmedDeliveryDate">
           <p-inplace #inplace>
             <ng-template pTemplate="display">
@@ -71,7 +71,7 @@
                     [readonlyInput]="true"
                     inputId="confirmedDate"
                   ></p-calendar>
-                  <label for="confirmedDate">Дата доставки</label>
+                  <label for="confirmedDate">Дата поставки</label>
                 </span>
                 <p-button
                   styleClass="ml-2"
@@ -99,7 +99,7 @@
                   [readonlyInput]="true"
                   inputId="confirmedDate"
                 ></p-calendar>
-                <label for="confirmedDate">Дата доставки</label>
+                <label for="confirmedDate">Дата поставки</label>
               </span>
               <p-button
                 styleClass="ml-2"
@@ -111,7 +111,7 @@
         </p-inplace>
       </div>
       <div class="order__header_address">
-        <div>Адрес доставки:</div>
+        <div>Адрес поставки:</div>
         <div>
           <p-inplace #inplace>
             <ng-template pTemplate="display"> {{ order.clientAddress }} </ng-template>
@@ -144,7 +144,7 @@
         <div>{{ getBoxesSum() | priceConverter }}</div>
       </div>
       <div class="order__header_delivery" *ngIf="order.deliveryPrice">
-        <div>Стоимость доставки:</div>
+        <div>Стоимость поставки:</div>
         <div>
           <p-inplace #inplace>
             <ng-template pTemplate="display">
@@ -155,7 +155,7 @@
                 <span class="p-float-label">
                   <p-inputNumber [(ngModel)]="order.deliveryPrice" inputId="delivery" [min]="1">
                   </p-inputNumber>
-                  <label for="delivery">Стоимость доставки</label>
+                  <label for="delivery">Стоимость поставки</label>
                 </span>
                 <p-button
                   styleClass="ml-2"
