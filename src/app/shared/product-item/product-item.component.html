@@ -34,17 +34,20 @@
         decrementButtonIcon="pi pi-minus"
       >
       </p-inputNumber>
-      <p-button
-        (onClick)="addToCart()"
-        [disabled]="category.isBlocked"
-        pTooltip="Временно нет в наличии"
-        [tooltipDisabled]="!category.isBlocked"
-      >
-        <ng-template pTemplate="content">
-          <img src="../../../assets/icons/cart.svg" width="25px" />
-        </ng-template>
-      </p-button>
     </div>
+  </div>
+  <div class="product__button">
+    <p-button
+      (onClick)="addToCart()"
+      [disabled]="category.isBlocked"
+      pTooltip="Временно нет в наличии"
+      [tooltipDisabled]="!category.isBlocked"
+    >
+      <ng-template pTemplate="content">
+        <span>Добавить в корзину</span>
+        <img src="../../../assets/icons/cart.svg" width="25px" />
+      </ng-template>
+    </p-button>
   </div>
   <div class="product__edit" *ngIf="isAdmin">
     <p-button

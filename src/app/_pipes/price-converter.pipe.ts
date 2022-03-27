@@ -17,7 +17,7 @@ export class PriceConverterPipe implements PipeTransform {
 
   private decimalTransform(value: number | string, dotOptions?: string, curr?: string): string {
     let number = this.decimalPipe.transform(value);
-    number = number?.split(',').join(' ') || null;
+    number = number?.split(',').join('\u00A0') || null;
     if (!number?.split('.')[1]) {
       switch (dotOptions) {
         case 'one':

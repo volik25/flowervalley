@@ -80,7 +80,6 @@
       }
     }
     ::ng-deep .p-inputnumber {
-      margin-right: 10px;
       width: 100px;
       input {
         width: 60px;
@@ -102,6 +101,23 @@
           &::before {
             font-size: 10px;
           }
+        }
+      }
+    }
+  }
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px 15px 15px;
+    ::ng-deep p-button {
+      width: 100%;
+      .p-button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        span {
+          margin-right: 10px;
         }
       }
     }

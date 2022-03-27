@@ -8,6 +8,9 @@
   .image {
     cursor: pointer;
   }
+  .category__name {
+    padding-right: 10px;
+  }
   &>div:nth-child(2) {
     padding: 20px 20px 30px;
     font-weight: 500;
