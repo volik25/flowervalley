@@ -104,6 +104,14 @@ export class PriceListGenerateService {
         cell.style.textAlign = 'center';
       }
     }
+    this.content.sort((a, b) => {
+      if (a[1] && b[1]) {
+        if (a[0].split(' ').join('')[0] > b[0].split(' ').join('')[0]) return 1;
+        if (a[0].split(' ').join('')[0] < b[0].split(' ').join('')[0]) return -1;
+        return 0;
+      }
+      return 0;
+    });
     for (let i = 0; i < this.content.length; i++) {
       const abstractRow = this.content[i];
       const bodyRow = tBody.insertRow(i);

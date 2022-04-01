@@ -43,6 +43,9 @@ export class SalesComponent {
           if (this.sales.items && this.sales.items.length) {
             const index = this.sales.items?.findIndex((item) => item.id === id);
             this.sales.items.splice(index, 1);
+            if (!this.sales.items.length) {
+              delete this.sales.items;
+            }
           }
         });
       },

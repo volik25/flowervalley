@@ -60,7 +60,7 @@
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       <div class="scrolled-search">
         <div class="menu">
-          <div #menuBtn class="button" (click)="isMenuToggle = !isMenuToggle">
+          <div #menuBtn class="button" (mouseenter)="isMenuToggle = !isMenuToggle">
             <span>Меню</span>
             <span *ngIf="!isMenuToggle" class="pi pi-angle-down"></span>
             <span *ngIf="isMenuToggle" class="pi pi-angle-up"></span>

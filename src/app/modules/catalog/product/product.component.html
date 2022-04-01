@@ -13,10 +13,18 @@
         [numVisible]="4"
       >
         <ng-template pTemplate="item" let-photo>
-          <p-image class="main-image" [src]="photo.src" (click)="openImage(photo.id)"></p-image>
+          <p-image
+            class="main-image"
+            [ngClass]="{ tulip: category?.isTulip }"
+            [src]="photo.src"
+            (click)="openImage(photo.id)"
+          ></p-image>
         </ng-template>
         <ng-template pTemplate="thumbnail" let-photo>
-          <p-image [src]="photo.src"></p-image>
+          <p-image
+            [imageClass]="category && category.isTulip ? 'tulip' : ''"
+            [src]="photo.src"
+          ></p-image>
         </ng-template>
       </p-galleria>
       <p-galleria
@@ -29,7 +37,11 @@
         [showThumbnails]="false"
       >
         <ng-template pTemplate="item" let-item>
-          <img [src]="item.src" style="width: 100%; display: block" />
+          <img
+            [ngClass]="category && category.isTulip ? 'tulip' : ''"
+            [src]="item.src"
+            style="width: 100%; display: block"
+          />
         </ng-template>
       </p-galleria>
       <span *ngIf="percentDiscount">Скидка {{ percentDiscount }}%</span>
