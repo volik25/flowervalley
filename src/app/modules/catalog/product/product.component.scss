@@ -32,6 +32,16 @@ $root: '.product';
             object-fit: cover;
             cursor: pointer;
           }
+          &.tulip {
+            img {
+              width: 245px;
+              height: 300px;
+              @media screen and (min-width: 600px) {
+                width: 420px;
+                height: 550px;
+              }
+            }
+          }
         }
         .p-galleria-thumbnail-container {
           background: none;
@@ -44,6 +54,14 @@ $root: '.product';
             }
             border-radius: 15px;
             object-fit: cover;
+            &.tulip {
+              width: 57px;
+              height: 75px;
+              @media screen and (min-width: 600px) {
+                width: 100px;
+                height: 130px;
+              }
+            }
           }
         }
       }

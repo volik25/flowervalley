@@ -9,17 +9,19 @@
       'border-radius-bottom-right': last && !showSubMenu,
       active: isActive(item.name, item.items)
     }"
+    (mouseenter)="menuToggle(i, item.items?.length)"
+    (mouseleave)="showSubMenu = false"
   >
     <span [routerLink]="item.routerLink" [relativeTo]="item.relativeTo">{{ item.name }}</span>
-    <span *ngIf="item.items?.length" class="pi pi-angle-right" (click)="menuToggle(i)"></span>
+    <span *ngIf="item.items?.length" class="pi pi-angle-right"></span>
     <div
       #subMenuContainer
       class="sub-menu"
-      *ngIf="showSubMenu && currentIndex === i"
-      [style]="{ right: '-' + (subMenuContainer.clientWidth + 1) + 'px' }"
+      *ngIf="showSubMenu && currentIndex === i && item.items"
+      [style]="{ right: '-' + (subMenuContainer.clientWidth + 6) + 'px' }"
     >
       <ng-container
-        *ngTemplateOutlet="subMenuRef; context: { $implicit: item.items || null }"
+        *ngTemplateOutlet="subMenuRef; context: { $implicit: item.items }"
       ></ng-container>
     </div>
   </div>
@@ -30,8 +32,6 @@
     class="item"
     *ngFor="let item of items; let first = first; let last = last"
     [ngClass]="{
-      'border-radius-top-right': first,
-      'border-radius-bottom-right': last,
       active: isActive(item.name)
     }"
   >

@@ -1,4 +1,12 @@
-import { Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { Category } from '../../../../_models/category';
 import { CategoryMenu } from '../../../../_models/category-menu';
 import { slugify } from 'transliteration';
@@ -27,6 +35,7 @@ export class CategoryMenuComponent implements OnInit {
     private storageService: StorageService,
     private catalogService: CatalogService,
     private ls: LoadingService,
+    private cdr: ChangeDetectorRef,
   ) {
     renderer.listen('document', 'click', (event: Event) => {
       if (this.showSubMenu && !this.menuItem?.nativeElement.contains(event.target)) {
@@ -100,15 +109,9 @@ export class CategoryMenuComponent implements OnInit {
     return slugify(item.name);
   }
 
-  public menuToggle(i: number): void {
-    if (!this.showSubMenu) {
-      this.showSubMenu = true;
-      this.currentIndex = i;
-    } else if (this.currentIndex === i) {
-      this.showSubMenu = false;
-      this.currentIndex = undefined;
-    } else {
-      this.currentIndex = i;
-    }
+  public menuToggle(i: number, items = 0): void {
+    this.showSubMenu = !!items;
+    this.currentIndex = i;
+    this.cdr.detectChanges();
   }
 }

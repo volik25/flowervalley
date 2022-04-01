@@ -59,6 +59,9 @@ export class SalesComponent implements OnInit {
     const sale = this.saleGroup.getRawValue();
     const formData = new FormData();
     delete sale.currentPrice;
+    if (!sale.productId) {
+      delete sale.productId;
+    }
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore
       const value = sale[key];
