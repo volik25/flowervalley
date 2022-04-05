@@ -71,7 +71,7 @@ export class AdvantagesComponent implements OnInit {
   public saveAdvantages(): void {
     if (isFormInvalid(this.advantagesForm)) return;
     this.isLoading = true;
-    if (this.uploadedPhotos) {
+    if (Object.keys(this.uploadedPhotos).length) {
       const requests: Observable<string>[] = [];
       const pathNames: string[] = [];
       Object.keys(this.uploadedPhotos).map((key) => {
