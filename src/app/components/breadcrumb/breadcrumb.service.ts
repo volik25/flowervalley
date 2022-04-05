@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, filter, map, Observable, Subject } from 'rxjs';
 import { slugify } from 'transliteration';
+import { Category } from '../../_models/category';
+
+interface BreadcrumbItem {
+  title: string;
+  routerLink: string[];
+}
 
 @Injectable()
 export class BreadcrumbService {
@@ -15,7 +21,7 @@ export class BreadcrumbService {
       routerLink: [''],
     },
   ];
-  private items: { title: string; routerLink: string[] }[] = [];
+  private items: BreadcrumbItem[] = [];
   private _breadCrumbUpdate: BehaviorSubject<any> = new BehaviorSubject<any>(this.items);
 
   private _background: 'light' | 'dark' = 'light';
@@ -82,39 +88,52 @@ export class BreadcrumbService {
     ]);
   }
 
-  public addItem(name: string, isProduct: boolean = false): void {
-    if (isProduct) {
-      this._breadCrumbUpdate.next([
-        ...this.items,
-        {
-          title: name,
-          routerLink: [slugify(name || '')],
-        },
-      ]);
+  public addCategory(category: Category, catalog: Category[]): void {
+    let items: BreadcrumbItem[] = [];
+    items.push({
+      title: category.name,
+      routerLink: ['catalog', slugify(category.name || '')],
+    });
+    items = this.generateItems(items, category, catalog);
+    this.items = [
+      ...this._initItems,
+      {
+        title: 'Каталог',
+        routerLink: ['catalog'],
+      },
+      ...items.reverse(),
+    ];
+    this._breadCrumbUpdate.next(this.items);
+  }
+
+  private generateItems(
+    items: BreadcrumbItem[],
+    category: Category,
+    catalog: Category[],
+  ): BreadcrumbItem[] {
+    if (category.parentId) {
+      const parent = catalog.find((item) => item.id === category.parentId);
+      if (parent) {
+        items.push({
+          title: parent.name,
+          routerLink: ['catalog', slugify(parent.name || '')],
+        });
+        return this.generateItems(items, parent, catalog);
+      }
+      return items;
     } else {
-      this.items = [
-        ...this._initItems,
-        {
-          title: 'Каталог',
-          routerLink: ['catalog'],
-        },
-        {
-          title: name,
-          routerLink: ['catalog', slugify(name || '')],
-        },
-      ];
-      this._breadCrumbUpdate.next([
-        ...this._initItems,
-        {
-          title: 'Каталог',
-          routerLink: ['catalog'],
-        },
-        {
-          title: name,
-          routerLink: ['catalog', slugify(name || '')],
-        },
-      ]);
+      return items;
     }
+  }
+
+  public addProduct(name: string): void {
+    this._breadCrumbUpdate.next([
+      ...this.items,
+      {
+        title: name,
+        routerLink: [slugify(name || '')],
+      },
+    ]);
   }
 
   public breadCrumbChanges(): Observable<any> {
