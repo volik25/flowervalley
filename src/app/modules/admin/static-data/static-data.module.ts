@@ -24,6 +24,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MainPageModule } from '../../main-page/main-page.module';
 import { AnimationComponent } from './components/animation/animation.component';
+import { ProductComponent } from './components/product/product.component';
+import { CatalogModule } from '../../catalog/catalog.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { AnimationComponent } from './components/animation/animation.component';
     CartComponent,
     OtherComponent,
     AnimationComponent,
+    ProductComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +56,7 @@ import { AnimationComponent } from './components/animation/animation.component';
     InputNumberModule,
     InputMaskModule,
     MainPageModule,
+    CatalogModule,
   ],
 })
 export class StaticDataModule {}
