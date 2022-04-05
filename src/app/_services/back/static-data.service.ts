@@ -22,6 +22,7 @@ import {
   Variables,
 } from '../../_models/static-data/variables';
 import { Animation, AnimationEnum } from '../../_models/static-data/animation';
+import { ProductBlock, ProductBlockEnum } from '../../_models/static-data/product-block';
 
 interface StaticResponse {
   id: number;
@@ -74,6 +75,14 @@ export class StaticDataService {
 
   public setAdvantagesContent(advantages: Advantages): Observable<any> {
     return this.generatePostRequest(AdvantagesEnum, advantages);
+  }
+
+  public getProductBlockContent(): Observable<ProductBlock> {
+    return this.generateGetRequest<ProductBlock>(ProductBlockEnum);
+  }
+
+  public setProductBlockContent(productBlock: ProductBlock): Observable<any> {
+    return this.generatePostRequest(ProductBlockEnum, productBlock);
   }
 
   public getContactsContent(): Observable<Contacts> {

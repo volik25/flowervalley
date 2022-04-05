@@ -19,6 +19,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CategoryMenuComponent } from './category/category-menu/category-menu.component';
 import { OrderListModule } from 'primeng/orderlist';
 import { SeedlingsComponent } from './seedlings/seedlings.component';
+import { DeliveryComponent } from './product/delivery/delivery.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SeedlingsComponent } from './seedlings/seedlings.component';
     ProductComponent,
     CategoryMenuComponent,
     SeedlingsComponent,
+    DeliveryComponent,
   ],
   imports: [
     CommonModule,
@@ -44,5 +46,6 @@ import { SeedlingsComponent } from './seedlings/seedlings.component';
     TieredMenuModule,
     OrderListModule,
   ],
+  exports: [DeliveryComponent],
 })
 export class CatalogModule {}

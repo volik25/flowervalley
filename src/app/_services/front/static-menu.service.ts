@@ -33,6 +33,11 @@ export class StaticMenuService {
       routerLink: 'advantages',
     },
     {
+      label: 'Блок в карточке товара',
+      icon: 'pi pi-inbox',
+      routerLink: 'product',
+    },
+    {
       label: 'Контакты',
       icon: 'pi pi-phone',
       routerLink: 'contacts',
