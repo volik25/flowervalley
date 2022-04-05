@@ -62,7 +62,7 @@ export class ProductComponent implements OnInit {
   public saveProductBlock(): void {
     if (isFormInvalid(this.productGroup)) return;
     this.isLoading = true;
-    if (this.uploadedPhotos) {
+    if (Object.keys(this.uploadedPhotos).length) {
       const requests: Observable<string>[] = [];
       const pathNames: string[] = [];
       Object.keys(this.uploadedPhotos).map((key) => {
