@@ -127,7 +127,7 @@ export class CategoryComponent implements OnInit {
 
   private getProductsList(): void {
     if (this.category) {
-      this.bs.addItem(this.category.name);
+      this.bs.addCategory(this.category, this.catalog);
       this.seoService.updateTitle(this.category.name);
       this.seoService.updateKeywords(this.category.name.split(' ').join(','));
       this.seoService.updateDescription('Товары категории - ' + this.category.name);

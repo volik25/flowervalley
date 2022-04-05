@@ -147,11 +147,11 @@ export class ProductComponent implements OnInit {
     if (catalog.length) {
       const category = catalog.find((item) => slugify(item.name) === categoryRoute);
       if (category) {
-        this.getProductsList(category, productName);
+        this.getProductsList(category, catalog, productName);
       } else if (categoryRoute === 'tulips') {
         const tulips = catalog.find((item) => item.id === 1);
         if (tulips) {
-          this.getProductsList(tulips, productName);
+          this.getProductsList(tulips, catalog, productName);
         }
       }
     } else {
@@ -160,11 +160,11 @@ export class ProductComponent implements OnInit {
         this.storageService.setItem(categoriesKey, categoriesApi);
         const category = catalog.find((item) => slugify(item.name) === categoryRoute);
         if (category) {
-          this.getProductsList(category, productName);
+          this.getProductsList(category, catalog, productName);
         } else if (categoryRoute === 'tulips') {
           const tulips = catalog.find((item) => item.id === 1);
           if (tulips) {
-            this.getProductsList(tulips, productName);
+            this.getProductsList(tulips, catalog, productName);
           }
         }
         this.ls.removeSubscription(sub);
@@ -173,10 +173,10 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  private getProductsList(category: Category, productName: string): void {
+  private getProductsList(category: Category, catalog: Category[], productName: string): void {
     this.category = category;
-    this.bs.addItem(category.name);
-    this.bs.addItem(productName, true);
+    this.bs.addCategory(category, catalog);
+    this.bs.addProduct(productName);
     const sub = this.catalogService.getItemById<Category>(category.id).subscribe((categoryApi) => {
       this.products =
         categoryApi.products
