@@ -4,3 +4,9 @@ export interface Box {
   price: number;
   volume: number;
 }
+
+export interface DocumentBox {
+  name: string;
+  count: number;
+  price: number;
+}

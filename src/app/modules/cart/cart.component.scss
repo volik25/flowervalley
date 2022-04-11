@@ -142,10 +142,7 @@
     }
     &_flowers {
       &>span:last-child {
-        font-weight: 400;
-        span {
-          font-weight: 500;
-        }
+        font-weight: 500;
       }
     }
     &_tulips {
@@ -155,11 +152,6 @@
       }
       &>span:last-child {
         font-weight: 500;
-        span {
-          line-height: 132%;
-          color: $red-100;
-          text-transform: uppercase;
-        }
       }
     }
     &_pickup {

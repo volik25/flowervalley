@@ -106,8 +106,10 @@ export class PriceListGenerateService {
     }
     this.content.sort((a, b) => {
       if (a[1] && b[1]) {
-        if (a[0].split(' ').join('')[0] > b[0].split(' ').join('')[0]) return 1;
-        if (a[0].split(' ').join('')[0] < b[0].split(' ').join('')[0]) return -1;
+        if (a[0].split(' ').join('').toLowerCase() > b[0].split(' ').join('').toLowerCase())
+          return 1;
+        if (a[0].split(' ').join('').toLowerCase() < b[0].split(' ').join('').toLowerCase())
+          return -1;
         return 0;
       }
       return 0;

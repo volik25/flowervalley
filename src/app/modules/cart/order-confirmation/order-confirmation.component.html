@@ -82,16 +82,26 @@
         <p-calendar
           [formControl]="deliveryDate"
           [firstDayOfWeek]="1"
-          [showTime]="true"
-          [showSeconds]="false"
           dateFormat="dd.mm.yy"
           [minDate]="currentDate"
           selectionMode="range"
           [readonlyInput]="true"
           inputId="range"
           styleClass="w-12"
-        ></p-calendar>
-        <label for="range">Желаемый интервал поставки (самовывоза)</label>
+          #calendar
+        >
+          <ng-template pTemplate="footer">
+            <div class="flex justify-content-center align-items-center">
+              <p-button
+                class="w-full"
+                styleClass="w-full"
+                (onClick)="calendar.hideOverlay()"
+                label="Закрыть"
+              ></p-button>
+            </div>
+          </ng-template>
+        </p-calendar>
+        <label for="range">Желаемая дата поставки (самовывоза)</label>
       </span>
       <flower-valley-entity-form
         *ngIf="clientType === 'entity'"

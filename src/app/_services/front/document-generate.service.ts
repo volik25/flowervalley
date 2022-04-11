@@ -5,6 +5,7 @@ import { Order } from '../../_models/order';
 import { map, Observable } from 'rxjs';
 import { Firm } from '../../_models/business-pack/firm';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
+import { DocumentBox } from '../../_models/box';
 
 @Injectable({
   providedIn: null,
@@ -49,11 +50,15 @@ export class DocumentGenerateService {
     );
   }
 
-  public getEstimate(order: Order, orderId: number): Observable<File> {
-    let boxesSum = 0;
+  public getEstimate(order: Order, orderId: number, discount?: number): Observable<File> {
+    const boxes: DocumentBox[] = [];
     let productsSum = 0;
     order.boxes.map((box) => {
-      boxesSum += box.count * box.price;
+      boxes.push({
+        name: box.box.name,
+        price: box.price,
+        count: box.count,
+      });
     });
     return this.estimatePDF
       .getClientPDF(
@@ -64,11 +69,12 @@ export class DocumentGenerateService {
             productsSum += goods.price * goods.count;
             return [goods.product.name, goods.price, goods.count, goods.price * goods.count];
           }),
-        this.priceConvert.transform(order.deliveryPrice, 'two', 'rub'),
-        this.priceConvert.transform(boxesSum, 'two', 'rub'),
+        this.priceConvert.transform(order.deliveryPrice, 'two', 'none'),
+        boxes,
         this.priceConvert.transform(productsSum, 'two', 'rub'),
-        this.priceConvert.transform(order.orderSum, 'two', 'rub'),
+        this.priceConvert.transform(order.orderSum, 'two', 'none'),
         orderId,
+        discount ? this.priceConvert.transform(discount, 'two', 'rub') : undefined,
         false,
       )
       .pipe(

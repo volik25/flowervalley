@@ -7,37 +7,35 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
 import { Observable, Subject } from 'rxjs';
-import { CartService } from './cart.service';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
+import { DocumentBox } from '../../_models/box';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
   private header!: string[];
   private content!: any[];
   private delivery!: string;
-  private boxes!: string;
+  private boxes!: DocumentBox[];
   private productsSum!: string;
-  private discount: number | undefined;
+  private discount: string | undefined;
   private sum!: string;
   private order: number | undefined;
   private date: string | undefined;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
-  constructor(
-    @Inject('PRICE_CONVERT') private priceConvert: PriceConverterPipe,
-    private cartService: CartService,
-  ) {}
+  constructor(@Inject('PRICE_CONVERT') private priceConvert: PriceConverterPipe) {}
 
   public getPDF(
     isClient: boolean,
     header: string[],
     content: any[],
     delivery: string,
-    boxes: string,
+    boxes: DocumentBox[],
     productsSum: string,
     sum: string,
     orderNumber?: number,
     date?: string,
+    discount?: string,
     isOpened: boolean = true,
   ): void {
     this.header = header;
@@ -48,7 +46,7 @@ export class HtmlToPdfService {
     this.sum = sum;
     this.order = orderNumber;
     this.date = date;
-    this.discount = this.cartService.discountSum;
+    this.discount = discount;
     if (isClient) {
       HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
         const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
@@ -104,25 +102,13 @@ export class HtmlToPdfService {
     div.append(table);
     const products = document.createElement('div');
     products.innerHTML = 'Стоимость товаров: ' + this.productsSum;
-    products.style.margin = '10px 0';
     div.append(products);
-    const delivery = document.createElement('div');
-    delivery.innerHTML = 'Стоимость доставки: ' + this.delivery;
-    div.append(delivery);
-    const boxes = document.createElement('div');
-    boxes.innerHTML = 'Стоимость коробок: ' + this.boxes;
-    boxes.style.margin = '10px 0';
-    div.append(boxes);
     if (this.discount) {
       const discount = document.createElement('div');
-      discount.innerHTML =
-        'Учтена скидка: ' + this.priceConvert.transform(this.discount, 'two', 'rub');
+      discount.innerHTML = 'Учтена скидка: ' + this.discount;
       discount.style.marginBottom = '10px';
       div.append(discount);
     }
-    const sum = document.createElement('div');
-    sum.innerHTML = 'Итоговая сумма: ' + this.sum;
-    div.append(sum);
     return div;
   }
 
@@ -216,10 +202,60 @@ export class HtmlToPdfService {
       const bodyRow = tBody.insertRow(i);
       for (let j = 0; j < abstractRow.length; j++) {
         const cell = bodyRow.insertCell(j);
-        cell.innerHTML = abstractRow[j];
+        switch (j) {
+          case 1:
+          case 3:
+            cell.innerHTML = this.priceConvert.transform(abstractRow[j], 'two', 'none');
+            break;
+          default:
+            cell.innerHTML = abstractRow[j];
+            break;
+        }
         if (j > 0) {
           cell.style.textAlign = 'right';
         }
+      }
+    }
+    let index = this.content.length;
+    for (let i = 0; i < this.boxes.length; i++) {
+      const abstractRow = this.boxes[i];
+      const bodyRow = tBody.insertRow(index);
+      index++;
+      const box = [
+        abstractRow.name,
+        this.priceConvert.transform(abstractRow.price, 'two', 'none'),
+        abstractRow.count,
+        this.priceConvert.transform(abstractRow.price * abstractRow.count, 'two', 'none'),
+      ];
+      for (let j = 0; j < box.length; j++) {
+        const cell = bodyRow.insertCell(j);
+        cell.innerHTML = box[j].toString();
+        if (j > 0) {
+          cell.style.textAlign = 'right';
+        }
+      }
+    }
+    if (this.delivery !== '0.00') {
+      const deliveryRow = tBody.insertRow(index);
+      index++;
+      const delivery = ['Доставка', this.delivery, '1', this.delivery];
+      for (let i = 0; i < this.header.length; i++) {
+        const cell = deliveryRow.insertCell(i);
+        cell.innerHTML = delivery[i];
+        if (i > 0) {
+          cell.style.textAlign = 'right';
+        }
+      }
+    }
+    const amountRow = tBody.insertRow(index);
+    const amountArray = ['', '', 'ИТОГО', this.sum];
+    for (let i = 0; i < this.header.length; i++) {
+      const cell = amountRow.insertCell(i);
+      cell.innerHTML = amountArray[i];
+      if (i === 2) {
+        cell.style.fontWeight = 'bold';
+      } else {
+        cell.style.textAlign = 'right';
       }
     }
     return table;

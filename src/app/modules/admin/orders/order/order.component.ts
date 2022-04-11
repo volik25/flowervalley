@@ -20,6 +20,7 @@ import { DocumentGenerateService } from '../../../../_services/front/document-ge
 import { GoodsInvoice } from '../../../../_models/business-pack/goods-invoice';
 import { Invoice } from '../../../../_models/business-pack/invoice';
 import { forkJoin } from 'rxjs';
+import { DocumentBox } from '../../../../_models/box';
 
 @Component({
   selector: 'flower-valley-order',
@@ -91,7 +92,7 @@ export class OrderComponent implements OnInit {
       if (orderDiscount) {
         this.orderDiscount = orderDiscount;
         this.orderDiscount.percent = Math.round(
-          (this.orderDiscount.value / this.order.orderSum) * 100,
+          (this.orderDiscount.value / (this.orderDiscount.value + this.order.orderSum)) * 100,
         );
       }
       if (this.order.deliveryWishDateFrom) {
@@ -197,6 +198,20 @@ export class OrderComponent implements OnInit {
     return sum;
   }
 
+  public getDocumentBoxes(): DocumentBox[] {
+    const boxes: DocumentBox[] = [];
+    if (this.order) {
+      this.order.boxes.map((box) => {
+        boxes.push({
+          name: box.box.name,
+          price: box.price,
+          count: box.count,
+        });
+      });
+    }
+    return boxes;
+  }
+
   public openTelepack(): void {
     window.open('https://375.ru/' + this.order?.accountNumber);
   }
@@ -222,12 +237,15 @@ export class OrderComponent implements OnInit {
             goods.count,
             goods.price * goods.count,
           ]),
-        this.priceConvert.transform(this.order.deliveryPrice, 'two', 'rub'),
-        this.priceConvert.transform(this.getBoxesSum(), 'two', 'rub'),
+        this.priceConvert.transform(this.order.deliveryPrice || 0, 'two', 'none'),
+        this.getDocumentBoxes(),
         this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
-        this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
+        this.priceConvert.transform(this.getOrderSum(), 'two', 'none'),
         this.orderId,
         this.dateConvert.transform(this.order.confirmedDeliveryDate, 'dd.MM.yyyy HH:mm'),
+        this.orderDiscount && this.orderDiscount.value
+          ? this.priceConvert.transform(this.orderDiscount.value, 'two', 'rub')
+          : null,
       );
     }
   }
@@ -352,21 +370,23 @@ export class OrderComponent implements OnInit {
     // @ts-ignore
     const orderId = this.order.id;
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
-        docSub.unsubscribe();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('orderId', orderId.toString());
-        formData.append('email', order.clientEmail);
-        this.mailService.sendEditOrderMail(formData).subscribe(() => {
-          this.sendingMail = false;
-          this.ms.add({
-            severity: 'success',
-            summary: 'Заказ изменен',
-            detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
+      const docSub = this.documentService
+        .getEstimate(order, orderId, this.orderDiscount?.value)
+        .subscribe((file) => {
+          docSub.unsubscribe();
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('orderId', orderId.toString());
+          formData.append('email', order.clientEmail);
+          this.mailService.sendEditOrderMail(formData).subscribe(() => {
+            this.sendingMail = false;
+            this.ms.add({
+              severity: 'success',
+              summary: 'Заказ изменен',
+              detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
+            });
           });
         });
-      });
     });
   }
 }

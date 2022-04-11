@@ -174,9 +174,9 @@ export class CartService {
     }
     if (currentDiscount) {
       discountProducts.map((item) => {
-        item.price = Math.ceil(
+        item.price = +(
           // @ts-ignore
-          item.initialPrice - item.initialPrice * (currentDiscount.discount / 100),
+          (item.initialPrice - item.initialPrice * (currentDiscount.discount / 100)).toFixed(2)
         );
       });
     } else {

@@ -32,7 +32,7 @@
           <div>Почта: {{ order.clientEmail }}</div>
         </td>
         <td>{{ order.clientAddress }}</td>
-        <td>{{ order.orderSum | priceConverter }}</td>
+        <td>{{ order.orderSum | priceConverter: 'two' }}</td>
         <td>
           <p-inplace #inplace>
             <ng-template pTemplate="display">
