@@ -297,7 +297,7 @@ export class NewOrderComponent implements OnInit {
   }
   private sendIndividualMail(orderId: number): void {
     const orderSub = this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
+      const docSub = this.documentService.getEstimate(order, orderId, 0).subscribe((file) => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('orderId', orderId.toString());

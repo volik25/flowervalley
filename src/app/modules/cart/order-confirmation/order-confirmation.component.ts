@@ -319,23 +319,25 @@ export class OrderConfirmationComponent {
 
   private sendIndividualMail(orderId: number): void {
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      const docSub = this.documentService.getEstimate(order, orderId).subscribe((file) => {
-        docSub.unsubscribe();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('orderId', orderId.toString());
-        formData.append('email', order.clientEmail);
-        this.mailService.sendIndividualMail(formData, order).subscribe(() => {
-          this.messageService.clear();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Заказ оформлен',
-            detail: `Данные заказа отправлены на почту ${order.clientEmail}`,
-            life: 10000,
+      const docSub = this.documentService
+        .getEstimate(order, orderId, this.cartService.discountSum)
+        .subscribe((file) => {
+          docSub.unsubscribe();
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('orderId', orderId.toString());
+          formData.append('email', order.clientEmail);
+          this.mailService.sendIndividualMail(formData, order).subscribe(() => {
+            this.messageService.clear();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Заказ оформлен',
+              detail: `Данные заказа отправлены на почту ${order.clientEmail}`,
+              life: 10000,
+            });
+            this.isInvoiceLoading = false;
           });
-          this.isInvoiceLoading = false;
         });
-      });
     });
   }
 

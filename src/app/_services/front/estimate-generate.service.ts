@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HtmlToPdfService } from './html-to-pdf.service';
 import { Observable } from 'rxjs';
+import { DocumentBox } from '../../_models/box';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,11 @@ export class EstimateGenerateService {
   public getClientPDF(
     content: any[],
     delivery: string,
-    boxes: string,
+    boxes: DocumentBox[],
     productsSum: string,
     sum: string,
     orderId?: number,
+    discount?: string,
     isOpened: boolean = true,
   ): Observable<Blob> {
     this.htmlToPdf.getPDF(
@@ -28,6 +30,7 @@ export class EstimateGenerateService {
       sum,
       orderId,
       undefined,
+      discount || undefined,
       isOpened,
     );
     return this.htmlToPdf.getGeneratedDocument();
@@ -36,11 +39,12 @@ export class EstimateGenerateService {
   public getCompanyPDF(
     content: any[],
     delivery: string,
-    boxes: string,
+    boxes: DocumentBox[],
     productsSum: string,
     sum: string,
     order: number,
     date: string | null,
+    discount: string | null,
     isOpened: boolean = true,
   ): Observable<Blob> {
     this.htmlToPdf.getPDF(
@@ -53,6 +57,7 @@ export class EstimateGenerateService {
       sum,
       order,
       date || undefined,
+      discount || undefined,
       isOpened,
     );
     return this.htmlToPdf.getGeneratedDocument();

@@ -15,7 +15,6 @@ export class CartGoodsComponent {
   public cartVariables: CartVariables | undefined;
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
-  public minSummary = 17500;
   public isLoading: boolean = false;
 
   constructor(private cartService: CartService, private boxService: BoxGenerateService) {
@@ -41,12 +40,16 @@ export class CartGoodsComponent {
     return sum;
   }
 
-  public get getDifference(): number {
-    const diff = this.minSummary - this.getSum;
-    if (diff > 0) {
-      return diff;
+  public get getDifference(): number | null {
+    const minOrderSum = this.cartVariables?.minOrderSum;
+    if (minOrderSum) {
+      const diff = minOrderSum - this.getSum;
+      if (diff > 0) {
+        return diff;
+      }
+      return 0;
     }
-    return 0;
+    return null;
   }
 
   public updateCount(item: ProductItem): void {

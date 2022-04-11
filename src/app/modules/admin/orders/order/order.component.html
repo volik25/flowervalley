@@ -43,10 +43,11 @@
         class="order__header_date"
         *ngIf="!order.confirmedDeliveryDate && order.deliveryWishDateFrom"
       >
-        <div>Желаемые даты поставки:</div>
+        <div>Желаемая дата поставки:</div>
         <div>
-          {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy HH:mm' }} -
-          {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy HH:mm' }}
+          {{ order.deliveryWishDateFrom | date: 'dd.MM.yyyy' }}
+          {{ order.deliveryWishDateTo ? '-' : '' }}
+          {{ order.deliveryWishDateTo | date: 'dd.MM.yyyy' }}
         </div>
       </div>
       <div class="order__header_date">
