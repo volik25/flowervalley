@@ -108,6 +108,10 @@
         *ngIf="clientType === 'entity'"
         (dataChanges)="entityDataChanges($event)"
       ></flower-valley-entity-form>
+      <div class="private-policy">
+        Нажимая кнопку "Оформить заказ" Вы соглашаетесь с условиями
+        <a [routerLink]="['/private-policy']">Политики конфиденциальности</a>
+      </div>
       <p-button
         [loading]="isInvoiceLoading"
         styleClass="confirm-order"

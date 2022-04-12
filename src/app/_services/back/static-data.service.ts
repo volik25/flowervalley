@@ -23,6 +23,7 @@ import {
 } from '../../_models/static-data/variables';
 import { Animation, AnimationEnum } from '../../_models/static-data/animation';
 import { ProductBlock, ProductBlockEnum } from '../../_models/static-data/product-block';
+import { PrivatePolicy, PrivatePolicyEnum } from '../../_models/static-data/private-policy';
 
 interface StaticResponse {
   id: number;
@@ -67,6 +68,14 @@ export class StaticDataService {
 
   public setAboutContent(about: About): Observable<any> {
     return this.generatePostRequest(AboutEnum, about);
+  }
+
+  public getPrivatePolicyContent(): Observable<PrivatePolicy> {
+    return this.generateGetRequest<PrivatePolicy>(PrivatePolicyEnum);
+  }
+
+  public setPrivatePolicyContent(privatePolicy: PrivatePolicy): Observable<any> {
+    return this.generatePostRequest(PrivatePolicyEnum, privatePolicy);
   }
 
   public getAdvantagesContent(): Observable<Advantages> {

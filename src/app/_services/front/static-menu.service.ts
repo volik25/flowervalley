@@ -48,6 +48,11 @@ export class StaticMenuService {
       routerLink: 'cart',
     },
     {
+      label: 'Политика',
+      icon: 'pi pi-users',
+      routerLink: 'private-policy',
+    },
+    {
       label: 'Прочее',
       icon: 'pi pi-sync',
       routerLink: 'other',
