@@ -28,12 +28,7 @@ export class PriceListGenerateService {
       categories
         .sort((a, b) => a.id - b.id)
         .map((category) => {
-          pricesContent.push(
-            [category.name],
-            ...products
-              .filter((item) => item.categoryId === category.id)
-              .map((item) => [item.name, item.coefficient, item.price]),
-          );
+          pricesContent.push([category.name], ...this.sortProducts(products, category));
         });
       this.getPDF(headers, pricesContent);
     } else {
@@ -46,9 +41,7 @@ export class PriceListGenerateService {
           .map((category) => {
             pricesContent.push(
               [category.name],
-              ...(loadedProducts as Product[])
-                .filter((item) => item.categoryId === category.id)
-                .map((item) => [item.name, item.coefficient, item.price]),
+              ...this.sortProducts(loadedProducts as Product[], category),
             );
           });
         this.getPDF(headers, pricesContent);
@@ -104,16 +97,14 @@ export class PriceListGenerateService {
         cell.style.textAlign = 'center';
       }
     }
-    this.content.sort((a, b) => {
-      if (a[1] && b[1]) {
-        if (a[0].split(' ').join('').toLowerCase() > b[0].split(' ').join('').toLowerCase())
-          return 1;
-        if (a[0].split(' ').join('').toLowerCase() < b[0].split(' ').join('').toLowerCase())
-          return -1;
-        return 0;
-      }
-      return 0;
-    });
+    // this.content.sort((a, b) => {
+    //   if (a[1] && b[1]) {
+    //     if (a[0].toLowerCase() > b[0].toLowerCase()) return 1;
+    //     if (a[0].toLowerCase() < b[0].toLowerCase()) return -1;
+    //     return 0;
+    //   }
+    //   return 0;
+    // });
     for (let i = 0; i < this.content.length; i++) {
       const abstractRow = this.content[i];
       const bodyRow = tBody.insertRow(i);
@@ -135,5 +126,24 @@ export class PriceListGenerateService {
 
   public getGeneratedDocument(): Observable<Blob> {
     return this._generatedDocument.asObservable();
+  }
+
+  private sortProducts(products: Product[], category: Category) {
+    return products
+      .filter((item) => item.categoryId === category.id)
+      .map((item) => [item.name, item.coefficient, item.price])
+      .sort((a, b) => {
+        if (
+          (a[0] as string).split(' ').join('').toLowerCase() >
+          (b[0] as string).split(' ').join('').toLowerCase()
+        )
+          return 1;
+        if (
+          (a[0] as string).split(' ').join('').toLowerCase() <
+          (b[0] as string).split(' ').join('').toLowerCase()
+        )
+          return -1;
+        return 0;
+      });
   }
 }

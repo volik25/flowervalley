@@ -107,9 +107,9 @@ export class OrderConfirmationComponent {
         this.contacts.controls['address'].enable();
       }
     });
-    this.deliveryDate.valueChanges.subscribe((dates: Date[]) => {
-      this.contacts.controls['deliveryWishDateFrom'].setValue(dates[0]);
-      this.contacts.controls['deliveryWishDateTo'].setValue(dates[1]);
+    this.deliveryDate.valueChanges.subscribe((dates: Date[] | null) => {
+      this.contacts.controls['deliveryWishDateFrom'].setValue(dates ? dates[0] : null);
+      this.contacts.controls['deliveryWishDateTo'].setValue(dates ? dates[0] : null);
     });
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
