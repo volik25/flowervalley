@@ -26,6 +26,7 @@ import { MainPageModule } from '../../main-page/main-page.module';
 import { AnimationComponent } from './components/animation/animation.component';
 import { ProductComponent } from './components/product/product.component';
 import { CatalogModule } from '../../catalog/catalog.module';
+import { PrivatePolicyComponent } from './components/private-policy/private-policy.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { CatalogModule } from '../../catalog/catalog.module';
     OtherComponent,
     AnimationComponent,
     ProductComponent,
+    PrivatePolicyComponent,
   ],
   imports: [
     CommonModule,

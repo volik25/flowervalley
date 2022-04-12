@@ -17,7 +17,7 @@ import { SEOService } from './_services/front/seo.service';
   providers: [DialogService],
 })
 export class AppComponent implements OnInit {
-  public cookieVisible = false;
+  public cookieVisible = true;
   public header: Header | undefined;
   public footer: Footer | undefined;
   public mobileButtons: MobileButtons | undefined;
