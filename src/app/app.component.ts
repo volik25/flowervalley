@@ -136,6 +136,8 @@ export class AppComponent implements OnInit {
         'Ноя',
         'Дек',
       ],
+      today: 'Сегодня',
+      clear: 'Очистить',
     });
   }
 
