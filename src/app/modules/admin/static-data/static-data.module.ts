@@ -14,7 +14,7 @@ import { HeaderAndFooterComponent } from './components/header-and-footer/header-
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { CartComponent } from './components/cart/cart.component';
 import { OtherComponent } from './components/other/other.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { EditorModule } from 'primeng/editor';
@@ -27,6 +27,9 @@ import { AnimationComponent } from './components/animation/animation.component';
 import { ProductComponent } from './components/product/product.component';
 import { CatalogModule } from '../../catalog/catalog.module';
 import { PrivatePolicyComponent } from './components/private-policy/private-policy.component';
+import { MainMenuComponent } from './components/main-menu/main-menu.component';
+import { TableModule } from 'primeng/table';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { PrivatePolicyComponent } from './components/private-policy/private-poli
     AnimationComponent,
     ProductComponent,
     PrivatePolicyComponent,
+    MainMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +63,9 @@ import { PrivatePolicyComponent } from './components/private-policy/private-poli
     InputMaskModule,
     MainPageModule,
     CatalogModule,
+    TableModule,
+    FormsModule,
+    AutoCompleteModule,
   ],
 })
 export class StaticDataModule {}

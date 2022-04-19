@@ -10,6 +10,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [DiscountComponent],
@@ -23,6 +24,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     FormsModule,
     PipesModule,
     MultiSelectModule,
+    CheckboxModule,
   ],
 })
 export class DiscountModule {}

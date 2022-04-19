@@ -31,6 +31,11 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { PasswordModule } from 'primeng/password';
 import { LoadingService } from './_services/front/loading.service';
 import { PriceConverterPipe } from './_pipes/price-converter.pipe';
+import { PRICE_CONVERT } from './_providers/price-convert.provider';
+import { DISCOUNT } from './_providers/discount.provider';
+import { DiscountService } from './_services/back/discount.service';
+import { STATIC_DATA } from './_providers/static-data.provider';
+import { StaticDataService } from './_services/back/static-data.service';
 
 @NgModule({
   declarations: [
@@ -83,8 +88,16 @@ import { PriceConverterPipe } from './_pipes/price-converter.pipe';
       multi: true,
     },
     {
-      provide: 'PRICE_CONVERT',
+      provide: PRICE_CONVERT,
       useClass: PriceConverterPipe,
+    },
+    {
+      provide: STATIC_DATA,
+      useClass: StaticDataService,
+    },
+    {
+      provide: DISCOUNT,
+      useClass: DiscountService,
     },
   ],
   bootstrap: [AppComponent],

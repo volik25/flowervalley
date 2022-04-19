@@ -17,6 +17,9 @@ import { StorageService } from '../../_services/front/storage.service';
 import { ProductService } from '../../_services/back/product.service';
 import { PriceListGenerateService } from '../../_services/front/price-list-generate.service';
 import { Header } from '../../_models/static-data/header';
+import { MainMenuUpdateService } from '../../_services/front/main-menu-update.service';
+import { MainMenuService } from '../../_services/back/main-menu.service';
+import { MainMenu } from '../../_models/static-data/main-menu';
 
 @Component({
   selector: 'flower-valley-header',
@@ -48,11 +51,14 @@ export class HeaderComponent implements OnInit {
   public menuShow: boolean = false;
   public isMenuToggle: boolean = false;
   public cart: ProductItem[] = [];
+  public menu: MainMenu[] = [];
 
   constructor(
     private renderer: Renderer2,
     private cartService: CartService,
     private storageService: StorageService,
+    private mainMenuService: MainMenuService,
+    private mainMenuUpdateService: MainMenuUpdateService,
     private productService: ProductService,
     private pricesPDFService: PriceListGenerateService,
     private router: Router,
@@ -74,6 +80,15 @@ export class HeaderComponent implements OnInit {
         !this.menuBtn?.nativeElement.contains(event.target)
       ) {
         this.isMenuToggle = false;
+      }
+    });
+    mainMenuUpdateService.updated().subscribe((items) => {
+      if (items) {
+        this.menu = items;
+      } else {
+        mainMenuService.getMenuItems().subscribe((menu) => {
+          this.menu = menu;
+        });
       }
     });
   }
@@ -106,6 +121,14 @@ export class HeaderComponent implements OnInit {
   public menuToggle(): void {
     this.searchShow = false;
     this.menuShow = !this.menuShow;
+  }
+
+  public getLink(url: string): string {
+    return url.split('#')[0];
+  }
+
+  public getFragment(url: string): string {
+    return url.split('#')[1];
   }
 
   public getPriceList(): void {

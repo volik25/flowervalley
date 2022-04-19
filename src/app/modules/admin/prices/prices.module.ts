@@ -13,6 +13,7 @@ import { FlowerValleySharedModule } from '../../../shared/shared.module';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { IndividualComponent } from './individual/individual.component';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { EditorModule } from 'primeng/editor';
 
 @NgModule({
   declarations: [PricesComponent, IndividualComponent],
@@ -29,6 +30,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     SplitButtonModule,
     MultiSelectModule,
     ReactiveFormsModule,
+    EditorModule,
   ],
 })
 export class PricesModule {}

@@ -130,7 +130,10 @@ export class MainPageComponent implements OnInit {
           setTimeout(() => {
             if (fragment) {
               const block = document.getElementById(`${fragment}Block`);
-              block?.scrollIntoView({ block: 'center', inline: 'center' });
+              if (block) {
+                block?.scrollIntoView();
+                window.scrollTo(0, block.offsetTop - 200);
+              }
             }
           });
         });
