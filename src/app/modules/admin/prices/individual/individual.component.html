@@ -23,6 +23,17 @@
     <label for="categories">Включить категории</label>
   </span>
 
+  <div [formGroup]="textGroup">
+    <div>
+      <h4>Текст в начале документа</h4>
+      <p-editor formControlName="textTop"></p-editor>
+    </div>
+    <div>
+      <h4>Текст в конце документа</h4>
+      <p-editor formControlName="textBottom"></p-editor>
+    </div>
+  </div>
+
   <p-table
     [value]="selectedGoods"
     [loading]="isLoading"

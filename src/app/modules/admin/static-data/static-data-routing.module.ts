@@ -11,6 +11,7 @@ import { OtherComponent } from './components/other/other.component';
 import { AnimationComponent } from './components/animation/animation.component';
 import { ProductComponent } from './components/product/product.component';
 import { PrivatePolicyComponent } from './components/private-policy/private-policy.component';
+import { MainMenuComponent } from './components/main-menu/main-menu.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
       {
         path: '',
         component: MainComponent,
+      },
+      {
+        path: 'main-menu',
+        component: MainMenuComponent,
       },
       {
         path: 'header-and-footer',

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 // @ts-ignore
 import pdfMake from 'pdfmake/build/pdfmake';
 // @ts-ignore
@@ -12,41 +12,76 @@ import { Product } from '../../_models/product';
 import { ProductService } from '../back/product.service';
 import { CatalogService } from '../back/catalog.service';
 import { forkJoin, Observable, Subject } from 'rxjs';
+import { DISCOUNT } from '../../_providers/discount.provider';
+import { DiscountService } from '../back/discount.service';
+import { Discount } from '../../_models/discount';
+import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
+import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
+import { PriceList } from '../../_models/static-data/price-list';
+import { STATIC_DATA } from '../../_providers/static-data.provider';
+import { StaticDataService } from '../back/static-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class PriceListGenerateService {
   private header!: string[];
   private content!: any[];
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
+  private discount: Discount[] = [];
+  private hasDiscountColumns: boolean = false;
+  private topText: string | undefined;
+  private bottomText: string | undefined;
 
-  constructor(private productService: ProductService, private catalogService: CatalogService) {}
+  constructor(
+    @Inject(DISCOUNT) private discountService: DiscountService,
+    @Inject(PRICE_CONVERT) private priceConvert: PriceConverterPipe,
+    @Inject(STATIC_DATA) private staticData: StaticDataService,
+    private productService: ProductService,
+    private catalogService: CatalogService,
+  ) {}
 
-  public generatePriceList(categories?: Category[], products?: Product[]): void {
+  public generatePriceList(categories?: Category[], products?: Product[], text?: PriceList): void {
     const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
     const pricesContent: any[] = [];
-    if (categories && products) {
-      categories
-        .sort((a, b) => a.id - b.id)
-        .map((category) => {
-          pricesContent.push([category.name], ...this.sortProducts(products, category));
-        });
-      this.getPDF(headers, pricesContent);
-    } else {
-      const requests = [this.productService.getItems(), this.catalogService.getItems()];
-      forkJoin(requests).subscribe(([loadedProducts, loadedCategories]) => {
-        (loadedCategories as Category[])
+    this.discountService.getItems().subscribe((items) => {
+      this.discount = items.filter((item) => item.addToPriceList).sort((a, b) => a.sum - b.sum);
+      if (this.discount.length == 2) {
+        const lowSum = this.priceConvert.transform(this.discount[0].sum, 'none', 'RUB');
+        const highSum = this.priceConvert.transform(this.discount[1].sum, 'none', 'RUB');
+        headers.push(`Малый опт (от ${lowSum})`, `Крупный опт (от ${highSum})`);
+        this.hasDiscountColumns = true;
+      }
+      if (categories && products && text) {
+        categories
           .sort((a, b) => a.id - b.id)
-          .filter((category) => category.id !== 1)
-          .filter((category) => !category.parentId)
           .map((category) => {
-            pricesContent.push(
-              [category.name],
-              ...this.sortProducts(loadedProducts as Product[], category),
-            );
+            pricesContent.push([category.name], ...this.sortProducts(products, category));
           });
+        this.topText = text.textTop;
+        this.bottomText = text.textBottom;
         this.getPDF(headers, pricesContent);
-      });
-    }
+      } else {
+        const requests = [
+          this.productService.getItems(),
+          this.catalogService.getItems(),
+          this.staticData.getPriceListText(),
+        ];
+        forkJoin(requests).subscribe(([loadedProducts, loadedCategories, loadedText]) => {
+          (loadedCategories as Category[])
+            .sort((a, b) => a.id - b.id)
+            .filter((category) => category.id !== 1)
+            .filter((category) => !category.parentId)
+            .map((category) => {
+              pricesContent.push(
+                [category.name],
+                ...this.sortProducts(loadedProducts as Product[], category),
+              );
+            });
+          this.topText = (loadedText as PriceList).textTop;
+          this.bottomText = (loadedText as PriceList).textBottom;
+          this.getPDF(headers, pricesContent);
+        });
+      }
+    });
   }
 
   private getPDF(header: string[], content: any[]): void {
@@ -59,6 +94,15 @@ export class PriceListGenerateService {
       const documentDefinition = {
         content: html,
         info: { title: 'Прайс-лист Агрофирма Цветочная Долина' },
+        pageOrientation: this.hasDiscountColumns ? 'landscape' : 'portrait',
+        styles: {
+          'ql-align-center': {
+            alignment: 'center',
+          },
+          'ql-align-right': {
+            alignment: 'right',
+          },
+        },
       };
       const document = pdfMake.createPdf(documentDefinition);
       document.open();
@@ -70,8 +114,12 @@ export class PriceListGenerateService {
 
   private generateHTML(imgSrc: unknown): HTMLElement {
     const div = document.createElement('div');
-    const headerTable = HtmlToPdfService.genHeaderTable(imgSrc);
+    const headerTable = HtmlToPdfService.genHeaderTable(imgSrc, this.hasDiscountColumns);
     div.append(headerTable);
+    if (this.topText) {
+      const topText = this.genTextTable(this.topText);
+      div.append(topText);
+    }
     const h2 = document.createElement('h2');
     h2.innerText = 'Прайс-лист';
     h2.style.textAlign = 'center';
@@ -79,7 +127,27 @@ export class PriceListGenerateService {
     div.append(h2);
     const table = this.genMainTable();
     div.append(table);
+    if (this.bottomText) {
+      const bottomText = this.genTextTable(this.bottomText);
+      div.append(bottomText);
+    }
     return div;
+  }
+
+  private genTextTable(text: string): HTMLTableElement {
+    const table: HTMLTableElement = document.createElement('table');
+    const tHead = table.createTHead();
+    const tBody = table.createTBody();
+    const headerRow = tHead.insertRow(0);
+    const headerCell = headerRow.insertCell(0);
+    headerCell.style.width = '100%';
+    const bodyRow = tBody.insertRow(0);
+    const bodyCell = bodyRow.insertCell(0);
+    bodyCell.innerHTML = text;
+    table.style.border = '0';
+    headerCell.style.border = '0';
+    bodyCell.style.border = '0';
+    return table;
   }
 
   private genMainTable(): HTMLTableElement {
@@ -93,18 +161,10 @@ export class PriceListGenerateService {
       if (i === 0) {
         cell.style.width = '60%';
       } else {
-        cell.style.width = '20%';
+        cell.style.width = this.hasDiscountColumns ? '10%' : '20%';
         cell.style.textAlign = 'center';
       }
     }
-    // this.content.sort((a, b) => {
-    //   if (a[1] && b[1]) {
-    //     if (a[0].toLowerCase() > b[0].toLowerCase()) return 1;
-    //     if (a[0].toLowerCase() < b[0].toLowerCase()) return -1;
-    //     return 0;
-    //   }
-    //   return 0;
-    // });
     for (let i = 0; i < this.content.length; i++) {
       const abstractRow = this.content[i];
       const bodyRow = tBody.insertRow(i);
@@ -112,9 +172,10 @@ export class PriceListGenerateService {
         const cell = bodyRow.insertCell(j);
         cell.innerHTML = abstractRow[j];
         if (abstractRow.length === 1) {
-          cell.colSpan = 3;
+          cell.colSpan = this.hasDiscountColumns ? 5 : 3;
           cell.style.textTransform = 'uppercase';
-          cell.style.fontSize = '22px';
+          cell.style.fontSize = '30px';
+          cell.style.height = '40px';
         }
         if (j > 0) {
           cell.style.textAlign = 'right';
@@ -131,7 +192,33 @@ export class PriceListGenerateService {
   private sortProducts(products: Product[], category: Category) {
     return products
       .filter((item) => item.categoryId === category.id)
-      .map((item) => [item.name, item.coefficient, item.price])
+      .map((item) => {
+        if (this.hasDiscountColumns) {
+          const lowSale = item.price - (item.price / 100) * this.discount[0].discount;
+          const highSale = item.price - (item.price / 100) * this.discount[1].discount;
+          if (!category.hasNoDiscount) {
+            return [
+              item.name,
+              item.coefficient,
+              this.priceConvert.transform(item.price, 'two', 'none'),
+              this.priceConvert.transform(lowSale, 'two', 'none'),
+              this.priceConvert.transform(highSale, 'two', 'none'),
+            ];
+          }
+          return [
+            item.name,
+            item.coefficient,
+            this.priceConvert.transform(item.price, 'two', 'none'),
+            '-',
+            '-',
+          ];
+        }
+        return [
+          item.name,
+          item.coefficient,
+          this.priceConvert.transform(item.price, 'two', 'none'),
+        ];
+      })
       .sort((a, b) => {
         if (
           (a[0] as string).split(' ').join('').toLowerCase() >

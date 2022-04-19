@@ -9,6 +9,7 @@ import htmlToPdfmake from 'html-to-pdfmake';
 import { Observable, Subject } from 'rxjs';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { DocumentBox } from '../../_models/box';
+import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
@@ -23,7 +24,7 @@ export class HtmlToPdfService {
   private date: string | undefined;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
-  constructor(@Inject('PRICE_CONVERT') private priceConvert: PriceConverterPipe) {}
+  constructor(@Inject(PRICE_CONVERT) private priceConvert: PriceConverterPipe) {}
 
   public getPDF(
     isClient: boolean,
@@ -137,14 +138,14 @@ export class HtmlToPdfService {
     });
   }
 
-  public static genHeaderTable(imgSrc: unknown): HTMLTableElement {
+  public static genHeaderTable(imgSrc: unknown, isDiscount = false): HTMLTableElement {
     const img = document.createElement('img');
     if (typeof imgSrc === 'string') {
       img.setAttribute('src', imgSrc);
-      img.setAttribute('width', '100');
+      img.setAttribute('width', isDiscount ? '150' : '100');
     }
     const title = document.createElement('div');
-    title.innerHTML = `<b>Агрофирма Цветочная Долина</b>`;
+    title.innerHTML = `<b>Агрофирма Цветочная<br/>Долина</b>`;
     title.style.textAlign = 'left';
     const headerTable: HTMLTableElement = document.createElement('table');
     headerTable.style.border = '0';
@@ -156,9 +157,9 @@ export class HtmlToPdfService {
     const rightCol = row.insertCell(2);
     leftCol.style.width = '15%';
     leftCol.style.border = '0';
-    centerCol.style.width = '20%';
+    centerCol.style.width = isDiscount ? '35%' : '20%';
     centerCol.style.border = '0';
-    rightCol.style.width = '65%';
+    rightCol.style.width = isDiscount ? '50%' : '65%';
     rightCol.style.border = '0';
     const headerTableBodyRow = htBody.insertRow(0);
     const image = headerTableBodyRow.insertCell(0);

@@ -1,22 +1,27 @@
 @import "src/app/modules/admin/add/product/product.component";
 @import "colors";
 
-::ng-deep .p-datatable-tbody {
-  td {
-    ::ng-deep {
-      input {
-        width: 200px;
+:host {
+  ::ng-deep .p-datatable-tbody {
+    td {
+      &:nth-child(1), &:nth-child(2) {
+        width: 232px;
       }
-    }
-    &:last-child {
-      &>div {
-        display: flex;
-        .edit {
-          color: $main-green;
+      ::ng-deep {
+        input {
+          width: 200px;
         }
-        .trash {
-          margin-left: 20px;
-          color: $red-100;
+      }
+      &:last-child {
+        &>div {
+          display: flex;
+          .edit {
+            color: $main-green;
+          }
+          .trash {
+            margin-left: 20px;
+            color: $red-100;
+          }
         }
       }
     }

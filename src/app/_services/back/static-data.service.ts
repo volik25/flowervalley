@@ -24,6 +24,7 @@ import {
 import { Animation, AnimationEnum } from '../../_models/static-data/animation';
 import { ProductBlock, ProductBlockEnum } from '../../_models/static-data/product-block';
 import { PrivatePolicy, PrivatePolicyEnum } from '../../_models/static-data/private-policy';
+import { PriceList, PriceListEnum } from '../../_models/static-data/price-list';
 
 interface StaticResponse {
   id: number;
@@ -48,6 +49,14 @@ export class StaticDataService {
 
   public getFooterContent(): Observable<Footer> {
     return this.generateGetRequest<Footer>(FooterEnum);
+  }
+
+  public getPriceListText(): Observable<PriceList> {
+    return this.generateGetRequest<PriceList>(PriceListEnum);
+  }
+
+  public setPriceListText(text: PriceList): Observable<any> {
+    return this.generatePostRequest(PriceListEnum, text);
   }
 
   public getAdminFooterContent(): Observable<AdminFooter> {

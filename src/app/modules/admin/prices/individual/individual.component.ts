@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { Category } from '../../../../_models/category';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductService } from '../../../../_services/back/product.service';
 import { forkJoin } from 'rxjs';
 import { Product } from '../../../../_models/product';
@@ -9,6 +9,7 @@ import { PriceListGenerateService } from '../../../../_services/front/price-list
 import { MailService } from '../../../../_services/back/mail.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { MessageService } from 'primeng/api';
+import { StaticDataService } from '../../../../_services/back/static-data.service';
 
 @Component({
   selector: 'flower-valley-individual',
@@ -27,6 +28,7 @@ export class IndividualComponent implements OnInit {
   public _doc: Blob | undefined;
   public sendButtonDisabled: boolean = true;
   public sendingMail: boolean = false;
+  public textGroup: FormGroup;
 
   private set document(value: Blob | undefined) {
     if (value) this.sendButtonDisabled = false;
@@ -39,6 +41,7 @@ export class IndividualComponent implements OnInit {
   constructor(
     private catalogService: CatalogService,
     private productService: ProductService,
+    private staticData: StaticDataService,
     private pricesPDFService: PriceListGenerateService,
     private mailService: MailService,
     private messageService: MessageService,
@@ -56,6 +59,10 @@ export class IndividualComponent implements OnInit {
       });
       this.isLoading = false;
     });
+    this.textGroup = fb.group({
+      textTop: [''],
+      textBottom: [''],
+    });
   }
 
   ngOnInit(): void {
@@ -66,6 +73,9 @@ export class IndividualComponent implements OnInit {
     });
     this.pricesPDFService.getGeneratedDocument().subscribe((doc) => {
       this.document = doc;
+    });
+    this.staticData.getPriceListText().subscribe((priceListData) => {
+      this.textGroup.patchValue(priceListData);
     });
   }
 
@@ -89,7 +99,11 @@ export class IndividualComponent implements OnInit {
   }
 
   public showPriceList(): void {
-    this.pricesPDFService.generatePriceList(this.selectedCategories, this.selectedGoods);
+    this.pricesPDFService.generatePriceList(
+      this.selectedCategories,
+      this.selectedGoods,
+      this.textGroup.getRawValue(),
+    );
   }
 
   public sendMail(): void {

@@ -1,5 +1,6 @@
 import { OrderStatus } from './order-status.enum';
 import { Message } from 'primeng/api';
+import { MainMenuItem } from '../_models/static-data/main-menu';
 
 export const tokenKey = 'flowerValley.token';
 export const refreshTokenKey = 'flowerValley.refreshToken';
@@ -106,3 +107,50 @@ export const orderWarnMessage: Message = {
     'Время оформления заказа может занимать до 30 секунд. Пожалуйста, оставайтесь на странице до уведомления об успешном оформлении заказа',
   life: 10000,
 };
+
+export const mainMenuStatic: MainMenuItem[] = [
+  {
+    title: 'Главная',
+    link: '/',
+  },
+  {
+    title: 'О компании',
+    link: '/#about',
+  },
+  {
+    title: 'Акции',
+    link: '/#sales',
+  },
+  {
+    title: 'Популярные',
+    link: '/#populars',
+  },
+  {
+    title: 'Преимущества',
+    link: '/#advatages',
+  },
+  {
+    title: 'Сми о нас',
+    link: '/#media',
+  },
+  {
+    title: 'Видео о нас',
+    link: '/#video',
+  },
+  {
+    title: 'Отзывы',
+    link: '/#reviews',
+  },
+  {
+    title: 'Клиенты',
+    link: '/#clients',
+  },
+  {
+    title: 'Рассада цветов',
+    link: '/catalog/seedlings',
+  },
+  {
+    title: 'Контакты',
+    link: '/contacts',
+  },
+];

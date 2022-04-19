@@ -13,6 +13,11 @@ export class StaticMenuService {
       routerLinkActiveOptions: { exact: true },
     },
     {
+      label: 'Главное меню',
+      icon: 'pi pi-bars',
+      routerLink: 'main-menu',
+    },
+    {
       label: 'Header и Footer',
       icon: 'pi pi-align-center',
       routerLink: 'header-and-footer',

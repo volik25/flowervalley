@@ -9,6 +9,7 @@ import { StaticDataService } from './_services/back/static-data.service';
 import { Footer, Header } from './_models/static-data/header';
 import { MobileButtons } from './_models/static-data/variables';
 import { SEOService } from './_services/front/seo.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'flower-valley-root',
@@ -17,7 +18,7 @@ import { SEOService } from './_services/front/seo.service';
   providers: [DialogService],
 })
 export class AppComponent implements OnInit {
-  public cookieVisible = true;
+  public cookieVisible = environment.production;
   public header: Header | undefined;
   public footer: Footer | undefined;
   public mobileButtons: MobileButtons | undefined;

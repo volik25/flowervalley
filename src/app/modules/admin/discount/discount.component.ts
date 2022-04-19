@@ -92,4 +92,26 @@ export class DiscountComponent implements OnInit {
       }
     });
   }
+
+  public saveDiscount(discount: Discount): void {
+    this.discountService.updateItem({ ...discount }).subscribe(() => {
+      if (discount.addToPriceList) {
+        this.ms.add({
+          severity: 'success',
+          summary: 'Скидка добавлена',
+          detail: `Скидка в ${discount.discount}% добавлена к отображению в прайс-листе`,
+        });
+      } else {
+        this.ms.add({
+          severity: 'success',
+          summary: 'Скидка отозвана',
+          detail: `Скидка в ${discount.discount}% отозвана от отображения в прайс-листе`,
+        });
+      }
+    });
+  }
+
+  public get isCheckBoxesDisabled(): boolean {
+    return !(this.discount.filter((item) => item.addToPriceList).length < 2);
+  }
 }

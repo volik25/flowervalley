@@ -31,6 +31,7 @@
       <tr>
         <th>Сумма</th>
         <th>Скидка</th>
+        <th>Добавить в прайс-лист</th>
         <th>Действия</th>
       </tr>
     </ng-template>
@@ -55,6 +56,16 @@
             </ng-template>
             <ng-template pTemplate="output"> {{ discount.discount }}% </ng-template>
           </p-cellEditor>
+        </td>
+        <td>
+          <div class="p-field-checkbox">
+            <p-checkbox
+              [(ngModel)]="!!discount.addToPriceList"
+              (ngModelChange)="saveDiscount(discount)"
+              [binary]="true"
+              [disabled]="isCheckBoxesDisabled && !discount.addToPriceList"
+            ></p-checkbox>
+          </div>
         </td>
         <td>
           <div>
