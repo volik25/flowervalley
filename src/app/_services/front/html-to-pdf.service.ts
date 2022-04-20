@@ -10,6 +10,7 @@ import { Observable, Subject } from 'rxjs';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { DocumentBox } from '../../_models/box';
 import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
+import { Header } from '../../_models/static-data/header';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
@@ -138,15 +139,26 @@ export class HtmlToPdfService {
     });
   }
 
-  public static genHeaderTable(imgSrc: unknown, isDiscount = false): HTMLTableElement {
+  public static genHeaderTable(
+    imgSrc: unknown,
+    isDiscount = false,
+    headerContent?: Header,
+  ): HTMLTableElement {
     const img = document.createElement('img');
     if (typeof imgSrc === 'string') {
       img.setAttribute('src', imgSrc);
       img.setAttribute('width', isDiscount ? '150' : '100');
     }
     const title = document.createElement('div');
-    title.innerHTML = `<b>Агрофирма Цветочная<br/>Долина</b>`;
+    if (headerContent?.title) {
+      title.innerHTML = `<b>${headerContent.title}</b>`;
+    } else {
+      title.innerHTML = `<b>Агрофирма Цветочная<br/>Долина</b>`;
+    }
     title.style.textAlign = 'left';
+    if (isDiscount) {
+      title.style.fontSize = '25px';
+    }
     const headerTable: HTMLTableElement = document.createElement('table');
     headerTable.style.border = '0';
     const htHead = headerTable.createTHead();
@@ -170,13 +182,25 @@ export class HtmlToPdfService {
     titleCell.style.border = '0';
     const address = headerTableBodyRow.insertCell(2);
     const addressInfo = document.createElement('div');
-    addressInfo.innerText =
-      '140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109';
+    if (headerContent?.address.length) {
+      addressInfo.innerText = headerContent.address[0];
+    } else {
+      addressInfo.innerText =
+        '140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109';
+    }
     const email = document.createElement('div');
-    email.innerText = 'flowervalley@mail.ru';
+    if (headerContent?.mail) {
+      email.innerText = headerContent.mail;
+    } else {
+      email.innerText = 'flowervalley@mail.ru';
+    }
     email.style.margin = '10px 0';
     const phone = document.createElement('div');
-    phone.innerText = '+7 915 109 1000';
+    if (headerContent?.phone) {
+      phone.innerText = headerContent.phone;
+    } else {
+      phone.innerText = '+7 915 109 1000';
+    }
     address.append(addressInfo, email, phone);
     address.style.border = '0';
     address.style.textAlign = 'right';

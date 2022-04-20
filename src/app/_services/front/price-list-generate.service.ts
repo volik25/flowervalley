@@ -20,10 +20,13 @@ import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { PriceList } from '../../_models/static-data/price-list';
 import { STATIC_DATA } from '../../_providers/static-data.provider';
 import { StaticDataService } from '../back/static-data.service';
+import { Header } from '../../_models/static-data/header';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PriceListGenerateService {
   private header!: string[];
+  private headerContent: Header | undefined;
   private content!: any[];
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
   private discount: Discount[] = [];
@@ -40,54 +43,62 @@ export class PriceListGenerateService {
   ) {}
 
   public generatePriceList(categories?: Category[], products?: Product[], text?: PriceList): void {
+    this.hasDiscountColumns = false;
     const headers = ['Товар', 'Упаковка', 'Цена за шт.'];
     const pricesContent: any[] = [];
-    this.discountService.getItems().subscribe((items) => {
-      this.discount = items.filter((item) => item.addToPriceList).sort((a, b) => a.sum - b.sum);
-      if (this.discount.length == 2) {
-        const lowSum = this.priceConvert.transform(this.discount[0].sum, 'none', 'RUB');
-        const highSum = this.priceConvert.transform(this.discount[1].sum, 'none', 'RUB');
-        headers.push(`Малый опт (от ${lowSum})`, `Крупный опт (от ${highSum})`);
-        this.hasDiscountColumns = true;
-      }
-      if (categories && products && text) {
-        categories
-          .sort((a, b) => a.id - b.id)
-          .map((category) => {
-            pricesContent.push([category.name], ...this.sortProducts(products, category));
-          });
-        this.topText = text.textTop;
-        this.bottomText = text.textBottom;
-        this.getPDF(headers, pricesContent);
-      } else {
-        const requests = [
-          this.productService.getItems(),
-          this.catalogService.getItems(),
-          this.staticData.getPriceListText(),
-        ];
-        forkJoin(requests).subscribe(([loadedProducts, loadedCategories, loadedText]) => {
-          (loadedCategories as Category[])
+    this.staticData.getHeaderContent().subscribe((header) => {
+      this.headerContent = header;
+      this.discountService.getItems().subscribe((items) => {
+        this.discount = items.filter((item) => item.addToPriceList).sort((a, b) => a.sum - b.sum);
+        if (this.discount.length == 2) {
+          const lowSum = this.priceConvert.transform(this.discount[0].sum, 'none', 'RUB');
+          const highSum = this.priceConvert.transform(this.discount[1].sum, 'none', 'RUB');
+          headers.push(`Малый опт (от ${lowSum})`, `Крупный опт (от ${highSum})`);
+          this.hasDiscountColumns = true;
+        }
+        if (categories && products && text) {
+          categories
             .sort((a, b) => a.id - b.id)
-            .filter((category) => category.id !== 1)
-            .filter((category) => !category.parentId)
             .map((category) => {
-              pricesContent.push(
-                [category.name],
-                ...this.sortProducts(loadedProducts as Product[], category),
-              );
+              pricesContent.push([category.name], ...this.sortProducts(products, category));
             });
-          this.topText = (loadedText as PriceList).textTop;
-          this.bottomText = (loadedText as PriceList).textBottom;
+          this.topText = text.textTop;
+          this.bottomText = text.textBottom;
           this.getPDF(headers, pricesContent);
-        });
-      }
+        } else {
+          const requests = [
+            this.productService.getItems(),
+            this.catalogService.getItems(),
+            this.staticData.getPriceListText(),
+          ];
+          forkJoin(requests).subscribe(([loadedProducts, loadedCategories, loadedText]) => {
+            (loadedCategories as Category[])
+              .sort((a, b) => a.id - b.id)
+              .filter((category) => category.id !== 1)
+              .filter((category) => !category.parentId)
+              .map((category) => {
+                pricesContent.push(
+                  [category.name],
+                  ...this.sortProducts(loadedProducts as Product[], category),
+                );
+              });
+            this.topText = (loadedText as PriceList).textTop;
+            this.bottomText = (loadedText as PriceList).textBottom;
+            this.getPDF(headers, pricesContent);
+          });
+        }
+      });
     });
   }
 
   private getPDF(header: string[], content: any[]): void {
     this.header = header;
     this.content = content;
-    HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
+    HtmlToPdfService.getBase64ImageFromURL(
+      this.headerContent && this.headerContent.img && environment.production
+        ? this.headerContent.img
+        : 'assets/images/logo.png',
+    ).then((res) => {
       const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
         tableAutoSize: true,
       });
@@ -114,7 +125,11 @@ export class PriceListGenerateService {
 
   private generateHTML(imgSrc: unknown): HTMLElement {
     const div = document.createElement('div');
-    const headerTable = HtmlToPdfService.genHeaderTable(imgSrc, this.hasDiscountColumns);
+    const headerTable = HtmlToPdfService.genHeaderTable(
+      imgSrc,
+      this.hasDiscountColumns,
+      this.headerContent,
+    );
     div.append(headerTable);
     if (this.topText) {
       const topText = this.genTextTable(this.topText);
