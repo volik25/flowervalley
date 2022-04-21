@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
 import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
 import { YaMapService } from '../../../_services/front/ya-map.service';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { ProductItem } from '../../../_models/product-item';
-import { MessageService } from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isFormInvalid } from '../../../_utils/formValidCheck';
 import { Invoice } from '../../../_models/business-pack/invoice';
@@ -26,7 +26,7 @@ import { orderWarnMessage } from '../../../_utils/constants';
   styleUrls: ['./order-confirmation.component.scss'],
   providers: [DestroyService, YaMapService, DocumentGenerateService],
 })
-export class OrderConfirmationComponent {
+export class OrderConfirmationComponent implements OnDestroy {
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
@@ -42,6 +42,8 @@ export class OrderConfirmationComponent {
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
+  public isOrderConfirmed: boolean = false;
+  public message: Message[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -116,19 +118,29 @@ export class OrderConfirmationComponent {
     });
   }
 
+  public ngOnDestroy(): void {
+    if (this.isOrderConfirmed) {
+      this.cartService.clearCart();
+      this.message = [];
+    }
+  }
+
   public deliveryButtonClick(): void {
     this.showDelivery = true;
     this.cdr.detectChanges();
   }
 
   public get isConfirmOrderDisabled(): boolean {
-    if (!this.contacts.getRawValue().address && !this.pickUp.value) return false;
-    return !(this.contacts.getRawValue().address && !this.showDelivery);
+    if (this.contacts.invalid) return true;
+    if (this.contacts.getRawValue().address && !this.pickUp.value) {
+      return !this.showDelivery;
+    }
+    return !(!this.contacts.getRawValue().address && this.pickUp.value);
   }
 
   public confirmOrder(): void {
     if (isFormInvalid(this.contacts)) return;
-    if (!this.isConfirmOrderDisabled) return;
+    if (this.isConfirmOrderDisabled) return;
     const order = this.getOrderData();
     if (this.clientType === 'entity') {
       if (isFormInvalid(this.entityData)) return;
@@ -329,13 +341,16 @@ export class OrderConfirmationComponent {
           formData.append('email', order.clientEmail);
           this.mailService.sendIndividualMail(formData, order).subscribe(() => {
             this.messageService.clear();
-            this.messageService.add({
+            const message: Message = {
               severity: 'success',
               summary: 'Заказ оформлен',
-              detail: `Данные заказа отправлены на почту ${order.clientEmail}`,
+              detail: `Данные заказа №${orderId} отправлены на почту ${order.clientEmail}`,
               life: 10000,
-            });
+              key: 'orderMessage',
+            };
+            this.messageService.add(message);
             this.isInvoiceLoading = false;
+            this.isOrderConfirmed = true;
           });
         });
     });
@@ -365,10 +380,12 @@ export class OrderConfirmationComponent {
           this.messageService.clear();
           this.messageService.add({
             severity: 'success',
-            summary: 'Заявка принята',
+            summary: `Заявка №${orderId} принята`,
             detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}`,
+            life: 10000,
           });
           this.isInvoiceLoading = false;
+          this.isOrderConfirmed = true;
           this.router.navigate(['download-invoice'], {
             relativeTo: this.route,
             queryParams: {

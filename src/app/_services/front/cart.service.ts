@@ -59,6 +59,10 @@ export class CartService {
     return [];
   }
 
+  public inCart(item: ProductItem): boolean {
+    return !!CartService.getCart().find((product) => product.id === item.id);
+  }
+
   public addToCart(item: ProductItem): void {
     const cart = sessionStorage.getItem('cart');
     if (cart) {
@@ -209,7 +213,7 @@ export class CartService {
   private sortCatalog(cart: ProductItem[]): ProductItem[] {
     cart.map((product) => this.setCategory(product));
     // @ts-ignore
-    return cart.sort((a, b) => a.category.id - b.category.id);
+    return cart.sort((a, b) => a.category.id - b.category.id).sort((a, b) => a.name - b.name);
   }
 
   private setCategory(product: ProductItem): ProductItem {

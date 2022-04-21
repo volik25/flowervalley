@@ -114,6 +114,16 @@ $root: '.confirmation';
             font-weight: normal;
             font-size: 14px;
             line-height: 100%;
+            &.blink{
+              -webkit-animation: buttonBlink 2s infinite;
+              animation: buttonBlink 2s infinite;
+              &:hover {
+                animation: none;
+                -webkit-animation: none;
+                background-color: $dark-green;
+                border-color: $dark-green;
+              }
+            }
           }
           .delivery {
             border-radius: 5px;
@@ -203,4 +213,25 @@ $root: '.confirmation';
 
 .top-10 {
   margin-top: 10px;
+}
+
+@-webkit-keyframes buttonBlink {
+  from, to {
+    background-color: $main-green;
+    border-color: $main-green;
+  }
+  50% {
+    background-color: $dark-green;
+    border-color: $dark-green;
+  }
+}
+@keyframes buttonBlink {
+  from, to {
+    background-color: $main-green;
+    border-color: $main-green;
+  }
+  50% {
+    background-color: $dark-green;
+    border-color: $dark-green;
+  }
 }

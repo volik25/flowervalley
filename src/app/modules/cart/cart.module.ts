@@ -27,6 +27,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
     SplitButtonModule,
     TooltipModule,
     CalendarModule,
+    MessagesModule,
   ],
   providers: [BoxGenerateService, PriceConverterPipe],
 })

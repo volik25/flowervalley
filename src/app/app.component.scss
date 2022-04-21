@@ -89,6 +89,13 @@
         background-color: $dark-green;
         color: $white-100;
       }
+      &.disabled {
+        &:hover, &:active {
+          background-color: $whats-app-button;
+          color: $main-green;
+          border-color: $main-green;
+        }
+      }
     }
   }
   &.p-button-cookie {

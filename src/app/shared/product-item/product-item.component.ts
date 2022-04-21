@@ -71,6 +71,10 @@ export class ProductItemComponent {
     }
   }
 
+  public get inCart(): boolean {
+    return this.cartService.inCart(this.product);
+  }
+
   public setCorrectCount(): void {
     if (this.product.count < this.step) {
       this.product.count = this.step;

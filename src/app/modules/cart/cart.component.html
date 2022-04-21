@@ -43,13 +43,20 @@
       </div>
     </div>
   </div>
+  <div class="empty-message">
+    <div *ngIf="!goods.length">Ваша корзина пуста</div>
+    <div *ngIf="goods.length">
+      <p-button
+        styleClass="p-button-danger mb-4"
+        label="Очистить корзину"
+        (onClick)="clearCart()"
+      ></p-button>
+    </div>
+  </div>
   <flower-valley-cart-goods
     *ngIf="goods.length"
     [cartVariables]="cartVariables"
   ></flower-valley-cart-goods>
-  <div *ngIf="!goods.length" class="empty-message">
-    <div>Ваша корзина пуста</div>
-  </div>
   <div class="important" *ngIf="cartContent">
     <div class="important__header">{{ cartContent.bannerTitle }}</div>
     <div class="important__content">

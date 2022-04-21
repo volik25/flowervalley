@@ -48,6 +48,7 @@
           <label for="address">Адрес доставки</label>
           <div class="calculation-result" *ngIf="shippingCost || delivery_error">
             <p-button
+              styleClass="blink"
               *ngIf="!showDelivery && !delivery_error"
               (onClick)="deliveryButtonClick()"
               label="Рассчитать доставку"
@@ -113,12 +114,18 @@
         <a [routerLink]="['/private-policy']">Политики конфиденциальности</a>
       </div>
       <p-button
+        *ngIf="!isOrderConfirmed"
         [loading]="isInvoiceLoading"
         styleClass="confirm-order"
         label="Оформить заказ"
-        pTooltip="Рассчитайте доставку или выберите самовывоз"
-        [tooltipDisabled]="isConfirmOrderDisabled || contacts.invalid"
+        [disabled]="isConfirmOrderDisabled"
         (onClick)="confirmOrder()"
+      ></p-button>
+      <p-button
+        *ngIf="isOrderConfirmed"
+        styleClass="confirm-order"
+        label="Новый заказ"
+        routerLink="/catalog"
       ></p-button>
     </div>
     <div class="confirmation__content_goods">
@@ -131,5 +138,6 @@
       ></flower-valley-confirmation-goods>
     </div>
   </div>
+  <p-messages [(value)]="message" key="orderMessage"></p-messages>
 </div>
 <flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>
