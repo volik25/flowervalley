@@ -13,19 +13,18 @@
 }
 
 ::ng-deep .p-datatable.confirmation {
-  height: 370px;
-  overflow-y: scroll;
-  padding-right: 10px;
-  &::-webkit-scrollbar {
-    width: 3px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: $scrollbar-thumb;
-    border-radius: 80px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: $scrollbar;
-    border-radius: 80px;
+  .p-datatable-wrapper {
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $scrollbar-thumb;
+      border-radius: 80px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: $scrollbar;
+      border-radius: 80px;
+    }
   }
   .p-datatable-thead {
     tr {
@@ -137,7 +136,6 @@
 
 .summary-block {
   border-top: 1px solid $main-green;
-  margin-top: 20px;
   padding-top: 25px;
   display: flex;
   align-items: flex-start;
@@ -159,5 +157,37 @@
       line-height: 100%;
       color: $main-green;
     }
+  }
+}
+
+:host ::ng-deep .p-button {
+  &.blink {
+    margin-top: 20px;
+    padding: 25px;
+    border: 3px solid $main-green;
+    animation: borderBlink 2s infinite;
+    -webkit-animation: borderBlink 2s infinite;
+    &:hover {
+      border-color: transparent;
+      animation: none;
+      -webkit-animation: none;
+    }
+  }
+}
+
+@-webkit-keyframes borderBlink {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: $main-green;
+  }
+}
+@keyframes borderBlink {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: $main-green;
   }
 }

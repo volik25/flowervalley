@@ -10,6 +10,7 @@ import { Cart } from '../../_models/static-data/cart';
 import { LoadingService } from '../../_services/front/loading.service';
 import { forkJoin } from 'rxjs';
 import { CartVariables } from '../../_models/static-data/variables';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-cart',
@@ -27,6 +28,7 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private adminService: AdminService,
     private staticData: StaticDataService,
+    private cs: ConfirmationService,
     private router: Router,
     private ls: LoadingService,
     private _bs: BreadcrumbService,
@@ -53,5 +55,15 @@ export class CartComponent implements OnInit {
 
   public navigateToBoxes(): void {
     this.router.navigate(['admin/boxes']);
+  }
+
+  public clearCart(): void {
+    this.cs.confirm({
+      header: 'Подтвердите действие',
+      message: 'Вы действительно хотите очистить корзину?',
+      accept: () => {
+        this.cartService.clearCart();
+      },
+    });
   }
 }

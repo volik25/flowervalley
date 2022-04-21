@@ -4,6 +4,8 @@
     rowGroupMode="subheader"
     groupRowsBy="category.id"
     styleClass="confirmation"
+    [scrollable]="true"
+    scrollHeight="370px"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -55,6 +57,12 @@
       </tr>
     </ng-template>
   </p-table>
+  <p-button
+    styleClass="ml-3 my-3"
+    label="Добавить товар"
+    icon="pi pi-plus"
+    routerLink="/catalog"
+  ></p-button>
   <div class="summary-block">
     <div class="summary-block__delivery">
       <span>Доставка:</span>
@@ -73,8 +81,7 @@
 
 <p-button
   *ngIf="(pickUp || !!shippingCost) && orderId"
-  [style]="{ 'margin-top': '20px', padding: '25px' }"
-  styleClass="p-button-estimate w-12 flex justify-content-center"
+  styleClass="p-button-estimate w-12 flex justify-content-center blink"
   (onClick)="getInvoice()"
 >
   <ng-template pTemplate="content">
