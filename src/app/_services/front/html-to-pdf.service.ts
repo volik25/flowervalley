@@ -11,6 +11,9 @@ import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { DocumentBox } from '../../_models/box';
 import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
 import { Header } from '../../_models/static-data/header';
+import { Order } from '../../_models/order';
+import { DatePipe } from '@angular/common';
+import { DATE_CONVERT } from '../../_providers/date-convert.provider';
 
 @Injectable({ providedIn: 'root' })
 export class HtmlToPdfService {
@@ -21,11 +24,14 @@ export class HtmlToPdfService {
   private productsSum!: string;
   private discount: string | undefined;
   private sum!: string;
-  private order: number | undefined;
+  private order: Order | undefined;
   private date: string | undefined;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
-  constructor(@Inject(PRICE_CONVERT) private priceConvert: PriceConverterPipe) {}
+  constructor(
+    @Inject(PRICE_CONVERT) private priceConvert: PriceConverterPipe,
+    @Inject(DATE_CONVERT) private dateConvert: DatePipe,
+  ) {}
 
   public getPDF(
     isClient: boolean,
@@ -35,7 +41,7 @@ export class HtmlToPdfService {
     boxes: DocumentBox[],
     productsSum: string,
     sum: string,
-    orderNumber?: number,
+    order?: Order,
     date?: string,
     discount?: string,
     isOpened: boolean = true,
@@ -46,7 +52,7 @@ export class HtmlToPdfService {
     this.boxes = boxes;
     this.productsSum = productsSum;
     this.sum = sum;
-    this.order = orderNumber;
+    this.order = order;
     this.date = date;
     this.discount = discount;
     if (isClient) {
@@ -70,7 +76,7 @@ export class HtmlToPdfService {
       });
       const documentDefinition = {
         content: html,
-        info: { title: `Смета по заказу №${orderNumber}` },
+        info: { title: `Смета к заказу №${order?.id}` },
       };
       const document = pdfMake.createPdf(documentDefinition);
       if (isOpened) document.open();
@@ -93,18 +99,17 @@ export class HtmlToPdfService {
       div.append(h1);
     }
     const h2 = document.createElement('h2');
-    h2.innerText = 'Смета по заказу';
-    if (this.order) {
-      h2.innerText += ` №${this.order}`;
+    h2.innerText = 'Смета к заказу';
+    if (this.order && this.order.id) {
+      h2.innerText += ` №${this.order.id}`;
     }
     h2.style.textAlign = 'center';
     h2.style.margin = '0 0 20px 0';
     div.append(h2);
     const table = this.genMainTable();
     div.append(table);
-    const products = document.createElement('div');
-    products.innerHTML = 'Стоимость товаров: ' + this.productsSum;
-    div.append(products);
+    const clientBlock = this.genClientBlock();
+    div.append(clientBlock);
     if (this.discount) {
       const discount = document.createElement('div');
       discount.innerHTML = 'Учтена скидка: ' + this.discount;
@@ -212,21 +217,30 @@ export class HtmlToPdfService {
     const tHead = table.createTHead();
     const tBody = table.createTBody();
     const headerRow = tHead.insertRow(0);
+    const number = headerRow.insertCell(0);
+    number.innerHTML = '№';
+    number.style.width = '2%';
+    number.style.textAlign = 'center';
     for (let i = 0; i < this.header.length; i++) {
-      const cell = headerRow.insertCell(i);
+      const cell = headerRow.insertCell(i + 1);
       cell.innerHTML = this.header[i];
       if (i === 0) {
         cell.style.width = '50%';
       } else {
-        cell.style.width = '16.6%';
+        cell.style.width = '16%';
         cell.style.textAlign = 'center';
       }
     }
+    let index = 1;
     for (let i = 0; i < this.content.length; i++) {
       const abstractRow = this.content[i];
       const bodyRow = tBody.insertRow(i);
+      const indexCell = bodyRow.insertCell(0);
+      indexCell.innerHTML = index.toString();
+      indexCell.style.textAlign = 'center';
+      index++;
       for (let j = 0; j < abstractRow.length; j++) {
-        const cell = bodyRow.insertCell(j);
+        const cell = bodyRow.insertCell(j + 1);
         switch (j) {
           case 1:
           case 3:
@@ -241,49 +255,102 @@ export class HtmlToPdfService {
         }
       }
     }
-    let index = this.content.length;
+    let rowIndex = this.content.length;
     for (let i = 0; i < this.boxes.length; i++) {
       const abstractRow = this.boxes[i];
-      const bodyRow = tBody.insertRow(index);
-      index++;
+      const bodyRow = tBody.insertRow(rowIndex);
+      rowIndex++;
       const box = [
+        index.toString(),
         abstractRow.name,
         this.priceConvert.transform(abstractRow.price, 'two', 'none'),
         abstractRow.count,
         this.priceConvert.transform(abstractRow.price * abstractRow.count, 'two', 'none'),
       ];
+      index++;
       for (let j = 0; j < box.length; j++) {
         const cell = bodyRow.insertCell(j);
         cell.innerHTML = box[j].toString();
-        if (j > 0) {
+        if (j > 1) {
           cell.style.textAlign = 'right';
+        }
+        if (j === 0) {
+          cell.style.textAlign = 'center';
         }
       }
     }
     if (this.delivery !== '0.00') {
-      const deliveryRow = tBody.insertRow(index);
+      const deliveryRow = tBody.insertRow(rowIndex);
+      rowIndex++;
+      const delivery = [index.toString(), 'Доставка', this.delivery, '1', this.delivery];
       index++;
-      const delivery = ['Доставка', this.delivery, '1', this.delivery];
-      for (let i = 0; i < this.header.length; i++) {
+      for (let i = 0; i < this.header.length + 1; i++) {
         const cell = deliveryRow.insertCell(i);
         cell.innerHTML = delivery[i];
-        if (i > 0) {
+        if (i > 1) {
           cell.style.textAlign = 'right';
+        }
+        if (i === 0) {
+          cell.style.textAlign = 'center';
         }
       }
     }
-    const amountRow = tBody.insertRow(index);
-    const amountArray = ['', '', 'ИТОГО', this.sum];
-    for (let i = 0; i < this.header.length; i++) {
+    const amountRow = tBody.insertRow(rowIndex);
+    const amountArray = ['', '', '', 'ИТОГО', this.sum];
+    for (let i = 0; i < this.header.length + 1; i++) {
       const cell = amountRow.insertCell(i);
       cell.innerHTML = amountArray[i];
-      if (i === 2) {
+      if (i === 3) {
         cell.style.fontWeight = 'bold';
       } else {
         cell.style.textAlign = 'right';
       }
+      cell.style.verticalAlign = 'middle';
     }
     return table;
+  }
+
+  private genClientBlock(): HTMLTableElement {
+    const clientInfo: string[][] = [];
+    if (this.order) {
+      clientInfo.push(
+        ['ФИО', this.order.clientName],
+        ['Email', this.order.clientEmail],
+        ['Телефон', this.order.clientPhone],
+      );
+      if (this.order?.clientAddress !== 'Самовывоз') {
+        clientInfo.push(['Адрес доставки:', this.order.clientAddress]);
+      }
+      if (this.order && this.order.deliveryWishDateFrom) {
+        const dateFrom = this.dateConvert.transform(this.order.deliveryWishDateFrom, 'dd.MM.yyyy');
+        const dateTo = this.dateConvert.transform(this.order.deliveryWishDateTo, 'dd.MM.yyyy');
+        clientInfo.push([
+          'Дата поставки:',
+          `${dateFrom}${this.order.deliveryWishDateTo ? '-' + dateTo : ''}`,
+        ]);
+      }
+    }
+    const clientTable: HTMLTableElement = document.createElement('table');
+    clientTable.style.border = '0';
+    const htHead = clientTable.createTHead();
+    const htBody = clientTable.createTBody();
+    const row = htHead.insertRow(0);
+    const leftCol = row.insertCell(0);
+    const rightCol = row.insertCell(1);
+    leftCol.style.width = '30%';
+    leftCol.style.border = '0';
+    rightCol.style.width = '60%';
+    rightCol.style.border = '0';
+    for (let i = 0; i < clientInfo.length; i++) {
+      const abstractRow = clientInfo[i];
+      const bodyRow = htBody.insertRow(i);
+      for (let j = 0; j < abstractRow.length; j++) {
+        const cell = bodyRow.insertCell(j);
+        cell.innerHTML = abstractRow[j].toString();
+        cell.style.border = '0';
+      }
+    }
+    return clientTable;
   }
 
   public getGeneratedDocument(): Observable<Blob> {

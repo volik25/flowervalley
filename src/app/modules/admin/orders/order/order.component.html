@@ -172,6 +172,10 @@
         <div>Сумма заказа:</div>
         <div>{{ getOrderSum() | priceConverter }}</div>
       </div>
+      <div class="order__header_comment" *ngIf="order.comment">
+        <div>Комментарий:</div>
+        <div>{{ order.comment }}</div>
+      </div>
     </div>
     <div class="order__client">
       <div class="order__client_name">

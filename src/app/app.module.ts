@@ -36,6 +36,8 @@ import { DISCOUNT } from './_providers/discount.provider';
 import { DiscountService } from './_services/back/discount.service';
 import { STATIC_DATA } from './_providers/static-data.provider';
 import { StaticDataService } from './_services/back/static-data.service';
+import { DATE_CONVERT } from './_providers/date-convert.provider';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,10 @@ import { StaticDataService } from './_services/back/static-data.service';
     {
       provide: DISCOUNT,
       useClass: DiscountService,
+    },
+    {
+      provide: DATE_CONVERT,
+      useClass: DatePipe,
     },
   ],
   bootstrap: [AppComponent],

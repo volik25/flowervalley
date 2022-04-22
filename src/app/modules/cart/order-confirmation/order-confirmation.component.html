@@ -105,6 +105,16 @@
         </p-calendar>
         <label for="range">Желаемая дата поставки (самовывоза)</label>
       </span>
+      <span class="p-float-label">
+        <textarea
+          id="textarea"
+          rows="3"
+          style="resize: none"
+          [formControl]="comment"
+          pInputTextarea
+        ></textarea>
+        <label for="textarea">Комментарий к заказу</label>
+      </span>
       <flower-valley-entity-form
         *ngIf="clientType === 'entity'"
         (dataChanges)="entityDataChanges($event)"
@@ -132,7 +142,7 @@
       <flower-valley-confirmation-goods
         [pickUp]="pickUp.value"
         [goods]="goods"
-        [orderId]="orderId"
+        [order]="order"
         [shippingCost]="showDelivery ? shippingCost || 0 : 0"
         (orderSum)="setOrderSum($event)"
       ></flower-valley-confirmation-goods>

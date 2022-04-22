@@ -35,7 +35,7 @@ import { DocumentBox } from '../../../../_models/box';
   ],
 })
 export class OrderComponent implements OnInit {
-  public orderId: number = 0;
+  public orderId?: number;
   public confirmedDate: FormControl;
   public currentDate = new Date();
   public clientEntity: Firm | undefined;
@@ -66,51 +66,53 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const orderSub = this.orderService.getItemById<Order>(this.orderId).subscribe((order) => {
-      this.order = {
-        ...order,
-        confirmedDeliveryDate: order.confirmedDeliveryDate
-          ? this.dateConverter.convert(order.confirmedDeliveryDate)
-          : undefined,
-        deliveryWishDateFrom: order.deliveryWishDateFrom
-          ? this.dateConverter.convert(order.deliveryWishDateFrom)
-          : undefined,
-        deliveryWishDateTo: order.deliveryWishDateTo
-          ? this.dateConverter.convert(order.deliveryWishDateTo)
-          : undefined,
-      };
-      let orderDiscount: OrderDiscount = {
-        value: 0,
-        percent: 0,
-      };
-      this.order.products.map((product) => {
-        const discount = product.product.price - product.price;
-        if (discount > 0) {
-          orderDiscount.value += discount * product.count;
-        }
-      });
-      if (orderDiscount) {
-        this.orderDiscount = orderDiscount;
-        this.orderDiscount.percent = Math.round(
-          (this.orderDiscount.value / (this.orderDiscount.value + this.order.orderSum)) * 100,
-        );
-      }
-      if (this.order.deliveryWishDateFrom) {
-        this.confirmedDate.setValue(
-          // @ts-ignore
-          new Date(this.dateConverter.convert(order.deliveryWishDateFrom)),
-        );
-      }
-      if (this.order.clientId) {
-        const bpSub = this.bpService.getFirmById(this.order.clientId).subscribe((firm) => {
-          this.clientEntity = firm;
-          this.ls.removeSubscription(bpSub);
+    if (this.orderId) {
+      const orderSub = this.orderService.getItemById<Order>(this.orderId).subscribe((order) => {
+        this.order = {
+          ...order,
+          confirmedDeliveryDate: order.confirmedDeliveryDate
+            ? this.dateConverter.convert(order.confirmedDeliveryDate)
+            : undefined,
+          deliveryWishDateFrom: order.deliveryWishDateFrom
+            ? this.dateConverter.convert(order.deliveryWishDateFrom)
+            : undefined,
+          deliveryWishDateTo: order.deliveryWishDateTo
+            ? this.dateConverter.convert(order.deliveryWishDateTo)
+            : undefined,
+        };
+        let orderDiscount: OrderDiscount = {
+          value: 0,
+          percent: 0,
+        };
+        this.order.products.map((product) => {
+          const discount = product.product.price - product.price;
+          if (discount > 0) {
+            orderDiscount.value += discount * product.count;
+          }
         });
-        this.ls.addSubscription(bpSub);
-      }
-      this.ls.removeSubscription(orderSub);
-    });
-    this.ls.addSubscription(orderSub);
+        if (orderDiscount) {
+          this.orderDiscount = orderDiscount;
+          this.orderDiscount.percent = Math.round(
+            (this.orderDiscount.value / (this.orderDiscount.value + this.order.orderSum)) * 100,
+          );
+        }
+        if (this.order.deliveryWishDateFrom) {
+          this.confirmedDate.setValue(
+            // @ts-ignore
+            new Date(this.dateConverter.convert(order.deliveryWishDateFrom)),
+          );
+        }
+        if (this.order.clientId) {
+          const bpSub = this.bpService.getFirmById(this.order.clientId).subscribe((firm) => {
+            this.clientEntity = firm;
+            this.ls.removeSubscription(bpSub);
+          });
+          this.ls.addSubscription(bpSub);
+        }
+        this.ls.removeSubscription(orderSub);
+      });
+      this.ls.addSubscription(orderSub);
+    }
   }
 
   public saveOrder(): void {
@@ -241,7 +243,7 @@ export class OrderComponent implements OnInit {
         this.getDocumentBoxes(),
         this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
         this.priceConvert.transform(this.getOrderSum(), 'two', 'none'),
-        this.orderId,
+        this.order,
         this.dateConvert.transform(this.order.confirmedDeliveryDate, 'dd.MM.yyyy HH:mm'),
         this.orderDiscount && this.orderDiscount.value
           ? this.priceConvert.transform(this.orderDiscount.value, 'two', 'rub')
@@ -371,7 +373,7 @@ export class OrderComponent implements OnInit {
     const orderId = this.order.id;
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
       const docSub = this.documentService
-        .getEstimate(order, orderId, this.orderDiscount?.value)
+        .getEstimate(order, this.orderDiscount?.value)
         .subscribe((file) => {
           docSub.unsubscribe();
           const formData = new FormData();

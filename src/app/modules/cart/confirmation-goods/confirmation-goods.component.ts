@@ -8,6 +8,7 @@ import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
 import { BoxItem } from '../../../_models/box-item';
 import { EstimateGenerateService } from '../../../_services/front/estimate-generate.service';
 import { DocumentBox } from '../../../_models/box';
+import { Order } from '../../../_models/order';
 
 @Component({
   selector: 'flower-valley-confirmation-goods',
@@ -20,7 +21,7 @@ export class ConfirmationGoodsComponent {
   public goods: ProductItem[] = [];
   public boxes: BoxItem[] = [];
   @Input()
-  public orderId: number | undefined;
+  public order: Order | undefined;
   @Input()
   public shippingCost = 0;
   @Input()
@@ -101,13 +102,20 @@ export class ConfirmationGoodsComponent {
   }
 
   public getInvoice(): void {
-    this.estimateGenerate.getClientPDF(
-      this.goods.map((goods) => [goods.name, goods.price, goods.count, goods.price * goods.count]),
-      this.priceConvert.transform(this.shippingCost, 'two', 'rub'),
-      this.getBoxes(),
-      this.priceConvert.transform(this.productsSum, 'two', 'rub'),
-      this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
-      this.orderId,
-    );
+    if (this.order) {
+      this.estimateGenerate.getClientPDF(
+        this.goods.map((goods) => [
+          goods.name,
+          goods.price,
+          goods.count,
+          goods.price * goods.count,
+        ]),
+        this.priceConvert.transform(this.order.deliveryPrice, 'two', 'none'),
+        this.getBoxes(),
+        this.priceConvert.transform(this.productsSum, 'two', 'rub'),
+        this.priceConvert.transform(this.getOrderSum(), 'two', 'rub'),
+        this.order,
+      );
+    }
   }
 }
