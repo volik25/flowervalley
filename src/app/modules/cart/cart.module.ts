@@ -28,6 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { MessagesModule } from 'primeng/messages';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { MessagesModule } from 'primeng/messages';
     TooltipModule,
     CalendarModule,
     MessagesModule,
+    InputTextareaModule,
   ],
   providers: [BoxGenerateService, PriceConverterPipe],
 })

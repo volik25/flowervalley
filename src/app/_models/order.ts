@@ -12,6 +12,7 @@ export interface Order {
   clientPhone: string;
   clientEmail: string;
   clientAddress: string;
+  comment?: string;
   deliveryPrice: number;
   orderDate: Date;
   orderSum: number;

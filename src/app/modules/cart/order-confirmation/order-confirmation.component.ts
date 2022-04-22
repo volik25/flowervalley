@@ -31,6 +31,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
   public deliveryDate: FormControl;
+  public comment: FormControl;
   public currentDate = new Date();
   public contacts: FormGroup;
   public entityData!: FormGroup;
@@ -39,6 +40,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   public delivery_error: string = '';
   public showDelivery = false;
   public orderId: number | undefined;
+  public order: Order | undefined;
   public telepakId: string | undefined;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
@@ -63,6 +65,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   ) {
     this.pickUp = fb.control(false);
     this.deliveryDate = fb.control(null);
+    this.comment = fb.control('');
     this.contacts = fb.group({
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
@@ -70,6 +73,7 @@ export class OrderConfirmationComponent implements OnDestroy {
       address: [''],
       deliveryWishDateFrom: [''],
       deliveryWishDateTo: [''],
+      comment: [''],
       orderSum: [null, Validators.required],
     });
     this.contacts.controls['address'].valueChanges
@@ -112,6 +116,9 @@ export class OrderConfirmationComponent implements OnDestroy {
     this.deliveryDate.valueChanges.subscribe((dates: Date[] | null) => {
       this.contacts.controls['deliveryWishDateFrom'].setValue(dates ? dates[0] : null);
       this.contacts.controls['deliveryWishDateTo'].setValue(dates ? dates[0] : null);
+    });
+    this.comment.valueChanges.subscribe((comment: string) => {
+      this.contacts.controls['comment'].setValue(comment);
     });
     this.cartService.cartUpdate().subscribe((goods) => {
       this.goods = goods;
@@ -310,6 +317,7 @@ export class OrderConfirmationComponent implements OnDestroy {
       clientName: contacts.name,
       clientPhone: contacts.phone,
       clientAddress: contacts.address ? contacts.address : 'Самовывоз',
+      comment: contacts.comment,
       deliveryWishDateFrom: contacts.deliveryWishDateFrom
         ? contacts.deliveryWishDateFrom.toISOString()
         : null,
@@ -331,8 +339,9 @@ export class OrderConfirmationComponent implements OnDestroy {
 
   private sendIndividualMail(orderId: number): void {
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
+      this.order = order;
       const docSub = this.documentService
-        .getEstimate(order, orderId, this.cartService.discountSum)
+        .getEstimate(order, this.cartService.discountSum)
         .subscribe((file) => {
           docSub.unsubscribe();
           const formData = new FormData();
