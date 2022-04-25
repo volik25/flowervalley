@@ -81,13 +81,8 @@
     <div class="boxes__title">Коробка транспортировочная</div>
     <div class="boxes__content">
       <div class="boxes__content_text">
-        <span
-          >У нас вы можете заказать коробки, они подсчитыются автоматически исходя из вашего
-          заказа</span
-        >
-        <span *ngIf="boxes.length"
-          >! Коробки нужны для сохранения микроклимата растений при транспортировке</span
-        >
+        <span>{{ cartContent?.boxesTitle }}</span>
+        <span *ngIf="boxes.length">{{ cartContent?.boxesNotice }}</span>
       </div>
       <div class="boxes__content_button">
         <p-button
@@ -146,9 +141,7 @@
   <div class="summary-block">
     <div class="summary-block__info">
       <div>
-        Оплата заказа возможна после подтверждения нашими менеджерами. Оплату можно осуществить как
-        за наличный так и за безналичный расчет. Для выставления вам счета, просьба прислать
-        реквизиты компании. Если требуется, заключаем договор поставки.
+        {{ cartContent?.paymentInfo }}
       </div>
     </div>
     <div class="summary-block__summary">

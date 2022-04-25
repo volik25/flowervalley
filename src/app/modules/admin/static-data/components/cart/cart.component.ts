@@ -39,6 +39,9 @@ export class CartComponent implements OnInit {
       mail: fb.array([fb.control('', Validators.required)]),
       callText: ['', Validators.required],
       writeText: ['', Validators.required],
+      boxesTitle: ['', Validators.required],
+      boxesNotice: ['', Validators.required],
+      paymentInfo: ['', Validators.required],
       bannerTitle: ['', Validators.required],
       leftBannerBlock: fb.group({
         title: ['', Validators.required],

@@ -99,6 +99,8 @@
           </div>
           <div class="button">
             <p-button
+              *ngIf="!isInCartShow"
+              styleClass="add-to-cart"
               (onClick)="addToCart()"
               [disabled]="category ? category.isBlocked : true"
               pTooltip="Временно нет в наличии"
@@ -112,6 +114,12 @@
                   width="15px"
                 ></p-image>
                 <span>В корзину</span>
+              </ng-template>
+            </p-button>
+            <p-button *ngIf="isInCartShow" styleClass="p-button-outlined disabled">
+              <ng-template pTemplate="content">
+                <span>Товар в корзине</span>
+                <i class="pi pi-check ml-2"></i>
               </ng-template>
             </p-button>
           </div>

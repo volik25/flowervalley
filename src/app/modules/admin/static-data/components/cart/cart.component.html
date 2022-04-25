@@ -117,6 +117,26 @@
       ></p-button>
     </div>
   </div>
+  <span class="p-float-label">
+    <input type="text" id="boxesTitle" pInputText formControlName="boxesTitle" />
+    <label for="boxesTitle">Заголовок расчета коробок</label>
+  </span>
+  <span class="p-float-label">
+    <input type="text" id="boxesNotice" pInputText formControlName="boxesNotice" />
+    <label for="boxesNotice">Уведомление расчета коробок</label>
+  </span>
+  <span class="p-float-label">
+    <textarea
+      type="text"
+      id="paymentInfo"
+      [rows]="7"
+      [cols]="30"
+      [autoResize]="true"
+      pInputTextarea
+      formControlName="paymentInfo"
+    ></textarea>
+    <label for="paymentInfo">Порядок оплаты</label>
+  </span>
   <h2>Баннер</h2>
   <span class="p-float-label">
     <input type="text" id="bannerTitle" pInputText formControlName="bannerTitle" />

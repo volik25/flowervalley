@@ -80,7 +80,6 @@
 </p-card>
 
 <p-button
-  *ngIf="(pickUp || !!shippingCost) && order?.id"
   styleClass="p-button-estimate w-12 flex justify-content-center blink"
   (onClick)="getInvoice()"
 >

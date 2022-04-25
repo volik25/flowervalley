@@ -217,7 +217,7 @@ $root: '.product';
             }
           }
           .button {
-            ::ng-deep .p-button {
+            ::ng-deep .p-button.add-to-cart {
               span {
                 font-weight: 500;
                 font-size: 16px;

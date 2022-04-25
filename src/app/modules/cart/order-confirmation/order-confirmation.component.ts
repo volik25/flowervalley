@@ -340,28 +340,26 @@ export class OrderConfirmationComponent implements OnDestroy {
   private sendIndividualMail(orderId: number): void {
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
       this.order = order;
-      const docSub = this.documentService
-        .getEstimate(order, this.cartService.discountSum)
-        .subscribe((file) => {
-          docSub.unsubscribe();
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('orderId', orderId.toString());
-          formData.append('email', order.clientEmail);
-          this.mailService.sendIndividualMail(formData, order).subscribe(() => {
-            this.messageService.clear();
-            const message: Message = {
-              severity: 'success',
-              summary: 'Заказ оформлен',
-              detail: `Данные заказа №${orderId} отправлены на почту ${order.clientEmail}`,
-              life: 10000,
-              key: 'orderMessage',
-            };
-            this.messageService.add(message);
-            this.isInvoiceLoading = false;
-            this.isOrderConfirmed = true;
-          });
+      const docSub = this.documentService.getEstimate(order).subscribe((file) => {
+        docSub.unsubscribe();
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('orderId', orderId.toString());
+        formData.append('email', order.clientEmail);
+        this.mailService.sendIndividualMail(formData, order).subscribe(() => {
+          this.messageService.clear();
+          const message: Message = {
+            severity: 'success',
+            summary: 'Заказ оформлен',
+            detail: `Данные заказа №${orderId} отправлены на почту ${order.clientEmail}`,
+            life: 10000,
+            key: 'orderMessage',
+          };
+          this.messageService.add(message);
+          this.isInvoiceLoading = false;
+          this.isOrderConfirmed = true;
         });
+      });
     });
   }
 
