@@ -39,6 +39,7 @@ export class ProductItemComponent {
     this._category = value;
   }
   private _category: any;
+  public isInCartShow: boolean = false;
 
   @Output()
   public openProductCard: EventEmitter<any> = new EventEmitter<any>();
@@ -61,6 +62,10 @@ export class ProductItemComponent {
       initialPrice = this.discount;
     }
     this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
+    this.isInCartShow = true;
+    setTimeout(() => {
+      this.isInCartShow = false;
+    }, 3000);
   }
 
   public get step(): number {
@@ -69,10 +74,6 @@ export class ProductItemComponent {
     } else {
       return 1;
     }
-  }
-
-  public get inCart(): boolean {
-    return this.cartService.inCart(this.product);
   }
 
   public setCorrectCount(): void {

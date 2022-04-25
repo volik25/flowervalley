@@ -11,7 +11,7 @@ import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { DocumentBox } from '../../_models/box';
 import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
 import { Header } from '../../_models/static-data/header';
-import { Order } from '../../_models/order';
+import { Order, OrderDiscount } from '../../_models/order';
 import { DatePipe } from '@angular/common';
 import { DATE_CONVERT } from '../../_providers/date-convert.provider';
 
@@ -22,7 +22,6 @@ export class HtmlToPdfService {
   private delivery!: string;
   private boxes!: DocumentBox[];
   private productsSum!: string;
-  private discount: string | undefined;
   private sum!: string;
   private order: Order | undefined;
   private date: string | undefined;
@@ -43,7 +42,6 @@ export class HtmlToPdfService {
     sum: string,
     order?: Order,
     date?: string,
-    discount?: string,
     isOpened: boolean = true,
   ): void {
     this.header = header;
@@ -54,7 +52,6 @@ export class HtmlToPdfService {
     this.sum = sum;
     this.order = order;
     this.date = date;
-    this.discount = discount;
     if (isClient) {
       HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
         const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
@@ -88,10 +85,8 @@ export class HtmlToPdfService {
 
   private generateHTML(imgSrc?: unknown): HTMLElement {
     const div = document.createElement('div');
-    if (imgSrc) {
-      const headerTable = HtmlToPdfService.genHeaderTable(imgSrc);
-      div.append(headerTable);
-    }
+    const clientBlock = this.genClientBlock();
+    div.append(clientBlock);
     if (this.date) {
       const h1 = document.createElement('h1');
       h1.innerText = `ВЫДАЧА ЗАКАЗА: ${this.date}`;
@@ -106,15 +101,19 @@ export class HtmlToPdfService {
     h2.style.textAlign = 'center';
     h2.style.margin = '0 0 20px 0';
     div.append(h2);
+    const discount = this.calculateDiscount();
+    if (discount) {
+      const discountBlock = document.createElement('div');
+      discountBlock.innerHTML = `Скидка на цветы: ${discount}%`;
+      discountBlock.style.marginBottom = '10px';
+      discountBlock.style.textAlign = 'right';
+      div.append(discountBlock);
+    }
     const table = this.genMainTable();
     div.append(table);
-    const clientBlock = this.genClientBlock();
-    div.append(clientBlock);
-    if (this.discount) {
-      const discount = document.createElement('div');
-      discount.innerHTML = 'Учтена скидка: ' + this.discount;
-      discount.style.marginBottom = '10px';
-      div.append(discount);
+    if (imgSrc) {
+      const headerTable = HtmlToPdfService.genHeaderTable(imgSrc);
+      div.append(headerTable);
     }
     return div;
   }
@@ -296,12 +295,16 @@ export class HtmlToPdfService {
       }
     }
     const amountRow = tBody.insertRow(rowIndex);
-    const amountArray = ['', '', '', 'ИТОГО', this.sum];
+    const amountArray = ['', '', 'ИТОГО', this.sum];
     for (let i = 0; i < this.header.length + 1; i++) {
       const cell = amountRow.insertCell(i);
       cell.innerHTML = amountArray[i];
       if (i === 3) {
+        cell.colSpan = 2;
+      }
+      if (i === 2) {
         cell.style.fontWeight = 'bold';
+        cell.style.textAlign = 'center';
       } else {
         cell.style.textAlign = 'right';
       }
@@ -321,11 +324,11 @@ export class HtmlToPdfService {
       if (this.order?.clientAddress !== 'Самовывоз') {
         clientInfo.push(['Адрес доставки:', this.order.clientAddress]);
       }
-      if (this.order && this.order.deliveryWishDateFrom) {
+      if (this.order && this.order.deliveryWishDateFrom && !this.date) {
         const dateFrom = this.dateConvert.transform(this.order.deliveryWishDateFrom, 'dd.MM.yyyy');
         const dateTo = this.dateConvert.transform(this.order.deliveryWishDateTo, 'dd.MM.yyyy');
         clientInfo.push([
-          'Дата поставки:',
+          'Дата доставки:',
           `${dateFrom}${this.order.deliveryWishDateTo ? '-' + dateTo : ''}`,
         ]);
       }
@@ -337,7 +340,7 @@ export class HtmlToPdfService {
     const row = htHead.insertRow(0);
     const leftCol = row.insertCell(0);
     const rightCol = row.insertCell(1);
-    leftCol.style.width = '30%';
+    leftCol.style.width = '40%';
     leftCol.style.border = '0';
     rightCol.style.width = '60%';
     rightCol.style.border = '0';
@@ -347,6 +350,9 @@ export class HtmlToPdfService {
       for (let j = 0; j < abstractRow.length; j++) {
         const cell = bodyRow.insertCell(j);
         cell.innerHTML = abstractRow[j].toString();
+        if (i === 4) {
+          cell.style.fontSize = '30px';
+        }
         cell.style.border = '0';
       }
     }
@@ -355,5 +361,28 @@ export class HtmlToPdfService {
 
   public getGeneratedDocument(): Observable<Blob> {
     return this._generatedDocument.asObservable();
+  }
+
+  private calculateDiscount(): number {
+    let orderDiscount: OrderDiscount = {
+      value: 0,
+      percent: 0,
+    };
+    let productSum: number = 0;
+    if (this.order) {
+      this.order.products.map((product) => {
+        const discount = product.product.price - product.price;
+        if (discount > 0) {
+          orderDiscount.value += discount * product.count;
+        }
+        productSum += product.price * product.count;
+      });
+      if (orderDiscount) {
+        orderDiscount.percent = Math.round(
+          (orderDiscount.value / (orderDiscount.value + productSum)) * 100,
+        );
+      }
+    }
+    return orderDiscount.percent;
   }
 }

@@ -11,6 +11,9 @@ export interface Cart {
   leftBannerBlock: BannerBlock;
   centerBannerBlock: BannerBlock;
   rightBannerBlock: BannerBlock;
+  boxesTitle: string;
+  boxesNotice: string;
+  paymentInfo: string;
 }
 
 export interface BannerBlock {
@@ -31,4 +34,7 @@ export enum CartEnum {
   leftBannerBlock,
   centerBannerBlock,
   rightBannerBlock,
+  boxesTitle = 58,
+  boxesNotice,
+  paymentInfo,
 }

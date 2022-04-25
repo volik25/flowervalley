@@ -4,6 +4,7 @@ import { BoxGenerateService } from '../../../_services/front/box-generate.servic
 import { Box } from '../../../_models/box';
 import { ProductItem } from '../../../_models/product-item';
 import { CartVariables } from '../../../_models/static-data/variables';
+import { Cart } from '../../../_models/static-data/cart';
 
 @Component({
   selector: 'flower-valley-cart-goods',
@@ -13,6 +14,8 @@ import { CartVariables } from '../../../_models/static-data/variables';
 export class CartGoodsComponent {
   @Input()
   public cartVariables: CartVariables | undefined;
+  @Input()
+  public cartContent: Cart | undefined;
   public goods: ProductItem[] = [];
   public boxes: Box[] = [];
   public isLoading: boolean = false;

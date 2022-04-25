@@ -55,7 +55,7 @@
         <div *ngIf="order.confirmedDeliveryDate">
           <p-inplace #inplace>
             <ng-template pTemplate="display">
-              {{ order.confirmedDeliveryDate | date: 'dd.MM.yyyy HH:mm' }}
+              {{ order.confirmedDeliveryDate | date: 'dd.MM.yyyy' }}
             </ng-template>
             <ng-template pTemplate="content">
               <div class="flex align-items-center">
@@ -64,9 +64,7 @@
                     #calendar
                     [(ngModel)]="order.confirmedDeliveryDate"
                     [firstDayOfWeek]="1"
-                    [minDate]="order.deliveryWishDateFrom || calendar.minDate"
-                    [maxDate]="order.deliveryWishDateTo || calendar.maxDate"
-                    [showTime]="true"
+                    [showTime]="false"
                     [showSeconds]="false"
                     dateFormat="dd.mm.yy"
                     [readonlyInput]="true"
@@ -92,9 +90,7 @@
                   #calendar
                   [formControl]="confirmedDate"
                   [firstDayOfWeek]="1"
-                  [minDate]="order.deliveryWishDateFrom || calendar.minDate"
-                  [maxDate]="order.deliveryWishDateTo || calendar.maxDate"
-                  [showTime]="true"
+                  [showTime]="false"
                   [showSeconds]="false"
                   dateFormat="dd.mm.yy"
                   [readonlyInput]="true"

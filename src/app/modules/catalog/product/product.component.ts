@@ -34,6 +34,7 @@ export class ProductComponent implements OnInit {
 
   public displayCustom: boolean = false;
   public activeIndex: number = 0;
+  public isInCartShow: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -123,6 +124,10 @@ export class ProductComponent implements OnInit {
     }
     // @ts-ignore
     this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
+    this.isInCartShow = true;
+    setTimeout(() => {
+      this.isInCartShow = false;
+    }, 3000);
   }
 
   public get discount(): number | null {

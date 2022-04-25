@@ -50,7 +50,7 @@ export class DocumentGenerateService {
     );
   }
 
-  public getEstimate(order: Order, discount?: number): Observable<File> {
+  public getEstimate(order: Order): Observable<File> {
     const boxes: DocumentBox[] = [];
     let productsSum = 0;
     order.boxes.map((box) => {
@@ -74,7 +74,6 @@ export class DocumentGenerateService {
         this.priceConvert.transform(productsSum, 'two', 'rub'),
         this.priceConvert.transform(order.orderSum, 'two', 'none'),
         order,
-        discount ? this.priceConvert.transform(discount, 'two', 'rub') : undefined,
         false,
       )
       .pipe(

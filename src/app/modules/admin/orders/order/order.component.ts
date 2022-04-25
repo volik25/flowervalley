@@ -84,16 +84,18 @@ export class OrderComponent implements OnInit {
           value: 0,
           percent: 0,
         };
+        let productsSum: number = 0;
         this.order.products.map((product) => {
           const discount = product.product.price - product.price;
           if (discount > 0) {
             orderDiscount.value += discount * product.count;
           }
+          productsSum += product.price * product.count;
         });
         if (orderDiscount) {
           this.orderDiscount = orderDiscount;
           this.orderDiscount.percent = Math.round(
-            (this.orderDiscount.value / (this.orderDiscount.value + this.order.orderSum)) * 100,
+            (this.orderDiscount.value / (this.orderDiscount.value + productsSum)) * 100,
           );
         }
         if (this.order.deliveryWishDateFrom) {
@@ -244,10 +246,7 @@ export class OrderComponent implements OnInit {
         this.priceConvert.transform(this.getProductsSum(), 'two', 'rub'),
         this.priceConvert.transform(this.getOrderSum(), 'two', 'none'),
         this.order,
-        this.dateConvert.transform(this.order.confirmedDeliveryDate, 'dd.MM.yyyy HH:mm'),
-        this.orderDiscount && this.orderDiscount.value
-          ? this.priceConvert.transform(this.orderDiscount.value, 'two', 'rub')
-          : null,
+        this.dateConvert.transform(this.order.confirmedDeliveryDate, 'dd.MM.yyyy'),
       );
     }
   }
@@ -372,23 +371,21 @@ export class OrderComponent implements OnInit {
     // @ts-ignore
     const orderId = this.order.id;
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      const docSub = this.documentService
-        .getEstimate(order, this.orderDiscount?.value)
-        .subscribe((file) => {
-          docSub.unsubscribe();
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('orderId', orderId.toString());
-          formData.append('email', order.clientEmail);
-          this.mailService.sendEditOrderMail(formData).subscribe(() => {
-            this.sendingMail = false;
-            this.ms.add({
-              severity: 'success',
-              summary: 'Заказ изменен',
-              detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
-            });
+      const docSub = this.documentService.getEstimate(order).subscribe((file) => {
+        docSub.unsubscribe();
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('orderId', orderId.toString());
+        formData.append('email', order.clientEmail);
+        this.mailService.sendEditOrderMail(formData).subscribe(() => {
+          this.sendingMail = false;
+          this.ms.add({
+            severity: 'success',
+            summary: 'Заказ изменен',
+            detail: `Обновленные данные заказа отправлены на почту ${order.clientEmail}`,
           });
         });
+      });
     });
   }
 }
