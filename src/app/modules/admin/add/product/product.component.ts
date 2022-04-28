@@ -84,7 +84,7 @@ export class ProductComponent {
       isPopular: [false],
       description: ['', Validators.required],
       categoryIds: [null, Validators.required],
-      boxId: [null, Validators.required],
+      boxId: [null],
       prices: this.fb.array([]),
     });
     route.queryParams.subscribe((params) => {

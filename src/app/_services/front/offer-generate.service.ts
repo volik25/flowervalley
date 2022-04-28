@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HtmlToPdfService } from './html-to-pdf.service';
 // @ts-ignore
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -8,6 +8,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // @ts-ignore
 import htmlToPdfmake from 'html-to-pdfmake';
 import { Observable, Subject } from 'rxjs';
+import { PRICE_CONVERT } from '../../_providers/price-convert.provider';
+import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,8 @@ export class OfferGenerateService {
   private content!: any[];
   private sum!: number;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
+
+  constructor(@Inject(PRICE_CONVERT) private priceConvert: PriceConverterPipe) {}
 
   public getPDF(
     orderNumber: number,
@@ -68,7 +72,7 @@ export class OfferGenerateService {
     const img = document.createElement('img');
     if (typeof logo === 'string') {
       img.setAttribute('src', logo);
-      img.setAttribute('width', '100');
+      img.setAttribute('width', '150');
     }
     const headerTable: HTMLTableElement = document.createElement('table');
     headerTable.style.border = '0';
@@ -76,66 +80,51 @@ export class OfferGenerateService {
     const htBody = headerTable.createTBody();
     const row = htHead.insertRow(0);
     const leftHead = row.insertCell(0);
-    const centerHead = row.insertCell(1);
-    const rightHead = row.insertCell(2);
-    leftHead.style.width = '50%';
+    const rightHead = row.insertCell(1);
+    leftHead.style.width = '25%';
     leftHead.style.border = '0';
-    centerHead.style.width = '20%';
-    centerHead.style.border = '0';
-    rightHead.style.width = '30%';
+    rightHead.style.width = '75%';
     rightHead.style.border = '0';
     const headerTableBodyRow1 = htBody.insertRow(0);
     const headerTableBodyRow2 = htBody.insertRow(1);
     const headerTableBodyRow3 = htBody.insertRow(2);
-    const payment = headerTableBodyRow1.insertCell(0);
-    payment.rowSpan = 3;
-    payment.innerHTML = OfferGenerateService.getPaymentText();
-    payment.style.border = '0';
-    payment.style.fontSize = '14px';
-    const image = headerTableBodyRow1.insertCell(1);
-    image.rowSpan = 2;
+    const headerTableBodyRow4 = htBody.insertRow(3);
+    const image = headerTableBodyRow1.insertCell(0);
+    image.rowSpan = 4;
     image.append(img);
-    image.style.textAlign = 'right';
     image.style.border = '0';
-    const title = headerTableBodyRow1.insertCell(2);
+    const title = headerTableBodyRow1.insertCell(1);
     title.innerHTML = this.getTitleText();
     title.style.border = '0';
-    const contacts = headerTableBodyRow2.insertCell(0);
-    contacts.innerHTML = this.getContacts();
-    contacts.style.fontSize = '14px';
-    contacts.style.textAlign = 'right';
-    contacts.style.border = '0';
-    const address = headerTableBodyRow3.insertCell(0);
-    address.colSpan = 2;
+    const address = headerTableBodyRow2.insertCell(0);
     address.innerHTML = this.getAddress();
-    address.style.textAlign = 'right';
+    address.style.fontSize = '10px';
     address.style.border = '0';
-    OfferGenerateService.insertSpaceRow(3, htBody, 3, 3);
+    const contacts = headerTableBodyRow3.insertCell(0);
+    contacts.innerHTML = this.getContacts();
+    contacts.style.fontSize = '10px';
+    contacts.style.border = '0';
+    const payment = headerTableBodyRow4.insertCell(0);
+    payment.innerHTML = this.getPaymentText();
+    payment.style.border = '0';
+    payment.style.fontSize = '10px';
     const headerTableBodyLine = htBody.insertRow(4);
     const lineCell = headerTableBodyLine.insertCell(0);
-    lineCell.colSpan = 3;
+    lineCell.colSpan = 2;
     lineCell.style.borderLeft = '0';
     lineCell.style.borderRight = '0';
     return headerTable;
   }
 
   private static getPaymentText(): string {
-    return `<b>Индивидуальный Предприниматель<br/>
-            Большаков Олег Валентинович<br/>
-            ИНН - 771601384607<br/>
-            ОГРНИП – 307770000627581<br/>
-            Расчетный счет – 40802810277010000460<br/>
-            Кор.счет - 30101810145250000411<br/>
-            Адрес - 129323, Москва, ул.Седова, дом 2,<br/>
-            корп.2, оф.56<br/>
-            Банк получателя – Филиал «ЦЕНТРАЛЬНЫЙ»<br/>
-            Банка ВТБ (ПАО) г. Москва</b>`;
+    return `<b>ИП Большаков Олег Валентинович ИНН - 771601384607 ОГРНИП – 307770000627581<br/>
+            Адрес - 129323, Москва, ул.Седова, дом 2, корп.2, оф.56<br/>
+            БИК - 044525225 Банк - ПАО Сбербанк г. Москва Р/С – 40802810277010000460 К/С - 30101810145250000411</b>`;
   }
 
   private static getTitleText(): string {
     const title = document.createElement('b');
-    title.innerHTML = `Агрофирма<br/>
-                        Цветочная Долина<br/>`;
+    title.innerHTML = `Агрофирма Цветочная Долина<br/>`;
     title.style.fontSize = '20px';
     const subTitle = document.createElement('span');
     subTitle.innerHTML = 'Тепличное хозяйство';
@@ -146,14 +135,11 @@ export class OfferGenerateService {
   }
 
   private static getContacts(): string {
-    return `<b>Тел. – +7 (915) 109 10 00<br/>
-            Почта - flowervalley@mail.ru</b>`;
+    return `<b>Почта - flowervalley@mail.ru  Тел. – +7 (915) 109 10 00</b>`;
   }
 
   private static getAddress(): string {
-    return `<b>Адрес - 140125, Моск. обл., Раменский р-н.,<br/>
-            д. Островцы, ул. Подмосковная д. 22 A<br/>
-            теплица 109</b>`;
+    return `<b>Адрес - 140125, Моск. обл., Раменский р-н., д. Островцы, ул. Подмосковная д. 22 A теплица 109</b>`;
   }
 
   private genBodyTitle(): HTMLTableElement {
@@ -193,7 +179,7 @@ export class OfferGenerateService {
   }
 
   private genBodyTable(): HTMLTableElement {
-    const header = ['№', 'Товар', 'Ед.', 'Цена', 'Кол-во', 'Сумма'];
+    const header = ['№', 'Товар', 'Ед.', 'Кол-во', 'Цена, \u20bd', 'Сумма, \u20bd'];
     const table: HTMLTableElement = document.createElement('table');
     const tHead = table.createTHead();
     const tBody = table.createTBody();
@@ -208,8 +194,14 @@ export class OfferGenerateService {
         case 1:
           cell.style.width = '45%';
           break;
+        case 2:
+          cell.style.width = '5%';
+          break;
+        case 3:
+          cell.style.width = '10%';
+          break;
         default:
-          cell.style.width = '12.5%';
+          cell.style.width = '17.5%';
           break;
       }
       cell.style.textAlign = 'center';
@@ -236,7 +228,7 @@ export class OfferGenerateService {
     const labelCell = lastRow.insertCell(1);
     labelCell.innerHTML = `<b>Итого:</b>`;
     const sumCell = lastRow.insertCell(2);
-    sumCell.innerHTML = this.sum.toString();
+    sumCell.innerHTML = this.priceConvert.transform(this.sum, 'two', 'rub');
     sumCell.style.textAlign = 'center';
     return table;
   }

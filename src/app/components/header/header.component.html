@@ -1,4 +1,4 @@
-<header #header class="header">
+<header #header class="header" (mouseleave)="isSubMenuActive ? (isMenuToggle = false) : ''">
   <div class="header__contacts" *ngIf="headerData">
     <div class="header__contacts_logo cursor-pointer" [routerLink]="['']">
       <p-image (click)="menuShow = false" [src]="headerData.img"></p-image>
@@ -48,8 +48,8 @@
     <div class="search-panel" [ngClass]="{ visible: searchShow }">
       <flower-valley-search></flower-valley-search>
     </div>
-    <div class="mobile-menu-panel" [ngClass]="{ visible: menuShow }">
-      <div class="content" (click)="menuShow = false">
+    <div class="mobile-menu-panel" [ngClass]="{ visible: menuShow }" (click)="menuShow = false">
+      <div class="content">
         <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       </div>
     </div>
@@ -60,12 +60,22 @@
       <ng-container *ngTemplateOutlet="menuBar"></ng-container>
       <div class="scrolled-search">
         <div class="menu">
-          <div #menuBtn class="button" (mouseenter)="isMenuToggle = !isMenuToggle">
+          <div
+            #menuBtn
+            class="button"
+            (mouseenter)="isMenuToggle = true"
+            (mouseleave)="isSubMenuActive = true"
+          >
             <span>Меню</span>
             <span *ngIf="!isMenuToggle" class="pi pi-angle-down"></span>
             <span *ngIf="isMenuToggle" class="pi pi-angle-up"></span>
           </div>
-          <div class="panel" *ngIf="isMenuToggle">
+          <div
+            class="panel"
+            *ngIf="isMenuToggle"
+            (mouseleave)="isSubMenuActive = false; isMenuToggle = false"
+            (mouseenter)="isSubMenuActive = true"
+          >
             <div class="content">
               <ng-container *ngTemplateOutlet="menuBar"></ng-container>
             </div>

@@ -78,7 +78,7 @@ export class ProductComponent implements OnInit {
       isPopular: [false],
       description: ['', Validators.required],
       categoryIds: [null, Validators.required],
-      boxId: [null, Validators.required],
+      boxId: [null],
       prices: this.fb.array([]),
     });
     route.params.subscribe((params) => {
