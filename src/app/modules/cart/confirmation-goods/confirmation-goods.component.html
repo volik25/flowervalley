@@ -70,7 +70,7 @@
     </div>
     <div class="summary-block__boxes">
       <span>Коробки:</span>
-      <span>{{ boxesCount }}x ({{ boxesSum | priceConverter: 'none':'RUB' }})</span>
+      <span>{{ boxesSum | priceConverter: 'none':'RUB' }} ({{ boxesCount }}шт.)</span>
     </div>
     <div class="summary-block__summary">
       <span>Итог:</span>
@@ -80,6 +80,7 @@
 </p-card>
 
 <p-button
+  *ngIf="(pickUp || !!shippingCost) && order?.id"
   styleClass="p-button-estimate w-12 flex justify-content-center blink"
   (onClick)="getInvoice()"
 >

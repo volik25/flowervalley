@@ -50,6 +50,7 @@ export class HeaderComponent implements OnInit {
   public searchShow: boolean = false;
   public menuShow: boolean = false;
   public isMenuToggle: boolean = false;
+  public isSubMenuActive: boolean = false;
   public cart: ProductItem[] = [];
   public menu: MainMenu[] = [];
 
