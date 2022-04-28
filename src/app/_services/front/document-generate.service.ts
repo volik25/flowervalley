@@ -22,7 +22,9 @@ export class DocumentGenerateService {
     client += firm.FullName;
     client += `, ${firm.Address}`;
     client += `, ИНН: ${firm.INN}`;
-    client += `, КПП: ${firm.KPP}`;
+    if (firm.KPP) {
+      client += `, КПП: ${firm.KPP}`;
+    }
     // @ts-ignore
     const orderNumber = order.id;
     // @ts-ignore
@@ -37,11 +39,21 @@ export class DocumentGenerateService {
         return [
           product.product.name,
           'шт.',
-          product.price,
           product.count,
-          product.count * product.price,
+          this.priceConvert.transform(product.price, 'two', 'none'),
+          this.priceConvert.transform(product.count * product.price, 'two', 'none'),
         ];
       });
+    if (order.deliveryPrice) {
+      sum += order.deliveryPrice;
+      content.push([
+        'Доставка',
+        '-',
+        1,
+        this.priceConvert.transform(order.deliveryPrice, 'two', 'none'),
+        this.priceConvert.transform(order.deliveryPrice, 'two', 'none'),
+      ]);
+    }
     this.offerPDF.getPDF(orderNumber, date, client, content, sum, false);
     return this.offerPDF.getGeneratedDocument().pipe(
       map((blob) => {
