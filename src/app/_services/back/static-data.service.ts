@@ -123,8 +123,8 @@ export class StaticDataService {
     return this.generateGetRequest<Variables>({ ...CartVariablesEnum, ...MobileButtonsEnum }).pipe(
       map((vars) => {
         vars.minOrderSum = Number(vars.minOrderSum);
-        vars.nearestDelivery = Number(vars.nearestDelivery);
-        vars.middleDelivery = Number(vars.middleDelivery);
+        // vars.nearestDelivery = Number(vars.nearestDelivery);
+        // vars.middleDelivery = Number(vars.middleDelivery);
         vars.moscowDelivery = Number(vars.moscowDelivery);
         vars.deliveryPerKm = Number(vars.deliveryPerKm);
         return vars;
@@ -136,8 +136,8 @@ export class StaticDataService {
     return this.generateGetRequest<CartVariables>(CartVariablesEnum).pipe(
       map((vars) => {
         vars.minOrderSum = Number(vars.minOrderSum);
-        vars.nearestDelivery = Number(vars.nearestDelivery);
-        vars.middleDelivery = Number(vars.middleDelivery);
+        // vars.nearestDelivery = Number(vars.nearestDelivery);
+        // vars.middleDelivery = Number(vars.middleDelivery);
         vars.moscowDelivery = Number(vars.moscowDelivery);
         vars.deliveryPerKm = Number(vars.deliveryPerKm);
         return vars;

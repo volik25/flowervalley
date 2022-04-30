@@ -5,10 +5,10 @@ import { Order, OrderBox, OrderDiscount, OrderItem, OrderProduct } from '../../.
 import { BusinessPackService } from '../../../../_services/back/business-paсk.service';
 import { Firm } from '../../../../_models/business-pack/firm';
 import { LoadingService } from '../../../../_services/front/loading.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { Product } from '../../../../_models/product';
 import { OrderStatus } from '../../../../_utils/order-status.enum';
-import { getOrderStatus } from '../../../../_utils/constants';
+import { getOrderStatus, statusOptions } from '../../../../_utils/constants';
 import { EstimateGenerateService } from '../../../../_services/front/estimate-generate.service';
 import { PriceConverterPipe } from '../../../../_pipes/price-converter.pipe';
 import { DatePipe } from '@angular/common';
@@ -43,6 +43,8 @@ export class OrderComponent implements OnInit {
   public products: Product[] = [];
   public sendingMail: boolean = false;
   public orderDiscount: OrderDiscount | undefined;
+  public sendMail: boolean = false;
+  public statusDropdown = statusOptions;
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
@@ -112,6 +114,7 @@ export class OrderComponent implements OnInit {
           this.ls.addSubscription(bpSub);
         }
         this.ls.removeSubscription(orderSub);
+        if (this.order.status === OrderStatus.New) this.order.status = OrderStatus.In_Process;
       });
       this.ls.addSubscription(orderSub);
     }
@@ -120,8 +123,10 @@ export class OrderComponent implements OnInit {
   public saveOrder(): void {
     this.sendingMail = true;
     const order: any = { ...this.order };
+    let sum = 0;
     // @ts-ignore
     order.products = this.order.products.map((product: OrderProduct) => {
+      sum += product.count * product.price;
       return <OrderItem>{
         id: product.product.id,
         count: product.count,
@@ -133,6 +138,7 @@ export class OrderComponent implements OnInit {
     }
     // @ts-ignore
     order.boxes = this.order.boxes.map((box: OrderBox) => {
+      sum += box.count * box.price;
       return <OrderItem>{
         id: box.box.id,
         count: box.count,
@@ -151,12 +157,23 @@ export class OrderComponent implements OnInit {
     if (!order.clientInn) {
       delete order.clientInn;
     }
+    if (order.deliveryPrice) sum += order.deliveryPrice;
+    order.orderSum = sum;
     // @ts-ignore
     this.orderService.updateItem<Order>(order).subscribe(() => {
-      if (order.clientId) {
-        this.sendBusinessMail();
+      if (this.sendMail) {
+        if (order.clientId) {
+          this.sendBusinessMail();
+        } else {
+          this.sendIndividualMail();
+        }
       } else {
-        this.sendIndividualMail();
+        this.sendingMail = false;
+        this.ms.add({
+          severity: 'success',
+          summary: 'Заказ изменен',
+          detail: `Данные сохранены в системе`,
+        });
       }
     });
   }
@@ -255,6 +272,35 @@ export class OrderComponent implements OnInit {
     inplace.deactivate();
     // @ts-ignore
     this.order.confirmedDeliveryDate = this.confirmedDate.value;
+  }
+
+  public businessOrderSave(): void {
+    this.sendMail = false;
+    this.cs.confirm({
+      header: 'Сохранение заказа',
+      message: 'Выберите способ сохранения',
+      acceptLabel: 'Сохранить и отправить письмо клиенту',
+      acceptIcon: 'pi pi-times',
+      rejectLabel: 'Сохранить без отправки письма',
+      accept: () => {
+        this.sendMail = true;
+        this.createInvoice();
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.saveOrder();
+            break;
+          case ConfirmEventType.CANCEL:
+            this.ms.add({
+              severity: 'warn',
+              summary: 'Сохранение отменено',
+              detail: 'Вы отменили сохранение заказа',
+            });
+            break;
+        }
+      },
+    });
   }
 
   public createInvoice(): void {

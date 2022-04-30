@@ -259,6 +259,7 @@ $root: '.header';
     }
     .mobile-menu {
       display: flex;
+      width: 35px;
       @include laptop-media {
         display: none;
       }

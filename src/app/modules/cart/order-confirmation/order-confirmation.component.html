@@ -38,44 +38,17 @@
         </span>
 
         <span class="p-float-label">
-          <input
-            [ngClass]="{ 'calculation-padding': shippingCost }"
-            type="text"
-            id="address"
-            pInputText
-            formControlName="address"
-          />
+          <input type="text" id="address" pInputText formControlName="address" />
           <label for="address">Адрес доставки</label>
-          <div class="calculation-result" *ngIf="shippingCost || delivery_error">
-            <p-button
-              styleClass="blink"
-              *ngIf="!showDelivery && !delivery_error"
-              (onClick)="deliveryButtonClick()"
-              label="Рассчитать доставку"
-            ></p-button>
-            <div
-              *ngIf="showDelivery || delivery_error"
-              class="delivery"
-              [ngClass]="{ success: shippingCost, error: delivery_error }"
-            >
-              {{
-                shippingCost
-                  ? 'Доставка ' + (shippingCost | priceConverter: 'none':'RUB')
-                  : delivery_error
-              }}
-            </div>
-          </div>
         </span>
-        <div class="flex justify-content-end">
-          <p-button
-            *ngIf="showDelivery"
-            styleClass="p-button-text"
-            label="Показать на карте"
-            (onClick)="yandexMapComponent.showMapToggle()"
-          ></p-button>
+        <div class="delivery-info" *ngIf="cartVariables && !pickUp.value">
+          <span>ВНИМАНИЕ!</span>
+          <span>Стоимость доставки по Москве - {{ cartVariables.moscowDelivery }}&#8381;</span>
+          <span>Далее - {{ cartVariables.deliveryPerKm }}&#8381;/км</span>
+          <span>В другие города рассчитывается индивидуально</span>
         </div>
       </form>
-      <div class="p-field-checkbox" [ngClass]="{ 'top-10': showDelivery }">
+      <div class="p-field-checkbox">
         <p-checkbox [formControl]="pickUp" [binary]="true" inputId="pickUp"></p-checkbox>
         <label for="pickUp">Самовывоз</label>
       </div>
@@ -119,6 +92,14 @@
         *ngIf="clientType === 'entity'"
         (dataChanges)="entityDataChanges($event)"
       ></flower-valley-entity-form>
+      <div class="p-field-checkbox mt-2" *ngIf="clientType === 'entity'">
+        <p-checkbox
+          [(ngModel)]="clientDataVerified"
+          [binary]="true"
+          inputId="clientDataVerify"
+        ></p-checkbox>
+        <label for="clientDataVerify">Данные о компании заполнены корректно</label>
+      </div>
       <div class="private-policy">
         Нажимая кнопку "Оформить заказ" Вы соглашаетесь с условиями
         <a [routerLink]="['/private-policy']">Политики конфиденциальности</a>
@@ -128,7 +109,7 @@
         [loading]="isInvoiceLoading"
         styleClass="confirm-order"
         label="Оформить заказ"
-        [disabled]="isConfirmOrderDisabled"
+        [disabled]="isConfirmOrderDisabled || (clientType === 'entity' && !clientDataVerified)"
         (onClick)="confirmOrder()"
       ></p-button>
       <p-button
@@ -143,11 +124,9 @@
         [pickUp]="pickUp.value"
         [goods]="goods"
         [order]="order"
-        [shippingCost]="showDelivery ? shippingCost || 0 : 0"
         (orderSum)="setOrderSum($event)"
       ></flower-valley-confirmation-goods>
     </div>
   </div>
-  <p-messages [(value)]="message" key="orderMessage"></p-messages>
+  <p-messages [(value)]="message" key="orderMessage" styleClass="order-message"></p-messages>
 </div>
-<flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>

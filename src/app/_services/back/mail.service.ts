@@ -24,8 +24,12 @@ export class MailService {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/business`, data);
   }
 
-  public sendBusinessRequestMail(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${this.apiUrl}/business-request`, data);
+  public sendBusinessNotificationMail(order: Order, firmName: string): Observable<any> {
+    this.sendCopyToAdmin(true, new FormData(), order, firmName);
+    const data = new FormData();
+    data.append('orderId', order.id.toString());
+    data.append('email', order.clientEmail);
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/business-notification`, data);
   }
 
   public sendEditOrderMail(data: any): Observable<any> {

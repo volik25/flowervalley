@@ -21,41 +21,9 @@
       </span>
 
       <span class="p-float-label">
-        <input
-          [ngClass]="{ 'calculation-padding': shippingCost }"
-          type="text"
-          id="address"
-          pInputText
-          formControlName="clientAddress"
-        />
+        <input type="text" id="address" pInputText formControlName="clientAddress" />
         <label for="address">Адрес доставки</label>
-        <div class="calculation-result" *ngIf="shippingCost || delivery_error">
-          <p-button
-            *ngIf="!showDelivery && !delivery_error"
-            (onClick)="deliveryButtonClick()"
-            label="Рассчитать доставку"
-          ></p-button>
-          <div
-            *ngIf="showDelivery || delivery_error"
-            class="delivery"
-            [ngClass]="{ success: shippingCost, error: delivery_error }"
-          >
-            {{
-              shippingCost
-                ? 'Доставка ' + (shippingCost | priceConverter: 'none':'RUB')
-                : delivery_error
-            }}
-          </div>
-        </div>
       </span>
-      <div class="flex justify-content-end">
-        <p-button
-          *ngIf="showDelivery"
-          styleClass="p-button-text"
-          label="Показать на карте"
-          (onClick)="yandexMapComponent.showMapToggle()"
-        ></p-button>
-      </div>
     </form>
     <div *ngIf="contactsGroup.controls['requestNumber'].value || order?.clientId">
       <flower-valley-entity-form
@@ -79,7 +47,6 @@
     ></flower-valley-boxes-order>
   </div>
 </flower-valley-container>
-<flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>
 
 <ng-template #createButton>
   <p-button label="Создать" icon="pi pi-plus" (onClick)="createOrder()"></p-button>

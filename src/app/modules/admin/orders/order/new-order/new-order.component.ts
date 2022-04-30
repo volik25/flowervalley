@@ -4,8 +4,7 @@ import { OrderService } from '../../../../../_services/back/order.service';
 import { Order, OrderBox, OrderItem, OrderProduct } from '../../../../../_models/order';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { isFormInvalid } from '../../../../../_utils/formValidCheck';
-import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
-import { YaMapService } from '../../../../../_services/front/ya-map.service';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { DestroyService } from '../../../../../_services/front/destroy.service';
 import { LoadingService } from '../../../../../_services/front/loading.service';
 import { BusinessPackService } from '../../../../../_services/back/business-paсk.service';
@@ -21,7 +20,7 @@ import { DocumentGenerateService } from '../../../../../_services/front/document
   selector: 'flower-valley-new-order',
   templateUrl: './new-order.component.html',
   styleUrls: ['./new-order.component.scss'],
-  providers: [DestroyService, YaMapService, DocumentGenerateService],
+  providers: [DestroyService, DocumentGenerateService],
 })
 export class NewOrderComponent implements OnInit {
   private orderId: number | undefined;
@@ -33,9 +32,6 @@ export class NewOrderComponent implements OnInit {
   private entityId: string | undefined;
   private isEntityDataChanged: boolean = false;
   public contactsGroup: FormGroup;
-  public shippingCost: number | undefined;
-  public delivery_error: string = '';
-  public showDelivery = false;
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
@@ -46,7 +42,6 @@ export class NewOrderComponent implements OnInit {
     private ls: LoadingService,
     private route: ActivatedRoute,
     private router: Router,
-    private yaMap: YaMapService,
     private ms: MessageService,
     private $destroy: DestroyService,
     private cdr: ChangeDetectorRef,
@@ -62,31 +57,6 @@ export class NewOrderComponent implements OnInit {
     route.queryParams.subscribe((params) => {
       this.orderId = params['orderId'];
     });
-    this.contactsGroup.controls['clientAddress'].valueChanges
-      .pipe(takeUntil($destroy), debounceTime(1000))
-      .subscribe((address) => {
-        this.shippingCost = 0;
-        this.showDelivery = false;
-        this.delivery_error = '';
-        if (address) {
-          yaMap.addressChanged.next(address);
-        } else {
-          cdr.detectChanges();
-        }
-      });
-    yaMap
-      .calculateShippingCost()
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((calculationResult) => {
-        this.shippingCost = calculationResult;
-        if (this.shippingCost === 0) {
-          this.delivery_error = 'Адрес не найден';
-        }
-        if (this.shippingCost && !this.delivery_error) {
-          this.deliveryButtonClick();
-        }
-        this.cdr.detectChanges();
-      });
   }
 
   ngOnInit(): void {
@@ -177,7 +147,6 @@ export class NewOrderComponent implements OnInit {
       orderSum: contacts.orderSum,
     };
     if (contacts.requestNumber) order.requestNumber = contacts.requestNumber;
-    if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
   }
   private createInvoice(order: Order): void {
@@ -291,10 +260,6 @@ export class NewOrderComponent implements OnInit {
     }
   }
 
-  public deliveryButtonClick(): void {
-    this.showDelivery = true;
-    this.cdr.detectChanges();
-  }
   private sendIndividualMail(orderId: number): void {
     const orderSub = this.orderService.getItemById<Order>(orderId).subscribe((order) => {
       const docSub = this.documentService.getEstimate(order).subscribe((file) => {
