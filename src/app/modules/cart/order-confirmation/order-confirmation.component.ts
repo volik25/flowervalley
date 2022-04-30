@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
-import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
-import { YaMapService } from '../../../_services/front/ya-map.service';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { ProductItem } from '../../../_models/product-item';
 import { Message, MessageService } from 'primeng/api';
@@ -19,14 +18,17 @@ import { MailService } from '../../../_services/back/mail.service';
 import { DocumentGenerateService } from '../../../_services/front/document-generate.service';
 import { Firm } from '../../../_models/business-pack/firm';
 import { orderWarnMessage } from '../../../_utils/constants';
+import { CartVariables } from '../../../_models/static-data/variables';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
   templateUrl: './order-confirmation.component.html',
   styleUrls: ['./order-confirmation.component.scss'],
-  providers: [DestroyService, YaMapService, DocumentGenerateService],
+  providers: [DestroyService, DocumentGenerateService],
 })
 export class OrderConfirmationComponent implements OnDestroy {
+  @Input()
+  public cartVariables: CartVariables | undefined;
   public goods: ProductItem[] = [];
   public clientType: 'individual' | 'entity' = 'individual';
   public pickUp: FormControl;
@@ -36,12 +38,9 @@ export class OrderConfirmationComponent implements OnDestroy {
   public contacts: FormGroup;
   public entityData!: FormGroup;
   private entityId: string | undefined;
-  public shippingCost: number | undefined;
-  public delivery_error: string = '';
-  public showDelivery = false;
   public orderId: number | undefined;
   public order: Order | undefined;
-  public telepakId: string | undefined;
+  public clientDataVerified: boolean = false;
   public isInvoiceLoading: boolean = false;
   private isEntityDataChanged: boolean = false;
   public isOrderConfirmed: boolean = false;
@@ -50,7 +49,6 @@ export class OrderConfirmationComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private $destroy: DestroyService,
-    private yaMap: YaMapService,
     private cdr: ChangeDetectorRef,
     private bpService: BusinessPackService,
     private cartService: CartService,
@@ -76,28 +74,6 @@ export class OrderConfirmationComponent implements OnDestroy {
       comment: [''],
       orderSum: [null, Validators.required],
     });
-    this.contacts.controls['address'].valueChanges
-      .pipe(takeUntil($destroy), debounceTime(1000))
-      .subscribe((address) => {
-        this.shippingCost = 0;
-        this.showDelivery = false;
-        this.delivery_error = '';
-        if (address) {
-          yaMap.addressChanged.next(address);
-        } else {
-          cdr.detectChanges();
-        }
-      });
-    yaMap
-      .calculateShippingCost()
-      .pipe(takeUntil(this.$destroy))
-      .subscribe((calculationResult) => {
-        this.shippingCost = calculationResult;
-        if (this.shippingCost === 0) {
-          this.delivery_error = 'Адрес не найден';
-        }
-        this.cdr.detectChanges();
-      });
     if (this.cartService.isTulipsInclude) {
       this.pickUp.setValue(true);
       this.pickUp.disable();
@@ -105,8 +81,6 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
     this.pickUp.valueChanges.subscribe((value) => {
       if (value) {
-        this.shippingCost = undefined;
-        this.showDelivery = false;
         this.contacts.controls['address'].setValue('');
         this.contacts.controls['address'].disable();
       } else {
@@ -132,17 +106,10 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
   }
 
-  public deliveryButtonClick(): void {
-    this.showDelivery = true;
-    this.cdr.detectChanges();
-  }
-
   public get isConfirmOrderDisabled(): boolean {
     if (this.contacts.invalid) return true;
-    if (this.contacts.getRawValue().address && !this.pickUp.value) {
-      return !this.showDelivery;
-    }
-    return !(!this.contacts.getRawValue().address && this.pickUp.value);
+    if (this.contacts.getRawValue().address) return false;
+    return !this.pickUp.value;
   }
 
   public confirmOrder(): void {
@@ -195,50 +162,57 @@ export class OrderConfirmationComponent implements OnDestroy {
             });
           }
         });
-        order.boxes.map((box) => {
-          goods.push({
-            model_id: this.bpService.boxId,
-            volume_id: this.bpService.boxVolume,
-            nds: 0,
-            nds_mode: 0,
-            count: box.count,
-            price: box.price,
-            qname: 'Транспортировочная коробка (в ассортименте)',
+        if (!order.boxes.length && this.pickUp.value) {
+          const invoice: Invoice = {
+            firm_id: firmId,
+            partner_id: partnerId,
+            goods: goods,
+            partner_flag: 'A',
+          };
+          this.bpService.createInvoice(invoice).subscribe((response) => {
+            const invoiceId = response.Object;
+            this.bpService
+              .sendInvoiceToTelepak(invoiceId, {
+                report_name: 'Счет с образцом п. п. + печать подпись',
+                send_with_stamp: true,
+              })
+              .subscribe(({ id }) => {
+                if (id) {
+                  order.accountNumber = id;
+                  this.orderService.addItem(order).subscribe((orderId) => {
+                    this.sendBusinessMail(invoiceId, partnerId, orderId);
+                  });
+                }
+              });
           });
-        });
-        if (order.deliveryPrice) {
-          goods.push({
-            model_id: this.bpService.deliveryId,
-            volume_id: this.bpService.deliveryVolume,
-            nds: 0,
-            nds_mode: 0,
-            count: 1,
-            price: order.deliveryPrice,
-            qname: 'Доставка',
+        } else {
+          this.orderService.addItem(order).subscribe((orderId) => {
+            const { FullName } = this.entityData.getRawValue();
+            this.sendBusinessNotification(orderId, FullName);
           });
         }
-        const invoice: Invoice = {
-          firm_id: firmId,
-          partner_id: partnerId,
-          goods: goods,
-          partner_flag: 'A',
-        };
-        this.bpService.createInvoice(invoice).subscribe((response) => {
-          const invoiceId = response.Object;
-          this.bpService
-            .sendInvoiceToTelepak(invoiceId, {
-              report_name: 'Счет с образцом п. п. + печать подпись',
-              send_with_stamp: true,
-            })
-            .subscribe(({ id }) => {
-              if (id) {
-                order.accountNumber = id;
-                this.orderService.addItem(order).subscribe((orderId) => {
-                  this.sendBusinessMail(invoiceId, partnerId, orderId);
-                });
-              }
-            });
-        });
+        // order.boxes.map((box) => {
+        //   goods.push({
+        //     model_id: this.bpService.boxId,
+        //     volume_id: this.bpService.boxVolume,
+        //     nds: 0,
+        //     nds_mode: 0,
+        //     count: box.count,
+        //     price: box.price,
+        //     qname: 'Транспортировочная коробка (в ассортименте)',
+        //   });
+        // });
+        // if (order.deliveryPrice) {
+        //   goods.push({
+        //     model_id: this.bpService.deliveryId,
+        //     volume_id: this.bpService.deliveryVolume,
+        //     nds: 0,
+        //     nds_mode: 0,
+        //     count: 1,
+        //     price: order.deliveryPrice,
+        //     qname: 'Доставка',
+        //   });
+        // }
       }
     });
   }
@@ -329,7 +303,6 @@ export class OrderConfirmationComponent implements OnDestroy {
       boxes: orderBoxes,
       deliveryPrice: 0,
     };
-    if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
   }
 
@@ -401,6 +374,23 @@ export class OrderConfirmationComponent implements OnDestroy {
             },
           });
         });
+      });
+    });
+  }
+
+  private sendBusinessNotification(orderId: number, firmName: string): void {
+    this.orderService.getItemById<Order>(orderId).subscribe((order) => {
+      this.mailService.sendBusinessNotificationMail(order, firmName).subscribe(() => {
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'success',
+          summary: `Заявка №${orderId} принята`,
+          detail: `После подтверждения заказа менеджером, Вам на почту будет отправлена инструкция с дальнейшими действиями`,
+          life: 10000,
+          key: 'orderMessage',
+        });
+        this.isInvoiceLoading = false;
+        this.isOrderConfirmed = true;
       });
     });
   }

@@ -22,8 +22,8 @@ export class OtherComponent implements OnInit {
   ) {
     this.variablesForm = fb.group({
       minOrderSum: [null, Validators.required],
-      nearestDelivery: [null, Validators.required],
-      middleDelivery: [null, Validators.required],
+      // nearestDelivery: [null, Validators.required],
+      // middleDelivery: [null, Validators.required],
       moscowDelivery: [null, Validators.required],
       deliveryPerKm: [null, Validators.required],
       mobileWhatsApp: ['', Validators.required],

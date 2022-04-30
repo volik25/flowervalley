@@ -64,10 +64,6 @@
     routerLink="/catalog"
   ></p-button>
   <div class="summary-block">
-    <div class="summary-block__delivery">
-      <span>Доставка:</span>
-      <span>{{ shippingCost | priceConverter: 'two':'rub' }}</span>
-    </div>
     <div class="summary-block__boxes">
       <span>Коробки:</span>
       <span>{{ boxesSum | priceConverter: 'none':'RUB' }} ({{ boxesCount }}шт.)</span>
@@ -80,7 +76,7 @@
 </p-card>
 
 <p-button
-  *ngIf="(pickUp || !!shippingCost) && order?.id"
+  *ngIf="pickUp && order?.id && boxesSum"
   styleClass="p-button-estimate w-12 flex justify-content-center blink"
   (onClick)="getInvoice()"
 >

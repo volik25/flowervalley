@@ -81,7 +81,9 @@
   background="dark"
   headerTitle="Оформление заказа"
 >
-  <flower-valley-order-confirmation></flower-valley-order-confirmation>
+  <flower-valley-order-confirmation
+    [cartVariables]="cartVariables"
+  ></flower-valley-order-confirmation>
 </flower-valley-container>
 
 <ng-template #boxesTemplate>

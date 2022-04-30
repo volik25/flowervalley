@@ -1,7 +1,7 @@
 export interface CartVariables {
   minOrderSum: number;
-  nearestDelivery: number;
-  middleDelivery: number;
+  // nearestDelivery: number;
+  // middleDelivery: number;
   moscowDelivery: number;
   deliveryPerKm: number;
 }
@@ -17,8 +17,8 @@ export enum CartVariablesEnum {
   minOrderSum = 30,
   moscowDelivery,
   deliveryPerKm,
-  nearestDelivery = 33,
-  middleDelivery,
+  // nearestDelivery = 33,
+  // middleDelivery,
 }
 
 export enum MobileButtonsEnum {

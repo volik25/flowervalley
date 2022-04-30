@@ -23,8 +23,6 @@ export class ConfirmationGoodsComponent {
   @Input()
   public order: Order | undefined;
   @Input()
-  public shippingCost = 0;
-  @Input()
   public pickUp: boolean = false;
   @Output()
   public orderSum: EventEmitter<number> = new EventEmitter<number>();
@@ -96,7 +94,7 @@ export class ConfirmationGoodsComponent {
   }
 
   public getOrderSum(): number {
-    const sum = this.productsSum + this.boxesSum + this.shippingCost;
+    const sum = this.productsSum + this.boxesSum;
     this.orderSum.emit(sum);
     return sum;
   }
