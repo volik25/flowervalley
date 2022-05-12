@@ -24,6 +24,12 @@
         <input type="text" id="address" pInputText formControlName="clientAddress" />
         <label for="address">Адрес доставки</label>
       </span>
+
+      <span class="p-float-label">
+        <p-inputNumber id="deliveryPrice" formControlName="deliveryPrice" [min]="0">
+        </p-inputNumber>
+        <label for="deliveryPrice">Стоимость доставки</label>
+      </span>
     </form>
     <div *ngIf="contactsGroup.controls['requestNumber'].value || order?.clientId">
       <flower-valley-entity-form
