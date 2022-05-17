@@ -74,6 +74,15 @@ export class CartService {
       } else {
         cartUpdated.push(item);
       }
+      cartUpdated.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
       cartUpdated = this.checkCart(cartUpdated);
       sessionStorage.setItem('cart', JSON.stringify(cartUpdated));
       this._cartUpdate.next(cartUpdated);
