@@ -8,7 +8,7 @@ export interface Category {
   img: string;
   products?: Product[];
   categoryOrder: number;
-  sale?: any;
+  sale?: number;
   steps?: Step[];
   isTulip: boolean;
   isSeedling: boolean;

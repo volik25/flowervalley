@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { EditRoutingModule } from './edit-routing.module';
 import { ProductComponent } from './product/product.component';
 import { FlowerValleySharedModule } from '../../../shared/shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -25,6 +25,8 @@ import { ReviewsComponent } from './reviews/reviews.component';
 import { MediaComponent } from './media/media.component';
 import { CalendarModule } from 'primeng/calendar';
 import { DragDropModule } from 'primeng/dragdrop';
+import { TableModule } from 'primeng/table';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,9 @@ import { DragDropModule } from 'primeng/dragdrop';
     PipesModule,
     CalendarModule,
     DragDropModule,
+    TableModule,
+    InputSwitchModule,
+    FormsModule,
   ],
 })
 export class EditModule {}

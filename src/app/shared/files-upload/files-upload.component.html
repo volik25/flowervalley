@@ -18,7 +18,7 @@
   <flower-valley-loader appearance="small"></flower-valley-loader>
 </div>
 
-<div class="grid" *ngIf="!showOnlyButton && localCompressedUrl.length">
+<div class="grid mt-2" *ngIf="!showOnlyButton && localCompressedUrl.length">
   <div class="img col-3" *ngFor="let photo of localCompressedUrl; let i = index">
     <p-image [src]="photo" styleClass="w-12" imageClass="w-12"></p-image>
     <p-button styleClass="p-button-danger" icon="pi pi-trash" (onClick)="removeImage(i)"></p-button>
