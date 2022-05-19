@@ -28,10 +28,12 @@ export class SalesComponent implements OnInit {
     this.saleGroup = fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      categoryId: [null, Validators.required],
+      categoryId: [null],
       productId: [null],
       currentPrice: [{ value: null, disabled: true }],
-      discount: [null, Validators.required],
+      discount: [null],
+      isActive: [true, Validators.required],
+      isVisible: [true, Validators.required],
     });
     this.saleGroup.controls['categoryId'].valueChanges.subscribe((id) => {
       this.saleGroup.controls['productId'].reset();
@@ -56,6 +58,7 @@ export class SalesComponent implements OnInit {
 
   public addSale(): void {
     if (isFormInvalid(this.saleGroup)) return;
+    this.isLoading = true;
     const sale = this.saleGroup.getRawValue();
     const formData = new FormData();
     delete sale.currentPrice;
@@ -65,11 +68,14 @@ export class SalesComponent implements OnInit {
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore
       const value = sale[key];
-      formData.append(key, value);
+      if (value) {
+        formData.append(key, value);
+      }
     });
     if (!this.photo) return;
     formData.append('img', this.photo);
     this.saleService.addItem<any>(formData).subscribe(() => {
+      this.isLoading = false;
       this.router.navigate([''], { fragment: 'sales' });
     });
   }

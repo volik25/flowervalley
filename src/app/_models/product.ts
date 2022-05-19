@@ -1,7 +1,6 @@
 import { BusinessPackModel } from './business-pack/business-pack-model';
 import { Category } from './category';
 import { Price } from './price';
-import { Sale } from './sale';
 import { BannerPhotos } from './main-banner';
 
 export interface Product extends BusinessPackModel {
@@ -12,7 +11,7 @@ export interface Product extends BusinessPackModel {
   categoryId?: number;
   boxId: number;
   prices: Price[];
-  sale?: Sale;
+  sale?: number;
   productCategoryId: number;
 }
 

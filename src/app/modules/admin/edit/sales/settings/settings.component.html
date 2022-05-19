@@ -12,6 +12,71 @@
       ></p-checkbox>
       <label for="isUserCanLeaf">Пользователь может листать фотографии</label>
     </div>
-    <p-button type="submit" label="Сохранить" [loading]="isLoading"></p-button>
+    <p-button type="submit" label="Сохранить" [loading]="isSaving"></p-button>
   </form>
+  <p-table
+    (onRowReorder)="onRowReorder()"
+    [value]="sales"
+    dataKey="id"
+    editMode="row"
+    [loading]="isLoading"
+    styleClass="mt-2"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th></th>
+        <th>Изображение</th>
+        <th>Акция</th>
+        <th>Видимость для клиента</th>
+        <th>Учет в системе</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-ri="rowIndex">
+      <tr [pReorderableRow]="ri">
+        <td>
+          <span class="pi pi-bars" [pReorderableRowHandle]="ri"></span>
+        </td>
+        <td>
+          <p-image width="100" [src]="item.img"></p-image>
+        </td>
+        <td>
+          {{ item.title }}
+        </td>
+        <td>
+          <p-inputSwitch
+            [trueValue]="true"
+            [falseValue]="false"
+            [ngModel]="item.isVisible"
+            (ngModelChange)="isVisibleChanged($event, item)"
+            [disabled]="!item.isActive"
+          ></p-inputSwitch>
+        </td>
+        <td>
+          <p-inputSwitch
+            [trueValue]="true"
+            [falseValue]="false"
+            [ngModel]="item.isActive"
+            (ngModelChange)="isActiveChanged($event, item)"
+            [disabled]="!item.category"
+          ></p-inputSwitch>
+        </td>
+        <td>
+          <div class="flex">
+            <span
+              class="edit pi pi-pencil cursor-pointer"
+              [routerLink]="['../', item.id]"
+              [queryParams]="{ redirect: 'settings' }"
+            ></span>
+            <div class="trash">
+              <span
+                class="pi pi-trash cursor-pointer ml-2"
+                (click)="deleteSale(item.id, ri)"
+              ></span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </flower-valley-container>

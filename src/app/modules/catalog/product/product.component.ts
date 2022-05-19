@@ -118,9 +118,9 @@ export class ProductComponent implements OnInit {
     // @ts-ignore
     this.product.category = this.category;
     // @ts-ignore
-    if (this.discount) {
-      price = this.discount;
-      initialPrice = this.discount;
+    if (this.product && this.product.sale) {
+      price = this.product.sale;
+      initialPrice = this.product.sale;
     }
     // @ts-ignore
     this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
@@ -130,18 +130,15 @@ export class ProductComponent implements OnInit {
     }, 3000);
   }
 
-  public get discount(): number | null {
-    const sale = this.product?.sale;
-    if (sale && sale.productId) {
-      return sale.discount;
-    }
-
-    return null;
-  }
-
   public get percentDiscount(): number | null {
-    if (this.discount && this.product) {
-      return 100 - Math.ceil((this.discount / this.product.price) * 100);
+    if (this.category && this.category.sale) {
+      if (this.product && this.product.sale) {
+        return 100 - Math.ceil((this.product.sale / this.product.price) * 100);
+      }
+      return this.category.sale;
+    }
+    if (this.product && this.product.sale) {
+      return 100 - Math.ceil((this.product.sale / this.product.price) * 100);
     }
     return null;
   }

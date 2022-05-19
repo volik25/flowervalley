@@ -49,7 +49,6 @@ export class CategoryComponent implements OnInit {
   public draggedIndex: number | null = null;
   public isDragDropFinished: boolean = false;
   public initialArray: Category[] | ProductItem[] = [];
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
