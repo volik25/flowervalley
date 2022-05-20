@@ -261,7 +261,11 @@
         </div>
       </div>
       <div class="flex justify-content-center">
-        <p-button label="Оформить" (onClick)="saveCalculatedOrder()"></p-button>
+        <p-button
+          label="Оформить"
+          (onClick)="saveCalculatedOrder()"
+          [loading]="sendingMail"
+        ></p-button>
       </div>
     </p-accordionTab>
   </p-accordion>

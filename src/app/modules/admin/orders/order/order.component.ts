@@ -552,7 +552,7 @@ export class OrderComponent implements OnInit {
   public saveCalculatedOrder(): void {
     this.isOrderCalculated = true;
     if (this.order?.clientId) {
-      this.businessOrderSave();
+      this.createInvoice();
     } else {
       this.saveOrder();
     }
