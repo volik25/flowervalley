@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../../_services/back/order.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Order, OrderBox, OrderDiscount, OrderItem, OrderProduct } from '../../../../_models/order';
+import {
+  CalculateOptions,
+  CalculateOptionsEnum,
+  Order,
+  OrderBox,
+  OrderDiscount,
+  OrderItem,
+  OrderProduct,
+} from '../../../../_models/order';
 import { BusinessPackService } from '../../../../_services/back/business-paсk.service';
 import { Firm } from '../../../../_models/business-pack/firm';
 import { LoadingService } from '../../../../_services/front/loading.service';
@@ -45,6 +53,19 @@ export class OrderComponent implements OnInit {
   public orderDiscount: OrderDiscount | undefined;
   public sendMail: boolean = false;
   public statusDropdown = statusOptions;
+  public calculateOptions: CalculateOptions[] = [
+    {
+      name: 'Понизить',
+      value: CalculateOptionsEnum.DownGrade,
+    },
+    {
+      name: 'Повысить',
+      value: CalculateOptionsEnum.UpGrade,
+    },
+  ];
+  public isBoxesDistribute = false;
+  public isDeliveryDistribute = false;
+  public isOrderCalculated = false;
   constructor(
     private orderService: OrderService,
     private bpService: BusinessPackService,
@@ -123,10 +144,8 @@ export class OrderComponent implements OnInit {
   public saveOrder(): void {
     this.sendingMail = true;
     const order: any = { ...this.order };
-    let sum = 0;
     // @ts-ignore
     order.products = this.order.products.map((product: OrderProduct) => {
-      sum += product.count * product.price;
       return <OrderItem>{
         id: product.product.id,
         count: product.count,
@@ -138,7 +157,6 @@ export class OrderComponent implements OnInit {
     }
     // @ts-ignore
     order.boxes = this.order.boxes.map((box: OrderBox) => {
-      sum += box.count * box.price;
       return <OrderItem>{
         id: box.box.id,
         count: box.count,
@@ -157,25 +175,44 @@ export class OrderComponent implements OnInit {
     if (!order.clientInn) {
       delete order.clientInn;
     }
-    if (order.deliveryPrice) sum += order.deliveryPrice;
-    order.orderSum = sum;
+    order.orderSum = this.getOrderSum();
     // @ts-ignore
-    this.orderService.updateItem<Order>(order).subscribe(() => {
-      if (this.sendMail) {
-        if (order.clientId) {
-          this.sendBusinessMail();
-        } else {
-          this.sendIndividualMail();
-        }
-      } else {
-        this.sendingMail = false;
-        this.ms.add({
-          severity: 'success',
-          summary: 'Заказ изменен',
-          detail: `Данные сохранены в системе`,
-        });
+    if (this.isOrderCalculated) {
+      if (order.id) {
+        this.orderService.updateItem({ id: order.id, status: OrderStatus.Calculated }).subscribe();
+        delete order.id;
       }
-    });
+      if (order.orderDate) delete order.orderDate;
+      this.orderService.addItem<Order>(order).subscribe((id: number) => {
+        if (this.sendMail) {
+          if (order.clientId) {
+            this.sendBusinessMail(id);
+          } else {
+            this.sendIndividualMail(id);
+          }
+        } else {
+          this.sendingMail = false;
+          this.router.navigate(['admin/orders']);
+        }
+      });
+    } else {
+      this.orderService.updateItem<Order>(order).subscribe(() => {
+        if (this.sendMail) {
+          if (order.clientId) {
+            this.sendBusinessMail();
+          } else {
+            this.sendIndividualMail();
+          }
+        } else {
+          this.sendingMail = false;
+          this.ms.add({
+            severity: 'success',
+            summary: 'Заказ изменен',
+            detail: `Данные сохранены в системе`,
+          });
+        }
+      });
+    }
   }
 
   public getStatus(status: OrderStatus): { label: string; severity: string } {
@@ -382,12 +419,12 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  private sendBusinessMail(): void {
+  private sendBusinessMail(id?: number): void {
     const requests = [
       // @ts-ignore
       this.bpService.getFirmById(this.order.clientId),
       // @ts-ignore
-      this.orderService.getItemById<Order>(this.order.id),
+      this.orderService.getItemById<Order>(id ? id : this.order.id),
     ];
     forkJoin(requests).subscribe(([firm, orderItem]) => {
       firm = firm as Firm;
@@ -413,9 +450,9 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  private sendIndividualMail(): void {
+  private sendIndividualMail(id?: number): void {
     // @ts-ignore
-    const orderId = this.order.id;
+    const orderId = id ? id : this.order.id;
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
       const docSub = this.documentService.getEstimate(order).subscribe((file) => {
         docSub.unsubscribe();
@@ -433,5 +470,91 @@ export class OrderComponent implements OnInit {
         });
       });
     });
+  }
+
+  public changeOrderSum(action: CalculateOptionsEnum, value: number): void {
+    const percent = value / 100;
+    switch (action) {
+      case CalculateOptionsEnum.DownGrade:
+        this.order?.products.map((product) => {
+          if (!product.initialPrice) {
+            product.initialPrice = product.price;
+          }
+          product.price -= Number((product.price * percent).toFixed(2));
+        });
+        break;
+      case CalculateOptionsEnum.UpGrade:
+        this.order?.products.map((product) => {
+          if (!product.initialPrice) {
+            product.initialPrice = product.price;
+          }
+          product.price += Number((product.price * percent).toFixed(2));
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  public cancelChangeOrderSum(): void {
+    this.order?.products.map((product) => {
+      if (product.initialPrice) {
+        product.price = product.initialPrice;
+        delete product.initialPrice;
+      }
+    });
+  }
+
+  public distributeDeliveryPrice(): void {
+    if (this.order) {
+      const productsCount = this.order.products.length;
+      const priceOnPos = this.order.deliveryPrice / productsCount;
+      let distributedSum = 0;
+      for (let i = 0; i < productsCount; i++) {
+        const product = this.order.products[i];
+        if (i === productsCount - 1) {
+          product.price += Number(
+            ((this.order.deliveryPrice - distributedSum) / product.count).toFixed(2),
+          );
+        } else {
+          const distributedPrice = Number((priceOnPos / product.count).toFixed(2));
+          distributedSum += distributedPrice * product.count;
+          product.price += distributedPrice;
+        }
+      }
+      this.order.deliveryPrice = 0;
+      this.isDeliveryDistribute = true;
+    }
+  }
+
+  public distributeBoxesPrice(): void {
+    if (this.order) {
+      const productsCount = this.order.products.length;
+      const priceOnPos = this.getBoxesSum() / productsCount;
+      let distributedSum = 0;
+      for (let i = 0; i < productsCount; i++) {
+        const product = this.order.products[i];
+        if (i === productsCount - 1) {
+          product.price += Number(
+            ((this.getBoxesSum() - distributedSum) / product.count).toFixed(2),
+          );
+        } else {
+          const distributedPrice = Number((priceOnPos / product.count).toFixed(2));
+          distributedSum += distributedPrice * product.count;
+          product.price += distributedPrice;
+        }
+      }
+      this.order.boxes = [];
+      this.isBoxesDistribute = true;
+    }
+  }
+
+  public saveCalculatedOrder(): void {
+    this.isOrderCalculated = true;
+    if (this.order?.clientId) {
+      this.businessOrderSave();
+    } else {
+      this.saveOrder();
+    }
   }
 }

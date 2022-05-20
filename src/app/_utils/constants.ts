@@ -53,6 +53,10 @@ export const statusOptions: { name: string; value: OrderStatus }[] = [
     name: 'Закрыт',
     value: OrderStatus.Closed,
   },
+  {
+    name: 'Пересчитан',
+    value: OrderStatus.Calculated,
+  },
 ];
 
 export function getOrderStatus(status: OrderStatus): { label: string; severity: string } {
@@ -96,6 +100,11 @@ export function getOrderStatus(status: OrderStatus): { label: string; severity: 
       return {
         label: 'Закрыт',
         severity: 'danger',
+      };
+    case OrderStatus.Calculated:
+      return {
+        label: 'Пересчитан',
+        severity: 'success',
       };
   }
 }
