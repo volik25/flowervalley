@@ -165,7 +165,12 @@
             <ng-template pTemplate="content">
               <div class="flex align-items-center">
                 <span class="p-float-label">
-                  <p-inputNumber [(ngModel)]="order.deliveryPrice" inputId="delivery" [min]="1">
+                  <p-inputNumber
+                    [(ngModel)]="order.deliveryPrice"
+                    inputId="delivery"
+                    [min]="1"
+                    [disabled]="isDeliveryDistribute"
+                  >
                   </p-inputNumber>
                   <label for="delivery">Стоимость поставки</label>
                 </span>
@@ -218,10 +223,52 @@
       <p-button label="Посмотреть счет" (onClick)="openTelepack()"></p-button>
     </div>
   </div>
+  <p-accordion>
+    <p-accordionTab header="Калькуляция заказа">
+      <div class="flex justify-content-between">
+        <div>
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="dropdown"
+              [options]="calculateOptions"
+              optionLabel="name"
+              optionValue="value"
+              #dropdown
+            ></p-dropdown>
+            <label for="dropdown">Действие</label>
+          </span>
+          <span class="p-float-label">
+            <p-inputNumber #inputNumber inputId="percentValue" [min]="1"> </p-inputNumber>
+            <label for="percentValue">Значение, %</label>
+          </span>
+          <p-button
+            label="Расчитать"
+            (onClick)="changeOrderSum(dropdown.value, inputNumber.value)"
+          ></p-button>
+          <p-button
+            styleClass="p-button-danger ml-2"
+            label="Сбросить"
+            (onClick)="cancelChangeOrderSum()"
+          ></p-button>
+        </div>
+        <div class="flex flex-column">
+          <p-button
+            styleClass="mb-2"
+            label="Распределить коробки"
+            (onClick)="distributeBoxesPrice()"
+          ></p-button>
+          <p-button label="Распределить доставку" (onClick)="distributeDeliveryPrice()"></p-button>
+        </div>
+      </div>
+      <div class="flex justify-content-center">
+        <p-button label="Оформить" (onClick)="saveCalculatedOrder()"></p-button>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
   <div class="order__products">
     <flower-valley-products-order [(orderProducts)]="order.products"></flower-valley-products-order>
   </div>
-  <div class="order__boxes">
+  <div class="order__boxes" *ngIf="!isBoxesDistribute">
     <flower-valley-boxes-order
       [(orderBoxes)]="order.boxes"
       [products]="order.products"

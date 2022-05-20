@@ -63,7 +63,13 @@
       <td>
         <p-cellEditor>
           <ng-template pTemplate="input">
-            <p-inputNumber [(ngModel)]="product.price" [min]="1" [required]="true"> </p-inputNumber>
+            <p-inputNumber
+              [(ngModel)]="product.price"
+              [min]="1"
+              [maxFractionDigits]="2"
+              [required]="true"
+            >
+            </p-inputNumber>
           </ng-template>
           <ng-template pTemplate="output">
             {{ product.price }}

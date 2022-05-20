@@ -32,6 +32,7 @@ export interface OrderItem {
 
 export interface OrderProduct extends OrderItem {
   product: ProductCategory;
+  initialPrice?: number;
 }
 
 export interface OrderBox extends OrderItem {
@@ -41,4 +42,14 @@ export interface OrderBox extends OrderItem {
 export interface OrderDiscount {
   value: number;
   percent: number;
+}
+
+export interface CalculateOptions {
+  name: string;
+  value: CalculateOptionsEnum;
+}
+
+export enum CalculateOptionsEnum {
+  UpGrade,
+  DownGrade,
 }

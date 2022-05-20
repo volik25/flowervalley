@@ -20,6 +20,7 @@ import { ProductsOrderComponent } from './order/products-order/products-order.co
 import { BoxesOrderComponent } from './order/boxes-order/boxes-order.component';
 import { CalendarModule } from 'primeng/calendar';
 import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
     InputNumberModule,
     ReactiveFormsModule,
     CalendarModule,
+    AccordionModule,
   ],
   providers: [PriceConverterPipe],
 })
