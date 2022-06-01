@@ -8,4 +8,5 @@ export enum OrderStatus {
   'Canceled',
   'Closed',
   'Calculated',
+  'Calculate_Delivery',
 }

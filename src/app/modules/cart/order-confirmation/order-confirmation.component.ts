@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DestroyService } from '../../../_services/front/destroy.service';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { debounceTime, forkJoin, map, Observable, of, takeUntil } from 'rxjs';
+import { YaMapService } from '../../../_services/front/ya-map.service';
 import { BusinessPackService } from '../../../_services/back/business-paсk.service';
 import { ProductItem } from '../../../_models/product-item';
 import { Message, MessageService } from 'primeng/api';
@@ -16,15 +17,16 @@ import { BoxGenerateService } from '../../../_services/front/box-generate.servic
 import { OrderService } from '../../../_services/back/order.service';
 import { MailService } from '../../../_services/back/mail.service';
 import { DocumentGenerateService } from '../../../_services/front/document-generate.service';
-import { Firm } from '../../../_models/business-pack/firm';
+import { Firm, Individual } from '../../../_models/business-pack/firm';
 import { orderWarnMessage } from '../../../_utils/constants';
 import { CartVariables } from '../../../_models/static-data/variables';
+import { OrderStatus } from '../../../_utils/order-status.enum';
 
 @Component({
   selector: 'flower-valley-order-confirmation',
   templateUrl: './order-confirmation.component.html',
   styleUrls: ['./order-confirmation.component.scss'],
-  providers: [DestroyService, DocumentGenerateService],
+  providers: [DestroyService, YaMapService, DocumentGenerateService],
 })
 export class OrderConfirmationComponent implements OnDestroy {
   @Input()
@@ -38,6 +40,9 @@ export class OrderConfirmationComponent implements OnDestroy {
   public contacts: FormGroup;
   public entityData!: FormGroup;
   private entityId: string | undefined;
+  public shippingCost: number | undefined;
+  public delivery_error: string = '';
+  public showDelivery = false;
   public orderId: number | undefined;
   public order: Order | undefined;
   public clientDataVerified: boolean = false;
@@ -49,6 +54,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private $destroy: DestroyService,
+    private yaMap: YaMapService,
     private cdr: ChangeDetectorRef,
     private bpService: BusinessPackService,
     private cartService: CartService,
@@ -74,6 +80,28 @@ export class OrderConfirmationComponent implements OnDestroy {
       comment: [''],
       orderSum: [null, Validators.required],
     });
+    this.contacts.controls['address'].valueChanges
+      .pipe(takeUntil($destroy), debounceTime(1000))
+      .subscribe((address) => {
+        this.shippingCost = undefined;
+        this.showDelivery = false;
+        this.delivery_error = '';
+        if (address) {
+          yaMap.addressChanged.next(address);
+        } else {
+          cdr.detectChanges();
+        }
+      });
+    yaMap
+      .calculateShippingCost()
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((calculationResult) => {
+        this.shippingCost = calculationResult;
+        if (this.shippingCost === 0) {
+          this.delivery_error = 'Адрес не найден';
+        }
+        this.cdr.detectChanges();
+      });
     if (this.cartService.isTulipsInclude) {
       this.pickUp.setValue(true);
       this.pickUp.disable();
@@ -81,6 +109,8 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
     this.pickUp.valueChanges.subscribe((value) => {
       if (value) {
+        this.shippingCost = undefined;
+        this.showDelivery = false;
         this.contacts.controls['address'].setValue('');
         this.contacts.controls['address'].disable();
       } else {
@@ -106,10 +136,17 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
   }
 
+  public deliveryButtonClick(): void {
+    this.showDelivery = true;
+    this.cdr.detectChanges();
+  }
+
   public get isConfirmOrderDisabled(): boolean {
     if (this.contacts.invalid) return true;
-    if (this.contacts.getRawValue().address) return false;
-    return !this.pickUp.value;
+    if (this.contacts.getRawValue().address && !this.pickUp.value) {
+      return !this.showDelivery && this.shippingCost === 0;
+    }
+    return !(!this.contacts.getRawValue().address && this.pickUp.value);
   }
 
   public confirmOrder(): void {
@@ -121,99 +158,122 @@ export class OrderConfirmationComponent implements OnDestroy {
       this.isInvoiceLoading = true;
       this.messageService.add(orderWarnMessage);
       this.entityData.disable();
-      this.createInvoice(order);
+      if (order.deliveryPrice === this.cartVariables?.moscowDelivery || this.pickUp.value) {
+        this.createBusinessInvoice(order);
+      } else {
+        order.status = OrderStatus.Calculate_Delivery;
+        this.getPartner().subscribe(({ partnerId, inn }) => {
+          order.clientId = partnerId;
+          order.clientInn = inn;
+          this.createOrder(order);
+        });
+      }
     } else {
       this.isInvoiceLoading = true;
       this.messageService.add(orderWarnMessage);
-      this.orderService.addItem(order).subscribe(
-        (id: number) => {
-          this.orderId = id;
-          this.sendIndividualMail(id);
-        },
-        ({ error }) => {
-          this.isInvoiceLoading = false;
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Что-то пошло не так',
-            detail: error.message,
-          });
-        },
-      );
+      if (order.deliveryPrice === this.cartVariables?.moscowDelivery || this.pickUp.value) {
+        this.createIndividualInvoice(order);
+      } else {
+        order.status = OrderStatus.Calculate_Delivery;
+        this.createOrder(order);
+      }
     }
   }
 
-  private createInvoice(order: Order): void {
-    this.getPartner().subscribe(({ partnerId, inn }) => {
-      if (partnerId) {
-        order.clientId = partnerId;
-        order.clientInn = inn;
-        const firmId = this.bpService.selfId;
-        const goods: GoodsInvoice[] = [];
-        this.goods.map((product) => {
-          if (product.id && product.volume) {
-            goods.push({
-              model_id: product.id,
-              volume_id: product.volume,
-              nds: 0,
-              nds_mode: 0,
-              count: product.count,
-              price: product.price,
-              qname: product.name,
+  private createOrder(order: Order): void {
+    this.orderService.addItem(order).subscribe(
+      (id: number) => {
+        this.orderId = id;
+        this.sendBusinessNotification(id);
+      },
+      ({ error }) => {
+        this.isInvoiceLoading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Что-то пошло не так',
+          detail: error.message,
+        });
+      },
+      () => {
+        this.isInvoiceLoading = false;
+      },
+    );
+  }
+
+  private createIndividualInvoice(order: Order): void {
+    this.createIndividualEntity().subscribe((partnerId) => {
+      this.createInvoice(order, partnerId, false);
+    });
+  }
+
+  private createBusinessInvoice(order: Order): void {
+    this.getPartner().subscribe(({ partnerId }) => {
+      this.createInvoice(order, partnerId, true);
+    });
+  }
+
+  private createInvoice(order: Order, partnerId: string, isBusiness: boolean): void {
+    order.clientId = partnerId;
+    const firmId = this.bpService.selfId;
+    const goods: GoodsInvoice[] = [];
+    this.orderService.generateInvoiceGoods(this.goods).map((product) => {
+      goods.push({
+        volume_id: product.volume,
+        model_name: product.name,
+        qname: product.name,
+        nds: 0,
+        nds_mode: 0,
+        count: product.count,
+        price: product.price,
+      });
+    });
+    order.boxes.map((box) => {
+      goods.push({
+        model_id: this.bpService.boxId,
+        volume_id: this.bpService.boxVolume,
+        nds: 0,
+        nds_mode: 0,
+        count: box.count,
+        price: box.price,
+        qname: 'Транспортировочная коробка (в ассортименте)',
+      });
+    });
+    if (order.deliveryPrice) {
+      goods.push({
+        model_id: this.bpService.deliveryId,
+        volume_id: this.bpService.deliveryVolume,
+        nds: 0,
+        nds_mode: 0,
+        count: 1,
+        price: order.deliveryPrice,
+        qname: 'Доставка',
+      });
+    }
+    const invoice: Invoice = {
+      firm_id: firmId,
+      partner_id: partnerId,
+      goods: goods,
+      partner_flag: 'A',
+    };
+    this.bpService.createInvoice(invoice).subscribe((response) => {
+      const invoiceId = response.Object;
+      order.invoiceId = invoiceId;
+      this.bpService
+        .sendInvoiceToTelepak(invoiceId, {
+          report_name: 'Счет с образцом п. п. + печать подпись',
+          send_with_stamp: true,
+        })
+        .subscribe(({ id }) => {
+          if (id) {
+            order.accountNumber = id;
+            if (!order.deliveryPrice) {
+              order.status = OrderStatus.Calculate_Delivery;
+            }
+            this.orderService.addItem(order).subscribe((orderId) => {
+              this.sendInvoiceMail(invoiceId, partnerId, orderId, isBusiness);
             });
           }
         });
-        if (!order.boxes.length && this.pickUp.value) {
-          const invoice: Invoice = {
-            firm_id: firmId,
-            partner_id: partnerId,
-            goods: goods,
-            partner_flag: 'A',
-          };
-          this.bpService.createInvoice(invoice).subscribe((response) => {
-            const invoiceId = response.Object;
-            this.bpService
-              .sendInvoiceToTelepak(invoiceId, {
-                report_name: 'Счет с образцом п. п. + печать подпись',
-                send_with_stamp: true,
-              })
-              .subscribe(({ id }) => {
-                if (id) {
-                  order.accountNumber = id;
-                  this.orderService.addItem(order).subscribe((orderId) => {
-                    this.sendBusinessMail(invoiceId, partnerId, orderId);
-                  });
-                }
-              });
-          });
-        } else {
-          this.orderService.addItem(order).subscribe((orderId) => {
-            const { FullName } = this.entityData.getRawValue();
-            this.sendBusinessNotification(orderId, FullName);
-          });
-        }
-        // order.boxes.map((box) => {
-        //   goods.push({
-        //     model_id: this.bpService.boxId,
-        //     volume_id: this.bpService.boxVolume,
-        //     nds: 0,
-        //     nds_mode: 0,
-        //     count: box.count,
-        //     price: box.price,
-        //     qname: 'Транспортировочная коробка (в ассортименте)',
-        //   });
-        // });
-        // if (order.deliveryPrice) {
-        //   goods.push({
-        //     model_id: this.bpService.deliveryId,
-        //     volume_id: this.bpService.deliveryVolume,
-        //     nds: 0,
-        //     nds_mode: 0,
-        //     count: 1,
-        //     price: order.deliveryPrice,
-        //     qname: 'Доставка',
-        //   });
-        // }
-      }
     });
   }
 
@@ -241,6 +301,22 @@ export class OrderConfirmationComponent implements OnDestroy {
         }),
       );
     }
+  }
+
+  public createIndividualEntity(): Observable<string> {
+    const entity = this.contacts.getRawValue();
+    return this.bpService
+      .createFirm({
+        FullName: entity.name,
+        Address: `${entity.address ? entity.address + ',' : ''} ${entity.phone}, ${entity.email}`,
+      } as Individual)
+      .pipe(
+        map((firm) => {
+          // @ts-ignore
+          this.order.clientId = firm.Object;
+          return firm.Object;
+        }),
+      );
   }
 
   public entityDataChanges(data: FormGroup | { id: string; isChanged: boolean }): void {
@@ -303,6 +379,7 @@ export class OrderConfirmationComponent implements OnDestroy {
       boxes: orderBoxes,
       deliveryPrice: 0,
     };
+    if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
   }
 
@@ -310,15 +387,52 @@ export class OrderConfirmationComponent implements OnDestroy {
     this.contacts.controls['orderSum'].setValue(sum);
   }
 
-  private sendIndividualMail(orderId: number): void {
-    this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      this.order = order;
-      const docSub = this.documentService.getEstimate(order).subscribe((file) => {
-        docSub.unsubscribe();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('orderId', orderId.toString());
-        formData.append('email', order.clientEmail);
+  private sendInvoiceMail(
+    invoiceId: string,
+    firmId: string,
+    orderId: number,
+    isBusiness: boolean,
+  ): void {
+    const requests = [
+      this.bpService.getInvoiceById(invoiceId),
+      this.bpService.getFirmById(firmId),
+      this.orderService.getItemById<Order>(orderId),
+    ];
+    forkJoin(requests).subscribe(([invoice, firm, orderItem]) => {
+      invoice = invoice as any;
+      firm = firm as Firm;
+      const order = orderItem as Order;
+      const formData = new FormData();
+      formData.append('billNumber', invoice.Name);
+      formData.append('billDate', invoice.Date);
+      // @ts-ignore
+      formData.append('accountNumber', order.accountNumber);
+      formData.append('email', order.clientEmail);
+      formData.append('orderId', orderId.toString());
+      if (isBusiness) {
+        const docSub = this.documentService.getOffer(order, firm).subscribe((file) => {
+          docSub.unsubscribe();
+          formData.append('file', file);
+          this.mailService.sendBusinessMail(formData, order, firm.FullName).subscribe(() => {
+            this.messageService.clear();
+            this.messageService.add({
+              severity: 'success',
+              summary: `Заявка №${orderId} принята`,
+              detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}`,
+              life: 10000,
+            });
+            this.isInvoiceLoading = false;
+            this.isOrderConfirmed = true;
+            this.router.navigate(['download-invoice'], {
+              relativeTo: this.route,
+              queryParams: {
+                invoice: order.accountNumber,
+                order: orderId,
+              },
+            });
+          });
+        });
+      } else {
         this.mailService.sendIndividualMail(formData, order).subscribe(() => {
           this.messageService.clear();
           const message: Message = {
@@ -332,60 +446,18 @@ export class OrderConfirmationComponent implements OnDestroy {
           this.isInvoiceLoading = false;
           this.isOrderConfirmed = true;
         });
-      });
+      }
     });
   }
 
-  private sendBusinessMail(invoiceId: string, firmId: string, orderId: number): void {
-    const requests = [
-      this.bpService.getInvoiceById(invoiceId),
-      this.bpService.getFirmById(firmId),
-      this.orderService.getItemById<Order>(orderId),
-    ];
-    forkJoin(requests).subscribe(([invoice, firm, orderItem]) => {
-      invoice = invoice as any;
-      firm = firm as Firm;
-      const order = orderItem as Order;
-      const docSub = this.documentService.getOffer(order, firm).subscribe((file) => {
-        docSub.unsubscribe();
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('billNumber', invoice.Name);
-        formData.append('billDate', invoice.Date);
-        // @ts-ignore
-        formData.append('accountNumber', order.accountNumber);
-        formData.append('email', order.clientEmail);
-        formData.append('orderId', orderId.toString());
-        this.mailService.sendBusinessMail(formData, order, firm.FullName).subscribe(() => {
-          this.messageService.clear();
-          this.messageService.add({
-            severity: 'success',
-            summary: `Заявка №${orderId} принята`,
-            detail: `Инструкции с дальнейшими действиями отправлены на почту ${order.clientEmail}`,
-            life: 10000,
-          });
-          this.isInvoiceLoading = false;
-          this.isOrderConfirmed = true;
-          this.router.navigate(['download-invoice'], {
-            relativeTo: this.route,
-            queryParams: {
-              invoice: order.accountNumber,
-              order: orderId,
-            },
-          });
-        });
-      });
-    });
-  }
-
-  private sendBusinessNotification(orderId: number, firmName: string): void {
+  private sendBusinessNotification(orderId: number): void {
     this.orderService.getItemById<Order>(orderId).subscribe((order) => {
-      this.mailService.sendBusinessNotificationMail(order, firmName).subscribe(() => {
+      this.mailService.sendBusinessNotificationMail(order).subscribe(() => {
         this.messageService.clear();
         this.messageService.add({
           severity: 'success',
           summary: `Заявка №${orderId} принята`,
-          detail: `После подтверждения заказа менеджером, Вам на почту будет отправлена инструкция с дальнейшими действиями`,
+          detail: `Вам на почту отправлена инструкция с дальнейшими действиями`,
           life: 10000,
           key: 'orderMessage',
         });

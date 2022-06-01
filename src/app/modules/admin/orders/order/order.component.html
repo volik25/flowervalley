@@ -17,7 +17,7 @@
         icon="pi pi-save"
         label="Сохранить"
         [loading]="sendingMail"
-        (onClick)="order.clientId ? businessOrderSave() : saveOrder()"
+        (onClick)="confirmSaving()"
       ></p-button>
     </span>
   </div>
@@ -208,8 +208,8 @@
       </div>
     </div>
   </div>
-  <div class="order__entity" *ngIf="clientEntity">
-    <div>
+  <div class="order__entity">
+    <div *ngIf="clientEntity && clientEntity.INN">
       <div class="order__entity_name">
         <div>Наименование юридического лица:</div>
         <div>{{ clientEntity.ShortName }}</div>

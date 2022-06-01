@@ -25,6 +25,7 @@ export class HtmlToPdfService {
   private sum!: string;
   private order: Order | undefined;
   private date: string | undefined;
+  private invoiceId: string | undefined;
   private _generatedDocument: Subject<Blob> = new Subject<Blob>();
 
   constructor(
@@ -42,6 +43,7 @@ export class HtmlToPdfService {
     sum: string,
     order?: Order,
     date?: string,
+    invoiceId?: string,
     isOpened: boolean = true,
   ): void {
     this.header = header;
@@ -52,6 +54,7 @@ export class HtmlToPdfService {
     this.sum = sum;
     this.order = order;
     this.date = date;
+    this.invoiceId = invoiceId;
     if (isClient) {
       HtmlToPdfService.getBase64ImageFromURL('assets/images/logo.png').then((res) => {
         const html = htmlToPdfmake(this.generateHTML(res).innerHTML, {
@@ -97,6 +100,9 @@ export class HtmlToPdfService {
     h2.innerText = 'Смета к заказу';
     if (this.order && this.order.id) {
       h2.innerText += ` №${this.order.id}`;
+      if (this.invoiceId) {
+        h2.innerText += ` по счету №${this.invoiceId}`;
+      }
     }
     h2.style.textAlign = 'center';
     h2.style.margin = '0 0 20px 0';

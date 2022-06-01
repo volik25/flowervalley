@@ -16,7 +16,7 @@ export interface Product extends BusinessPackModel {
 }
 
 export interface ProductCategory extends Product {
-  category?: {
+  category: {
     id: number;
     name: string;
   };

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Firm } from '../../_models/business-pack/firm';
+import { Firm, Individual } from '../../_models/business-pack/firm';
 import { environment } from '../../../environments/environment';
 import { GoodsBusinessPack } from '../../_models/business-pack/goods-base';
 import { Invoice } from '../../_models/business-pack/invoice';
@@ -44,7 +44,7 @@ export class BusinessPackService {
     );
   }
 
-  public createFirm(firm: Firm): Observable<any> {
+  public createFirm(firm: Firm | Individual): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/firm`, firm);
   }
 

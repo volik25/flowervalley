@@ -57,6 +57,10 @@ export const statusOptions: { name: string; value: OrderStatus }[] = [
     name: 'Пересчитан',
     value: OrderStatus.Calculated,
   },
+  {
+    name: 'Расчет доставки',
+    value: OrderStatus.Calculate_Delivery,
+  },
 ];
 
 export function getOrderStatus(status: OrderStatus): { label: string; severity: string } {
@@ -99,6 +103,11 @@ export function getOrderStatus(status: OrderStatus): { label: string; severity: 
     case OrderStatus.Closed:
       return {
         label: 'Закрыт',
+        severity: 'danger',
+      };
+    case OrderStatus.Calculate_Delivery:
+      return {
+        label: 'Расчет доставки',
         severity: 'danger',
       };
     case OrderStatus.Calculated:

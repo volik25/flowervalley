@@ -24,8 +24,8 @@ export class MailService {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/business`, data);
   }
 
-  public sendBusinessNotificationMail(order: Order, firmName: string): Observable<any> {
-    this.sendCopyToAdmin(true, new FormData(), order, firmName);
+  public sendBusinessNotificationMail(order: Order): Observable<any> {
+    this.sendAdminNotificationMail(order).subscribe();
     const data = new FormData();
     data.append('orderId', order.id.toString());
     data.append('email', order.clientEmail);
@@ -38,6 +38,16 @@ export class MailService {
 
   private sendAdminMail(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/${this.apiUrl}/admin`, data);
+  }
+
+  private sendAdminNotificationMail(order: Order): Observable<any> {
+    const data = new FormData();
+    data.append('orderId', order.id.toString());
+    data.append('contactName', order.clientName);
+    data.append('contactPhone', order.clientPhone);
+    data.append('contactEmail', order.clientEmail);
+    data.append('contactAddress', order.clientAddress);
+    return this.http.post(`${this.baseUrl}/${this.apiUrl}/admin-notification`, data);
   }
 
   public sendPricesMail(data: any): Observable<any> {
