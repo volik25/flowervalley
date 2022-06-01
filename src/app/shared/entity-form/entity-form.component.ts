@@ -113,7 +113,7 @@ export class EntityFormComponent implements OnInit, OnChanges {
 
   public searchItemsByBP(searchString: string): void {
     this.bpService.searchFirm(searchString).subscribe(({ items }) => {
-      this.businessPackResults = items;
+      this.businessPackResults = items.filter((item) => item.INN);
     });
   }
 

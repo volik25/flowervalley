@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../../../../_models/category';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
@@ -8,6 +16,8 @@ import { StorageService } from '../../../../_services/front/storage.service';
 import { categoriesKey } from '../../../../_utils/constants';
 import { slugify } from 'transliteration';
 import { LoadingService } from '../../../../_services/front/loading.service';
+import { Observable, tap } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-category',
@@ -25,10 +35,11 @@ export class CategoryComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private router: Router,
+    private ms: MessageService,
     private ls: LoadingService,
   ) {
     this.categoryGroup = fb.group({
-      name: ['', Validators.required],
+      name: ['', Validators.required, [this.nameAsyncValidator.bind(this)]],
       img: [''],
       parentId: [null],
       isSeedling: [false],
@@ -153,5 +164,19 @@ export class CategoryComponent implements OnInit {
 
   public get isFormArrayValid(): boolean {
     return this.steps.status === 'VALID';
+  }
+
+  public nameAsyncValidator(control: FormControl): Observable<ValidationErrors | null> {
+    return this.catalogService.validateName(control.value).pipe(
+      tap((value) => {
+        if (value && control.dirty) {
+          this.ms.add({
+            severity: 'error',
+            summary: 'Совпадение названия',
+            detail: 'Категория с таким именем уже существует',
+          });
+        }
+      }),
+    );
   }
 }

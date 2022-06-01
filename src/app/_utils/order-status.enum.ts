@@ -7,4 +7,5 @@ export enum OrderStatus {
   'Completed',
   'Canceled',
   'Closed',
+  'Calculate_Delivery',
 }

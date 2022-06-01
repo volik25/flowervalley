@@ -119,6 +119,14 @@
         *ngIf="clientType === 'entity'"
         (dataChanges)="entityDataChanges($event)"
       ></flower-valley-entity-form>
+      <div class="p-field-checkbox mt-2" *ngIf="clientType === 'entity'">
+        <p-checkbox
+          [(ngModel)]="clientDataVerified"
+          [binary]="true"
+          inputId="clientDataVerify"
+        ></p-checkbox>
+        <label for="clientDataVerify">Данные о компании заполнены корректно</label>
+      </div>
       <div class="private-policy">
         Нажимая кнопку "Оформить заказ" Вы соглашаетесь с условиями
         <a [routerLink]="['/private-policy']">Политики конфиденциальности</a>
@@ -128,7 +136,7 @@
         [loading]="isInvoiceLoading"
         styleClass="confirm-order"
         label="Оформить заказ"
-        [disabled]="isConfirmOrderDisabled"
+        [disabled]="isConfirmOrderDisabled || (clientType === 'entity' && !clientDataVerified)"
         (onClick)="confirmOrder()"
       ></p-button>
       <p-button
@@ -148,6 +156,6 @@
       ></flower-valley-confirmation-goods>
     </div>
   </div>
-  <p-messages [(value)]="message" key="orderMessage"></p-messages>
+  <p-messages [(value)]="message" key="orderMessage" styleClass="order-message"></p-messages>
 </div>
 <flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>

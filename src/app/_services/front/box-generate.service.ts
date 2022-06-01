@@ -48,11 +48,12 @@ export class BoxGenerateService {
                 ...box,
                 count: 1,
               });
-              spaceLeft = box.volume;
+              spaceLeft = box.volume - product.count;
             }
           } else if (product.count / box.volume > 1) {
             if (currentBox) {
               if (spaceLeft) {
+                product.count = product.count - spaceLeft;
                 const flooredCount = Math.ceil(product.count / currentBox.volume);
                 currentBox.count += flooredCount;
                 spaceLeft = flooredCount * currentBox.volume - product.count;

@@ -7,6 +7,7 @@ export interface Order {
   clientId?: string;
   clientInn?: string;
   accountNumber?: string;
+  invoiceId?: string;
   requestNumber?: string;
   clientName: string;
   clientPhone: string;

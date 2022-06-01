@@ -5,19 +5,40 @@
   border-radius: 10px;
   width: 280px;
   margin-bottom: 20px;
+  position: relative;
+  &>span {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: $white-100;
+    background-color: $main-green;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 110%;
+  }
   .image {
     cursor: pointer;
   }
-  .category__name {
-    padding-right: 10px;
-  }
-  &>div:nth-child(2) {
+  .name-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px 20px 30px;
     font-weight: 500;
     font-size: 16px;
     line-height: 110%;
   }
-  &>div:last-child:not(:nth-child(2)) {
+  .category__name {
+    padding-right: 10px;
+  }
+  &>div:last-child:not(.name-block) {
     padding: 0 10px 20px;
   }
 }

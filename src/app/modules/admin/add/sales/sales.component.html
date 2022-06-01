@@ -25,6 +25,10 @@
         optionLabel="name"
         formControlName="categoryId"
         [autoDisplayFirst]="false"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        emptyFilterMessage="Совпадений не найдено"
       ></p-dropdown>
       <label for="categories">Целевая категория</label>
     </span>
@@ -37,6 +41,10 @@
         optionLabel="name"
         formControlName="productId"
         [autoDisplayFirst]="false"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        emptyFilterMessage="Совпадений не найдено"
       ></p-dropdown>
       <label for="products">Целевой товар (при скидке на товар)</label>
     </span>
@@ -70,6 +78,19 @@
       ></p-inputNumber>
       <label for="discount">Скидка, %</label>
     </span>
+    <div class="p-field-checkbox mb-2">
+      <p-checkbox formControlName="isVisible" [binary]="true" inputId="isVisible"></p-checkbox>
+      <label for="isVisible">Отображать в блоке акций</label>
+    </div>
+    <div class="p-field-checkbox mb-2">
+      <p-checkbox
+        formControlName="isActive"
+        [binary]="true"
+        inputId="isActive"
+        [disabled]="!selectedCategory"
+      ></p-checkbox>
+      <label for="isActive">Включить в систему</label>
+    </div>
     <flower-valley-files-upload
       [multi]="false"
       label="Добавить изображение"

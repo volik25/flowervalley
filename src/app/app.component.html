@@ -39,7 +39,7 @@
       type="button"
       pButton
       icon="pi pi-check"
-      label="Да"
+      [label]="confirmDialog.acceptButtonLabel !== 'Yes' ? confirmDialog.acceptButtonLabel : 'Да'"
       (click)="confirmDialog.accept()"
     ></button>
     <button
@@ -47,7 +47,7 @@
       pButton
       class="p-button-danger"
       icon="pi pi-times"
-      label="Нет"
+      [label]="confirmDialog.rejectButtonLabel !== 'No' ? confirmDialog.rejectButtonLabel : 'Нет'"
       (click)="confirmDialog.reject()"
     ></button>
   </ng-template>

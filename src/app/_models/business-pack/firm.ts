@@ -19,6 +19,12 @@ export interface Firm {
   OKDP: string;
   ExtraName: string;
   PersonalDep: string;
+  OrgEMail: string;
   OrgPhone: string;
   OrgUrl: string;
+}
+
+export interface Individual {
+  FullName: string;
+  Address: string;
 }

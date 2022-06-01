@@ -57,9 +57,9 @@ export class ProductItemComponent {
     let price = this.product.price;
     let initialPrice = this.product.initialPrice;
     if (this.category) this.product.category = this.category;
-    if (this.discount) {
-      price = this.discount;
-      initialPrice = this.discount;
+    if (this.product.sale) {
+      price = this.product.sale;
+      initialPrice = this.product.sale;
     }
     this.cartService.addToCart({ ...this.product, price: price, initialPrice: initialPrice });
     this.isInCartShow = true;
@@ -109,18 +109,15 @@ export class ProductItemComponent {
     });
   }
 
-  public get discount(): number | null {
-    const sale = this.product.sale;
-    if (sale && sale.productId) {
-      return sale.discount;
-    }
-
-    return null;
-  }
-
   public get percentDiscount(): number | null {
-    if (this.discount) {
-      return 100 - Math.ceil((this.discount / this.product.price) * 100);
+    if (this.category && this.category.sale) {
+      if (this.product && this.product.sale) {
+        return 100 - Math.ceil((this.product.sale / this.product.price) * 100);
+      }
+      return this.category.sale;
+    }
+    if (this.product && this.product.sale) {
+      return 100 - Math.ceil((this.product.sale / this.product.price) * 100);
     }
     return null;
   }

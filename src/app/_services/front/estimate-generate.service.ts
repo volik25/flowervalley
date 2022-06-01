@@ -30,6 +30,7 @@ export class EstimateGenerateService {
       sum,
       order,
       undefined,
+      undefined,
       isOpened,
     );
     return this.htmlToPdf.getGeneratedDocument();
@@ -43,6 +44,7 @@ export class EstimateGenerateService {
     sum: string,
     order: Order,
     date: string | null,
+    invoiceId: string | undefined,
     isOpened: boolean = true,
   ): Observable<Blob> {
     this.htmlToPdf.getPDF(
@@ -55,6 +57,7 @@ export class EstimateGenerateService {
       sum,
       order,
       date || undefined,
+      invoiceId,
       isOpened,
     );
     return this.htmlToPdf.getGeneratedDocument();

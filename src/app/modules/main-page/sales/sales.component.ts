@@ -52,11 +52,15 @@ export class SalesComponent {
     });
   }
 
-  public navigateTo(categoryName: string, productId?: string): void {
-    if (productId) {
-      this.router.navigate(['catalog', slugify(categoryName), productId]);
+  public navigateTo(categoryName?: string, productId?: string): void {
+    if (categoryName) {
+      if (productId) {
+        this.router.navigate(['catalog', slugify(categoryName), productId]);
+      } else {
+        this.router.navigate(['catalog', slugify(categoryName)]);
+      }
     } else {
-      this.router.navigate(['catalog', slugify(categoryName)]);
+      this.router.navigate(['catalog']);
     }
   }
 }

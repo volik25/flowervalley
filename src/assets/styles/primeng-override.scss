@@ -156,3 +156,11 @@
     }
   }
 }
+
+.order-message {
+  .p-message-detail {
+    @media screen and (max-width: 1024px) {
+      font-size: 13px;
+    }
+  }
+}

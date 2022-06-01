@@ -17,7 +17,7 @@
         icon="pi pi-save"
         label="Сохранить"
         [loading]="sendingMail"
-        (onClick)="order.clientId ? createInvoice() : saveOrder()"
+        (onClick)="confirmSaving()"
       ></p-button>
     </span>
   </div>
@@ -29,10 +29,25 @@
           <span>
             {{ order.id }}
           </span>
-          <p-tag
-            [value]="getStatus(order.status).label"
-            [severity]="getStatus(order.status).severity"
-          ></p-tag>
+          <p-inplace #statusInplace>
+            <ng-template pTemplate="display">
+              <p-tag
+                [value]="getStatus(order.status).label"
+                [severity]="getStatus(order.status).severity"
+              ></p-tag>
+            </ng-template>
+            <ng-template pTemplate="content">
+              <p-dropdown
+                [options]="statusDropdown"
+                [autoDisplayFirst]="false"
+                (onHide)="statusInplace.deactivate()"
+                [(ngModel)]="order.status"
+                placeholder="Выберите статус"
+                optionLabel="name"
+                optionValue="value"
+              ></p-dropdown>
+            </ng-template>
+          </p-inplace>
         </div>
       </div>
       <div class="order__header_date">
@@ -81,7 +96,7 @@
             </ng-template>
           </p-inplace>
         </div>
-        <p-inplace *ngIf="!order.confirmedDeliveryDate" #inplace>
+        <p-inplace *ngIf="!order.confirmedDeliveryDate" #dateInplace>
           <ng-template pTemplate="display"> Согласовать </ng-template>
           <ng-template pTemplate="content">
             <div class="flex align-items-center">
@@ -101,7 +116,7 @@
               <p-button
                 styleClass="ml-2"
                 label="Согласовать"
-                (onClick)="confirmDate(inplace)"
+                (onClick)="confirmDate(dateInplace)"
               ></p-button>
             </div>
           </ng-template>
@@ -110,7 +125,7 @@
       <div class="order__header_address">
         <div>Адрес поставки:</div>
         <div>
-          <p-inplace #inplace>
+          <p-inplace #addressInplace>
             <ng-template pTemplate="display"> {{ order.clientAddress }} </ng-template>
             <ng-template pTemplate="content">
               <div class="flex align-items-center">
@@ -121,7 +136,7 @@
                 <p-button
                   styleClass="ml-2"
                   label="Закрыть"
-                  (onClick)="inplace.deactivate()"
+                  (onClick)="addressInplace.deactivate()"
                 ></p-button>
               </div>
             </ng-template>
@@ -140,10 +155,10 @@
         <div>Стоимость коробок:</div>
         <div>{{ getBoxesSum() | priceConverter }}</div>
       </div>
-      <div class="order__header_delivery" *ngIf="order.deliveryPrice">
+      <div class="order__header_delivery">
         <div>Стоимость поставки:</div>
         <div>
-          <p-inplace #inplace>
+          <p-inplace #deliveryInplace>
             <ng-template pTemplate="display">
               {{ order.deliveryPrice | priceConverter }}
             </ng-template>
@@ -157,7 +172,7 @@
                 <p-button
                   styleClass="ml-2"
                   label="Закрыть"
-                  (onClick)="inplace.deactivate()"
+                  (onClick)="deliveryInplace.deactivate()"
                 ></p-button>
               </div>
             </ng-template>
@@ -188,8 +203,8 @@
       </div>
     </div>
   </div>
-  <div class="order__entity" *ngIf="clientEntity">
-    <div>
+  <div class="order__entity">
+    <div *ngIf="clientEntity && clientEntity.INN">
       <div class="order__entity_name">
         <div>Наименование юридического лица:</div>
         <div>{{ clientEntity.ShortName }}</div>
@@ -199,7 +214,7 @@
         <div>{{ clientEntity.INN }}</div>
       </div>
     </div>
-    <div class="order__entity_account">
+    <div class="order__entity_account" *ngIf="this.order?.accountNumber">
       <p-button label="Посмотреть счет" (onClick)="openTelepack()"></p-button>
     </div>
   </div>

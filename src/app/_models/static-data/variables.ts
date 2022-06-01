@@ -1,7 +1,5 @@
 export interface CartVariables {
   minOrderSum: number;
-  nearestDelivery: number;
-  middleDelivery: number;
   moscowDelivery: number;
   deliveryPerKm: number;
 }

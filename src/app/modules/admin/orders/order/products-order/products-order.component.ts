@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { Product } from '../../../../../_models/product';
+import { Product, ProductCategory } from '../../../../../_models/product';
 import { OrderProduct } from '../../../../../_models/order';
 import { ProductService } from '../../../../../_services/back/product.service';
 import { ConfirmationService } from 'primeng/api';
@@ -66,6 +66,12 @@ export class ProductsOrderComponent implements OnChanges {
         this.hiddedProducts.push(product);
         products.splice(index, 1);
         if (this.isNewOrder) orderProduct.price = product.price;
+        if (product.categoryId && product.categoryName) {
+          orderProduct.product.category = {
+            id: product.categoryId,
+            name: product.categoryName,
+          };
+        }
       });
       this.products = products;
       this.isProductsLoading = false;
@@ -75,7 +81,7 @@ export class ProductsOrderComponent implements OnChanges {
     });
   }
 
-  public addProduct(product: Product): void {
+  public addProduct(product: ProductCategory): void {
     this.orderProducts.push({
       // @ts-ignore
       id: product.id,

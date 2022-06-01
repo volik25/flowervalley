@@ -24,6 +24,7 @@ export class SalesComponent implements OnInit {
   private photo: File | undefined;
   public selectedCategory: Category | undefined;
   public selectedProduct: Product | undefined;
+  private redirectTo: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -36,13 +37,18 @@ export class SalesComponent implements OnInit {
     this.saleGroup = fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      categoryId: [null, Validators.required],
+      categoryId: [null],
       productId: [null],
       currentPrice: [{ value: null, disabled: true }],
-      discount: [null, Validators.required],
+      discount: [null],
+      isActive: [true, Validators.required],
+      isVisible: [true, Validators.required],
     });
     route.params.subscribe((params) => {
       this.saleId = params['id'];
+    });
+    route.queryParams.subscribe((params) => {
+      this.redirectTo = params['redirect'];
     });
   }
 
@@ -53,9 +59,11 @@ export class SalesComponent implements OnInit {
         this.saleGroup.controls['currentPrice'].reset();
         this.selectedProduct = undefined;
       }
-      this.catalogService.getItemById<Category>(id).subscribe((category) => {
-        this.selectedCategory = category;
-      });
+      if (id) {
+        this.catalogService.getItemById<Category>(id).subscribe((category) => {
+          this.selectedCategory = category;
+        });
+      }
     });
     this.saleGroup.controls['productId'].valueChanges.subscribe((id) => {
       if (id) {
@@ -83,6 +91,12 @@ export class SalesComponent implements OnInit {
     ];
     forkJoin(requests).subscribe(([sale, catalog]) => {
       this.sale = sale as Sale;
+      if (this.sale.discount === 0) {
+        // @ts-ignore
+        this.sale.discount = null;
+      }
+      this.sale.isActive = !!this.sale.isActive;
+      this.sale.isVisible = !!this.sale.isVisible;
       this.categories = (catalog as Category[])
         .filter((item) => item.id !== 1)
         .filter((item) => item.parentId !== 1);
@@ -101,7 +115,9 @@ export class SalesComponent implements OnInit {
     Object.getOwnPropertyNames(sale).map((key) => {
       // @ts-ignore
       const value = sale[key];
-      formData.append(key, value);
+      if (value) {
+        formData.append(key, value);
+      }
     });
     if (this.photo) {
       formData.append('img', this.photo);
@@ -109,7 +125,11 @@ export class SalesComponent implements OnInit {
     // @ts-ignore
     this.saleService.updateItem<any>(formData, this.sale.id).subscribe(() => {
       this.isLoading = false;
-      this.router.navigate([''], { fragment: 'sales' });
+      if (this.redirectTo) {
+        this.router.navigate(['admin/edit/sale', this.redirectTo]);
+      } else {
+        this.router.navigate([''], { fragment: 'sales' });
+      }
     });
   }
 

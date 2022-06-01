@@ -56,8 +56,8 @@ export class NewOrderComponent implements OnInit {
       clientName: ['', Validators.required],
       clientPhone: ['', Validators.required],
       clientEmail: ['', Validators.required],
-      clientAddress: ['', Validators.required],
-      orderSum: [null, Validators.required],
+      clientAddress: [''],
+      deliveryPrice: [0],
     });
     route.queryParams.subscribe((params) => {
       this.orderId = params['orderId'];
@@ -173,13 +173,14 @@ export class NewOrderComponent implements OnInit {
       clientAddress: contacts.clientAddress ? contacts.clientAddress : 'Самовывоз',
       products: this.products,
       boxes: orderBoxes,
-      deliveryPrice: 0,
-      orderSum: contacts.orderSum,
+      deliveryPrice: contacts.deliveryPrice,
+      orderSum: this.getOrderSum(),
     };
     if (contacts.requestNumber) order.requestNumber = contacts.requestNumber;
     if (this.shippingCost) order.deliveryPrice = this.shippingCost;
     return <Order>order;
   }
+
   private createInvoice(order: Order): void {
     this.getPartner().subscribe(({ partnerId, inn }) => {
       if (partnerId) {
@@ -361,5 +362,20 @@ export class NewOrderComponent implements OnInit {
       this.ls.removeSubscription(subs);
     });
     this.ls.addSubscription(subs);
+  }
+
+  private getOrderSum(): number {
+    let sum = 0;
+    this.boxes.map((box) => {
+      sum += box.price * box.count;
+    });
+    this.products.map((product) => {
+      sum += product.price * product.count;
+    });
+    const delivery = this.contactsGroup.get('deliveryPrice')?.value;
+    if (delivery) {
+      sum += delivery;
+    }
+    return sum;
   }
 }

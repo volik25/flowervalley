@@ -78,8 +78,10 @@
       </div>
       <div class="product__desc_info-cart">
         <div class="price">
-          <span *ngIf="discount">{{ discount | priceConverter }}</span>
-          <span>{{ product.price | priceConverter }}</span>
+          <span *ngIf="product.sale">{{ product.sale | priceConverter }}</span>
+          <div>
+            <span>{{ product.price | priceConverter }}</span>
+          </div>
         </div>
         <div class="right-block">
           <div class="count">

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Category } from '../../../../_models/category';
 import { CatalogService } from '../../../../_services/back/catalog.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
@@ -8,6 +8,8 @@ import { slugify } from 'transliteration';
 import { StorageService } from '../../../../_services/front/storage.service';
 import { categoriesKey } from '../../../../_utils/constants';
 import { LoadingService } from '../../../../_services/front/loading.service';
+import { Observable, tap } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'flower-valley-category',
@@ -25,9 +27,10 @@ export class CategoryComponent {
     private router: Router,
     private storageService: StorageService,
     private ls: LoadingService,
+    private ms: MessageService,
   ) {
     this.category = fb.group({
-      name: ['', Validators.required],
+      name: ['', Validators.required, [this.nameAsyncValidator.bind(this)]],
       img: [''],
       parentId: [null],
       isSeedling: [false],
@@ -72,5 +75,19 @@ export class CategoryComponent {
 
   public photoUploaded(photos: File[]): void {
     this.category.get('img')?.setValue(photos[0]);
+  }
+
+  public nameAsyncValidator(control: FormControl): Observable<ValidationErrors | null> {
+    return this.catalogService.validateName(control.value).pipe(
+      tap((value) => {
+        if (value && control.dirty) {
+          this.ms.add({
+            severity: 'error',
+            summary: 'Совпадение названия',
+            detail: 'Категория с таким именем уже существует',
+          });
+        }
+      }),
+    );
   }
 }
