@@ -25,6 +25,7 @@ import { SearchComponent } from './search/search.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PipesModule } from '../_pipes/pipes.module';
 import { LoaderComponent } from './loader/loader.component';
+import { YandexMapComponent } from './yandex-map/yandex-map.component';
 import { DialogModule } from 'primeng/dialog';
 import { EntityFormComponent } from './entity-form/entity-form.component';
 import { AccordionModule } from 'primeng/accordion';
@@ -38,6 +39,7 @@ import { AccordionModule } from 'primeng/accordion';
     FilesUploadComponent,
     SearchComponent,
     LoaderComponent,
+    YandexMapComponent,
     EntityFormComponent,
   ],
   imports: [
@@ -72,6 +74,7 @@ import { AccordionModule } from 'primeng/accordion';
     SearchComponent,
     FilesUploadComponent,
     LoaderComponent,
+    YandexMapComponent,
     EntityFormComponent,
   ],
 })

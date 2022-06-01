@@ -102,6 +102,49 @@ $root: '.confirmation';
             padding-top: 25px;
           }
         }
+        .calculation-result {
+          position: absolute;
+          top: 15px;
+          right: 10px;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 100%;
+
+          ::ng-deep .p-button {
+            padding: 8px 22px;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 100%;
+
+            &.blink {
+              -webkit-animation: buttonBlink 2s infinite;
+              animation: buttonBlink 2s infinite;
+
+              &:hover {
+                animation: none;
+                -webkit-animation: none;
+                background-color: $dark-green;
+                border-color: $dark-green;
+              }
+            }
+          }
+
+          .delivery {
+            border-radius: 5px;
+            padding: 8px 22px;
+
+            &.success {
+              border: 1px solid $main-green;
+              color: $text;
+            }
+
+            &.error {
+              border: 1px solid $red-100;
+              background-color: $red-100;
+              color: $white-100;
+            }
+          }
+        }
       }
       ::ng-deep .p-field-checkbox {
         margin-bottom: 10px;

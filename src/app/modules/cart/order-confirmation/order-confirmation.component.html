@@ -38,9 +38,42 @@
         </span>
 
         <span class="p-float-label">
-          <input type="text" id="address" pInputText formControlName="address" />
+          <input
+            [ngClass]="{ 'calculation-padding': shippingCost }"
+            type="text"
+            id="address"
+            pInputText
+            formControlName="address"
+          />
           <label for="address">Адрес доставки</label>
+          <div class="calculation-result" *ngIf="shippingCost || delivery_error">
+            <p-button
+              styleClass="blink"
+              *ngIf="!showDelivery && !delivery_error"
+              (onClick)="deliveryButtonClick()"
+              label="Рассчитать доставку"
+            ></p-button>
+            <div
+              *ngIf="showDelivery || delivery_error"
+              class="delivery"
+              [ngClass]="{ success: shippingCost, error: delivery_error }"
+            >
+              {{
+                shippingCost
+                  ? 'Доставка ' + (shippingCost | priceConverter: 'none':'RUB')
+                  : delivery_error
+              }}
+            </div>
+          </div>
         </span>
+        <div class="flex justify-content-end">
+          <p-button
+            *ngIf="showDelivery"
+            styleClass="p-button-text"
+            label="Показать на карте"
+            (onClick)="yandexMapComponent.showMapToggle()"
+          ></p-button>
+        </div>
         <div class="delivery-info" *ngIf="cartVariables && !pickUp.value">
           <span>ВНИМАНИЕ!</span>
           <span>Стоимость доставки по Москве - {{ cartVariables.moscowDelivery }}&#8381;</span>
@@ -130,3 +163,4 @@
   </div>
   <p-messages [(value)]="message" key="orderMessage" styleClass="order-message"></p-messages>
 </div>
+<flower-valley-yandex-map #yandexMapComponent></flower-valley-yandex-map>
