@@ -118,7 +118,6 @@
   }
   &__content {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     flex-direction: column;
     @include laptop-media {

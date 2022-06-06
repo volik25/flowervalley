@@ -40,7 +40,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   public contacts: FormGroup;
   public entityData!: FormGroup;
   private entityId: string | undefined;
-  public shippingCost: number | undefined;
+  public shippingCost: number | undefined = 0;
   public delivery_error: string = '';
   public showDelivery = false;
   public orderId: number | undefined;
@@ -83,7 +83,7 @@ export class OrderConfirmationComponent implements OnDestroy {
     this.contacts.controls['address'].valueChanges
       .pipe(takeUntil($destroy), debounceTime(1000))
       .subscribe((address) => {
-        this.shippingCost = undefined;
+        this.shippingCost = 0;
         this.showDelivery = false;
         this.delivery_error = '';
         if (address) {
@@ -109,7 +109,7 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
     this.pickUp.valueChanges.subscribe((value) => {
       if (value) {
-        this.shippingCost = undefined;
+        this.shippingCost = 0;
         this.showDelivery = false;
         this.contacts.controls['address'].setValue('');
         this.contacts.controls['address'].disable();
@@ -144,7 +144,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   public get isConfirmOrderDisabled(): boolean {
     if (this.contacts.invalid) return true;
     if (this.contacts.getRawValue().address && !this.pickUp.value) {
-      return !this.showDelivery && this.shippingCost === 0;
+      return !(this.showDelivery || (!this.showDelivery && this.shippingCost === undefined));
     }
     return !(!this.contacts.getRawValue().address && this.pickUp.value);
   }
@@ -201,7 +201,7 @@ export class OrderConfirmationComponent implements OnDestroy {
   }
 
   private createIndividualInvoice(order: Order): void {
-    this.createIndividualEntity().subscribe((partnerId) => {
+    this.createIndividualEntity(order).subscribe((partnerId) => {
       this.createInvoice(order, partnerId, false);
     });
   }
@@ -303,7 +303,7 @@ export class OrderConfirmationComponent implements OnDestroy {
     }
   }
 
-  public createIndividualEntity(): Observable<string> {
+  public createIndividualEntity(order: Order): Observable<string> {
     const entity = this.contacts.getRawValue();
     return this.bpService
       .createFirm({
@@ -312,8 +312,7 @@ export class OrderConfirmationComponent implements OnDestroy {
       } as Individual)
       .pipe(
         map((firm) => {
-          // @ts-ignore
-          this.order.clientId = firm.Object;
+          order.clientId = firm.Object;
           return firm.Object;
         }),
       );
@@ -465,5 +464,10 @@ export class OrderConfirmationComponent implements OnDestroy {
         this.isOrderConfirmed = true;
       });
     });
+  }
+
+  public get shippingCostInput(): number | undefined {
+    if (this.showDelivery || this.shippingCost === undefined) return this.shippingCost;
+    return 0;
   }
 }

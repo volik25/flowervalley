@@ -23,7 +23,7 @@ export class ConfirmationGoodsComponent {
   @Input()
   public order: Order | undefined;
   @Input()
-  public shippingCost = 0;
+  public shippingCost: number | undefined;
   @Input()
   public pickUp: boolean = false;
   @Output()
