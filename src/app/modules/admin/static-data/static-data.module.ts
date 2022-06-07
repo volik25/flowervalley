@@ -20,7 +20,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { EditorModule } from 'primeng/editor';
 import { ImageModule } from 'primeng/image';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MainPageModule } from '../../main-page/main-page.module';
 import { AnimationComponent } from './components/animation/animation.component';
@@ -30,6 +29,7 @@ import { PrivatePolicyComponent } from './components/private-policy/private-poli
 import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputNumberModule } from '../../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

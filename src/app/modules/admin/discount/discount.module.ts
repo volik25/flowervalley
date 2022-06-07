@@ -6,11 +6,11 @@ import { DiscountComponent } from './discount.component';
 import { FlowerValleySharedModule } from '../../../shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { PipesModule } from '../../../_pipes/pipes.module';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputNumberModule } from '../../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [DiscountComponent],

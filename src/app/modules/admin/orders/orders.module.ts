@@ -15,12 +15,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FlowerValleySharedModule } from '../../../shared/shared.module';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { ProductsOrderComponent } from './order/products-order/products-order.component';
 import { BoxesOrderComponent } from './order/boxes-order/boxes-order.component';
 import { CalendarModule } from 'primeng/calendar';
 import { PriceConverterPipe } from '../../../_pipes/price-converter.pipe';
 import { AccordionModule } from 'primeng/accordion';
+import { InputNumberModule } from '../../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

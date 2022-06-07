@@ -22,13 +22,13 @@ import { DownloadInvoiceComponent } from './download-invoice/download-invoice.co
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
 import { TabViewModule } from 'primeng/tabview';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 import { PriceConverterPipe } from '../../_pipes/price-converter.pipe';
 import { MessagesModule } from 'primeng/messages';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from '../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

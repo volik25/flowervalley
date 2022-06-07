@@ -22,7 +22,6 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { GalleriaModule } from 'primeng/galleria';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ImageModule } from 'primeng/image';
 import { TooltipModule } from 'primeng/tooltip';
@@ -32,6 +31,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { MediaComponent } from './media/media.component';
 import { DragDropModule } from 'primeng/dragdrop';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InputNumberModule } from '../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

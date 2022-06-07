@@ -19,7 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ImageModule } from 'primeng/image';
 import { FilesUploadComponent } from './files-upload/files-upload.component';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 import { SearchComponent } from './search/search.component';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -29,6 +28,7 @@ import { YandexMapComponent } from './yandex-map/yandex-map.component';
 import { DialogModule } from 'primeng/dialog';
 import { EntityFormComponent } from './entity-form/entity-form.component';
 import { AccordionModule } from 'primeng/accordion';
+import { InputNumberModule } from '../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [
