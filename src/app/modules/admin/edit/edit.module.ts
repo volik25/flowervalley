@@ -7,7 +7,6 @@ import { FlowerValleySharedModule } from '../../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EditorModule } from 'primeng/editor';
@@ -27,6 +26,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DragDropModule } from 'primeng/dragdrop';
 import { TableModule } from 'primeng/table';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputNumberModule } from '../../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

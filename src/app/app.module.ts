@@ -24,7 +24,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { DadataInterceptor } from './_interceptors/dadata.interceptor';
 import { SignInComponent } from './components/sign-in/sign-in.component';
@@ -38,6 +37,7 @@ import { STATIC_DATA } from './_providers/static-data.provider';
 import { StaticDataService } from './_services/back/static-data.service';
 import { DATE_CONVERT } from './_providers/date-convert.provider';
 import { DatePipe } from '@angular/common';
+import { InputNumberModule } from './components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

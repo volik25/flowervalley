@@ -8,7 +8,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EditorModule } from 'primeng/editor';
@@ -24,6 +23,7 @@ import { CardModule } from 'primeng/card';
 import { MediaComponent } from './media/media.component';
 import { CalendarModule } from 'primeng/calendar';
 import { DiscountComponent } from './discount/discount.component';
+import { InputNumberModule } from '../../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [

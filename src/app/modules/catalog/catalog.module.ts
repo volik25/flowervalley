@@ -13,13 +13,13 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { PipesModule } from '../../_pipes/pipes.module';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { DragDropModule } from 'primeng/dragdrop';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { CategoryMenuComponent } from './category/category-menu/category-menu.component';
 import { OrderListModule } from 'primeng/orderlist';
 import { SeedlingsComponent } from './seedlings/seedlings.component';
 import { DeliveryComponent } from './product/delivery/delivery.component';
+import { InputNumberModule } from '../../components/input-number/input-number.module';
 
 @NgModule({
   declarations: [
