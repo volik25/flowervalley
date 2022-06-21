@@ -106,7 +106,9 @@
     >{{ item.title }}</a
   >
   <div *ngIf="menuShow" class="mobile-cart">
-    <ng-container *ngTemplateOutlet="cartButton"></ng-container>
+    <div class="cart-button-container">
+      <ng-container *ngTemplateOutlet="cartButton"></ng-container>
+    </div>
     <div>
       <ng-container *ngTemplateOutlet="pricesButton"></ng-container>
       <ng-container *ngTemplateOutlet="contacts"></ng-container>

@@ -62,6 +62,9 @@
       font-weight: bold;
     }
   }
+  ::ng-deep .p-autocomplete-item {
+    white-space: normal;
+  }
   &__button {
     ::ng-deep button {
       padding: 10px;

@@ -455,8 +455,10 @@ $root: '.header';
   flex-direction: column;
   justify-content: space-between;
   @include cart-button;
+  .cart-button-container {
+    margin-right: auto;
+  }
   .cart {
-    max-width: 160px;
     border-color: $main-green;
     &__icon {
       background-color: #F4F8E6;
